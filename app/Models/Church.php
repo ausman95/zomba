@@ -1,0 +1,22 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+
+class Church extends Model
+{
+    use HasFactory;
+    protected $fillable = [
+        'name',
+    ];
+    public function members()
+    {
+        return $this->hasMany(Member::class,'church_id');
+    }
+    public function payments()
+    {
+        return  $this->hasMany(ChurchPayment::class,'church_id');
+    }
+}
