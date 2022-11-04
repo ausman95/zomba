@@ -84,8 +84,6 @@ Route::middleware(['auth', 'view.share'])->group(function () {
     Route::get('users/audit-trail', [UserController::class, 'logActivity'])->name('user.audit');
     Route::get('requisitions/pending', [RequisitionController::class, 'pending'])->name('request.pending');
 
-<<<<<<< HEAD
-=======
     Route::get('reports/out-tray', [\App\Http\Controllers\ReportController::class, 'archive'])->name('reports.archive');
 
     Route::get('stock/next', [\App\Http\Controllers\StockFlowController::class, 'determine'])->name('stock.next');
@@ -292,7 +290,7 @@ Route::middleware(['auth', 'view.share'])->group(function () {
     Route::post('labourers/subcontractors/store', [\App\Http\Controllers\LabourerController::class, 'subcontractorsStore'])->name('transactions.store');
     Route::post('register/{department}/produce', [AttendanceRegisterController::class, 'produceAttendance'])->name('register.produce');
     Route::post('suppliers/store', [\App\Http\Controllers\SupplierController::class, 'supplierStore'])->name('transaction.store');
->>>>>>> 2cf49c8b454683e000a57590879039877e9292c6
+
 
     Route::get('attendance/{department}/record', [AttendanceRegisterController::class, 'showAttendanceForm'])->name('attendance.record');
     Route::get('attendance/{department}/report', [AttendanceRegisterController::class, 'showAttendanceReport'])->name('attendance.report');
