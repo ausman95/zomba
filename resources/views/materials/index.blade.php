@@ -15,7 +15,6 @@
         <nav aria-label="breadcrumb">
             <ol class="breadcrumb bg-transparent">
                 <li class="breadcrumb-item"><a href="{{route('home')}}">Home</a></li>
-                <li class="breadcrumb-item"><a href="{{route('suppliers.index')}}">Suppliers</a></li>
                 <li class="breadcrumb-item active" aria-current="page">Materials</li>
             </ol>
         </nav>
@@ -26,6 +25,9 @@
             <button type="button" class="btn btn-primary rounded-0 btn-md" data-bs-toggle="modal" data-bs-target="#material">
                 <i class="fa fa-plus-circle"></i> New Material
             </button>
+{{--            <a href="{{route('materials.index')}}" class="btn btn-primary btn-md rounded-0">--}}
+{{--                <i class="fa fa-list-ol"></i>Material Prices--}}
+{{--            </a>--}}
             <div class="modal " id="material" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
                 <div class="modal-dialog">
                     <div class="modal-content">

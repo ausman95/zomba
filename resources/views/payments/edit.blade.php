@@ -14,7 +14,7 @@
                 <li class="breadcrumb-item"><a href="{{route('home')}}">Home</a></li>
                 <li class="breadcrumb-item"><a href="{{route('finances.index')}}">Finances</a></li>
                 <li class="breadcrumb-item"><a href="{{route('banks.index')}}">Bank Account</a></li>
-                <li class="breadcrumb-item"><a href="{{route('Ministries.show',$bank->id)}}">{{$bank->name}}</a></li>
+                <li class="breadcrumb-item"><a href="{{route('ministries.show',$bank->id)}}">{{$bank->name}}</a></li>
                 <li class="breadcrumb-item active" aria-current="page">Update</li>
             </ol>
         </nav>

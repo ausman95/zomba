@@ -4,17 +4,16 @@
     <div class="container-fluid ps-1 pt-4">
 
         <h4>
-            <i class="fa fa-list-ul"></i>Labours
+            <i class="fa fa-list-ul"></i>Positions
         </h4>
         <p>
-            Manage Labour information
+            Manage Positions
         </p>
         <nav>
             <ol class="breadcrumb bg-transparent">
                 <li class="breadcrumb-item"><a href="{{route('home')}}">Home</a></li>
                 <li class="breadcrumb-item"><a href="{{route('human-resources.index')}}">Human Resources</a></li>
-                <li class="breadcrumb-item"><a href="{{route('labourers.index')}}">Labourers</a></li>
-                <li class="breadcrumb-item"><a href="{{route('labours.index')}}">Labours</a></li>
+                <li class="breadcrumb-item"><a href="{{route('labours.index')}}">Positions</a></li>
                 <li class="breadcrumb-item active" aria-current="page">{{$labour->name}}</li>
             </ol>
         </nav>
@@ -86,9 +85,9 @@
                                             <th>GENDER</th>
                                             <th>DEPARTMENT</th>
                                             <th>PHONE</th>
-                                            <th>AGE</th>
+{{--                                            <th>AGE</th>--}}
                                             <th>PROFESSIONAL</th>
-                                            <th>EXPERIENCE</th>
+{{--                                            <th>EXPERIENCE</th>--}}
                                             <th>TYPE</th>
                                             <th>ACTION</th>
                                         </tr>
@@ -102,9 +101,9 @@
                                                 <td>{{$labourer->gender}}</td>
                                                 <td>{{$labourer->department->name}}</td>
                                                 <td>{{$labourer->phone_number}}</td>
-                                                <td>{{$labourer->getAgeAttribute()}}</td>
+{{--                                                <td>{{$labourer->getAgeAttribute()}}</td>--}}
                                                 <td>{{$labourer->labour->name}}</td>
-                                                <td>{{$labourer->period}}</td>
+{{--                                                <td>{{$labourer->period}}</td>--}}
                                                 <td>
                                                     @if($labourer->type==1)
                                                         {{'Employed'}}
@@ -115,7 +114,7 @@
                                                     @endif
                                                 </td>
                                                 <td class="pt-1">
-                                                    <a href="{{route('members.show',$labourer->id)}}"
+                                                    <a href="{{route('labourers.show',$labourer->id)}}"
                                                        class="btn btn-md btn-primary rounded-0">
                                                         <i class="fa fa-list-ol"></i>  Manage
                                                     </a>

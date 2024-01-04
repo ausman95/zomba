@@ -47,7 +47,6 @@
                                             <th>EMAIL/USERNAME</th>
                                             <th>ROLE</th>
                                             <th>LEVEL</th>
-                                            <th>POSITION</th>
                                             <th>LAST LOGIN</th>
                                             <th>STATUS</th>
                                             <th>ACTION</th>
@@ -63,7 +62,6 @@
                                                 <td>{{$user->email}}</td>
                                                 <td>{{$user->designation}}</td>
                                                 <td>{{$user->level}}</td>
-                                                <td>{{$user->position}}</td>
                                                 <td>{{$user->getTimeAttribute()}}</td>
                                                 <td>
                                                     @if(Cache::has('user-is-online-' . $user->id))

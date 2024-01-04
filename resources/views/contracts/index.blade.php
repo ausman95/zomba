@@ -72,9 +72,11 @@
                                                         <td>{{@$contract->labourer->department->name}}</td>
                                                         <td>{{@$contract->labourer->labour->name}}</td>
                                                         <td>{{$contract->contractType->name}}</td>
-                                                        <td>{{number_format($contract->salary)}}</td>
-                                                        <td>{{$contract->start_date}}</td>
-                                                        <td>{{$contract->end_date}}</td>
+                                                        <th>{{number_format($contract->salary,2)}}</th>
+                                                        <td>{{date('d F Y', strtotime($contract->start_date)) }}</td>
+
+                                                        <td>{{date('d F Y', strtotime($contract->end_date)) }}</td>
+
                                                         <td>
                                                             @if($contract->status=='ENDED')
                                                                 0

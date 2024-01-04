@@ -75,10 +75,6 @@
                                                 <td>{{$user->email}}</td>
                                             </tr>
                                             <tr>
-                                                <td>Position</td>
-                                                <td>{{$user->position}}</td>
-                                            </tr>
-                                            <tr>
                                                 <td>Phone Number</td>
                                                 <td>{{$user->phone_number}}</td>
                                             </tr>

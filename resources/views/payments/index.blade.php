@@ -15,6 +15,7 @@
         <nav aria-label="breadcrumb">
             <ol class="breadcrumb bg-transparent">
                 <li class="breadcrumb-item"><a href="{{route('home')}}">Home</a></li>
+                <li class="breadcrumb-item"><a href="{{route('finances.index')}}">Finances</a></li>
                 <li class="breadcrumb-item active" aria-current="page">payments</li>
             </ol>
         </nav>
@@ -25,101 +26,128 @@
             <a href="{{route('payments.create')}}" class="btn btn-primary btn-md rounded-0">
                 <i class="fa fa-plus-circle"></i>New Payment
             </a>
-            <a href="{{route('member.transaction')}}" class="btn btn-primary btn-md rounded-0">
-                <i class="fa fa-user-circle"></i><i class="fa fa-list-ol"></i>Member Transactions
-            </a>
-            <a href="{{route('ministry.transaction')}}" class="btn btn-primary btn-md rounded-0">
-                <i class="fa fa-file-alt"></i> <i class="fa fa-list-ol"></i>Ministry Transactions
-            </a>
-            <a href="{{route('home.transactions')}}" class="btn btn-primary btn-md rounded-0">
-                <i class="fa fa-folder"></i><i class="fa fa-list-ol"></i>Home Church Transactions
-            </a>
+{{--            <a href="{{route('member.transaction')}}" class="btn btn-primary btn-md rounded-0">--}}
+{{--                <i class="fa fa-user-circle"></i><i class="fa fa-list-ol"></i>Member Transactions--}}
+{{--            </a>--}}
+{{--            <a href="{{route('ministry.transaction')}}" class="btn btn-primary btn-md rounded-0">--}}
+{{--                <i class="fa fa-file-alt"></i> <i class="fa fa-list-ol"></i>Ministry Transactions--}}
+{{--            </a>--}}
+{{--            <a href="{{route('home.transactions')}}" class="btn btn-primary btn-md rounded-0">--}}
+{{--                <i class="fa fa-folder"></i><i class="fa fa-list-ol"></i>Home Church Transactions--}}
+{{--            </a>--}}
             <div class="mt-3">
-                <div class="row">
-                    <div class="col-sm-12 mb-2 col-md-12 col-lg-12">
-                        <div class="card " style="min-height: 30em;">
-                            <div class="card-body px-1">
-                                @if($payments->count() === 0)
-                                    <i class="fa fa-info-circle"></i>There are no payment!
-                                @else
-                                    <div style="overflow-x:auto;">
-                                        <table class="table  table-bordered table-hover table-striped">
-                                            <caption style=" caption-side: top; text-align: center">payments</caption>
-                                            <thead>
-                                        <tr>
-                                            <th>NO</th>
-                                            <th>NAME</th>
-                                            <th>AMOUNT (MK)</th>
-                                            <th>ACCOUNT</th>
-                                            <th>BANK</th>
-                                            <th>TYPE</th>
-                                            <th>METHOD</th>
-                                            <th>TYPE</th>
-                                            <th>REF</th>
-                                            <th>DATE</th>
-{{--                                            <th>ACTION</th>--}}
-                                        </tr>
-                                        </thead>
-                                        <tbody>
-                                        <?php  $c= 1;?>
-                                        @foreach($payments as $payment)
-                                            <tr>
-                                                <td>{{$c++}}</td>
-                                                <td>{{ucwords(substr($payment->name,0,20)) }}</td>
-                                                <td>{{number_format($payment->amount) }}</td>
-                                                <td>{{ucwords($payment->account->name) }}</td>
-                                                <td>
-                                                    @if(!@$payment->bank->account_name)
-                                                        OPENING TRANSACTION
-                                                    @else
-                                                    {{ucwords(@$payment->bank->account_name) }}
-                                                        @endif
-                                                </td>
-                                                <td>{{ucwords($payment->account->type == 1 ? 'CR' : 'DR') }}</td>
-                                                <td>
-                                                    @if($payment->payment_method==1)
-                                                        CASH
-                                                    @elseif($payment->payment_method==3)
-                                                        CHEQUE
-                                                    @else
-                                                        ONLINE TRANSFER
-                                                    @endif
-                                                </td>
-                                                <td>
-                                                    @if($payment->type==1)
-                                                        DEPARTMENT
-                                                    @elseif($payment->type==2)
-                                                        ADMIN
-                                                    @elseif($payment->type==3)
-                                                        SUPPLIERS
-                                                    @elseif($payment->type==4)
-                                                        EMPLOYEES
-                                                    @elseif($payment->type==5)
-                                                        MEMBERS
-                                                    @elseif($payment->type==6)
-                                                        HOME CHURCH
-                                                    @elseif($payment->type==7)
-                                                        MINISTRIES
-                                                    @else
-                                                        UNKNOWN
-                                                    @endif
-                                                </td>
-                                                <td>{{ucwords($payment->reference) }}</td>
-                                                <td>{{date('d F Y', strtotime($payment->created_at)) }}</td>
-{{--                                                <td>--}}
-{{--                                                    <a href="{{route('delivery-note.generate')."?id={$flow->id}"}}" target="_blank" class="btn btn-primary rounded-0" style="margin: 2px">--}}
-{{--                                                        <i class="fa fa-vote-yea"></i> Generate--}}
-{{--                                                    </a>--}}
-{{--                                                </td>--}}
-                                            </tr>
+                <div class="card container-fluid" style="min-height: 30em;">
+                    <div class="row">
+                        <div class="col-sm-12 mb-2 col-md-2 col-lg-2">
+                            <hr>
+                            <form action="{{route('receipt.generate')}}" method="POST">
+                                @csrf
+                                <div class="form-group">
+                                    <select name="month_id"
+                                            class="form-select select-relation @error('month_id') is-invalid @enderror" style="width: 100%">
+                                        @foreach($months as $month)
+                                            <option value="{{$month->id}}"
+                                                {{old('month')===$month->id ? 'selected' : ''}}>{{$month->name}}</option>
                                         @endforeach
-                                        </tbody>
-                                    </table>
-                                    </div>
-                                @endif
+                                    </select>
+                                    @error('month_id')
+                                    <span class="invalid-feedback">
+                               {{$message}}
+                        </span>
+                                    @enderror
+                                </div>
+                                <div class="form-group">
+                                    <button class="btn btn-primary rounded-0" type="submit">
+                                        Generate
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="col-sm-12 mb-2 col-md-11 col-lg-10">
+                            <br>
+                            <div class="card container-fluid" style="min-height: 30em;">
+                                <div class="card-body px-1">
+                                    @if($payments->count() === 0)
+                                        <i class="fa fa-info-circle"></i>There are no payment!
+                                    @else
+                                        <div style="overflow-x:auto;">
+                                            <table class="table  table-bordered table-hover table-striped">
+                                                <caption style=" caption-side: top; text-align: center">payments</caption>
+                                                <thead>
+                                                <tr>
+                                                    <th>NO</th>
+                                                    <th>DATE</th>
+                                                    <th>NAME</th>
+                                                    <th>AMOUNT (MK)</th>
+                                                    <th>ACCOUNT</th>
+                                                    <th>BANK</th>
+                                                    <th>TYPE</th>
+                                                    <th>METHOD</th>
+                                                    <th>TYPE</th>
+                                                    <th>REF</th>
+                                                    {{--                                            <th>ACTION</th>--}}
+                                                </tr>
+                                                </thead>
+                                                <tbody>
+                                                <?php  $c= 1;?>
+                                                @foreach($payments as $payment)
+                                                    <tr>
+                                                        <td>{{$c++}}</td>
+                                                        <td>{{date('d F Y', strtotime($payment->t_date)) }}</td>
+                                                        <td>{{ucwords(substr($payment->name,0,20)) }}</td>
+                                                        <td>{{number_format($payment->amount) }}</td>
+                                                        <td>{{ucwords($payment->account->name) }}</td>
+                                                        <td>
+                                                            @if(!@$payment->bank->account_name)
+                                                                OPENING TRANSACTION
+                                                            @else
+                                                                {{ucwords(@$payment->bank->account_name) }}
+                                                            @endif
+                                                        </td>
+                                                        <td>{{ucwords($payment->account->type == 1 ? 'CR' : 'DR') }}</td>
+                                                        <td>
+                                                            @if($payment->payment_method==1)
+                                                                CASH
+                                                            @elseif($payment->payment_method==3)
+                                                                CHEQUE
+                                                            @else
+                                                                ONLINE TRANSFER
+                                                            @endif
+                                                        </td>
+                                                        <td>
+                                                            @if($payment->type==1)
+                                                                DEPARTMENT
+                                                            @elseif($payment->type==2)
+                                                                ADMIN
+                                                            @elseif($payment->type==3)
+                                                                SUPPLIERS
+                                                            @elseif($payment->type==4)
+                                                                EMPLOYEES
+                                                            @elseif($payment->type==5)
+                                                                MEMBERS
+                                                            @elseif($payment->type==6)
+                                                                HOME CHURCH
+                                                            @elseif($payment->type==7)
+                                                                MINISTRIES
+                                                            @else
+                                                                UNKNOWN
+                                                            @endif
+                                                        </td>
+                                                        <td>{{ucwords($payment->reference) }}</td>
+                                                        {{--                                                <td>--}}
+                                                        {{--                                                    <a href="{{route('delivery-note.generate')."?id={$flow->id}"}}" target="_blank" class="btn btn-primary rounded-0" style="margin: 2px">--}}
+                                                        {{--                                                        <i class="fa fa-vote-yea"></i> Generate--}}
+                                                        {{--                                                    </a>--}}
+                                                        {{--                                                </td>--}}
+                                                    </tr>
+                                                @endforeach
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    @endif
+                                </div>
                             </div>
                         </div>
-
                     </div>
                 </div>
             </div>

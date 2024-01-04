@@ -24,10 +24,11 @@ class StoreRequest extends FormRequest
     public function rules()
     {
         return [
-            'account_name' => "required|string|unique:banks,account_name",
+            'account_name' => "required|string",
             'account_number' => "required|string|unique:banks,account_number",
             'service_centre' => "required|string",
-            'account_type'=>"required|string"
+            'account_type'=>"required|string",
+            'bank_name'=>"required|string"
         ];
     }
 }

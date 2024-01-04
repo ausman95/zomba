@@ -167,7 +167,7 @@
                                         <div class="card " style="min-height: 30em;">
                                             <div class="card-body px-1">
                                                 <div style="overflow-x:auto;">
-                                                    <table class="table table-primary table-bordered table-hover table-striped" id="data-table">
+                                                    <table class="table  table-bordered table-hover table-striped" id="data-table">
                                                         <caption style=" caption-side: top; text-align: center">{{@$department_name}} - {{@$material_name}} USAGE</caption>
                                                         <thead>
                                                         <tr>
@@ -194,7 +194,7 @@
 
                                                                 <td>
                                                                     @if($flow->flow==1)
-                                                                        {{$flow->activity}} -    {{ucwords('IN-STOCK') }}
+                                                                            {{ucwords('IN-STOCK') }}
                                                                     @elseif($flow->flow==2)
                                                                         {{$flow->activity}} -    {{'OUT-STOCK'}}
                                                                     @else
@@ -204,10 +204,10 @@
                                                                 <td>{{number_format($flow->balance).' '.$flow->material->units }}</td>
                                                                 <td>{{ucwords($flow->status) }}</td>
                                                                 <td>{{ucwords($flow->created_at) }}</td>
-                                                                <td>
-                                                                    <a href="{{route('delivery-note.generate')."?id={$flow->id}"}}" target="_blank" class="btn btn-primary rounded-0" style="margin: 2px">
-                                                                        <i class="fa fa-vote-yea"></i> Generate
-                                                                    </a>
+                                                                <td> ------
+{{--                                                                    <a href="{{route('delivery-note.generate')."?id={$flow->id}"}}" target="_blank" class="btn btn-primary rounded-0" style="margin: 2px">--}}
+{{--                                                                        <i class="fa fa-vote-yea"></i> Generate--}}
+{{--                                                                    </a>--}}
                                                                 </td>
                                                             </tr>
                                                         @endforeach

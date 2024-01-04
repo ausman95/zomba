@@ -25,9 +25,6 @@
         <button type="button" class="btn btn-primary rounded-0 btn-md" data-bs-toggle="modal" data-bs-target="#supplier">
             <i class="fa fa-plus-circle"></i> New Supplier
         </button>
-        <button type="button" class="btn btn-primary rounded-0 btn-md" data-bs-toggle="modal" data-bs-target="#price">
-            <i class="fa fa-plus-circle"></i> New Price
-        </button>
         <div class="modal " id="account" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
@@ -128,76 +125,6 @@
                                 @enderror
                             </div>
                             <hr style="height: .3em;" class="border-theme">
-                            <div class="form-group">
-                                <button class="btn btn-md btn-primary rounded-0">
-                                    <i class="fa fa-paper-plane"></i>Save
-                                </button>
-
-                            </div>
-                        </form>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"><i class="fa fa-times-circle"></i> Cancel</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="modal " id="price" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="staticBackdropLabel">Adding Prices</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                        <form action="{{route('prices.store')}}" method="POST" autocomplete="off">
-                            @csrf
-                            <div class="form-group">
-                                <label>Materials</label>
-                                <select name="material_id"
-                                        class="form-select select-relation @error('material_id') is-invalid @enderror" style="width: 100%">
-                                    <option value="">-- Select ---</option>
-                                    @foreach($materials as $material)
-                                        <option value="{{$material->id}}"
-                                            {{old('material_id')===$material->id ? 'selected' : ''}}>{{$material->name.' OF '.$material->specifications}}</option>
-                                    @endforeach
-                                </select>
-                                @error('material_id')
-                                <span class="invalid-feedback">
-                               {{$message}}
-                        </span>
-                                @enderror
-                            </div>
-                            <div class="form-group">
-                                <label>Supplier</label>
-                                <select name="supplier_id"
-                                        class="form-select select-relation @error('supplier_id') is-invalid @enderror" style="width: 100%">
-                                    <option value="">-- Select ---</option>
-                                    @foreach($suppliers as $supplier)
-                                        <option value="{{$supplier->id}}"
-                                            {{old('supplier_id')===$supplier->id ? 'selected' : ''}}>{{$supplier->name}}</option>
-                                    @endforeach
-                                </select>
-                                @error('supplier_id')
-                                <span class="invalid-feedback">
-                               {{$message}}
-                        </span>
-                                @enderror
-                            </div>
-                            <div class="form-group">
-                                <label>Price / Item / Kg</label>
-                                <input type="number" name="price"
-                                       class="form-control @error('price') is-invalid @enderror"
-                                       value="{{old('price')}}"
-                                       placeholder="Price" >
-                                @error('price')
-                                <span class="invalid-feedback">
-                               {{$message}}
-                        </span>
-                                @enderror
-                            </div>
-                            <hr style="height: .3em;" class="border-theme">
-
                             <div class="form-group">
                                 <button class="btn btn-md btn-primary rounded-0">
                                     <i class="fa fa-paper-plane"></i>Save
@@ -327,16 +254,24 @@
                             @enderror
                         </div>
                         <div class="form-group">
-                            <label>Suppliers</label>
-                            <select name="supplier_id"
-                                    class="form-select select-relation @error('supplier_id') is-invalid @enderror" style="width: 100%">
-                                <option value="">-- Select ---</option>
-                                @foreach($suppliers as $supplier)
-                                    <option value="{{$supplier->id}}"
-                                        {{old('supplier_id')===$supplier->id ? 'selected' : ''}}>{{$supplier->name}}</option>
-                                @endforeach
-                            </select>
-                            @error('supplier_id')
+                            <label>Quantity</label>
+                            <input type="number" name="quantity"
+                                   class="form-control @error('quantity') is-invalid @enderror"
+                                   value="{{old('quantity')}}"
+                                   placeholder="Quantity" >
+                            @error('quantity')
+                            <span class="invalid-feedback">
+                                   {{$message}}
+                            </span>
+                            @enderror
+                        </div>
+                        <div class="form-group">
+                            <label>Total Amount</label>
+                            <input type="text" name="amount"
+                                   class="form-control @error('amount') is-invalid @enderror"
+                                   value="{{old('amount')}}"
+                                   placeholder="amount" >
+                            @error('amount')
                             <span class="invalid-feedback">
                                    {{$message}}
                             </span>
@@ -364,6 +299,22 @@
                     <div class="col-sm-12 col-md-8 col-lg-4">
                         @csrf
                         <div class="form-group">
+                            <label>Suppliers</label>
+                            <select name="supplier_id"
+                                    class="form-select select-relation @error('supplier_id') is-invalid @enderror" style="width: 100%">
+                                <option value="">-- Select ---</option>
+                                @foreach($suppliers as $supplier)
+                                    <option value="{{$supplier->id}}"
+                                        {{old('supplier_id')===$supplier->id ? 'selected' : ''}}>{{$supplier->name}}</option>
+                                @endforeach
+                            </select>
+                            @error('supplier_id')
+                            <span class="invalid-feedback">
+                                   {{$message}}
+                            </span>
+                            @enderror
+                        </div>
+                        <div class="form-group">
                             <label>Reference</label>
                             <input type="text" name="reference"
                                    class="form-control @error('reference') is-invalid @enderror"
@@ -372,18 +323,6 @@
                             <span class="invalid-feedback">
                                {{$message}}
                         </span>
-                            @enderror
-                        </div>
-                        <div class="form-group">
-                            <label>Quantity</label>
-                            <input type="number" name="quantity"
-                                   class="form-control @error('quantity') is-invalid @enderror"
-                                   value="{{old('quantity')}}"
-                                   placeholder="Quantity" >
-                            @error('quantity')
-                            <span class="invalid-feedback">
-                                   {{$message}}
-                            </span>
                             @enderror
                         </div>
                         <div class="projects">

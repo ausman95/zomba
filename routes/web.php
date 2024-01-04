@@ -34,6 +34,7 @@ Route::middleware(['auth', 'view.share'])->group(function () {
     Route::resource('months', \App\Http\Controllers\MonthController::class);
     Route::resource('members', \App\Http\Controllers\MemberController::class);
     Route::resource('banks', \App\Http\Controllers\BankController::class);
+    Route::resource('announcements', \App\Http\Controllers\AnnouncementController::class);
     Route::resource('accounts', \App\Http\Controllers\AccountController::class);
     Route::resource('finances', \App\Http\Controllers\AccountController::class);
     Route::resource('suppliers', \App\Http\Controllers\SupplierController::class);
@@ -46,11 +47,15 @@ Route::middleware(['auth', 'view.share'])->group(function () {
     Route::resource('departments', \App\Http\Controllers\DepartmentController::class);
     Route::resource('contracts', \App\Http\Controllers\ContractController::class);
     Route::resource('leaves', \App\Http\Controllers\LeaveController::class);
+    Route::resource('attendances', \App\Http\Controllers\AttendanceController::class);
+
     Route::resource('leave-settings', \App\Http\Controllers\LeaveSettingController::class);
     Route::resource('requisitions', RequisitionController::class)->except(['store', 'show', 'destroy']);
-    Route::get('receipt/generate/', [\App\Http\Controllers\DeliveryController::class, 'generateDeliveryNote'])->name('receipt.generate');
+//    Route::get('receipt/generate/', [\App\Http\Controllers\DeliveryController::class, 'generateDeliveryNote'])->name('receipt.generate');
     Route::get('receipt/ministry/generate/', [\App\Http\Controllers\DeliveryController::class, 'generateReceipt'])->name('ministry-receipt.generate');
     Route::get('receipt/church/generate/', [\App\Http\Controllers\DeliveryController::class, 'generateChurchReceipt'])->name('church-receipt.generate');
+//    Route::post('receipt/generate/', [\App\Http\Controllers\DeliveryController::class, 'generateDeliveryNote'])->name('receipt.generate');
+    Route::post('receipt/report', [\App\Http\Controllers\PaymentController::class, 'generateReceipt'])->name('receipt.generate');
 
     Route::post('leave/summary', [\App\Http\Controllers\LeaveController::class, 'leaveSummary'])->name('leave.summary');
     Route::get('leave/summary', [\App\Http\Controllers\LeaveController::class, 'leaveSummary'])->name('leave.summary');

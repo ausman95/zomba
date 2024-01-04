@@ -4,17 +4,16 @@
     <div class="container-fluid ps-1 pt-4">
 
         <h4>
-            <i class="fa fa-list-ul"></i>Projects / Sites
+            <i class="fa fa-list-ul"></i>Departments
         </h4>
         <p>
-            Manage Project / Site information
+            Departments information
         </p>
         <nav>
             <ol class="breadcrumb bg-transparent">
                 <li class="breadcrumb-item"><a href="{{route('home')}}">Home</a></li>
                 @if(request()->user()->designation!='clerk')
                     <li class="breadcrumb-item"><a href="{{route('human-resources.index')}}">Human Resources</a></li>
-                    <li class="breadcrumb-item"><a href="{{route('departments.index')}}">Projects / Sites</a></li>
                 @endif
                 <li class="breadcrumb-item active" aria-current="page">{{$department->name}}</li>
             </ol>
@@ -35,7 +34,7 @@
                                                id="data-table">
                                             <caption
                                                 style=" caption-side: top; text-align: center">{{$department->name}}
-                                                PROJECT / SITE
+                                                DEPARTMENT
                                             </caption>
                                             <tbody>
                                             <tr>
@@ -76,72 +75,45 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-sm-12 mt-2 mb-2 col-md-3 col-lg-4">
-                            <div class="card h-100">
-                                <div class="card-body">
-                                    <header>Attendance & Reports</header>
-                                    <div class="my-2">
-                                        <small class="my-4">
-                                            View attendance report for members of this project / Site on a specific day
-                                        </small>
-                                    </div>
+{{--                        <div class="col-sm-12 mt-2 mb-2 col-md-3 col-lg-4">--}}
+{{--                            <div class="card h-100">--}}
+{{--                                <div class="card-body">--}}
+{{--                                    <header>Attendance & Reports</header>--}}
+{{--                                    <div class="my-2">--}}
+{{--                                        <small class="my-4">--}}
+{{--                                            View attendance report for members of this project / Site on a specific day--}}
+{{--                                        </small>--}}
+{{--                                    </div>--}}
 
-                                    <form action="{{route('attendance.report',$department->id)}}" method="GET">
-                                        <div class="form-group">
-                                            <input type="date" class="form-control  @error('date') is-invalid @enderror" name="date">
-                                            @error('date')
-                                            <span class="invalid-feedback">
-                                                {{$message}}
-                                            </span>
-                                            @enderror
-                                        </div>
-                                        <div>
-                                            <button class="btn btn-outline-secondary">
-                                                Go &rarr;
-                                            </button>
-                                        </div>
-                                    </form>
-                                </div>
-                                <div class="card-footer">
-                                    <a href="{{route('attendance.record',$department->id)}}"
-                                       class="btn btn-primary rounded-0">
-                                        Record Attendance
-                                    </a>
-                                    <a href="{{route('attendance.view',$department->id)}}"
-                                       class="btn btn-primary rounded-0">
-                                        View Attendance
-                                    </a>
-                                </div>
-                            </div>
+{{--                                    <form action="{{route('attendance.report',$department->id)}}" method="GET">--}}
+{{--                                        <div class="form-group">--}}
+{{--                                            <input type="date" class="form-control  @error('date') is-invalid @enderror" name="date">--}}
+{{--                                            @error('date')--}}
+{{--                                            <span class="invalid-feedback">--}}
+{{--                                                {{$message}}--}}
+{{--                                            </span>--}}
+{{--                                            @enderror--}}
+{{--                                        </div>--}}
+{{--                                        <div>--}}
+{{--                                            <button class="btn btn-outline-secondary">--}}
+{{--                                                Go &rarr;--}}
+{{--                                            </button>--}}
+{{--                                        </div>--}}
+{{--                                    </form>--}}
+{{--                                </div>--}}
+{{--                                <div class="card-footer">--}}
+{{--                                    <a href="{{route('attendance.record',$department->id)}}"--}}
+{{--                                       class="btn btn-primary rounded-0">--}}
+{{--                                        Record Attendance--}}
+{{--                                    </a>--}}
+{{--                                    <a href="{{route('attendance.view',$department->id)}}"--}}
+{{--                                       class="btn btn-primary rounded-0">--}}
+{{--                                        View Attendance--}}
+{{--                                    </a>--}}
+{{--                                </div>--}}
+{{--                            </div>--}}
 
-                        </div>
-                        <div class="col-sm-12 mt-2 mb-2 col-md-3 col-lg-4">
-                            <div class="card h-100">
-                                <div class="card-body">
-                                    <table class="table table1 table-bordered table-hover table-striped" id="data-table">
-                                        <caption style=" caption-side: top; text-align: center">{{$department->name}} SUPERVISOR NOTES</caption>
-                                        <thead>
-                                        <tr>
-                                            <th>NO</th>
-                                            <th>NOTE</th>
-                                            <th>DATE</th>
-                                        </tr>
-                                        </thead>
-                                        <tbody>
-                                        <?php  $c= 1;?>
-                                        @foreach($notes as $note)
-                                            <tr>
-                                                <td>{{$c++}}</td>
-                                                <td>{{ucwords($note->note) }}</td>
-                                                <td>{{ucwords($note->created_at) }}</td>
-                                            </tr>
-                                        @endforeach
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-
-                        </div>
+{{--                        </div>--}}
                     </div>
                 </div>
                 <div class="mt-5">
@@ -189,7 +161,7 @@
                                                         </td>
                                                         <td class="pt-1">
                                                             @if(request()->user()->designation==='administrator')
-                                                            <a href="{{route('members.show',$labourer->id)}}"
+                                                            <a href="{{route('labourers.show',$labourer->id)}}"
                                                                class="btn btn-md btn-primary rounded-0">
                                                                 <i class="fa fa-list-ol"></i>   Manage
                                                             </a>
@@ -209,7 +181,7 @@
                         <div class="col-sm-12 mb-2 col-md-12">
                             <div class="mt-5">
                                 <h5>
-                                    <i class="fa fa-microscope"></i>PROJECT / SITE Transactions
+                                    <i class="fa fa-microscope"></i>Department Transactions
                                 </h5>
                                 <div class="card">
                                     <div class="card-body">
@@ -263,47 +235,6 @@
                             </div>
                         </div>
                     @endif
-                    <div class="col-sm-12 mb-2 col-md-12">
-                        <div class="mt-5">
-                            <h5>
-                                <i class="fa fa-microscope"></i>PROJECT / SITE Material Budgets
-                            </h5>
-                            <div class="card">
-                                <div class="card-body">
-                                    @if($incomes->count() === 0)
-                                        <i class="fa fa-info-circle"></i>There are no Material Budgets!
-                                    @else
-                                        <div style="overflow-x:auto;">
-                                            <table class="table  table2 table-bordered table-striped" id="incomes-table">
-                                                <caption style=" caption-side: top; text-align: center">PROJECT / SITE MATERIAL BUDGETS</caption>
-                                                <thead>
-                                                <tr>
-                                                    <th>NO</th>
-                                                    <th>MATERIAL</th>
-                                                    <th>BUDGETED QUANTITY</th>
-                                                    <th>ACTUAL QUANTITY  </th>
-                                                    <th>VARIANCE</th>
-                                                </tr>
-                                                </thead>
-                                                <tbody>
-                                                <?php  $c = 1; $balance = 0;?>
-                                                @foreach($budgets as $budget)
-                                                    <tr>
-                                                        <td>{{$c++}}</td>
-                                                        <td>{{ucwords($budget->material->name) }}</td>
-                                                        <td>{{number_format($budget->quantity) }}</td>
-                                                        <td>{{number_format($budget->balance($budget->material->id,$budget->department->id)) }}</td>
-                                                        <td>{{number_format($budget->quantity-($budget->balance($budget->material->id,$budget->department->id))) }}</td>
-                                                    </tr>
-                                                @endforeach
-                                                </tbody>
-                                            </table>
-                                        </div>
-                                    @endif
-                                </div>
-                            </div>
-                        </div>
-                    </div>
                 </div>
             </div>
         </div>

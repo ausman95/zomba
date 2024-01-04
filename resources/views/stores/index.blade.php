@@ -42,7 +42,7 @@
                                         <tr>
                                             <th>NO</th>
                                             @if(request()->user()->designation!='clerk')
-                                            <th>DEPARTMENT / PROJECT</th>
+                                            <th>DEPARTMENT </th>
                                             @endif
                                             <th>MATERIAL</th>
                                             <th>QUANTITY BALANCE</th>

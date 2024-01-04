@@ -10,7 +10,7 @@ class Payment extends Model
 {
     use HasFactory;
     protected $fillable = [
-        'account_id', 'bank_id','name','amount','payment_method','reference','type'
+        'account_id', 'bank_id','name','amount','payment_method','reference','type','t_date'
     ];
     public function account(): BelongsTo
     {

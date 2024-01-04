@@ -100,7 +100,7 @@
                                                     <i class="fa fa-edit"></i>
                                                 </button>
                                                 <div class="d-none request">
-                                                    <form action="{{route('Ministries.store')}}" method="POST" autocomplete="off">
+                                                    <form action="{{route('ministries.store')}}" method="POST" autocomplete="off">
                                                         @csrf
                                                         <div class="form-group">
                                                             <label>Name</label>

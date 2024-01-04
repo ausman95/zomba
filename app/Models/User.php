@@ -24,9 +24,10 @@ class User extends Authenticatable
         'phone_number',
         'designation',
         'password',
-        'position',
         'level',
-        'department_id',
+        'home_id',
+        'church_id',
+        'member_id',
         'last_login_at',
         'last_login_ip_address',
     ];

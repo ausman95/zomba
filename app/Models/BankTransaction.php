@@ -10,10 +10,14 @@ class BankTransaction extends Model
 {
     use HasFactory;
     protected $fillable = [
-        'amount', 'account_name','bank_id','balance','type','method'
+        'amount','bank_id','balance','type','method','account_id','description'
     ];
     public function banks(): BelongsTo
     {
         return $this->belongsTo(Banks::class,'bank_id');
+    }
+    public function account(): BelongsTo
+    {
+        return $this->belongsTo(Accounts::class,'account_id');
     }
 }

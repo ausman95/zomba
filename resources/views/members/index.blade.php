@@ -22,9 +22,11 @@
             <hr>
         </div>
         <div class="mt-3">
+            @if(request()->user()->designation=='administrator')
             <a href="{{route('members.create')}}" class="btn btn-primary btn-md rounded-0">
                 <i class="fa fa-plus-circle"></i>New Member
             </a>
+            @endif
             <div class="mt-3">
                 <div class="row">
                     <div class="col-sm-12 mb-2 col-md-12 col-lg-12">
@@ -66,10 +68,12 @@
                                                     @endif
                                                 </td>
                                                 <td class="pt-1">
+{{--                                                    @if(request()->user()->member_id==$member->id)--}}
                                                     <a href="{{route('members.show',$member->id)}}"
                                                        class="btn btn-primary btn-md rounded-0">
                                                       <i class="fa fa-list-ol"></i>  Manage
                                                     </a>
+{{--                                                    @endif--}}
                                                 </td>
                                             </tr>
                                         @endforeach

@@ -80,31 +80,15 @@
                         </span>
                             @enderror
                         </div>
-                        <div class="form-group">
-                            <label>Company Position</label>
-                            <input type="text" name="position"
-                                   class="form-control @error('position') is-invalid @enderror"
-                                   value="{{old('position') ?? $user->position}}"
-                                   placeholder="Enter Position"
-                            >
-                            @error('position')
-                            <span class="invalid-feedback">
-                               {{$message}}
-                        </span>
-                            @enderror
-                        </div>
                         @if(request()->user()->designation==='administrator')
                         <div class="form-group">
                             <label> Role </label>
                             <select name="designation"
-                                    class="select-relation form-select @error('designation') is-invalid @enderror" style="width: 100%">
+                                    class="select-relation designation form-select @error('designation') is-invalid @enderror" style="width: 100%">
                                 <option value="{{old('designation') ?? $user->designation}}">{{ucwords($user->designation)}}</option>
-                                <option value="accountant">Accountant</option>
                                 <option value="administrator">Administrator</option>
-                                <option value="project">Project</option>
-                                <option value="stores">Stores</option>
-                                <option value="hr">Human Resource</option>
-                                <option value="other">Other</option>
+                                <option value="member">Member</option>
+                                <option value="church">Home Church</option>
                             </select>
                             @error('designation')
                             <span class="invalid-feedback">
@@ -112,6 +96,42 @@
                         </span>
                             @enderror
                         </div>
+                            <div class="members  d-none">
+                                <div class="form-group">
+                                    <label>Member</label>
+                                    <select name="member_id"
+                                            class="form-select select-relation @error('member_id') is-invalid @enderror" style="width: 100%">
+                                        <option value="">-- Select ---</option>
+                                        @foreach($members as $member)
+                                            <option value="{{$member->id}}"
+                                                {{old('member_id')===$member->id ? 'selected' : ''}}>{{$member->name}}</option>
+                                        @endforeach
+                                    </select>
+                                    @error('member_id')
+                                    <span class="invalid-feedback">
+                                   {{$message}}
+                            </span>
+                                    @enderror
+                                </div>
+                            </div>
+                            <div class="churches  d-none">
+                                <div class="form-group">
+                                    <label>Home Church</label>
+                                    <select name="church_id"
+                                            class="form-select select-relation @error('church_id') is-invalid @enderror" style="width: 100%">
+                                        <option value="">-- Select ---</option>
+                                        @foreach($churches as $church)
+                                            <option value="{{$church->id}}"
+                                                {{old('church_id')===$church->id ? 'selected' : ''}}>{{$church->name}}</option>
+                                        @endforeach
+                                    </select>
+                                    @error('church_id')
+                                    <span class="invalid-feedback">
+                                   {{$message}}
+                            </span>
+                                    @enderror
+                                </div>
+                            </div>
                             @if(request()->user()->level>2)
                             <div class="form-group">
                                 <label> Level </label>
@@ -143,3 +163,24 @@
         </div>
     </div>
 @stop
+@section('scripts')
+    <script>
+        $(document).ready(function () {
+            $('.designation').on('change', function () {
+                let designation = $(this).val();
+                if(designation==='member'){
+                    $('.members').addClass('show').removeClass('d-none');
+                    $('.churches').addClass('d-none').removeClass('show');
+                }
+                else if(designation==='church'){
+                    $('.members').addClass('d-none').removeClass('show');
+                    $('.churches').addClass('show').removeClass('d-none');
+                }
+                else{
+                    $('.churches').addClass('d-none').removeClass('show');
+                    $('.members').addClass('d-none').removeClass('show');
+                }
+            });
+        });
+    </script>
+@endsection

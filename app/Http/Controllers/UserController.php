@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\Users\StoreRequest;
 use App\Http\Requests\Users\UpdateRequest;
+use App\Models\Church;
 use App\Models\Department;
+use App\Models\Member;
 use Spatie\Activitylog\Models\Activity;
 use App\Models\User;
 use App\Models\LogActivity;
@@ -50,7 +52,8 @@ class UserController extends Controller
     {
         return view('users.create')->with([
             'cpage' => 'users',
-            'departments'=>Department::all()
+            'churches'=>Church::all(),
+            'members'=>Member::all()
         ]);
     }
 
@@ -77,12 +80,18 @@ class UserController extends Controller
         }else{
             $department_id = $request->post('department_id');
         }
+        if(empty($request->post('member_id'))){
+            $member_id= 0;
+        }else{
+           $member_id = $request->post('member_id');
+        }
         $data = [
             'password' => $password,
             'first_name' =>$request->post('first_name'),
             'last_name' => $request->post('last_name'),
             'designation' => $request->post('designation'),
             'position' => $request->post('position'),
+            'member_id' => $member_id,
             'level' => $level,
             'department_id' =>$department_id,
             'phone_number' => $request->post('phone_number'),
@@ -99,7 +108,9 @@ class UserController extends Controller
 
         return view('users.edit')->with([
             'user' => $user,
-            'cpage' => 'users'
+            'cpage' => 'users',
+            'churches'=>Church::all(),
+            'members'=>Member::all()
         ]);
     }
 

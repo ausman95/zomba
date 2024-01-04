@@ -13,7 +13,7 @@
             <ol class="breadcrumb bg-transparent">
                 <li class="breadcrumb-item"><a href="{{route('home')}}">Home</a></li>
                 <li class="breadcrumb-item"><a href="{{route('finances.index')}}">Finances</a></li>
-                <li class="breadcrumb-item"><a href="{{route('Ministries.index')}}">Accounts</a></li>
+                <li class="breadcrumb-item"><a href="{{route('ministries.index')}}">Accounts</a></li>
                 <li class="breadcrumb-item active" aria-current="page">Create Account</li>
             </ol>
         </nav>
@@ -23,7 +23,7 @@
         <div class="mt-2">
             <div class="row">
                 <div class="col-sm-12 col-md-8 col-lg-4">
-                    <form action="{{route('Ministries.store')}}" method="POST" autocomplete="off">
+                    <form action="{{route('ministries.store')}}" method="POST" autocomplete="off">
                         @csrf
                         <div class="form-group">
                             <label>Name</label>

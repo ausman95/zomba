@@ -29,6 +29,19 @@
                         @csrf
                         <input type="hidden" name="_method" value="PATCH">
                         <div class="form-group">
+                            <label>Bank Name</label>
+                            <input type="text" name="bank_name"
+                                   class="form-control @error('bank_name')
+                                    is-invalid @enderror"
+                                   value="{{old('bank_name') ?? $bank->bank_name }}"
+                                   placeholder="Bank Name" >
+                            @error('bank_name')
+                            <span class="invalid-feedback">
+                               {{$message}}
+                        </span>
+                            @enderror
+                        </div>
+                        <div class="form-group">
                             <label>Account Name</label>
                             <input type="text" name="account_name"
                                    class="form-control @error('account_name') is-invalid @enderror"

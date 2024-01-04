@@ -25,8 +25,9 @@ class StoreRequest extends FormRequest
     {
         return [
             'amount' => "required|string",
-            'account_id' => "required|numeric|exists:Ministries,id",
-            'financial_year_id' => "required|numeric|exists:financial_years,id",
+            'start_date' => "required|string",
+            'end_date' => "required|string",
+            'account_id' => "required|numeric|exists:accounts,id",
         ];
     }
 }

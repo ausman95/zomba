@@ -4,18 +4,17 @@
 @section('content')
     <div class="container-fluid ps-1 pt-4">
         <h4>
-            <i class="fa fa-list-ul"></i>Labours
+            <i class="fa fa-list-ul"></i>Positions
         </h4>
         <p>
-            Labour
+            Positions
         </p>
         <nav aria-label="breadcrumb">
             <ol class="breadcrumb bg-transparent">
                 <li class="breadcrumb-item"><a href="{{route('home')}}">Home</a></li>
                 <li class="breadcrumb-item"><a href="{{route('human-resources.index')}}">Human Resources</a></li>
-                <li class="breadcrumb-item"><a href="{{route('labourers.index')}}">Labourers</a></li>
-                <li class="breadcrumb-item"><a href="{{route('labours.index')}}">Labours</a></li>
-                <li class="breadcrumb-item active" aria-current="page">Create Labour</li>
+                <li class="breadcrumb-item"><a href="{{route('labours.index')}}">Positions</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Create Position</li>
             </ol>
         </nav>
         <div class="mb-5">
@@ -31,7 +30,7 @@
                             <input type="text" name="name"
                                    class="form-control @error('name') is-invalid @enderror"
                                    value="{{old('name')}}"
-                                   placeholder="Labour's name i.e. Plumber" >
+                                   placeholder="Position's name i.e. Accountant" >
                             @error('name')
                             <span class="invalid-feedback">
                                {{$message}}

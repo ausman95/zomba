@@ -13,8 +13,8 @@
             <ol class="breadcrumb bg-transparent">
                 <li class="breadcrumb-item"><a href="{{route('home')}}">Home</a></li>
                 @if(request()->user()->designation!='clerk')
-                <li class="breadcrumb-item"><a href="{{route('human-resources.index')}}">Human Resources</a></li>
-                <li class="breadcrumb-item"><a href="{{route('departments.index')}}">Departments</a></li>
+                    <li class="breadcrumb-item"><a href="{{route('human-resources.index')}}">Human Resources</a></li>
+                    <li class="breadcrumb-item"><a href="{{route('departments.index')}}">Departments</a></li>
                 @endif
                 <li class="breadcrumb-item"><a
                         href="{{route('departments.show',$department->id)}}">{{$department->name}}</a></li>
@@ -35,9 +35,9 @@
             </div>
         @endif
         <div class="row">
-            <form action="{{route('attendance.save',$department->id)}}" method="POST">
-                @csrf
-                <div class="col-sm-12 col-md-8 col-lg-6">
+            <div class="col-sm-12 col-md-8 col-lg-6">
+                <form action="{{route('attendance.save',$department->id)}}" method="POST">
+                    @csrf
                     <div class="form-group">
                         <label for="date">Date</label>
                         <input type="date" name="date" class="form-control @error('date') is-invalid @enderror">
@@ -48,18 +48,16 @@
                         @enderror
                     </div>
                     <hr>
-                </div>
-{{--                <input type="hidden" name="date" class="form-control @error('date') is-invalid @enderror" value="{{date('Y-m-d')}}">--}}
+                    {{--                <input type="hidden" name="date" class="form-control @error('date') is-invalid @enderror" value="{{date('Y-m-d')}}">--}}
 
-            @foreach($employees as $employee)
-                    <div class="col-sm-12 col-md-8 col-lg-6">
+                    @foreach($employees as $employee)
                         <div class="form-group">
                             <div class="row">
-                                <div class="col-6">
+                                <div class="col-7">
                                     <label>{{$employee->name}}</label>
-                                   ( <label>{{$employee->labour->name}}</label>)
+                                    ( <label>{{$employee->labour->name}}</label>)
                                 </div>
-                                <div class="col-6">
+                                <div class="col-5">
                                     <select name="emp-{{$employee->id}}" class="form-select">
                                         <option value="0" {{old('emp-'.$employee->id) == '0' ? 'selected' : ''}}>0 - Absent </option>
                                         <option value="1" {{old('emp-'.$employee->id) == '1' ? 'selected' : ''}}>1- Present</option>
@@ -68,13 +66,13 @@
                                 </div>
                             </div>
                         </div>
+                    @endforeach
+                    <div class="col-sm-12 col-md-8 col-lg-6">
+                        <hr>
+                        <button class="btn btn-primary rounded-0">Save Attendance</button>
                     </div>
-                @endforeach
-                <div class="col-sm-12 col-md-8 col-lg-6">
-                    <hr>
-                    <button class="btn btn-primary rounded-0">Save Attendance</button>
-                </div>
-            </form>
+                </form>
+            </div>
         </div>
 
     </div>

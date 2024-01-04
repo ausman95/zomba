@@ -39,7 +39,8 @@
                                             <caption style=" caption-side: top; text-align: center">BANKS</caption>
                                             <thead>
                                         <tr>
-                                            <th>No</th>
+                                            <th>NO</th>
+                                            <th>BANK NAME</th>
                                             <th>ACCOUNT NAME</th>
                                             <th>BALANCE (MK)</th>
                                             <th>ACCOUNT NUMBER</th>
@@ -53,6 +54,7 @@
                                         @foreach($banks as $bank)
                                             <tr>
                                                 <td>{{$c++}}</td>
+                                                <td>{{ucwords($bank->bank_name) }}</td>
                                                 <td>{{ucwords($bank->account_name) }}</td>
                                                 <th>
                                                     @if($bank->getBalance()<0)

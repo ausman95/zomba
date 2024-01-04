@@ -63,10 +63,7 @@ class LabourerController extends Controller
             'project_id'=>$data['project_id']
         ];
 
-        if(!Allocation::where($check_data)->first()){
-            // labourer is already part of this project
-            return back()->with(['error-notification'=>"Subcontractor is not part or  assigned to the selected project"]);
-        }
+
 
 
         $account = Accounts::where(['id'=>$request->post('account_id')])->first();
@@ -269,12 +266,10 @@ class LabourerController extends Controller
     public function show(Labourer $labourer)
     {
         $payments = $labourer->payments;
-        $allocations = $labourer->allocations;
 
         return view('labourers.show')->with([
             'cpage'=>"labourers",
             'labourer'=>$labourer,
-            'allocations' => $allocations,
             'payments'=>$payments
 
         ]);

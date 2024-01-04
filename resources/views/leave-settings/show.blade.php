@@ -56,7 +56,7 @@
                                         </div>
 {{--                                        @if(request()->user()->designation==='administrator')--}}
 {{--                                            <div class="">--}}
-{{--                                                <form action="{{route('Ministries.destroy',$account->id)}}" method="POST" id="delete-form">--}}
+{{--                                                <form action="{{route('ministries.destroy',$account->id)}}" method="POST" id="delete-form">--}}
 {{--                                                    @csrf--}}
 {{--                                                    <input type="hidden" name="_method" value="DELETE">--}}
 {{--                                                </form>--}}

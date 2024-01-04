@@ -15,7 +15,7 @@ class Supplier extends Model
     ];
     public function payments()
     {
-        return  $this->hasMany(SupplierPayments::class,'supplier_id');
+        return  $this->hasMany(SupplierPayments::class,'supplier_id')->orderByDesc('id');
     }
 
     public function getAmountBalance()

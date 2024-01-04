@@ -46,6 +46,7 @@ class AccountController extends Controller
      */
     public function store(StoreRequest $request)
     {
+
         $data = $request->post();
 
         Accounts::create($data);

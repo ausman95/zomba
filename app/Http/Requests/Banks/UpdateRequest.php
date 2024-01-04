@@ -25,8 +25,9 @@ class UpdateRequest extends FormRequest
     public function rules()
     {
         return [
-            'account_number' => ["nullable", "string", Rule::unique('banks', 'account_number')->ignore($this->route('bank'))],
-            'account_name' => ["nullable", "string", Rule::unique('banks', 'account_name')->ignore($this->route('bank'))],
+            'bank_name' => "required|string",
+            'account_name' => "required|string",
+            'account_number' => ["nullable", "string", Rule::unique('banks', 'account_name')->ignore($this->route('bank'))],
             'service_centre' => "required|string",
             'account_type'=>"required|string"
         ];

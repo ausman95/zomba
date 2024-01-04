@@ -23,13 +23,13 @@ class Accounts extends Model
     public static  function getAccountBalanceDebits($start_date,$end_date)
     {
         $credits = DB::table('incomes')
-            ->join('Ministries', 'Ministries.id','=','incomes.account_id')
-            ->select('Ministries.*',DB::raw('SUM(incomes.amount) as amount'))
-            ->where(['Ministries.type'=>1])
+            ->join('ministries', 'ministries.id','=','incomes.account_id')
+            ->select('ministries.*',DB::raw('SUM(incomes.amount) as amount'))
+            ->where(['ministries.type'=>1])
             ->where('incomes.transaction_type','!=',2)
             ->where('incomes.bank_id','!=',NULL)
             ->whereBetween('incomes.created_at',[$start_date,$end_date])
-            ->groupBy('Ministries.id')
+            ->groupBy('ministries.id')
             ->get();
         return $credits;
     }
@@ -37,13 +37,13 @@ class Accounts extends Model
     public static  function getAccountBalanceAdmin($start_date,$end_date)
     {
         $credits = DB::table('incomes')
-            ->join('Ministries', 'Ministries.id','=','incomes.account_id')
-            ->select('Ministries.*',DB::raw('SUM(incomes.amount) as amount'))
-            ->where(['Ministries.type'=>1])
+            ->join('ministries', 'ministries.id','=','incomes.account_id')
+            ->select('ministries.*',DB::raw('SUM(incomes.amount) as amount'))
+            ->where(['ministries.type'=>1])
             ->where('incomes.transaction_type','=',2)
             ->where('incomes.project_id','!=',0)
             ->whereBetween('incomes.created_at',[$start_date,$end_date])
-            ->groupBy('Ministries.id')
+            ->groupBy('ministries.id')
             ->get();
         return $credits;
     }

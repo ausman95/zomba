@@ -23,11 +23,9 @@
             <hr>
         </div>
         <div class="mt-3">
-            <a href="{{route('suppliers.index')}}" class="btn btn-primary btn-md rounded-0">
-                <i class="fa fa-suitcase-rolling"></i> Suppliers
-            </a>
-            <a href="{{route('financial-years.index')}}" class="btn btn-primary btn-md rounded-0">
-                <i class="fa fa-calendar-check"></i> Financial Years
+
+            <a href="{{route('transfers.index')}}" class="btn btn-primary btn-md rounded-0">
+                <i class="fa fa-folder-open"></i> Bank Transfers
             </a>
             <a href="{{route('budgets.index')}}" class="btn btn-primary btn-md rounded-0">
                 <i class="fa fa-file-archive"></i> Budgets
@@ -35,12 +33,7 @@
             <a href="{{route('banks.index')}}" class="btn btn-primary btn-md rounded-0">
                 <i class="fa fa-building"></i> Banks
             </a>
-            @if(request()->user()->designation==='administrator')
-            <a href="{{route('transfers.index')}}" class="btn btn-primary btn-md rounded-0">
-                <i class="fa fa-exchange-alt"></i> Bank Transfers
-            </a>
-            @endif
-            <a href="{{route('Ministries.index')}}" class="btn btn-primary btn-md rounded-0">
+            <a href="{{route('accounts.index')}}" class="btn btn-primary btn-md rounded-0">
                 <i class="fa fa-list-ol"></i> Charts of Accounts
             </a>
             <a href="{{route('purchases.index')}}" class="btn btn-primary btn-md rounded-0">

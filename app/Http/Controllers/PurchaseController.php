@@ -34,7 +34,7 @@ class PurchaseController extends Controller
             ->log("Accessed Purchases")->causer(request()->user());
         $purchases = Purchase::orderBy('id','desc')->get();;
         return view('purchases.index')->with([
-            'cpage' => "purchases",
+            'cpage' => "finances",
             'purchases'=>$purchases,
         ]);
     }
@@ -50,9 +50,9 @@ class PurchaseController extends Controller
         $banks = Banks::all();
         $material = Material::all();
         $projects = Department::all();
-        $accounts = Accounts::where(['type'=>1])->orderBy('name','DESC')->get();
+        $accounts = Accounts::where(['type'=>2])->orderBy('name','DESC')->get();
         return view('purchases.create')->with([
-            'cpage'=>"purchases",
+            'cpage'=>"finances",
             'suppliers'=>$suppliers,
             'banks'=>$banks,
             'projects'=>$projects,
@@ -83,33 +83,18 @@ class PurchaseController extends Controller
                 'supplier_id' => "required",
             ]);
         }
-        $data = $request->post();
-//        $check_data = [
-//            'material_id'=>$data['material_id'],
-//            'supplier_id'=>$data['supplier_id']
-//        ];
 
-
-//        if(!Selection::where($check_data)->first()){
-//            // labourer is already part of this project
-//            return back()->with(['error-notification'=>"The material you trying to purchase is not allocated to the supplier specified!"]);
-//        }
-
-        $price = Price::where(['material_id'=>$request->post('material_id')])->first()->price;
-        if(!$price){
-            return back()->with(['error-notification'=>"The Material you are trying to purchase does not have a price tag"]);
-        }
-        $amount = $price*$request->post('quantity');
+        $amount = $request->post('amount');
 
         // validation
         $account = Accounts::where(['id'=>$request->post('account_id')])->first();
-
         $mat = Material::where(['id'=>$request->post('material_id')])->first();
         $mat_name =$mat->name;
         $account_name =$account->name;
         $account_name = @$mat_name.' - '.$account_name;
         $account_type = $account->type;
-        $bal = BankTransaction::where(['bank_id'=>$request->post('bank_id')])->orderBy('id','desc')->first();
+        $bal = BankTransaction::where(['bank_id'=>$request->post('bank_id')])
+            ->orderBy('id','desc')->first();
         @$balance = $bal->balance;
         if($request->post('payment_type')!=2){
             if($amount>$balance){
@@ -131,12 +116,10 @@ class PurchaseController extends Controller
             $supplier_balance = $balance;
         }
 
-
-
         $tuple = [
             'expenses_id'=>1111,
             'supplier_id'=>$request->post('supplier_id'),
-            'amount'=>$amount,
+            'amount'=>$request->post('amount'),
             'balance'=>$supplier_balance,
             'method'=>$request->post('payment_type'),
             'transaction_type'=>1,
@@ -154,7 +137,7 @@ class PurchaseController extends Controller
         }
         $payment = [
             'project_id'=>$request->post('project_id'),
-            'amount'=>$amount,
+            'amount'=>$request->post('amount'),
             'balance'=>$balances-$amount,
             'payment_name'=>"Purchase of Materials",
             'payment_type'=>'2'
@@ -162,7 +145,7 @@ class PurchaseController extends Controller
         $purchase_data = [
             'material_id'=>$request->post('material_id'),
             'supplier_id'=>$request->post('supplier_id'),
-            'amount'=>$amount,
+            'amount'=>$request->post('amount'),
             'account_id'=>$request->post('account_id'),
             'reference'=>$request->post('reference'),
             'date'=>$request->post('date'),
@@ -176,7 +159,7 @@ class PurchaseController extends Controller
         $projects = [
             'account_id'=>$request->post('account_id'),
             'project_id'=>$request->post('project_id'),
-            'amount'=>$amount,
+            'amount'=>$request->post('amount'),
             'bank_id'=>$request->post('bank_id'),
             'cheque_number'=>0,
             'description'=>"Purchase of Materials",
@@ -186,7 +169,7 @@ class PurchaseController extends Controller
         $stock = [
             'quantity'=>$request->post('quantity'),
             'department_id'=>$request->post('project_id'),
-            'amount'=>$amount,
+            'amount'=>$request->post('amount'),
             'flow'=>1,
             'status' => 'PENDING',
             'balance'=>$material_balance+$request->post('quantity'),
@@ -196,9 +179,10 @@ class PurchaseController extends Controller
         ProjectPayment::create($payment);
         Incomes::create($projects);
         $transactions = [
-            'account_name'=>$account_name,
-            'type'=>$account_type,
-            'amount'=>$amount,
+            'description'=>$account_name,
+            'account_id'=>$request->post('account_id'),
+            'type'=>2,
+            'amount'=>$request->post('amount'),
             'bank_id'=>$request->post('bank_id'),
             'method'=>$request->post('payment_type'),
             'balance'=>$new_balance

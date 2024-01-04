@@ -4,10 +4,10 @@
     <div class="container-fluid ps-1 pt-4">
 
         <h4>
-            <i class="fa fa-users"></i>Labourer
+            <i class="fa fa-users"></i>Employees
         </h4>
         <p>
-            Manage labourer information
+            Manage Employees information
         </p>
         <nav>
             <ol class="breadcrumb bg-transparent">
@@ -29,12 +29,6 @@
                         </div>
                     </div>
                     <div class="mt-3">
-                        <div>
-                            <a href="{{route('labourer.allocate')."?id=$labourer->id"}}"
-                               class="btn btn-primary btn-md rounded-0" style="margin: 5px">
-                                <i class="fa fa-list-ol"></i>Allocate
-                            </a>
-                        </div>
                         <div>
                             <a href="{{route('labourers.edit',$labourer->id)}}"
                                class="btn btn-primary btn-md rounded-0" style="margin: 5px">
@@ -112,66 +106,6 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-sm-12 col-md-7 col-lg-6">
-                            <h5>
-                                <i class="fa fa-microscope"></i>Projects Allocated
-                            </h5>
-                            <div class="card">
-                                <div class="card-body">
-                                    <div class="table-responsive">
-                                        @if($allocations->count() === 0)
-                                            <i class="fa fa-info-circle"></i>There are no Project allocations!
-                                        @else
-                                            <div style="overflow-x:auto;">
-                                                <table class="table table1  table-bordered table-hover table-striped" id="project-table">
-                                                    <thead>
-                                                    <tr>
-                                                        <th>NO</th>
-                                                        <th>PROJECT NAME</th>
-                                                        <th>
-                                                            {{--                                                        @if($labourer->type==2)--}}
-                                                            {{--                                                            Amount Agreed (MK)/ Project--}}
-                                                            {{--                                                        @else--}}
-                                                            {{--                                                           Expectd Amount Agreed (MK)/ Month--}}
-                                                            {{--                                                        @endif--}}
-                                                            AMOUNT (MK)
-                                                        </th>
-                                                        <th>Total</th>
-                                                        <th></th>
-                                                    </tr>
-                                                    </thead>
-                                                    <tbody>
-                                                    <?php $sum = 0; $c = 1;?>
-                                                    @foreach($allocations as $allocation)
-                                                        <tr>
-                                                            <td>{{$c++}}</td>
-                                                            <td>{{ucwords($allocation->project->name) }}</td>
-                                                            @if($labourer->type==2)
-                                                                <td>{{number_format($allocation->amount)}}</td>
-                                                                <td>{{number_format($sum = $sum+$allocation->amount)}}</td>
-                                                            @else
-                                                                <td>{{number_format($allocation->getProjectMonth($allocation->project_id)*$allocation->amount)}}</td>
-                                                                <td>{{number_format($sum = $sum+$allocation->getProjectMonth($allocation->project_id)*$allocation->amount)}}</td>
-                                                            @endif
-                                                            <td class="pt-1">
-                                                                <form action="{{route('allocations.destroy',$allocation->id)}}" method="POST" id="delete-forms">
-                                                                    @csrf
-                                                                    <input type="hidden" name="_method" value="DELETE">
-                                                                </form>
-                                                                <button class="btn  btn-danger btn-md rounded-0" id="delete-bt">
-                                                                    <i class="fa fa-trash"></i>Remove
-                                                                </button>
-                                                            </td>
-                                                        </tr>
-                                                    @endforeach
-                                                    </tbody>
-                                                </table>
-                                            </div>
-                                        @endif
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
                     </div>
                 </div>
             </div>
@@ -185,13 +119,10 @@
                             <i class="fa fa-info-circle"></i>There are no  Transactions!
                         @else
                             <div style="overflow-x:auto;">
-<<<<<<< HEAD
                             <table class="table  table2 table-bordered table-hover table-striped" id="data-table">
                                 <caption style=" caption-side: top; text-align: center">TRANSACTIONS</caption>
-=======
                             <table class="table table-primary table2 table-bordered table-hover table-striped" id="data-table">
                                 <caption style=" caption-side: top; text-align: center">{{$labourer->name}} TRANSACTIONS</caption>
->>>>>>> 2cf49c8b454683e000a57590879039877e9292c6
                                 <thead>
                                 <tr>
                                     <th>NO</th>

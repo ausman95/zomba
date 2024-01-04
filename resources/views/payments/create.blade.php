@@ -12,6 +12,7 @@
         <nav aria-label="breadcrumb">
             <ol class="breadcrumb bg-transparent">
                 <li class="breadcrumb-item"><a href="{{route('home')}}">Home</a></li>
+                <li class="breadcrumb-item"><a href="{{route('finances.index')}}">Finances</a></li>
                 <li class="breadcrumb-item"><a href="{{route('payments.index')}}">Payments</a></li>
                 <li class="breadcrumb-item active" aria-current="page">Create Payments</li>
             </ol>
@@ -232,6 +233,16 @@
                             @enderror
                         </div>
                         <div class="form-group">
+                            <label>Date</label>
+                            <input type="date" name="t_date"
+                                   class="form-control @error('t_date') is-invalid @enderror">
+                            @error('t_date')
+                            <span class="invalid-feedback">
+                               {{$message}}
+                        </span>
+                            @enderror
+                        </div>
+                        <div class="form-group">
                             <label>Payment Description</label>
                             <select name="type" class="form-select select-relation type @error('type') required is-invalid @enderror" style="width: 100%">{{old('type')}} >
                                 <option value="">-- Select ---</option>
@@ -243,8 +254,6 @@
                                 <option value="3">Suppliers</option>
                                 <option value="4">Employees</option>
                                 <option value="8">Others</option>
-
-
 
                             </select>
                             @error('type')
@@ -388,6 +397,13 @@
     </div>
 @stop
 @section('scripts')
+    @if(@$_GET['id']=='success')
+            <script>
+                $(document).ready(function () {
+                    window.open('../libs/receipt.pdf', "_blank", "scrollbars=yes,width=700,height=600,top=30");
+                });
+            </script>
+    @endif
     <script>
     $(document).ready(function () {
         $('.type').on('change', function () {

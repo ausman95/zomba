@@ -41,7 +41,8 @@
                                         <tr>
                                             <th>NO</th>
                                             <th>ACCOUNT NAME</th>
-                                            <th>FINANCIAL YEAR</th>
+                                            <th>START DATE</th>
+                                            <th>END DATE</th>
                                             <th>BUDGETED AMOUNT (MK)</th>
                                             <th>ACTUAL AMOUNT (MK)</th>
                                             <th>VARIANCE (MK)</th>
@@ -54,14 +55,15 @@
                                             <tr>
                                                 <td>{{$c++}}</td>
                                                 <td>{{ucwords($budget->account->name) }}</td>
-                                                <td>{{ucwords($budget->financial->name) }}</td>
+                                                <td>{{date('d F Y', strtotime($budget->start_date)) }}</td>
+                                                <td>{{date('d F Y', strtotime($budget->end_date)) }}</td>
                                                 <td>{{number_format($budget->amount) }}</td>
-                                                @foreach( $budget->getAllocated($budget->account_id,
-                                                        $budget->financial->end_date,
-                                                        $budget->financial->start_date) as $amount)
-                                                <td>{{number_format($amount->amount)}}</td>
-                                                    <td>{{number_format($budget->amount-$amount->amount) }}</td>
-                                                @endforeach
+                                                <td>{{number_format($budget->getAllocated($budget->account_id,
+                                                        $budget->start_date,
+                                                        $budget->end_date)) }}</td>
+                                                <td>{{number_format($budget->getAllocated($budget->account_id,
+                                                        $budget->start_date,
+                                                        $budget->end_date)-$budget->amount) }}</td>
                                                 <td class="pt-1">
                                                     <a href="{{route('budgets.show',$budget->id)}}"
                                                        class="btn btn-primary btn-md rounded-0">

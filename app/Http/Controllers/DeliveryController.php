@@ -3,8 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Models\Accounts;
+use App\Models\Church;
 use App\Models\ChurchPayment;
+use App\Models\Member;
 use App\Models\MemberPayment;
+use App\Models\Ministry;
 use App\Models\MinistryPayment;
 use App\Models\order;
 use App\Models\Payment;
@@ -16,14 +19,10 @@ include ('libs/numberToWords.php');
 class DeliveryController extends \FPDF
 {
     var $paidFor,
-        $paymentMode,
-        $chequeNo,
         $sumOf,
         $kwachaFigure,
-        $accountant,
-        $receivedFrom,
-        $date,
-        $number;
+        $monthOf,
+        $receivedFrom;
 
 
     function SetDash($black=null, $white=null)
@@ -42,83 +41,62 @@ class DeliveryController extends \FPDF
 
     }
 
-    function content()
-    {
-        $this->Image('libs/logo.png', '1', '0', '15');
-        $this->SetFont('times', 'B', 12);
-        $this->Cell(55, 5, 'RECEIPT', '0', '', 'R');
-        $this->SetFont('times', 'B', 10);
-        $this->Cell(30, 5, $this->number, '', '', 'C');
-
-        $this->Ln(10);
-        $this->Cell(20, 2, '', '', 'L');
-        $this->SetFont('times', 'B', 10);
-        $this->Cell(55, 5, 'DEVINE OASIS ASSEMBLY', '', '', 'C');
-        $this->Ln();
-        $this->Cell(20, 2, '', '', 'L');
-        $this->Cell(55, 5, 'MALAWI ASSEMBLIES OF GOD', '', '', 'C');
+    function content(){
+        $this->Image('logo.png','3','5','20');
+        $this->SetFont('Courier','B',12);
+        $this->Cell(55,5,'RECEIPT','0','','R');
+        $this->SetFont('Courier','B',7);
+        $this->Cell(30,5,'NO '.$this->SD,'','','C');
 
         $this->Ln();
-        $this->SetFont('times', '', 9);
-        $this->Cell(20, 8, '', '', 'L');
-        $this->Cell(55, 5, 'P.O.BOX 208', '', '', 'C');
-        $this->Ln();
-        $this->SetFont('times', '', 10);
-        $this->Cell(20, 8, '', '', 'L');
-        $this->Cell(55, 5, 'ZOMBA', '', '', 'C');
-
-        $this->Ln(6);
-        $this->Cell(50, 10, '', '', 'L');
-        $this->Cell(30, 10, 'Date: ' . $this->date, '', 'R');
-        $this->Ln(12);
-
-        $this->SetFont('times', 'B', 10);
-        $this->MultiCell(88, 5, 'Received from ' . $this->receivedFrom, '', 'L');
-        $this->Ln(5);
-
-        $this->SetFont('times', 'B', 10);
-        $this->MultiCell(88, 5, 'The Sum Of : ' . $this->sumOf, '', 'L');
-        $this->Ln(5);
-
-        $this->SetFont('times', 'B', 10);
-        $this->Cell(4, 5, 'K', '', 'L');
-        $this->Cell(22, 5, number_format($this->kwachaFigure, 2), '', 'L');
-
-        if ($this->chequeNo){
-            $this->SetFont('times', 'B', 10);
-            $this->Cell(6, 5, '');
-            $this->Cell(19, 5, 'Cheque No');
-            $this->Cell(27, 5, $this->chequeNo, '1');
-        }
+        $this->Cell(20,8,'','','L');
+        $this->SetFont('Times','B',8);
+        $this->Cell(85,5,'MALAWI ASSEMBLIES OF GOD','','','C');
         $this->Ln(10);
 
-        $this->SetFont('times','B',8);
-        $this->Cell(12,5,$this->paymentMode,'1','L');
-        $this->Cell(20,5,'','','L');
-        $this->Cell(30,5,'Accountant/Treasure','','L');
-        $this->SetFont('arial','B',10);
-        $this->Cell(28,5,'','1','L');
+        $this->SetFont('Times','B',9);
+        $this->Cell(50,10,'','','L');
+        $this->Cell(30,2,'Date: '.@date('D d, M Y'),'','R');
         $this->Ln(10);
 
-        $this->SetFont('times','B',10);
-        $this->MultiCell(88,5,'In Payment of '.$this->paidFor,'','L');
+        $this->SetFont('Times','B',9);
+        $this->MultiCell(88,1,'Received from '.$this->receivedFrom,'','L');
         $this->Ln(5);
 
+        $this->SetFont('Times','B',9);
+        $this->MultiCell(88,5,'The Sum Of : '.$this->sumOf,'','L');
+        $this->Ln(5);
 
+        $this->SetFont('Times','B',9);
+        $this->MultiCell(88,5,'Being Paid for '.$this->paidFor.' for the month of '.$this->monthOf,'','L');
+        $this->Ln(5);
+
+        $this->SetFont('Times','B',9);
+        $this->Cell(22,7,'K '.number_format($this->kwachaFigure,2),'','L');
+        $this->SetFont('Times','B',9);
+        $this->Cell(1,5,'Thank You','','L');
+        $this->Ln(5);
+
+        $this->SetDash(1, 1);
+        $this->Line(5, 28, 95, 28);
+        $this->Line(5, 70, 95, 70);
+        $this->Line(5, 100, 95, 100);
     }
 
     function footer_note(){
 
-        $this->Ln();
-        $this->SetFont('times', 'B', 8);
-        $this->MultiCell(0, 4, '"Give and it shall be given to you" (Luke 6:38a)', 0, 'C' );
+        $this->Ln(10);
+        $this->SetFont('Times', '', 8);
+
+        $this->cell(0, 0, 'Designed By Marc Systems Africa (0882 230 137)', 0, 0, 'C','');
+        $this->Ln(4);
     }
 
     public function generateDeliveryNote()
     {
         $id = new Payment();
-        $payment = MemberPayment::where(['payment_id'=>$_GET['id']])->first();
-        $payment_id = Payment::where(['id'=>$_GET['id']])->first();
+        $payment = MemberPayment::where(['payment_id'=>@$_GET['id']])->first();
+        $payment_id = Payment::where(['id'=>@$_GET['id']])->first();
         $account = Accounts::where(['id'=>$payment_id->account_id])->first();
 
         $totalInWords = $payment->amount;
@@ -141,6 +119,84 @@ class DeliveryController extends \FPDF
         $this->content();
         //$this->footer_note();
         @$this->Output();
+    }
+    public function generateMemberReceipt($id)
+    {
+        $payment = MemberPayment::where(['id'=>$id])->first();
+        $account = Accounts::where(['id'=>$payment->account_id])->first();
+        $totalInWords = $payment->amount;
+        $total = $totalInWords;
+        $totalInWords = str_replace('  ',' ',str_replace(
+            '.',' Kwacha ',strtolower(numberToWords($totalInWords))));
+
+        $this->monthOf = date('F');
+        $this->date = date('d-m-Y');
+        $this->kwachaFigure = $total;
+        $this->sumOf = ucwords($totalInWords);
+        $this->paidFor = $account->name;
+        $this->receivedFrom = Member::where(['id'=>$payment->member_id])->first()->name;
+        $this->SD = 'AOG-'.$payment->id;
+
+        $this->SetMargins(5,5,5);
+        $this->AddPage('P','struck');
+        $this->AliasNbPages();
+        $this->header();
+        $this->content();
+        $this->footer_note();
+        $this->Output('libs/receipt.pdf', 'F');
+
+    }
+    public function generateHomeReceipt($id)
+    {
+        $payment = ChurchPayment::where(['id'=>$id])->first();
+        $account = Accounts::where(['id'=>$payment->account_id])->first();
+        $totalInWords = $payment->amount;
+        $total = $totalInWords;
+        $totalInWords = str_replace('  ',' ',str_replace(
+            '.',' Kwacha ',strtolower(numberToWords($totalInWords))));
+
+        $this->monthOf = date('F');
+        $this->date = date('d-m-Y');
+        $this->kwachaFigure = $total;
+        $this->sumOf = ucwords($totalInWords);
+        $this->paidFor = $account->name;
+        $this->receivedFrom = Church::where(['id'=>$payment->church_id])->first()->name.' Home Church';
+        $this->SD = 'AOG-'.$payment->id;
+
+        $this->SetMargins(5,5,5);
+        $this->AddPage('P','struck');
+        $this->AliasNbPages();
+        $this->header();
+        $this->content();
+        $this->footer_note();
+        $this->Output('libs/receipt.pdf', 'F');
+
+    }
+    public function generateMinistryReceipt($id)
+    {
+        $payment = MinistryPayment::where(['id'=>$id])->first();
+        $account = Accounts::where(['id'=>$payment->account_id])->first();
+        $totalInWords = $payment->amount;
+        $total = $totalInWords;
+        $totalInWords = str_replace('  ',' ',str_replace(
+            '.',' Kwacha ',strtolower(numberToWords($totalInWords))));
+
+        $this->monthOf = date('F');
+        $this->date = date('d-m-Y');
+        $this->kwachaFigure = $total;
+        $this->sumOf = ucwords($totalInWords);
+        $this->paidFor = $account->name;
+        $this->receivedFrom = Ministry::where(['id'=>$payment->ministry_id])->first()->name.' Ministry';
+        $this->SD = 'AOG-'.$payment->id;
+
+        $this->SetMargins(5,5,5);
+        $this->AddPage('P','struck');
+        $this->AliasNbPages();
+        $this->header();
+        $this->content();
+        $this->footer_note();
+        $this->Output('libs/receipt.pdf', 'F');
+
     }
     public function generateReceipt()
     {

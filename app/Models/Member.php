@@ -22,6 +22,6 @@ class Member extends Model
     }
     public function payments()
     {
-        return  $this->hasMany(MemberPayment::class,'member_id');
+        return  $this->hasMany(MemberPayment::class,'member_id')->orderByDesc('id');
     }
 }

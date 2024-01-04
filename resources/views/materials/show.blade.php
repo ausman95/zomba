@@ -12,7 +12,6 @@
         <nav>
             <ol class="breadcrumb bg-transparent">
                 <li class="breadcrumb-item"><a href="{{route('home')}}">Home</a></li>
-                <li class="breadcrumb-item"><a href="{{route('suppliers.index')}}">Supplier</a></li>
                 <li class="breadcrumb-item"><a href="{{route('materials.index')}}">Material</a></li>
                 <li class="breadcrumb-item active" aria-current="page">{{$material->name}}</li>
             </ol>

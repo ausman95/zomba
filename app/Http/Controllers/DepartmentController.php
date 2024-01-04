@@ -65,13 +65,10 @@ class DepartmentController extends Controller
     {
         $labourers = $department->employees;
         $incomes = $department->payments;
-        $budgets = $department->budgets;
         return view('departments.show')->with([
             'cpage'=>"departments",
             'department'=>$department,
             'incomes' =>$incomes,
-            'budgets'=>$budgets,
-            'notes'=>$department->notes,
             'labourers' => $labourers
         ]);
     }

@@ -47,9 +47,6 @@
                                    class="form-control @error('amount') is-invalid @enderror"
                                    value="{{old('amount') ?? $budget->amount}}"
                                    placeholder="Amount Allocated" >
-                            <input type="hidden" name="transaction_type" value="1"
-                                   class="form-control @error('transaction_type') is-invalid @enderror"
-                            >
                             @error('transaction_type')
                             <span class="invalid-feedback">
                                {{$message}}
@@ -57,16 +54,24 @@
                             @enderror
                         </div>
                         <div class="form-group">
-                            <label>Financial Year</label>
-                            <select name="financial_year_id"
-                                    class="form-select select-relation @error('financial_year_id') is-invalid @enderror" style="width: 100%">
-                                <option value="{{$budget->financial_year_id}}">{{$budget->financial->name}}</option>
-                                @foreach($financial_years as $financial_year)
-                                    <option value="{{$financial_year->id}}"
-                                        {{old('financial_year_id')===$financial_year->id ? 'selected' : ''}}>{{$financial_year->name.' From '.$financial_year->start_date}}</option>
-                                @endforeach
-                            </select>
-                            @error('financial_year_id')
+                            <label>From (Start Date)</label>
+                            <input type="date" name="start_date"
+                                   class="form-control @error('start_date') is-invalid @enderror"
+                                   value="{{old('start_date') ?? $budget->start_date}}"
+                                   placeholder="Start Date" >
+                            @error('start_date')
+                            <span class="invalid-feedback">
+                               {{$message}}
+                        </span>
+                            @enderror
+                        </div>
+                        <div class="form-group">
+                            <label>To (End Date)</label>
+                            <input type="date" name="end_date"
+                                   class="form-control @error('end_date') is-invalid @enderror"
+                                   value="{{old('end_date') ?? $budget->end_date}}"
+                                   placeholder="End Date" >
+                            @error('end_date')
                             <span class="invalid-feedback">
                                {{$message}}
                         </span>

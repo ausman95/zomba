@@ -125,7 +125,8 @@
                                        @else
                                            {{number_format($payment->balance) }}
                                        @endif
-                                    <td>{{$payment->created_at}}</td>
+                                    <td>{{date('d F Y', strtotime($payment->created_at)) }}</td>
+
                                     <th>
                                         @if( $payment->transaction_type==1 && $payment->method==1)
                                             {{ "Bought on Cash"}}

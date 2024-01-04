@@ -10,7 +10,7 @@ class Banks extends Model
 {
     use HasFactory;
     protected $fillable = [
-        'account_name', 'account_type','account_number','service_centre'
+        'account_name', 'account_type','account_number','service_centre','bank_name'
     ];
     public function transfersTo()
     {
@@ -18,7 +18,7 @@ class Banks extends Model
     }
     public function transactions()
     {
-        return  $this->hasMany(BankTransaction::class,'bank_id');
+        return  $this->hasMany(BankTransaction::class,'bank_id')->orderByDesc('id');
     }
     public function incomes()
     {

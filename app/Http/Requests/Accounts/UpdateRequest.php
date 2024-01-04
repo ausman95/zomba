@@ -25,7 +25,7 @@ class UpdateRequest extends FormRequest
     public function rules()
     {
         return [
-            'name' => ["nullable", "string", Rule::unique('Ministries', 'name')->ignore($this->route('account'))],
+            'name' => ["nullable", "string", Rule::unique('ministries', 'name')->ignore($this->route('account'))],
             'type'=>"required|string"
         ];
     }

@@ -11,8 +11,8 @@ class MinistryController extends Controller
 {
     public function index()
     {
-        activity('Ministries')
-            ->log("Accessed Ministries listing")->causer(request()->user());
+        activity('ministries')
+            ->log("Accessed ministries listing")->causer(request()->user());
 
         return view('ministries.index')->with([
             'cpage' => "ministries",
@@ -24,8 +24,8 @@ class MinistryController extends Controller
         $data = $request->post();
 
         Ministry::create($data);
-        activity('Ministries')
-            ->log("Created a new Ministries")->causer(request()->user());
+        activity('ministries')
+            ->log("Created a new ministries")->causer(request()->user());
         return redirect()->back()->with([
             'success-notification'=>"Successfully Created"
         ]);

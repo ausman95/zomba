@@ -7,17 +7,16 @@
 @section('content')
     <div class="container-fluid ps-1 pt-4">
         <h4>
-            <i class="fa fa-list-ul"></i>Labours
+            <i class="fa fa-list-ul"></i>Positions
         </h4>
         <p>
-            Labours
+            Positions
         </p>
         <nav aria-label="breadcrumb">
             <ol class="breadcrumb bg-transparent">
                 <li class="breadcrumb-item"><a href="{{route('home')}}">Home</a></li>
                 <li class="breadcrumb-item"><a href="{{route('human-resources.index')}}">Human Resources</a></li>
-                <li class="breadcrumb-item"><a href="{{route('labourers.index')}}">Labourers</a></li>
-                <li class="breadcrumb-item active" aria-current="page">Labours</li>
+                <li class="breadcrumb-item active" aria-current="page">Positions</li>
             </ol>
         </nav>
         <div class="mb-5">
@@ -25,7 +24,7 @@
         </div>
         <div class="mt-3">
             <a href="{{route('labours.create')}}" class="btn btn-primary btn-md rounded-0">
-                <i class="fa fa-plus-circle"></i>New Labour
+                <i class="fa fa-plus-circle"></i>New Position
             </a>
             <div class="mt-3">
                 <div class="row">
@@ -33,16 +32,16 @@
                         <div class="card " style="min-height: 30em;">
                             <div class="card-body px-1">
                                 @if($labours->count() === 0)
-                                    <i class="fa fa-info-circle"></i>There are no Labours!
+                                    <i class="fa fa-info-circle"></i>There are no Position!
                                 @else
                                     <div style="overflow-x:auto;">
                                         <table class="table table-bordered table-hover table-striped" id="data-table">
-                                            <caption style=" caption-side: top; text-align: center">LABOURS</caption>
+                                            <caption style=" caption-side: top; text-align: center">POSITIONS</caption>
                                             <thead>
                                         <tr>
                                             <th>NO</th>
                                             <th>NAME</th>
-                                            <th>ID</th>
+                                            <th>NO. EMPLOYEES</th>
                                             <th>CREATED ON</th>
                                             <th>ACTION</th>
                                         </tr>
@@ -53,7 +52,7 @@
                                             <tr>
                                                 <td>{{$c++}}</td>
                                                 <td>{{ucwords($labour->name) }}</td>
-                                                <td>{{ucwords($labour->id) }}</td>
+                                                <td>{{count($labour->labourers) }}</td>
                                                 <td>{{ucwords($labour->created_at) }}</td>
                                                 <td class="pt-1">
                                                     <a href="{{route('labours.show',$labour->id)}}"

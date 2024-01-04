@@ -18,7 +18,7 @@ class BankController extends Controller
 
         $banks= Banks::orderBy('id','desc')->get();;
         return view('banks.index')->with([
-            'cpage' => "banks",
+            'cpage' => "finances",
             'banks'=>$banks
         ]);
     }
@@ -26,7 +26,7 @@ class BankController extends Controller
     public function create()
     {
         return view('banks.create')->with([
-            'cpage'=>"banks"
+            'cpage'=>"finances"
         ]);
     }
 
@@ -55,7 +55,7 @@ class BankController extends Controller
         $transactions = $bank->transactions;
       //  dd($incomes);
         return view('banks.show')->with([
-            'cpage'=>"banks",
+            'cpage'=>"finances",
             'bank'=>$bank,
             'transactions' =>$transactions
         ]);
@@ -63,7 +63,7 @@ class BankController extends Controller
     public function edit( Banks $bank)
     {
         return view('banks.edit')->with([
-            'cpage' => "banks",
+            'cpage' => "finances",
             'bank' => $bank
         ]);
     }

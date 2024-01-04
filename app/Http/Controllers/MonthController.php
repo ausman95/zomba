@@ -19,7 +19,7 @@ class MonthController extends Controller
             ->log("Accessed Months listing")->causer(request()->user());
         $months= Month::orderBy('id','desc')->get();;
         return view('months.index')->with([
-            'cpage' => "month",
+            'cpage' => "months",
             'months'=>$months,
         ]);
     }
@@ -101,7 +101,7 @@ class MonthController extends Controller
     public function show(Month $month)
     {
         return view('months.show')->with([
-            'cpage'=>"Ministries",
+            'cpage'=>"months",
             'month'=>$month,
         ]);
     }

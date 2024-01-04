@@ -26,57 +26,57 @@
                     <div class="row">
                         <div class="col-sm-12 col-md-7 col-lg-8">
                             <div class="card">
-                            <div class="card-body">
-                                <div class="table-responsive">
-                                    <table class="table table-bordered table-hover table-striped">
-                                        <caption style=" caption-side: top; text-align: center">{{$bank->account_name}} INFORMATION</caption>
-                                        <tbody>
-                                        <tr>
-                                            <td>Account Name</td>
-                                            <td>{{$bank->account_name}}</td>
-                                        </tr>
-                                        <tr>
-                                            <td>Account Number</td>
-                                            <td>{{$bank->account_number}}</td>
-                                        </tr>
-                                        <tr>
-                                            <td>Service Centre</td>
-                                            <td>{{$bank->service_centre}}</td>
-                                        </tr>
-                                        <tr>
-                                            <td>Account Type</td>
-                                            <td>{{$bank->account_type}}</td>
-                                        </tr>
-                                        <tr>
-                                            <td>Created On</td>
-                                            <td>{{$bank->created_at}}</td>
-                                        </tr>
-                                        <tr>
-                                            <td>Update ON</td>
-                                            <td>{{$bank->updated_at}}</td>
-                                        </tr>
-                                    </table>
-                                    <div class="mt-3">
-                                        <div>
-                                            <a href="{{route('banks.edit',$bank->id)}}"
-                                               class="btn btn-primary rounded-0" style="margin: 2px">
-                                                <i class="fa fa-edit"></i>Update
-                                            </a>
+                                <div class="card-body">
+                                    <div class="table-responsive">
+                                        <table class="table table-bordered table-hover table-striped">
+                                            <caption style=" caption-side: top; text-align: center">{{$bank->account_name}} INFORMATION</caption>
+                                            <tbody>
+                                            <tr>
+                                                <td>Bank Name</td>
+                                                <td>{{$bank->bank_name}}</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Account Name</td>
+                                                <td>{{$bank->account_name}}</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Account Number</td>
+                                                <td>{{$bank->account_number}}</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Service Centre</td>
+                                                <td>{{$bank->service_centre}}</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Created On</td>
+                                                <td>{{$bank->created_at}}</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Update ON</td>
+                                                <td>{{$bank->updated_at}}</td>
+                                            </tr>
+                                        </table>
+                                        <div class="mt-3">
+                                            <div>
+                                                <a href="{{route('banks.edit',$bank->id)}}"
+                                                   class="btn btn-primary rounded-0" style="margin: 2px">
+                                                    <i class="fa fa-edit"></i>Update
+                                                </a>
+                                            </div>
+                                            {{--                                        @if(request()->user()->designation==='administrator')--}}
+                                            {{--                                            <div class="">--}}
+                                            {{--                                                <form action="{{route('banks.destroy',$bank->id)}}" method="POST" id="delete-form">--}}
+                                            {{--                                                    @csrf--}}
+                                            {{--                                                    <input type="hidden" name="_method" value="DELETE">--}}
+                                            {{--                                                </form>--}}
+                                            {{--                                                <button class="btn btn-danger rounded-0" id="delete-btn" style="margin: 2px">--}}
+                                            {{--                                                    <i class="fa fa-trash"></i>Delete--}}
+                                            {{--                                                </button>--}}
+                                            {{--                                            </div>--}}
+                                            {{--                                        @endif--}}
                                         </div>
-{{--                                        @if(request()->user()->designation==='administrator')--}}
-{{--                                            <div class="">--}}
-{{--                                                <form action="{{route('banks.destroy',$bank->id)}}" method="POST" id="delete-form">--}}
-{{--                                                    @csrf--}}
-{{--                                                    <input type="hidden" name="_method" value="DELETE">--}}
-{{--                                                </form>--}}
-{{--                                                <button class="btn btn-danger rounded-0" id="delete-btn" style="margin: 2px">--}}
-{{--                                                    <i class="fa fa-trash"></i>Delete--}}
-{{--                                                </button>--}}
-{{--                                            </div>--}}
-{{--                                        @endif--}}
                                     </div>
                                 </div>
-                            </div>
                             </div>
                         </div>
                     </div>
@@ -93,11 +93,11 @@
                                     <thead>
                                     <tr>
                                         <th>NO</th>
+                                        <th>DATE</th>
+                                        <th>DESCRIPTION</th>
                                         <th>ACCOUNT</th>
                                         <th>AMOUNT (MK)</th>
                                         <th>BALANCE (MK)</th>
-                                        <th>DATE</th>
-                                        <th>METHOD</th>
                                         <th>TYPE</th>
                                     </tr>
                                     </thead>
@@ -106,33 +106,29 @@
                                     @foreach($transactions as $transaction)
                                         <tr>
                                             <td>{{$c++}}</td>
-                                            <td>{{ucwords($transaction->account_name) }}</td>
+                                            <td>{{date('d F Y', strtotime($transaction->created_at)) }}</td>
+                                            <td>{{ucwords($transaction->description) }}</td>
+                                            <td>{{ucwords($transaction->account->name) }}</td>
                                             <td>
-                                                @if($transaction->type==2)
-                                                    {{number_format($transaction->amount)}}
-                                                @elseif($transaction->type==1)
+                                                @if($transaction->type==1)
+                                                    @if($transaction->amount<0)
+                                                        ({{number_format($transaction->amount*-1)}})
+                                                    @else
+                                                        {{number_format($transaction->amount)}}
+                                                    @endif
+                                                @elseif($transaction->type==2)
                                                     ({{number_format($transaction->amount)}})
                                                 @endif
                                             </td>
                                             <th>
                                                 {{number_format($transaction->balance)}}
                                             </th>
-                                            <td>{{ucwords($transaction->created_at) }}</td>
-                                            <td>
-                                                @if($transaction->method==1)
-                                                   Cash
-                                                @elseif($transaction->method==3)
-                                                    Cheque
-                                                @else
-                                                    Online Transfer
-                                                @endif
-                                            </td>
                                             <td>{{ucwords($transaction->type==1 ? "CR" : "DR") }}</td>
                                         </tr>
                                     @endforeach
                                     </tbody>
                                 </table>
-                        </div>
+                            </div>
                         </div>
                     </div>
                 </div>

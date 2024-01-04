@@ -18,7 +18,7 @@ class StockFlowController extends Controller
     public function show(StockFlow $stockFlow)
     {
         return view('stock-flows.show')->with([
-            'cpage'=>"accounts",
+            'cpage'=>"stores",
             'stockFlow'=>$stockFlow,
         ]);
     }
@@ -109,7 +109,7 @@ class StockFlowController extends Controller
         $project = Department::all();
         return view('stock-flows.save')->with([
             'projects' => $project,
-            'cpage' => "requisitions",
+            'cpage' => "stores",
         ]);
     }
 
@@ -165,7 +165,7 @@ class StockFlowController extends Controller
                 ->orderBy('id','DESC')->get();
         }
         return view('stock-flows.index')->with([
-            'cpage' => "stock-flows",
+            'cpage' => "stores",
             'material_name'=>$material->name,
             'department_name'=>$department->name,
             'departments'=>Department::all(),
@@ -188,7 +188,7 @@ class StockFlowController extends Controller
                 ->get();
         }
         return view('stock-flows.index')->with([
-            'cpage' => "stock-flows",
+            'cpage' => "stores",
             'departments'=>Department::all(),
             'materials'=>Material::all(),
             'flows'=>$stock_flow,
@@ -213,7 +213,7 @@ class StockFlowController extends Controller
         return view('stock-flows.create')->with([
             'project' => $project,
             'materials' => Material::all(),
-            'cpage' => "projects",
+            'cpage' => "stores",
             'stock_list' => $stock_list
         ]);
     }

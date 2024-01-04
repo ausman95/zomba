@@ -22,6 +22,7 @@
             <hr>
         </div>
         <div class="mt-3">
+            @if(request()->user()->designation=='administrator')
             <button type="button" class="btn btn-primary rounded-0 btn-md" data-bs-toggle="modal" data-bs-target="#material">
                 <i class="fa fa-plus-circle"></i> New Home Church
             </button>
@@ -62,7 +63,7 @@
                     </div>
                 </div>
             </div>
-
+            @endif
             <div class="mt-3">
                 <div class="row">
                     <div class="col-sm-12 mb-2 col-md-12 col-lg-12">
@@ -78,6 +79,8 @@
                                         <tr>
                                             <th>NO</th>
                                             <th>NAME</th>
+                                            <th>MEMBERS</th>
+                                            <th>CREATED ON</th>
                                             <th>ACTION</th>
                                         </tr>
                                         </thead>
@@ -87,6 +90,8 @@
                                             <tr>
                                                 <td>{{$c++}}</td>
                                                 <td>{{ucwords($church->name) }}</td>
+                                                <td>{{count($church->members) }}</td>
+                                                <td>{{date('d F Y', strtotime($church->created_at)) }}</td>
                                                 <td class="pt-1">
                                                     <a href="{{route('churches.show',$church->id)}}"
                                                        class="btn btn-primary btn-md rounded-0">
