@@ -9,7 +9,6 @@
     <meta name="generator" content="Hugo 0.112.5">
     <title>Signin · EASYBOOK v3.0</title>
     <link rel="icon" href="{{asset('images/logo.png')}}">
-
     <link rel="canonical" href="https://getbootstrap.com/docs/5.3/examples/sign-in/">
 
 
@@ -182,7 +181,7 @@
             </label>
         </div>
         <button class="btn btn-primary w-100 py-2" type="submit">Sign in</button>
-        <p class="mt-5 mb-3 text-body-secondary">&copy; 2020 – {{date('Y')}}</p>
+        <p class="mt-5 mb-3 text-body-secondary">&copy; Marc Systems Africa (0882 230 137)</p>
     </form>
 </main>
 <script src="{{asset('vendor/bootstrap2/assets/dist/js/bootstrap.bundle.min.js')}}"></script>
