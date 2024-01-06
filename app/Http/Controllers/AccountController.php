@@ -21,7 +21,7 @@ class AccountController extends Controller
             ->log("Accessed Accounts listing")->causer(request()->user());
         $accounts= Accounts::orderBy('id','desc')->get();;
         return view('accounts.index')->with([
-            'cpage' => "accounts",
+            'cpage' => "finances",
             'accounts'=>$accounts,
         ]);
     }
@@ -34,7 +34,7 @@ class AccountController extends Controller
     public function create()
     {
        return view('accounts.create')->with([
-            'cpage'=>"accounts"
+            'cpage'=>"finances"
         ]);
     }
 
@@ -67,7 +67,7 @@ class AccountController extends Controller
     {
         $incomes = $account->incomes;
         return view('accounts.show')->with([
-            'cpage'=>"accounts",
+            'cpage'=>"finances",
             'account'=>$account,
             'transactions'=>$incomes
         ]);
@@ -82,7 +82,7 @@ class AccountController extends Controller
     public function edit( Accounts $account)
     {
        return view('accounts.edit')->with([
-            'cpage' => "accounts",
+            'cpage' => "finances",
             'account' => $account
         ]);
     }
