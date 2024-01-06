@@ -11,6 +11,7 @@ use App\Models\ChurchPayment;
 use App\Models\Cohort;
 use App\Models\Department;
 use App\Models\District;
+use App\Models\Division;
 use App\Models\Fee;
 use App\Models\Labourer;
 use App\Models\LabourerPayments;
@@ -33,66 +34,63 @@ use Illuminate\Http\Request;
 
 class ReceiptController extends Controller
 {
-    public function generateBalance(Request $request, Receipt $receipt)
+    public function churchReportGenerate(Request $request, Receipt $receipt)
     {
-        $request->validate([
-            'term_id' => "required|numeric",
-            'cohort_id' => "required|numeric",
-            'account_id' => "required|numeric",
-        ]);
-
-        $termID = $request->post('term_id');
         $accountID = $request->post('account_id');
-        $cohortID = $request->post('cohort_id');
+        $to_month_id = $request->post('to_month_id');
+        $from_month_id= $request->post('from_month_id');
+        $description= $request->post('description');
+        if(!$description){
+            $description = $request->session()->get('description');
+        }
+        if(!$to_month_id){
+            $to_month_id = $request->session()->get('to_month_id');
+        }
+        if(!$from_month_id){
+            $from_month_id = $request->session()->get('from_month_id');
+        }
+        if(!$accountID){
+            $accountID = $request->session()->get('account_id');
+        }
 
+        $request->session()->put('account_id',$accountID );
+        $request->session()->put('to_month_id', $to_month_id);
+        $request->session()->put('from_month_id', $from_month_id);
+
+        $to_month= Month::where(['id' =>$to_month_id])->first();
+        $from_month = Month::where(['id' =>$from_month_id])->first();
+
+        $start = $from_month->start_date;
+        $end = $to_month->end_date;
+
+        $receipts =  $receipt->getMembers($start,$end,$accountID);
 
         activity('Receipts')
             ->log("Accessed Receipts")->causer(request()->user());
-        return view('receipts.balance')->with([
+        return view('receipts.division-reports')->with([
             'cpage' => "finances",
-            'terms'=>Term::orderBy('id','desc')->get(),
-            'students'=>Students::orderBy('class_id','desc')->get(),
-            'cohorts'=>Cohort::orderBy('id','desc')->get(),
-            'accounts'=>Accounts::orderBy('id','ASC')->get(),
-            '$termID'=>$termID,
-            'accountID'=>$accountID,
-            '$cohortID'=>$cohortID,
-        ]);
-    }
-    public function getStudentBalances(Receipt $receipt)
-    {
-        activity('Receipts')
-            ->log("Accessed Receipts")->causer(request()->user());
-        return view('receipts.balance')->with([
-            'cpage' => "finances",
-            'terms'=>Term::orderBy('id','desc')->get(),
-            'students'=>Students::orderBy('class_id','desc')->get(),
-            'cohorts'=>Cohort::orderBy('id','desc')->get(),
+            'account_id'=>$accountID,
+            'account_name'=>@Accounts::where(['id'=>$accountID])->first()->name,
+            'receipts'=>$receipts,
+            'getMonths'=>$receipt->getMonthsTransaction($start,$end,$accountID),
+            'description'=>$description,
+            'churches'=>$receipts,
+            'from_month_name'=>$to_month->name,
+            'to_month_name'=>$from_month->name,
+            'month_id' => $request->post('month_id'),
+            'months'=>Month::orderBy('id','desc')->get(),
             'accounts'=>Accounts::orderBy('id','ASC')->get()
         ]);
     }
 
-    public function generateReceipt(Request $request)
+    public function churchReports()
     {
-        $request->validate([
-            'month_id' => "required|numeric",
-        ]);
-        $month =  Month::where(['id'=>$request->post('month_id')])
-            ->first();
-
-        activity('FINANCES')
-            ->log("Accessed Payments")->causer(request()->user());
-        $payment = Payment::join('accounts', 'accounts.id','=','payments.account_id')
-            ->select(
-                'payments.*',
-            )
-            ->whereBetween('t_date',[$month->start_date,$month->end_date])
-            ->where(['accounts.type'=>1])
-            ->orderBy('payments.id','desc')->get();
-        return view('receipts.index')->with([
+        activity('Receipts')
+            ->log("Accessed Receipts")->causer(request()->user());
+        return view('receipts.division-reports')->with([
             'cpage' => "finances",
-            'payments'=>$payment,
-            'months'=>Month::orderBY('id','desc')->get()
+            'months'=>Month::orderBy('id','desc')->get(),
+            'accounts'=>Accounts::orderBy('id','ASC')->get()
         ]);
     }
 
@@ -314,6 +312,8 @@ class ReceiptController extends Controller
                 'name'=>$transactions_name.' For '.$account->name,
                 'member_id'=>$request->post('member_id'),
                 'amount'=>$request->post('amount'),
+                't_date'=>$request->post('t_date'),
+                'month_id'=>$monthID->id,
                 'account_id'=>$request->post('account_id'),
                 'balance'=>$balances+$request->post('amount'),
                 'payment_id'=>$payment,

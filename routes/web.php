@@ -49,6 +49,9 @@ Route::middleware(['auth', 'view.share'])->group(function () {
     Route::resource('leaves', \App\Http\Controllers\LeaveController::class);
     Route::resource('attendances', \App\Http\Controllers\AttendanceController::class);
     Route::resource('receipts', \App\Http\Controllers\ReceiptController::class);
+    Route::get('church/reports/', [\App\Http\Controllers\ReceiptController::class, 'churchReports'])->name('church.reports');
+    Route::post('church/report/generate', [\App\Http\Controllers\ReceiptController::class, 'churchReportGenerate'])->name('church-report.generate');
+    Route::get('church/report/generate', [\App\Http\Controllers\ReceiptController::class, 'churchReportGenerate'])->name('church-report.generate');
 
     Route::resource('leave-settings', \App\Http\Controllers\LeaveSettingController::class);
     Route::resource('requisitions', RequisitionController::class)->except(['store', 'show', 'destroy']);

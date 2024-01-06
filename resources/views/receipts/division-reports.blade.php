@@ -7,17 +7,16 @@
 @section('content')
     <div class="container-fluid ps-1 pt-4">
         <h4>
-            <i class="fa fa-cash-register"></i>Division Reports
+            <i class="fa fa-cash-register"></i>Church Reports
         </h4>
         <p>
-            Manage Division Reports
+            Manage Church Reports
         </p>
         <nav aria-label="breadcrumb">
             <ol class="breadcrumb bg-transparent">
                 <li class="breadcrumb-item"><a href="{{route('home')}}">Home</a></li>
-                <li class="breadcrumb-item"><a href="{{route('finances.index')}}">Finances</a></li>
-                <li class="breadcrumb-item"><a href="{{route('receipts.index')}}">Receipts</a></li>
-                <li class="breadcrumb-item active" aria-current="page">Division Reports</li>
+                <li class="breadcrumb-item"><a href="{{route('analytics')}}">Analytics</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Accounts Reports</li>
             </ol>
         </nav>
         <hr>
@@ -26,32 +25,8 @@
                 <div class="row">
                     <div class="mb-2  col-lg-3">
                         <hr>
-                        <form action="{{route('division-report.generate')}}" method="POST">
+                        <form action="{{route('church-report.generate')}}" method="POST">
                             @csrf
-                            @if(request()->user()->division_id==1)
-                                <div class="row mb-3">
-                                    <label for="inputEmail3" class="col-sm-4 col-form-label">Division</label>
-                                    <div class="col-sm-8">
-                                        <select name="division_id"
-                                                class="form-select select-relation @error('division_id') is-invalid @enderror" style="width: 100%">
-                                            <option value=""></option>
-                                            @foreach($divisions as $division)
-                                                <option value="{{$division->id}}"
-                                                    {{old('division_id')===$division->id ? 'selected' : ''}}>{{$division->name}}</option>
-                                            @endforeach
-                                        </select>
-                                        @error('division_id')
-                                        <span class="invalid-feedback">
-                               {{$message}}
-                        </span>
-                                        @enderror
-                                    </div>
-                                </div>
-                            @else
-                                <input type="hidden" name="division_id"
-                                       class="form-control @error('division_id') is-invalid @enderror"
-                                       value="{{request()->user()->division_id}}">
-                            @endif
                             <div class="row mb-3">
                                 <label for="inputEmail3" class="col-sm-4 col-form-label">Account</label>
                                 <div class="col-sm-8">
@@ -108,27 +83,11 @@
                                 <div class="col-sm-8">
                                     <select name="description"
                                             class="form-select select-relation @error('description') is-invalid @enderror" style="width: 100%">
-                                        <option value="4">Church</option>
-                                        <option value="1">District</option>
-                                        <option value="2">Section</option>
-                                        <option value="3">Pastor</option>
+                                        <option value="3">Members</option>
+{{--                                        <option value="4">Home Churches</option>--}}
+{{--                                        <option value="2">Ministries</option>--}}
                                     </select>
                                     @error('description')
-                                    <span class="invalid-feedback">
-                               {{$message}}
-                                     </span>
-                                    @enderror
-                                </div>
-                            </div>
-                            <div class="row mb-3">
-                                <label for="inputEmail3" class="col-sm-4 col-form-label">Type</label>
-                                <div class="col-sm-8">
-                                    <select name="type"
-                                            class="form-select select-relation @error('type') is-invalid @enderror" style="width: 100%">
-                                        <option value="1">Default</option>
-                                        <option value="2">Descending</option>
-                                    </select>
-                                    @error('type')
                                     <span class="invalid-feedback">
                                {{$message}}
                                      </span>
@@ -166,16 +125,16 @@
                                             </div>
                                         @else
                                             <div style="overflow-x:auto;">
-                                                @if($description ==='3' || $account_id ==='2' || $account_id ==='7' )
+                                                @if($description ==='3')
                                                     <table class="table table-bordered table-hover table-striped">
-                                                        <caption style=" caption-side: top; text-align: center">{{$division_name.' DIVISION '.$account_name}}  PERFORMANCE REPORT FROM {{strtoupper($to_month_name)}}  TO {{strtoupper($from_month_name)}}</caption>
+                                                        <caption style=" caption-side: top; text-align: center"> PERFORMANCE REPORT FROM {{strtoupper($to_month_name)}}  TO {{strtoupper($from_month_name)}}</caption>
                                                         <thead>
                                                         <tr>
                                                             <th>NO</th>
-                                                            <th>PASTOR</th>
-                                                            <th>CHURCH</th>
+                                                            <th>MEMBER</th>
+                                                            <th>HOME CHURCH</th>
                                                             @foreach($getMonths as $month)
-                                                                <th>{{$month->month->name}}
+                                                                <th>{{$month->name}}
                                                                     <br>
                                                                     (MK)
                                                                 </th>
@@ -195,10 +154,10 @@
                                                                 <td>{{$church->church}}</td>
                                                             @foreach($getMonths as $month)
                                                                     <td>
-                                                                        {{number_format($month->getPastorAmount($church->pastor_id,$month->month_id,$church->account_id))}}
+                                                                        {{number_format($month->getMemberAmount($church->member_id,$month->month_id,$church->account_id),2)}}
                                                                     </td>
                                                                 @endforeach
-                                                                <td>{{number_format($church->amount)}}</td>
+                                                                <td>{{number_format($church->amount,2)}}</td>
                                                             </tr>
                                                         @endforeach
                                                         </tbody>
