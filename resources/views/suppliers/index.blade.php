@@ -108,7 +108,7 @@
                                             <th>NAME</th>
                                             <th>PHONE</th>
                                             <th>LOCATION</th>
-                                            <th>BALANCE</th>
+                                            <th>BALANCE (MK)</th>
                                             <th>ACTION</th>
                                         </tr>
                                         </thead>
@@ -120,7 +120,7 @@
                                                 <td>{{$supplier->name}}</td>
                                                 <td>{{$supplier->phone_number}}</td>
                                                 <td>{{$supplier->location}}</td>
-                                                <td>{{number_format($supplier->getBalance($supplier->id))}}</td>
+                                                <td>{{number_format($supplier->getBalance($supplier->id),2)}}</td>
                                                 <td class="pt-1">
                                                     <a href="{{route('suppliers.show',$supplier->id)}}"
                                                        class="btn btn-primary btn-md rounded-0">
