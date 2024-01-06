@@ -150,8 +150,8 @@
 
 <main class="form-signin w-100 m-auto">
     <form method="POST" action="{{ route('login') }}">
-        <img class="mb-4" src="{{asset('vendor/bootstrap2/assets/brand/bootstrap-logo.svg')}}" alt="" width="72" height="57">
-        <h1 class="h3 mb-3 fw-normal">CHURCHBOOK</h1>
+        <img style="margin-left: 35%" class="mb-2" src="{{asset('vendor/logo.png')}}" alt="" width="72" height="57">
+        <h1 style="margin-left: 17% !important;" class="h3 mb-3 fw-normal">CHURCHBOOK</h1>
         @csrf
         <div class="form-floating">
             <input id="floatingInput" type="email" class="form-control @error('email') is-invalid @enderror"
