@@ -319,11 +319,11 @@ class ReceiptController extends Controller
             ];
             $last_id = MemberPayment::create($members);
             $member = Member::where(['id'=>$request->post('member_id')])->first();
-                $message = 'MALAWI ASSEMBLIES OF GOD ' .
-                    PHP_EOL .PHP_EOL . 'Dear '.$member->name.PHP_EOL .PHP_EOL .' You have Paid the following ' .
+                $message = 'GIRLFRIEND ALLOWANCE ' .
+                    PHP_EOL .PHP_EOL . 'Dear '.$member->name.PHP_EOL .PHP_EOL .' You have Received ' .
                     PHP_EOL .PHP_EOL .Accounts::where(['id'=>$request->post('account_id')])->first()->name .
                     ' : MK '.$data['amount'].PHP_EOL
-                    .PHP_EOL.' AREA 25 VICTORY TEMPLE';
+                    .PHP_EOL.' AUSIE LOVE EYMIE ';
                     $this->sendSms($member->phone_number,$message);
             $order = new DeliveryController();
             $order->generateMemberReceipt($last_id->id,$monthID->name);
