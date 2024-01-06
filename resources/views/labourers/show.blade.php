@@ -13,6 +13,7 @@
             <ol class="breadcrumb bg-transparent">
                 <li class="breadcrumb-item"><a href="{{route('home')}}">Home</a></li>
                 <li class="breadcrumb-item"><a href="{{route('human-resources.index')}}">Human Resources</a></li>
+                <li class="breadcrumb-item"><a href="{{route('labourers.employees')}}">Employees</a></li>
                 <li class="breadcrumb-item active" aria-current="page">{{$labourer->name}}</li>
             </ol>
         </nav>
@@ -115,49 +116,38 @@
                 </h5>
                 <div class="card">
                     <div class="card-body">
-                        @if($payments->count() === 0)
+                        @if($transactions->count() === 0)
                             <i class="fa fa-info-circle"></i>There are no  Transactions!
                         @else
                             <div style="overflow-x:auto;">
                             <table class="table  table2 table-bordered table-hover table-striped" id="data-table">
                                 <caption style=" caption-side: top; text-align: center">TRANSACTIONS</caption>
-                            <table class="table table-primary table2 table-bordered table-hover table-striped" id="data-table">
                                 <caption style=" caption-side: top; text-align: center">{{$labourer->name}} TRANSACTIONS</caption>
                                 <thead>
                                 <tr>
                                     <th>NO</th>
-                                    <th>DESCRIPTION</th>
-                                    <th>AMOUNT (MK)</th>
-                                    <th>BALANCE (MK)</th>
                                     <th>DATE</th>
-                                    <th>TYPE</th>
+                                    <th>TRANSACTION NAME</th>
+                                    <th>AMOUNT (MK)</th>
+                                    <th>PAYMENT TYPE</th>
                                 </tr>
                                 </thead>
                                 <tbody>
                                 <?php  $c= 1; $balance = 0; ?>
-                                @foreach($payments as $payment)
-                                    @if($payment->amount!=0)
+                                @foreach($transactions as $transaction)
                                     <tr>
                                         <td>{{$c++}}</td>
-                                        <td>{{$payment->expense_name}}</td>
+                                        <td>{{date('d F Y', strtotime($transaction->created_at)) }}</td>
+                                        <td>{{ucwords($transaction->account->name) }}</td>
                                         <th>
-                                            @if($payment->type==2)
-                                               ( {{number_format($payment->amount)}})
+                                            @if($transaction->account->type == 1)
+                                                ({{number_format($transaction->amount,2) }})
                                             @else
-                                                {{number_format($payment->amount)}}
+                                                {{number_format($transaction->amount,2) }}
                                             @endif
                                         </th>
-                                        <th>
-                                            @if($payment->balance<0)
-                                            ({{number_format($payment->balance*-1)}})
-                                            @else
-                                            {{number_format($payment->balance)}}
-                                            @endif
-                                        </th>
-                                        <td>{{$payment->created_at}}</td>
-                                        <td>{{$payment->type==1 ? "Dr" : "Cr"}}</td>
+                                        <td>{{ucwords($transaction->account->type == 2 ? "CR" : "DR") }}</td>
                                     </tr>
-                                    @endif
                                 @endforeach
                                 </tbody>
                             </table>

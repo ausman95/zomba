@@ -5,17 +5,16 @@
     <div class="container-fluid ps-1 pt-4">
 
         <h4>
-            <i class="fa fa-list-ul"></i>Labours
+            <i class="fa fa-list-ul"></i>Positions
         </h4>
         <p>
-            Update Labour Details
+            Update Positions Details
         </p>
         <nav>
             <ol class="breadcrumb bg-transparent">
                 <li class="breadcrumb-item"><a href="{{route('home')}}">Home</a></li>
                 <li class="breadcrumb-item"><a href="{{route('human-resources.index')}}">Human Resources</a></li>
-                <li class="breadcrumb-item"><a href="{{route('labourers.index')}}">Labourers</a></li>
-                <li class="breadcrumb-item"><a href="{{route('labourers.index')}}">Labours</a></li>
+                <li class="breadcrumb-item"><a href="{{route('labourers.index')}}">Positions</a></li>
                 <li class="breadcrumb-item"><a href="{{route('labours.show',$labour->id)}}">{{$labour->name}}</a></li>
                 <li class="breadcrumb-item active" aria-current="page">Update</li>
             </ol>

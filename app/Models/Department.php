@@ -31,6 +31,6 @@ class Department extends Model
     /// this company is treating departments as projects hence this
     public function payments()
     {
-        return  $this->hasMany(ProjectPayment::class,'project_id');
+        return  $this->hasMany(ProjectPayment::class,'project_id')->orderByDesc('id');
     }
 }

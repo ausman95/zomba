@@ -46,17 +46,9 @@ class FinanceController extends Controller
         if($request->post('end_date')< $request->post('start_date')){
             return back()->with(['error-notification'=>"Please Specify the date correctly!"]);
         }
-        $start = $request->post('start_date');
-        $end = $request->post('end_date');
         activity('ANALYTICS')
             ->log("Accessed Financial Reports")->causer(request()->user());
-        $banks = Banks::all();
 
-//        $users = DB::table('users')
-//            ->join('contacts', 'users.id', '=', 'contacts.user_id')
-//            ->join('orders', 'users.id', '=', 'orders.user_id')
-//            ->select('users.*', 'contacts.phone', 'orders.price')
-//            ->get();
 
         return view('finances.reports')->with([
             'cpage' => "finances",
@@ -66,6 +58,7 @@ class FinanceController extends Controller
             'accounts' => Accounts::all(),
             'credits' => Accounts::getAccountBalanceDebits($request->post('start_date'),$request->post('end_date')),
             'debits' => Incomes::accountAll($request->post('start_date'),$request->post('end_date')),
+            'expenses' => Incomes::accountExpensesAll($request->post('start_date'),$request->post('end_date')),
             'admins' => Accounts::getAccountBalanceAdmin($request->post('start_date'),$request->post('end_date')),
         ]);
     }

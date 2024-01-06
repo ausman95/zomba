@@ -26,7 +26,7 @@ class LabourerController extends Controller
     public function showLeaveByEmployee(Labourer $labourer)
     {
         return view('leaves.show')->with([
-            'cpage'=>"leaves",
+            'cpage'=>"human-resources",
             'labourer'=>$labourer,
             'leaves'=>$labourer->leaves
         ]);
@@ -172,7 +172,7 @@ class LabourerController extends Controller
 
         $labourer= Labourer::where(['type'=>2])->orderBy('id','desc')->get();;
         return view('labourers.transactions-create')->with([
-            'cpage' => "labourers",
+            'cpage' => "human-resources",
             'labours'=>Labour::all(),
             'accounts'=>Accounts::all(),
             'banks'=>Banks::all(),
@@ -187,7 +187,7 @@ class LabourerController extends Controller
             ->log("Accessed Labourers")->causer(request()->user());
         $labourer= Labourer::where(['type'=>3])->orderBy('id','desc')->get();;
         return view('labourers.index')->with([
-            'cpage' => "labourers",
+            'cpage' => "human-resources",
             'labours'=>Labour::all(),
             'departments'=>Department::all(),
             'labourers'=>$labourer
@@ -200,7 +200,7 @@ class LabourerController extends Controller
 
         $labourer= Labourer::where(['type'=>2])->orderBy('id','desc')->get();;
         return view('labourers.subcontractors')->with([
-            'cpage' => "labourers",
+            'cpage' => "human-resources",
             'labours'=>Labour::all(),
             'accounts'=>Accounts::all(),
             'banks'=>Banks::all(),
@@ -216,7 +216,7 @@ class LabourerController extends Controller
 
         $labourer= Labourer::where(['type'=>1])->orderBy('id','desc')->get();;
         return view('labourers.employees')->with([
-            'cpage' => "labourers",
+            'cpage' => "human-resources",
             'labours'=>Labour::all(),
             'departments'=>Department::all(),
             'labourers'=>$labourer
@@ -233,7 +233,7 @@ class LabourerController extends Controller
         $labour = Labour::orderBy('id','desc')->get();;
         $department = Department::all();
         return view('labourers.create')->with([
-            'cpage'=>"labourers",
+            'cpage'=>"human-resources",
             'labours'=>$labour,
             'departments'=>$department
         ]);
@@ -268,9 +268,9 @@ class LabourerController extends Controller
         $payments = $labourer->payments;
 
         return view('labourers.show')->with([
-            'cpage'=>"labourers",
+            'cpage'=>"human-resources",
             'labourer'=>$labourer,
-            'payments'=>$payments
+            'transactions'=>$payments
 
         ]);
     }
@@ -286,7 +286,7 @@ class LabourerController extends Controller
         $labour = Labour::all();
         $department = Department::all();
         return view('labourers.edit')->with([
-            'cpage' => "labourers",
+            'cpage' => "human-resources",
             'labourer' => $labourer,
             'departments' => $department,
             'labours' => $labour
@@ -296,7 +296,7 @@ class LabourerController extends Controller
     {
         $project = Department::all();
         return view('labourers.allocate')->with([
-            'cpage' => "labourers",
+            'cpage' => "human-resources",
             'labourer' => $labourer,
             'projects' => $project
         ]);

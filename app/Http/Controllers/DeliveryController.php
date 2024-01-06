@@ -9,6 +9,7 @@ use App\Models\Member;
 use App\Models\MemberPayment;
 use App\Models\Ministry;
 use App\Models\MinistryPayment;
+use App\Models\Month;
 use App\Models\order;
 use App\Models\Payment;
 use Illuminate\Http\Request;
@@ -120,7 +121,7 @@ class DeliveryController extends \FPDF
         //$this->footer_note();
         @$this->Output();
     }
-    public function generateMemberReceipt($id)
+    public function generateMemberReceipt($id,$monthId)
     {
         $payment = MemberPayment::where(['id'=>$id])->first();
         $account = Accounts::where(['id'=>$payment->account_id])->first();
@@ -129,7 +130,7 @@ class DeliveryController extends \FPDF
         $totalInWords = str_replace('  ',' ',str_replace(
             '.',' Kwacha ',strtolower(numberToWords($totalInWords))));
 
-        $this->monthOf = date('F');
+        $this->monthOf = $monthId;
         $this->date = date('d-m-Y');
         $this->kwachaFigure = $total;
         $this->sumOf = ucwords($totalInWords);
@@ -146,7 +147,7 @@ class DeliveryController extends \FPDF
         $this->Output('libs/receipt.pdf', 'F');
 
     }
-    public function generateHomeReceipt($id)
+    public function generateHomeReceipt($id,$monthId)
     {
         $payment = ChurchPayment::where(['id'=>$id])->first();
         $account = Accounts::where(['id'=>$payment->account_id])->first();
@@ -155,7 +156,7 @@ class DeliveryController extends \FPDF
         $totalInWords = str_replace('  ',' ',str_replace(
             '.',' Kwacha ',strtolower(numberToWords($totalInWords))));
 
-        $this->monthOf = date('F');
+        $this->monthOf = $monthId;
         $this->date = date('d-m-Y');
         $this->kwachaFigure = $total;
         $this->sumOf = ucwords($totalInWords);
@@ -172,7 +173,7 @@ class DeliveryController extends \FPDF
         $this->Output('libs/receipt.pdf', 'F');
 
     }
-    public function generateMinistryReceipt($id)
+    public function generateMinistryReceipt($id,$monthId)
     {
         $payment = MinistryPayment::where(['id'=>$id])->first();
         $account = Accounts::where(['id'=>$payment->account_id])->first();
@@ -181,7 +182,7 @@ class DeliveryController extends \FPDF
         $totalInWords = str_replace('  ',' ',str_replace(
             '.',' Kwacha ',strtolower(numberToWords($totalInWords))));
 
-        $this->monthOf = date('F');
+        $this->monthOf = $monthId;
         $this->date = date('d-m-Y');
         $this->kwachaFigure = $total;
         $this->sumOf = ucwords($totalInWords);
@@ -204,13 +205,14 @@ class DeliveryController extends \FPDF
         $payment = MinistryPayment::where(['payment_id'=>$_GET['id']])->first();
         $payment_id = Payment::where(['id'=>$_GET['id']])->first();
         $account = Accounts::where(['id'=>$payment_id->account_id])->first();
+        $month = Month::where(['id'=>$payment_id->month_id])->first();
 
         $totalInWords = $payment->amount;
         $total = $totalInWords;
         $totalInWords = str_replace('  ',' ',str_replace(
             '.',' Kwacha ',strtolower(numberToWords($totalInWords))));
 
-        $this->monthOf = date('F');
+        $this->monthOf = $month->name;
         $this->date = date('d-m-Y');
         $this->kwachaFigure = $total;
         $this->sumOf = ucwords($totalInWords);
@@ -232,18 +234,48 @@ class DeliveryController extends \FPDF
         $payment = ChurchPayment::where(['payment_id'=>$_GET['id']])->first();
         $payment_id = Payment::where(['id'=>$_GET['id']])->first();
         $account = Accounts::where(['id'=>$payment_id->account_id])->first();
+        $month = Month::where(['id'=>$payment_id->month_id])->first();
 
         $totalInWords = $payment->amount;
         $total = $totalInWords;
         $totalInWords = str_replace('  ',' ',str_replace(
             '.',' Kwacha ',strtolower(numberToWords($totalInWords))));
 
-        $this->monthOf = date('F');
+        $this->monthOf = $month->name;
         $this->date = date('d-m-Y');
         $this->kwachaFigure = $total;
         $this->sumOf = ucwords($totalInWords);
         $this->paidFor = $account->name;
         $this->receivedFrom = $id->getHome($_GET['id']).' Home Cell';
+        $this->SD = 'AOG-'.$payment->id;
+
+        $this->SetMargins(5,5,5);
+        $this->AddPage('P','struck');
+        $this->AliasNbPages();
+        $this->header();
+        $this->content();
+        //$this->footer_note();
+        @$this->Output();
+    }
+    public function generateMemberReceiptById()
+    {
+        $id = new Payment();
+        $payment = MemberPayment::where(['payment_id'=>$_GET['id']])->first();
+        $payment_id = Payment::where(['id'=>$_GET['id']])->first();
+        $account = Accounts::where(['id'=>$payment_id->account_id])->first();
+        $month = Month::where(['id'=>$payment_id->month_id])->first();
+
+        $totalInWords = $payment->amount;
+        $total = $totalInWords;
+        $totalInWords = str_replace('  ',' ',str_replace(
+            '.',' Kwacha ',strtolower(numberToWords($totalInWords))));
+
+        $this->monthOf = $month->name;
+        $this->date = date('d-m-Y');
+        $this->kwachaFigure = $total;
+        $this->sumOf = ucwords($totalInWords);
+        $this->paidFor = $account->name;
+        $this->receivedFrom = Member::where(['id'=>$payment->member_id])->first()->name.' Member';
         $this->SD = 'AOG-'.$payment->id;
 
         $this->SetMargins(5,5,5);

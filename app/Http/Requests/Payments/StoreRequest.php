@@ -26,12 +26,10 @@ class StoreRequest extends FormRequest
         return [
             'account_id'=>"required|numeric",
             'bank_id'=>"required|numeric",
-            'name'=>"required|string",
             'amount'=>"required|numeric",
             'type'=>"required|numeric",
             't_date'=>"required|date",
             'payment_method'=>"required|numeric",
-            'cheque_number'=>"required|string",
         ];
     }
 }

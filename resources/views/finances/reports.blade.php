@@ -96,19 +96,13 @@
                                 <div class="card " style="min-height: 30em;">
                                     <div class="card-body px-1">
                                 <div style="overflow-x:auto;">
-                                   <u><h4 style="text-align: center">
-                                        @if($statement==1)
-                                            Trial Balance Statement from {{$start_date}} to {{$end_date}}
-                                        @elseif($statement==2)
-                                            Income Statement from {{$start_date}} to {{$end_date}}
-                                        @else
-                                        Balance Sheet from {{$start_date}} to {{$end_date}}
-                                        @endif
-                                    </h4>
-                                   </u>
                                     @if($statement==1)
-                                    <table class="table table-primary table-bordered table-hover table-striped" id="data-table">
+                                    <table class="table table-bordered table-hover table-striped" id="data-table">
+
+                                        <caption style="caption-side:top">   Trial Balance Statement from {{date('d F Y', strtotime($start_date))}} To {{date('d F Y', strtotime($end_date))}}
+                                        </caption>
                                         <thead>
+
                                         <tr>
                                             <th>NO</th>
                                             <th>ACCOUNT</th>
@@ -170,7 +164,9 @@
                                         </tbody>
                                     </table>
                                     @elseif($statement==2)
-                                            <table class="table table-primary table-bordered table-hover table-striped" id="data-table">
+                                            <table class="table table-bordered table-hover table-striped" id="data-table">
+                                                <caption style="caption-side:top">                                            Income Statement from {{date('d F Y', strtotime($start_date))}} To {{date('d F Y', strtotime($end_date))}}
+                                                </caption>
                                                 <thead>
                                                 <tr>
                                                     <th>NO</th>
@@ -192,34 +188,7 @@
                                                 ?>
                                                 <tr>
                                                     <td>{{$c++}}</td>
-                                                    <td> <b>Sales (Revenue)</b></td>
-                                                    <td></td>
-                                                    <td></td>
-                                                    <td></td>
-                                                    <td></td>
-                                                </tr>
-                                                @foreach($debits as $debit)
-                                                    <tr>
-                                                        <td>{{$c++}}</td>
-                                                        <td></td>
-                                                        <td>{{ucwords($debit->name) }}</td>
-                                                        <td></td>
-                                                        <td></td>
-                                                        <td>{{number_format($debit->amount)}}</td>
-                                                        <p class="d-none">{{$b1 = $b1+$debit->amount}}</p>
-                                                    </tr>
-                                                @endforeach
-                                                <tr>
-                                                    <td>{{$c++}}</td>
-                                                    <td><b>Total Sales (Revenue)</b></td>
-                                                    <td></td>
-                                                    <td></td>
-                                                    <td></td>
-                                                    <td><b>{{number_format($b1)}}</b> </td>
-                                                </tr>
-                                                <tr>
-                                                    <td>{{$c++}}</td>
-                                                    <td> <b>Less Cost of Sales (Revenue)</b></td>
+                                                    <td> <b>Church Revenue</b></td>
                                                     <td></td>
                                                     <td></td>
                                                     <td></td>
@@ -231,14 +200,41 @@
                                                         <td></td>
                                                         <td>{{ucwords($credit->name) }}</td>
                                                         <td></td>
+                                                        <td></td>
                                                         <td>{{number_format($credit->amount)}}</td>
-                                                        <p class="d-none">{{$b2 = $b2+$credit->amount}}</p>
+                                                        <p class="d-none">{{$b1 = $b1+$credit->amount}}</p>
+                                                    </tr>
+                                                @endforeach
+                                                <tr>
+                                                    <td>{{$c++}}</td>
+                                                    <td><b>Total Church Revenue</b></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td><b>{{number_format($b1)}}</b> </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>{{$c++}}</td>
+                                                    <td> <b>Less Cost of Church Revenue</b></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                </tr>
+                                                @foreach($expenses as $debit)
+                                                    <tr>
+                                                        <td>{{$c++}}</td>
+                                                        <td></td>
+                                                        <td>{{ucwords($debit->name) }}</td>
+                                                        <td></td>
+                                                        <td>{{number_format($debit->amount)}}</td>
+                                                        <p class="d-none">{{$b2 = $b2+$debit->amount}}</p>
                                                         <td></td>
                                                     </tr>
                                                 @endforeach
                                                 <tr>
                                                     <td>{{$c++}}</td>
-                                                    <td><b>Total cost of Sales </b></td>
+                                                    <td><b>Total cost of Church Revenue </b></td>
                                                     <td></td>
                                                     <td></td>
                                                     <td></td>
@@ -254,7 +250,7 @@
                                                 </tr>
                                                 <tr>
                                                     <td>{{$c++}}</td>
-                                                    <td> <b>Less Admin  Costs</b></td>
+                                                    <td> <b>Less Administration  Costs</b></td>
                                                     <td></td>
                                                     <td></td>
                                                     <td></td>
@@ -273,7 +269,7 @@
                                                 @endforeach
                                                 <tr>
                                                     <td>{{$c++}}</td>
-                                                    <td><b>Total Admin Cost </b></td>
+                                                    <td><b>Total Administration Cost </b></td>
                                                     <td></td>
                                                     <td></td>
                                                     <td></td>
@@ -281,43 +277,11 @@
                                                 </tr>
                                                 <tr>
                                                     <td>{{$c++}}</td>
-                                                    <td><b>Gross Profit</b></td>
+                                                    <td><b>Profit For the Period</b></td>
                                                     <td></td>
                                                     <td></td>
                                                     <td></td>
                                                     <td><b>{{number_format($b1-$b2-$b3)}}</b> </td>
-                                                </tr>
-                                                <tr>
-                                                    <td>{{$c++}}</td>
-                                                    <td><b>Less 1% NCIC</b></td>
-                                                    <td></td>
-                                                    <td></td>
-                                                    <td></td>
-                                                    <td><b><u>({{number_format(0.01*$b1)}})</u></b> </td>
-                                                </tr>
-                                                <tr>
-                                                    <td>{{$c++}}</td>
-                                                    <td><b></b></td>
-                                                    <td></td>
-                                                    <td></td>
-                                                    <td></td>
-                                                    <td><b>{{number_format($df = $b1-$b2-$b3-(0.01*$b1))}}</b> </td>
-                                                </tr>
-                                                <tr>
-                                                    <td>{{$c++}}</td>
-                                                    <td><b>Less 4% WithHolding Tax</b></td>
-                                                    <td></td>
-                                                    <td></td>
-                                                    <td></td>
-                                                    <td><b><u>({{number_format(0.04*$b1)}})</u></b> </td>
-                                                </tr>
-                                                <tr>
-                                                    <td>{{$c++}}</td>
-                                                    <td><b>Profit / Loss for the Period</b></td>
-                                                    <td></td>
-                                                    <td></td>
-                                                    <td></td>
-                                                    <td><b><u>{{number_format(($b1-$b2-$b3) - (0.05*$b1))}}</u></b> </td>
                                                 </tr>
                                                 </tbody>
                                             </table>

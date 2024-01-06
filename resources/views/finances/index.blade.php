@@ -42,7 +42,9 @@
             <a href="{{route('payments.index')}}" class="btn btn-primary btn-md rounded-0">
                 <i class="fa fa-money-bill-wave"></i> Payments
             </a>
-
+            <a href="{{route('receipts.index')}}" class="btn btn-primary btn-md rounded-0">
+                <i class="bx bx-dollar-circle"></i> Church Receipts
+            </a>
             <div class="mt-3">
                 <div class="row">
                     <div class="col-sm-12 mb-2 col-md-12 col-lg-12">

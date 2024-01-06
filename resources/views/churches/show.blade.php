@@ -89,8 +89,14 @@
                                                                 <td>{{$c++}}</td>
                                                                 <td>{{date('d F Y', strtotime($transaction->created_at)) }}</td>
                                                                 <td>{{ucwords($transaction->account->name) }}</td>
-                                                                <th>{{number_format($transaction->amount) }}</th>
-                                                                <td>{{ucwords($transaction->transaction_type == 1 ? "CR" : "DR") }}</td>
+                                                                <th>
+                                                                    @if($transaction->account->type == 1)
+                                                                        ({{number_format($transaction->amount,2) }})
+                                                                    @else
+                                                                        {{number_format($transaction->amount,2) }}
+                                                                    @endif
+                                                                </th>
+                                                                <td>{{ucwords($transaction->account->type == 2 ? "CR" : "DR") }}</td>
                                                             </tr>
                                                         @endforeach
                                                         </tbody>

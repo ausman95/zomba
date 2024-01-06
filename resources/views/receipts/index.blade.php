@@ -7,40 +7,29 @@
 @section('content')
     <div class="container-fluid ps-1 pt-4">
         <h4>
-            <i class="fa fa-money-bill-alt"></i>Payments
+            <i class="fa fa-cash-register"></i>Church Receipts
         </h4>
         <p>
-            Manage Payments
+            Manage Church Receipts
         </p>
         <nav aria-label="breadcrumb">
             <ol class="breadcrumb bg-transparent">
                 <li class="breadcrumb-item"><a href="{{route('home')}}">Home</a></li>
                 <li class="breadcrumb-item"><a href="{{route('finances.index')}}">Finances</a></li>
-                <li class="breadcrumb-item active" aria-current="page">Payments</li>
+                <li class="breadcrumb-item active" aria-current="page">Church Receipts</li>
             </ol>
         </nav>
-        <div class="mb-5">
-            <hr>
-        </div>
+        <hr>
         <div class="mt-3">
-            <a href="{{route('payments.create')}}" class="btn btn-primary btn-md rounded-0">
-                <i class="fa fa-plus-circle"></i>New Payment
+            <a href="{{route('receipts.create')}}" class="btn btn-primary btn-md rounded-0">
+                <i class="fa fa-plus-circle"></i>New Receipt
             </a>
-{{--            <a href="{{route('member.transaction')}}" class="btn btn-primary btn-md rounded-0">--}}
-{{--                <i class="fa fa-user-circle"></i><i class="fa fa-list-ol"></i>Member Transactions--}}
-{{--            </a>--}}
-{{--            <a href="{{route('ministry.transaction')}}" class="btn btn-primary btn-md rounded-0">--}}
-{{--                <i class="fa fa-file-alt"></i> <i class="fa fa-list-ol"></i>Ministry Transactions--}}
-{{--            </a>--}}
-{{--            <a href="{{route('home.transactions')}}" class="btn btn-primary btn-md rounded-0">--}}
-{{--                <i class="fa fa-folder"></i><i class="fa fa-list-ol"></i>Home Church Transactions--}}
-{{--            </a>--}}
             <div class="mt-3">
                 <div class="card container-fluid" style="min-height: 30em;">
                     <div class="row">
                         <div class="col-sm-12 mb-2 col-md-2 col-lg-2">
                             <hr>
-                            <form action="{{route('receipt.generate')}}" method="POST">
+                            <form action="{{route('receipt.produce')}}" method="POST">
                                 @csrf
                                 <div class="form-group">
                                     <select name="month_id"
@@ -68,11 +57,11 @@
                             <div class="card container-fluid" style="min-height: 30em;">
                                 <div class="card-body px-1">
                                     @if($payments->count() === 0)
-                                        <i class="fa fa-info-circle"></i>There are no Payment!
+                                        <i class="fa fa-info-circle"></i>There are no Receipts!
                                     @else
                                         <div style="overflow-x:auto;">
                                             <table class="table  table-bordered table-hover table-striped">
-                                                <caption style=" caption-side: top; text-align: center">PAYMENTS</caption>
+                                                <caption style=" caption-side: top; text-align: center">RECEIPTS</caption>
                                                 <thead>
                                                 <tr>
                                                     <th>NO</th>
@@ -83,12 +72,12 @@
                                                     <th>BANK</th>
                                                     <th>METHOD</th>
                                                     <th>TYPE</th>
-                                                    <th>REF</th>
-                                                    {{--                                            <th>ACTION</th>--}}
+{{--                                                    <th>REF</th>--}}
+                                                    <th>ACTION</th>
                                                 </tr>
                                                 </thead>
                                                 <tbody>
-                                                <?php  $c= 1;?>
+                                                    <?php  $c= 1;?>
                                                 @foreach($payments as $payment)
                                                     <tr>
                                                         <td>{{$c++}}</td>
@@ -100,7 +89,7 @@
                                                             @if(!@$payment->bank->account_name)
                                                                 OPENING TRANSACTION
                                                             @else
-                                                                {{ucwords(@$payment->bank->account_name) }}
+                                                            {{$payment->bank->bank_name.' - '.$payment->bank->account_name}}
                                                             @endif
                                                         </td>
                                                         <td>
@@ -131,12 +120,13 @@
                                                                 OTHERS
                                                             @endif
                                                         </td>
-                                                        <td>{{ucwords($payment->reference) }}</td>
-                                                        {{--                                                <td>--}}
-                                                        {{--                                                    <a href="{{route('delivery-note.generate')."?id={$flow->id}"}}" target="_blank" class="btn btn-primary rounded-0" style="margin: 2px">--}}
-                                                        {{--                                                        <i class="fa fa-vote-yea"></i> Generate--}}
-                                                        {{--                                                    </a>--}}
-                                                        {{--                                                </td>--}}
+{{--                                                        <td>{{ucwords($payment->reference) }}</td>--}}
+                                                        <td class="pt-1">
+                                                            <a href="{{route('payments.show',$payment->id)}}"
+                                                               class="btn btn-primary btn-md rounded-0">
+                                                                <i class="fa fa-list-ol"></i>   Details
+                                                            </a>
+                                                        </td>
                                                     </tr>
                                                 @endforeach
                                                 </tbody>
@@ -151,9 +141,7 @@
             </div>
         </div>
     </div>
-
 @stop
-
 @section('scripts')
     <script src="{{asset('vendor/simple-datatable/simple-datatable.js')}}"></script>
     <script>
@@ -183,7 +171,7 @@
                     $("#delete-form").submit();
                 })
             });
-
         })
     </script>
 @stop
+

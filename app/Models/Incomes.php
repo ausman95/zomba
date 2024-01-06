@@ -24,12 +24,23 @@ class Incomes extends Model
 
     public static  function accountAll($start_date,$end_date)
     {
-        $credits = DB::table('incomes')
-            ->join('accounts', 'accounts.id','=','incomes.account_id')
-            ->select('accounts.*',DB::raw('SUM(incomes.amount) as amount'))
+        $credits = DB::table('bank_transactions')
+            ->join('accounts', 'accounts.id','=','bank_transactions.account_id')
+            ->select('accounts.*',DB::raw('SUM(bank_transactions.amount) as amount'))
             ->where(['accounts.type'=>2])
-            ->where('incomes.transaction_type','!=',2)
-            ->whereBetween('incomes.created_at',[$start_date,$end_date])
+            ->whereBetween('bank_transactions.t_date',[$start_date,$end_date])
+            ->groupBy('accounts.id')
+            ->get();
+        return $credits;
+    }
+    public static  function accountExpensesAll($start_date,$end_date)
+    {
+        $credits = DB::table('bank_transactions')
+            ->join('accounts', 'accounts.id','=','bank_transactions.account_id')
+            ->select('accounts.*',DB::raw('SUM(bank_transactions.amount) as amount'))
+            ->where(['accounts.type'=>2])
+            ->where('bank_transactions.type','!=',2)
+            ->whereBetween('bank_transactions.t_date',[$start_date,$end_date])
             ->groupBy('accounts.id')
             ->get();
         return $credits;

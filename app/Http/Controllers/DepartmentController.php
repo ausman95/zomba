@@ -20,7 +20,7 @@ class DepartmentController extends Controller
             ->log("Accessed Departments")->causer(request()->user());
         $department = Department::orderBy('id','desc')->get();;
         return view('departments.index')->with([
-            'cpage' => "departments",
+            'cpage' => "human-resources",
             'departments'=>$department
         ]);
     }
@@ -33,7 +33,7 @@ class DepartmentController extends Controller
     public function create()
     {
         return view('departments.create')->with([
-            'cpage'=>"departments"
+            'cpage'=>"human-resources"
         ]);
     }
 
@@ -66,7 +66,7 @@ class DepartmentController extends Controller
         $labourers = $department->employees;
         $incomes = $department->payments;
         return view('departments.show')->with([
-            'cpage'=>"departments",
+            'cpage'=>"human-resources",
             'department'=>$department,
             'incomes' =>$incomes,
             'labourers' => $labourers
@@ -82,7 +82,7 @@ class DepartmentController extends Controller
     public function edit(Department $department)
     {
         return view('departments.edit')->with([
-            'cpage' => "departments",
+            'cpage' => "human-resources",
             'department' => $department
         ]);
     }

@@ -5,17 +5,19 @@
     <div class="container-fluid ps-1 pt-4">
 
         <h4>
-            <i class="fa fa-users"></i>Labourers
+            <i class="fa fa-users"></i>Employees
         </h4>
         <p>
-            Update Labourers account
+            Update Employees account
         </p>
         <nav>
             <ol class="breadcrumb bg-transparent">
                 <li class="breadcrumb-item"><a href="{{route('home')}}">Home</a></li>
                 <li class="breadcrumb-item"><a href="{{route('human-resources.index')}}">Human Resources</a></li>
-                <li class="breadcrumb-item"><a href="{{route('labourers.index')}}">Labourers</a></li>
-                <li class="breadcrumb-item active" aria-current="page">{{$labourer->name}}</li>
+                <li class="breadcrumb-item"><a href="{{route('labourers.employees')}}">Employees</a></li>
+                <li class="breadcrumb-item"><a href="{{route('labourers.show',$labourer->id)}}">{{$labourer->name}}</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Update</li>
+
             </ol>
         </nav>
         <div class="mb-5">

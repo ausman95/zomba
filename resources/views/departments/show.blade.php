@@ -132,7 +132,7 @@
                                                 class="table1 table table-bordered table-hover table-striped"
                                                 id="data-table">
                                                 <caption style=" caption-side: top; text-align: center">EMPLOYEES UNDER
-                                                    THIS SITE / PROJECT
+                                                    THIS DEPARTMENT
                                                 </caption>
                                                 <thead>
                                                 <tr>

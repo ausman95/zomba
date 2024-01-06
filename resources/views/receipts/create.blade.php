@@ -4,17 +4,17 @@
 @section('content')
     <div class="container-fluid ps-1 pt-4">
         <h4>
-            <i class="fa fa-money-bill-alt"></i>Payments
+            <i class="fa fa-money-bill-alt"></i>Church Receipts
         </h4>
         <p>
-            Payments
+            Church Receipts
         </p>
         <nav aria-label="breadcrumb">
             <ol class="breadcrumb bg-transparent">
                 <li class="breadcrumb-item"><a href="{{route('home')}}">Home</a></li>
                 <li class="breadcrumb-item"><a href="{{route('finances.index')}}">Finances</a></li>
-                <li class="breadcrumb-item"><a href="{{route('payments.index')}}">Payments</a></li>
-                <li class="breadcrumb-item active" aria-current="page">Create Payments</li>
+                <li class="breadcrumb-item"><a href="{{route('receipts.index')}}">Church Receipts</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Create  Receipt</li>
             </ol>
         </nav>
         <button type="button" class="btn btn-primary rounded-0 btn-md" data-bs-toggle="modal" data-bs-target="#account">
@@ -140,22 +140,17 @@
 
         <hr>
         <div class="mt-2">
-            <form action="{{route('payments.store')}}" method="POST" autocomplete="off">
+            <form action="{{route('receipts.store')}}" method="POST" autocomplete="off">
                 <div class="row">
                     <div class="col-sm-12 col-md-8 col-lg-4">
-                            @csrf
+                        @csrf
                         <div class="form-group">
-                            <label>Payment Description</label>
+                            <label>Transactor</label>
                             <select name="type" class="form-select select-relation type @error('type') required is-invalid @enderror" style="width: 100%">{{old('type')}} >
                                 <option value="">-- Select ---</option>
                                 <option value="5">Members</option>
                                 <option value="6">Home Churches</option>
                                 <option value="7">Ministries</option>
-                                <option value="1">Department</option>
-                                <option value="2">Admin</option>
-                                <option value="3">Suppliers</option>
-                                <option value="4">Employees</option>
-                                <option value="8">Others</option>
                             </select>
                             @error('type')
                             <span class="invalid-feedback">
@@ -217,90 +212,40 @@
                                 @enderror
                             </div>
                         </div>
-                        <div class="suppliers d-none">
-                            <div class="form-group">
-                                <label>Suppliers</label>
-                                <select name="supplier_id"
-                                        class="form-select select-relation @error('supplier_id') is-invalid @enderror" style="width: 100%">
-                                    <option value="">-- Select ---</option>
-                                    @foreach($suppliers as $supplier)
-                                        <option value="{{$supplier->id}}"
-                                            {{old('supplier_id')===$supplier->id ? 'selected' : ''}}>{{$supplier->name}}</option>
-                                    @endforeach
-                                </select>
-                                @error('supplier_id')
-                                <span class="invalid-feedback">
+{{--                        <div class="projects  d-none">--}}
+{{--                            <div class="form-group">--}}
+{{--                                <label>Department</label>--}}
+{{--                                <select name="project_id"--}}
+{{--                                        class="form-select select-relation @error('project_id') is-invalid @enderror" style="width: 100%">--}}
+{{--                                    <option value="">-- Select ---</option>--}}
+{{--                                    @foreach($projects as $project)--}}
+{{--                                        <option value="{{$project->id}}"--}}
+{{--                                            {{old('project_id')===$project->id ? 'selected' : ''}}>{{$project->name}}</option>--}}
+{{--                                    @endforeach--}}
+{{--                                </select>--}}
+{{--                                @error('project_id')--}}
+{{--                                <span class="invalid-feedback">--}}
+{{--                                   {{$message}}--}}
+{{--                            </span>--}}
+{{--                                @enderror--}}
+{{--                            </div>--}}
+{{--                        </div>--}}
+                        <div class="form-group">
+                            <label>Account</label>
+                            <select name="account_id"
+                                    class="form-select select-relation @error('account_id') is-invalid @enderror" style="width: 100%">
+                                <option value="">-- Select ---</option>
+                                @foreach($accounts as $account)
+                                    <option value="{{$account->id}}"
+                                        {{old('account_id')===$account->id ? 'selected' : ''}}>{{$account->name}}</option>
+                                @endforeach
+                            </select>
+                            @error('account_id')
+                            <span class="invalid-feedback">
                                    {{$message}}
                             </span>
-                                @enderror
-                            </div>
+                            @enderror
                         </div>
-                        <div class="members  d-none">
-                            <div class="form-group">
-                                <label>Employees</label>
-                                <select name="labourer_id"
-                                        class="form-select select-relation @error('labourer_id') is-invalid @enderror" style="width: 100%">
-                                    <option value="">-- Select ---</option>
-                                    @foreach($labourers as $labourer)
-                                        <option value="{{$labourer->id}}"
-                                            {{old('labourer_id')===$labourer->id ? 'selected' : ''}}>{{$labourer->name}}</option>
-                                    @endforeach
-                                </select>
-                                @error('labourer_id')
-                                <span class="invalid-feedback">
-                                   {{$message}}
-                            </span>
-                                @enderror
-                            </div>
-                            <div class="form-group">
-                                <label>Payment Type</label>
-                                <select name="description" class="form-select select-relation description @error('description') required is-invalid @enderror" style="width: 100%">{{old('description')}} >
-                                    <option value="1">Normal</option>
-                                    <option value="2">Advance</option>
-                                    <option value="3">Allowances</option>
-                                    <option value="4">Other</option>
-                                </select>
-                                @error('description')
-                                <span class="invalid-feedback">
-                                   {{$message}}
-                            </span>
-                                @enderror
-                            </div>
-                        </div>
-                        <div class="projects  d-none">
-                            <div class="form-group">
-                                <label>Department</label>
-                                <select name="project_id"
-                                        class="form-select select-relation @error('project_id') is-invalid @enderror" style="width: 100%">
-                                    <option value="">-- Select ---</option>
-                                    @foreach($projects as $project)
-                                        <option value="{{$project->id}}"
-                                            {{old('project_id')===$project->id ? 'selected' : ''}}>{{$project->name}}</option>
-                                    @endforeach
-                                </select>
-                                @error('project_id')
-                                <span class="invalid-feedback">
-                                   {{$message}}
-                            </span>
-                                @enderror
-                            </div>
-                        </div>
-                            <div class="form-group">
-                                <label>Account</label>
-                                <select name="account_id"
-                                        class="form-select select-relation @error('account_id') is-invalid @enderror" style="width: 100%">
-                                    <option value="">-- Select ---</option>
-                                    @foreach($accounts as $account)
-                                        <option value="{{$account->id}}"
-                                            {{old('account_id')===$account->id ? 'selected' : ''}}>{{$account->name}}</option>
-                                    @endforeach
-                                </select>
-                                @error('account_id')
-                                <span class="invalid-feedback">
-                                   {{$message}}
-                            </span>
-                                @enderror
-                            </div>
 
                         <div class="form-group ">
                             <label>Bank Account</label>
@@ -386,76 +331,76 @@
     </div>
 @stop
 @section('scripts')
-{{--    @if(@$_GET['id']=='success')--}}
-{{--            <script>--}}
-{{--                $(document).ready(function () {--}}
-{{--                    window.open('../libs/receipt.pdf', "_blank", "scrollbars=yes,width=700,height=600,top=30");--}}
-{{--                });--}}
-{{--            </script>--}}
-{{--    @endif--}}
+        @if(@$_GET['id']=='success')
+                <script>
+                    $(document).ready(function () {
+                        window.open('../libs/receipt.pdf', "_blank", "scrollbars=yes,width=700,height=600,top=30");
+                    });
+                </script>
+        @endif
     <script>
-    $(document).ready(function () {
-        $('.type').on('change', function () {
-            let status = $(this).val();
-            if(status==='1'){
-                $('.suppliers').addClass('d-none').removeClass('show');
-                $('.members').addClass('d-none').removeClass('show');
-                $('.projects').addClass('show').removeClass('d-none');
+        $(document).ready(function () {
+            $('.type').on('change', function () {
+                let status = $(this).val();
+                if(status==='1'){
+                    $('.suppliers').addClass('d-none').removeClass('show');
+                    $('.members').addClass('d-none').removeClass('show');
+                    $('.projects').addClass('show').removeClass('d-none');
 
-                $('.churches').addClass('d-none').removeClass('show');
-                $('.ministries').addClass('d-none').removeClass('show');
-                $('.employees').addClass('d-none').removeClass('show');
-            }
-            if(status==='2'){
-                $('.suppliers').addClass('d-none').removeClass('show');
-                $('.members').addClass('d-none').removeClass('show');
-                $('.projects').addClass('d-none').removeClass('show');
-                $('.churches').addClass('d-none').removeClass('show');
-                $('.ministries').addClass('d-none').removeClass('show');
-                $('.employees').addClass('d-none').removeClass('show');
-            }
-            if(status==='3'){
-                $('.suppliers').addClass('show').removeClass('d-none');
-                $('.members').addClass('d-none').removeClass('show');
-                $('.projects').addClass('d-none').removeClass('show');
-                $('.churches').addClass('d-none').removeClass('show');
-                $('.ministries').addClass('d-none').removeClass('show');
-                $('.employees').addClass('d-none').removeClass('show');
-            }
-            if(status==='4'){
-                $('.suppliers').addClass('d-none').removeClass('show');
-                $('.members').addClass('show').removeClass('d-none');
-                $('.projects').addClass('d-none').removeClass('show');
-                $('.churches').addClass('d-none').removeClass('show');
-                $('.ministries').addClass('d-none').removeClass('show');
-                $('.employees').addClass('d-none').removeClass('show');
-            }
-            if(status==='5'){
-                $('.suppliers').addClass('d-none').removeClass('show');
-                $('.members').addClass('d-none').removeClass('show');
-                $('.projects').addClass('d-none').removeClass('show');
-                $('.churches').addClass('d-none').removeClass('show');
-                $('.ministries').addClass('d-none').removeClass('show');
-                $('.employees').addClass('show').removeClass('d-none');
-            }
-            if(status==='6'){
-                $('.suppliers').addClass('d-none').removeClass('show');
-                $('.members').addClass('d-none').removeClass('show');
-                $('.projects').addClass('d-none').removeClass('show');
-                $('.churches').addClass('show').removeClass('d-none');
-                $('.ministries').addClass('d-none').removeClass('show');
-                $('.employees').addClass('d-none').removeClass('show');
-            }
-            if(status==='7'){
-                $('.suppliers').addClass('d-none').removeClass('show');
-                $('.members').addClass('d-none').removeClass('show');
-                $('.projects').addClass('d-none').removeClass('show');
-                $('.churches').addClass('d-none').removeClass('show');
-                $('.ministries').addClass('show').removeClass('d-none');
-                $('.employees').addClass('d-none').removeClass('show');
-            }
+                    $('.churches').addClass('d-none').removeClass('show');
+                    $('.ministries').addClass('d-none').removeClass('show');
+                    $('.employees').addClass('d-none').removeClass('show');
+                }
+                if(status==='2'){
+                    $('.suppliers').addClass('d-none').removeClass('show');
+                    $('.members').addClass('d-none').removeClass('show');
+                    $('.projects').addClass('d-none').removeClass('show');
+                    $('.churches').addClass('d-none').removeClass('show');
+                    $('.ministries').addClass('d-none').removeClass('show');
+                    $('.employees').addClass('d-none').removeClass('show');
+                }
+                if(status==='3'){
+                    $('.suppliers').addClass('show').removeClass('d-none');
+                    $('.members').addClass('d-none').removeClass('show');
+                    $('.projects').addClass('d-none').removeClass('show');
+                    $('.churches').addClass('d-none').removeClass('show');
+                    $('.ministries').addClass('d-none').removeClass('show');
+                    $('.employees').addClass('d-none').removeClass('show');
+                }
+                if(status==='4'){
+                    $('.suppliers').addClass('d-none').removeClass('show');
+                    $('.members').addClass('show').removeClass('d-none');
+                    $('.projects').addClass('d-none').removeClass('show');
+                    $('.churches').addClass('d-none').removeClass('show');
+                    $('.ministries').addClass('d-none').removeClass('show');
+                    $('.employees').addClass('d-none').removeClass('show');
+                }
+                if(status==='5'){
+                    $('.suppliers').addClass('d-none').removeClass('show');
+                    $('.members').addClass('d-none').removeClass('show');
+                    $('.projects').addClass('d-none').removeClass('show');
+                    $('.churches').addClass('d-none').removeClass('show');
+                    $('.ministries').addClass('d-none').removeClass('show');
+                    $('.employees').addClass('show').removeClass('d-none');
+                }
+                if(status==='6'){
+                    $('.suppliers').addClass('d-none').removeClass('show');
+                    $('.members').addClass('d-none').removeClass('show');
+                    $('.projects').addClass('d-none').removeClass('show');
+                    $('.churches').addClass('show').removeClass('d-none');
+                    $('.ministries').addClass('d-none').removeClass('show');
+                    $('.employees').addClass('d-none').removeClass('show');
+                }
+                if(status==='7'){
+                    $('.suppliers').addClass('d-none').removeClass('show');
+                    $('.members').addClass('d-none').removeClass('show');
+                    $('.projects').addClass('d-none').removeClass('show');
+                    $('.churches').addClass('d-none').removeClass('show');
+                    $('.ministries').addClass('show').removeClass('d-none');
+                    $('.employees').addClass('d-none').removeClass('show');
+                }
+            });
         });
-    });
     </script>
 @endsection
 

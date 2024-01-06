@@ -17,14 +17,14 @@ class ContractController extends Controller
             ->log("Accessed Contracts")->causer(request()->user());
         $contracts= Contract::all();
         return view('contracts.index')->with([
-            'cpage' => "finances",
+            'cpage' => "human-resources",
             'contracts' => $contracts
         ]);
     }
     public function create()
     {
         return view('contracts.create')->with([
-            'cpage'=>"contracts",
+            'cpage'=>"human-resources",
             'labourers'=>Labourer::all(),
             'contract_types'=>ContractType::all()
         ]);
@@ -50,7 +50,7 @@ class ContractController extends Controller
     public function show(Contract $contract)
     {
         return view('contracts.show')->with([
-            'cpage'=>"departments",
+            'cpage'=>"human-resources",
             'contract'=>$contract
         ]);
     }
@@ -84,7 +84,7 @@ class ContractController extends Controller
     public function edit(Contract $contract)
     {
         return view('contracts.edit')->with([
-            'cpage' => "contracts",
+            'cpage' => "human-resources",
             'contract' => $contract,
             'labourers'=>Labourer::all(),
             'contract_types'=>ContractType::all()

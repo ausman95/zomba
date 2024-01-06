@@ -48,6 +48,7 @@ Route::middleware(['auth', 'view.share'])->group(function () {
     Route::resource('contracts', \App\Http\Controllers\ContractController::class);
     Route::resource('leaves', \App\Http\Controllers\LeaveController::class);
     Route::resource('attendances', \App\Http\Controllers\AttendanceController::class);
+    Route::resource('receipts', \App\Http\Controllers\ReceiptController::class);
 
     Route::resource('leave-settings', \App\Http\Controllers\LeaveSettingController::class);
     Route::resource('requisitions', RequisitionController::class)->except(['store', 'show', 'destroy']);
@@ -56,6 +57,11 @@ Route::middleware(['auth', 'view.share'])->group(function () {
     Route::get('receipt/church/generate/', [\App\Http\Controllers\DeliveryController::class, 'generateChurchReceipt'])->name('church-receipt.generate');
 //    Route::post('receipt/generate/', [\App\Http\Controllers\DeliveryController::class, 'generateDeliveryNote'])->name('receipt.generate');
     Route::post('receipt/report', [\App\Http\Controllers\PaymentController::class, 'generateReceipt'])->name('receipt.generate');
+    Route::post('receipt/report', [\App\Http\Controllers\ReceiptController::class, 'generateReceipt'])->name('receipt.produce');
+    Route::get('receipt/generate/', [\App\Http\Controllers\OrderController::class, 'generateReceipt'])->name('request.generate');
+    Route::get('receipt/member/generate/', [\App\Http\Controllers\DeliveryController::class, 'generateMemberReceiptById'])->name('member-receipt.generate');
+
+
 
     Route::post('leave/summary', [\App\Http\Controllers\LeaveController::class, 'leaveSummary'])->name('leave.summary');
     Route::get('leave/summary', [\App\Http\Controllers\LeaveController::class, 'leaveSummary'])->name('leave.summary');

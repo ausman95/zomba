@@ -10,14 +10,14 @@ class LabourerPayments extends Model
 {
     use HasFactory;
     protected $fillable = [
-        'amount','labourer_id','expense_name','method','project_id','balance','type','description'
+        'account_id','amount','labourer_id','expense_name','method','project_id','balance','type','description'
     ];
     public function labourer(): BelongsTo
     {
         return $this->belongsTo(Labourer::class, 'labourer_id', 'id');
     }
-    public function expense(): BelongsTo
+    public function account(): BelongsTo
     {
-        return $this->belongsTo(Payment::class, 'expenses_id', 'id');
+        return $this->belongsTo(Accounts::class, 'account_id', 'id');
     }
 }

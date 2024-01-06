@@ -8,8 +8,10 @@ use App\Models\Banks;
 use App\Models\BankTransaction;
 use App\Models\Church;
 use App\Models\ChurchPayment;
+use App\Models\Cohort;
 use App\Models\Department;
-use App\Models\Incomes;
+use App\Models\District;
+use App\Models\Fee;
 use App\Models\Labourer;
 use App\Models\LabourerPayments;
 use App\Models\Member;
@@ -17,83 +19,59 @@ use App\Models\MemberPayment;
 use App\Models\Ministry;
 use App\Models\MinistryPayment;
 use App\Models\Month;
-use App\Models\order;
+use App\Models\Pastor;
 use App\Models\Payment;
-use App\Models\Project;
 use App\Models\ProjectPayment;
-use App\Models\Requisition;
-use App\Models\RequisitionItem;
+use App\Models\Receipt;
+use App\Models\Section;
+use App\Models\Students;
+use App\Models\StudentTransaction;
 use App\Models\Supplier;
 use App\Models\SupplierPayments;
+use App\Models\Term;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 
-class PaymentController extends Controller
+class ReceiptController extends Controller
 {
-
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function homePayments()
+    public function generateBalance(Request $request, Receipt $receipt)
     {
+        $request->validate([
+            'term_id' => "required|numeric",
+            'cohort_id' => "required|numeric",
+            'account_id' => "required|numeric",
+        ]);
 
-        activity('FINANCES')
-            ->log("Accessed Payments")->causer(request()->user());
-        $payment = Payment::where(['type'=>6])->orderBy('id','desc')->get();
-        return view('payments.church-transactions')->with([
+        $termID = $request->post('term_id');
+        $accountID = $request->post('account_id');
+        $cohortID = $request->post('cohort_id');
+
+
+        activity('Receipts')
+            ->log("Accessed Receipts")->causer(request()->user());
+        return view('receipts.balance')->with([
             'cpage' => "finances",
-            'payments'=>$payment,
+            'terms'=>Term::orderBy('id','desc')->get(),
+            'students'=>Students::orderBy('class_id','desc')->get(),
+            'cohorts'=>Cohort::orderBy('id','desc')->get(),
+            'accounts'=>Accounts::orderBy('id','ASC')->get(),
+            '$termID'=>$termID,
+            'accountID'=>$accountID,
+            '$cohortID'=>$cohortID,
         ]);
     }
-    public function ministryPayments()
+    public function getStudentBalances(Receipt $receipt)
     {
-
-        activity('FINANCES')
-            ->log("Accessed Payments")->causer(request()->user());
-        $payment = Payment::where(['type'=>7])->orderBy('id','desc')->get();
-        return view('payments.ministry-transactions')->with([
+        activity('Receipts')
+            ->log("Accessed Receipts")->causer(request()->user());
+        return view('receipts.balance')->with([
             'cpage' => "finances",
-            'payments'=>$payment,
-        ]);
-    }
-    public function memberPayments()
-    {
-
-        activity('FINANCES')
-            ->log("Accessed Payments")->causer(request()->user());
-        $payment = Payment::where(['type'=>5])->orderBy('id','desc')->get();
-        return view('payments.member-transactions')->with([
-            'cpage' => "finances",
-            'payments'=>$payment,
-        ]);
-    }
-    public function index()
-    {
-
-         if(Month::getActiveMonth()){
-             $month =Month::getActiveMonth();
-    }else{
-        return redirect()->route('months.index')->with([
-            'success-notification'=>"Please Create a new month"
+            'terms'=>Term::orderBy('id','desc')->get(),
+            'students'=>Students::orderBy('class_id','desc')->get(),
+            'cohorts'=>Cohort::orderBy('id','desc')->get(),
+            'accounts'=>Accounts::orderBy('id','ASC')->get()
         ]);
     }
 
-        activity('FINANCES')
-            ->log("Accessed Payments")->causer(request()->user());
-        return view('payments.index')->with([
-            'cpage' => "finances",
-            'payments'=>Payment::join('accounts', 'accounts.id','=','payments.account_id')
-                ->select(
-                    'payments.*',
-                )
-                ->whereBetween('t_date',[$month->start_date,$month->end_date])
-                ->where(['accounts.type'=>2])
-                ->orderBy('payments.id','desc')->get(),
-            'months'=>Month::orderBY('id','desc')->get()
-        ]);
-    }
     public function generateReceipt(Request $request)
     {
         $request->validate([
@@ -104,31 +82,93 @@ class PaymentController extends Controller
 
         activity('FINANCES')
             ->log("Accessed Payments")->causer(request()->user());
-        return view('payments.index')->with([
+        $payment = Payment::join('accounts', 'accounts.id','=','payments.account_id')
+            ->select(
+                'payments.*',
+            )
+            ->whereBetween('t_date',[$month->start_date,$month->end_date])
+            ->where(['accounts.type'=>1])
+            ->orderBy('payments.id','desc')->get();
+        return view('receipts.index')->with([
             'cpage' => "finances",
-            'payments'=>Payment::join('accounts', 'accounts.id','=','payments.account_id')
+            'payments'=>$payment,
+            'months'=>Month::orderBY('id','desc')->get()
+        ]);
+    }
+
+    public function sendSms($number, $message)
+    {
+        //dd($message);
+        $curl = curl_init();
+
+        curl_setopt_array($curl, array(
+            CURLOPT_URL => 'https://mysms.store/api-v2/send',
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_ENCODING => '',
+            CURLOPT_MAXREDIRS => 10,
+            CURLOPT_TIMEOUT => 0   ,
+            CURLOPT_FOLLOWLOCATION => true,
+            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+            CURLOPT_CUSTOMREQUEST => 'POST',
+            CURLOPT_POSTFIELDS => array(
+                'api_key' => 'eHTIUfunQ4UgDMQKtblY',
+                'password' => '@asakala1',
+                'text' => $message,
+                'numbers' => $number,
+                'from' => 'WGIT'),
+        ));
+
+        $response = curl_exec($curl);
+
+
+        curl_close($curl);
+        return $response;
+        //die();
+
+    }
+    public function index(Receipt $receipt)
+    {
+//        $month = Month::getActiveMonth();
+//        dd($month->id);
+        if(Month::getActiveMonth()){
+            $month=Month::getActiveMonth();
+        }else{
+            return redirect()->route('months.index')->with([
+                'success-notification'=>"Invalid Month, Call Your System Administrator"
+            ]);
+        }
+
+
+        activity('Receipts')
+            ->log("Accessed Receipts")->causer(request()->user());
+        return view('receipts.index')->with([
+            'cpage' => "finances",
+            'months'=>Month::orderBy('id','desc')->get(),
+            'churches'=>Church::orderBy('id','desc')->get(),
+            'ministries'=>Ministry::orderBy('id','desc')->get(),
+            'account_id'=>'1',
+            'description'=>0,
+            'type'=>'0',
+            'account_name'=>"SCHOOL FEES",
+            'term_name'=>Month::where(['id'=>$month->id])->first()->name,
+            'payments'=> Payment::join('accounts', 'accounts.id','=','payments.account_id')
                 ->select(
                     'payments.*',
                 )
                 ->whereBetween('t_date',[$month->start_date,$month->end_date])
-                ->where(['accounts.type'=>2])
+                ->where(['accounts.type'=>1])
                 ->orderBy('payments.id','desc')->get(),
-            'months'=>Month::orderBY('id','desc')->get()
+            'accounts'=>Accounts::orderBy('id','ASC')->get()
         ]);
     }
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function create()
     {
         $suppliers = Supplier::all();
         $banks = Banks::all();
         $labourer = Labourer::all();
         $projects = Department::all();
-        $accounts = Accounts::where(['type'=>2])->get();
-        return view('payments.create')->with([
+        $accounts = Accounts::where(['type'=>1])->get();
+        return view('receipts.create')->with([
             'cpage'=>"finances",
             'suppliers'=>$suppliers,
             'banks'=>$banks,
@@ -140,14 +180,15 @@ class PaymentController extends Controller
             'accounts'=>$accounts
         ]);
     }
-
     public function store (StoreRequest $request)
     {
         $request->validate([
             'type' => "required",
         ]);
-        $monthID  = Month::getActiveMonth();
         $data = $request->all();
+
+        $monthID  = Month::getActiveMonth();
+
         $reference = 'N/A';
         if($data['reference']){
             $reference = $data['reference'];
@@ -155,24 +196,7 @@ class PaymentController extends Controller
         $transactions_name = 'Admin';
 
         switch ($data['type']){
-            case '1':{
-                $request->validate(['project_id' => "required"]);
-                $transactions_name = Department::where(['id'=>$request->post('project_id')])->first()->name;
-                break;
-            }
-            case '3':{
-                $request->validate(['supplier_id' => "required"]);
-                $transactions_name = Supplier::where(['id'=>$request->post('supplier_id')])->first()->name;
-                break;
-            }
-            case '4':{
-                $request->validate(['labourer_id' => "required"]);
-                $labour_project_id = Labourer::where(['id'=>$request->post('labourer_id')])
-                    ->first();
-                $labour_project_id = $labour_project_id->department_id;
-                $transactions_name = Labourer::where(['id'=>$request->post('labourer_id')])->first()->name;
-                break;
-            }
+
             case '5':{
                 $request->validate(['member_id' => "required"]);
                 $transactions_name = Member::where(['id'=>$request->post('member_id')])->first()->name;
@@ -233,8 +257,8 @@ class PaymentController extends Controller
             'amount'=>$data['amount'],
             'name'=>$transactions_name,
             't_date'=>$data['t_date'],
-            'month_id'=>$monthID->id,
             'bank_id'=>$data['bank_id'],
+            'month_id'=>$monthID->id,
             'type'=>$data['type'],
             'payment_method'=>$data['payment_method'],
             'reference'=>$reference,
@@ -259,33 +283,6 @@ class PaymentController extends Controller
             $new_balances = $balances-$request->post('amount');
         }
 
-        if($request->type==4){
-            $bala = LabourerPayments::where(['labourer_id'=>$request->post('labourer_id')])->orderBy('id','desc')->first();
-            @$balances = $bala->balance;
-            if(!$balances){
-                $balances = 0;
-            }
-            $labourers = [
-                'expense_name'=>$transactions_name.' For '.$account->name,
-                'labourer_id'=>$request->post('labourer_id'),
-                'amount'=>$request->post('amount'),
-                'account_id'=>$request->post('account_id'),
-                'description'=>$request->post('description'),
-                'project_id'=>$labour_project_id,
-                'balance'=>$balances-$request->post('amount'),
-                'method'=>$request->post('payment_method'),
-                'type'=>2,
-            ];
-            $project_payment = [
-                'project_id'=>$labour_project_id,
-                'amount'=>$request->post('amount'),
-                'balance'=>$new_balances,
-                'payment_name'=>$transactions_name.' For '.$account->name,
-                'payment_type'=>'2'
-            ];
-            ProjectPayment::create($project_payment);
-            LabourerPayments::create($labourers);
-        }
         if($request->type==3){
             $suppliers = [
                 'expenses_id'=>'1111111',
@@ -322,10 +319,9 @@ class PaymentController extends Controller
                 'payment_id'=>$payment,
                 'transaction_type'=>2,
             ];
-            MemberPayment::create($members);
-//            $last_id = MemberPayment::create($members);
-//            $order = new DeliveryController();
-//            $order->generateMemberReceipt($last_id->id);
+            $last_id = MemberPayment::create($members);
+            $order = new DeliveryController();
+            $order->generateMemberReceipt($last_id->id,$monthID->name);
         }
         if($request->type==6){
             $bala = ChurchPayment::where(['church_id'=>$request->post('church_id')])->orderBy('id','desc')->first();
@@ -342,10 +338,9 @@ class PaymentController extends Controller
                 'payment_id'=>$payment,
                 'transaction_type'=>2,
             ];
-                ChurchPayment::create($churches);
-//            $last_id = ChurchPayment::create($churches);
-//            $order = new DeliveryController();
-//            $order->generateHomeReceipt($last_id->id);
+            $last_id = ChurchPayment::create($churches);
+            $order = new DeliveryController();
+            $order->generateHomeReceipt($last_id->id,$monthID->name);
         }
         if($request->type==7){
             $bala = MinistryPayment::where(['ministry_id'=>$request->post('ministry_id')])->orderBy('id','desc')->first();
@@ -362,67 +357,19 @@ class PaymentController extends Controller
                 'payment_id'=>$payment,
                 'transaction_type'=>2,
             ];
-            MinistryPayment::create($ministries);
-//            $last_id =MinistryPayment::create($ministries);
-//            $order = new DeliveryController();
-//            $order->generateMinistryReceipt($last_id->id);
+            $last_id =MinistryPayment::create($ministries);
+            $order = new DeliveryController();
+            $order->generateMinistryReceipt($last_id->id,$monthID->name);
         }
 
         BankTransaction::create($transactions);
         //code to generate an invoice
         activity('FINANCES')
-            ->log("Created a Payment")->causer(request()->user());
+            ->log("Created a Receipt")->causer(request()->user());
         return redirect(
-            route('payments.create') . "?id=success")->with(
+            route('receipts.create') . "?id=success")->with(
             ['success-notification'=>"Successfully Created"]
         );
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Payment $payment)
-    {
-        return view('receipts.show')->with([
-            'cpage'=>"finances",
-            'transaction'=>$payment,
-        ]);
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        //
-    }
 }

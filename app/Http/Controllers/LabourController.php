@@ -19,7 +19,7 @@ class LabourController extends Controller
 
         $labour= Labour::orderBy('id','desc')->get();;
         return view('labours.index')->with([
-            'cpage' => "labours",
+            'cpage' => "human-resources",
             'labours'=>$labour
         ]);
     }
@@ -35,7 +35,7 @@ class LabourController extends Controller
     public function create()
     {
         return view('labours.create')->with([
-            'cpage'=>"labours"
+            'cpage'=>"human-resources"
         ]);
     }
 
@@ -67,7 +67,7 @@ class LabourController extends Controller
     {
         $labourers = $labour->labourers;
         return view('labours.show')->with([
-            'cpage'=>"labours",
+            'cpage'=>"human-resources",
             'labourers'=>$labourers,
             'labour'=>$labour
         ]);
@@ -82,7 +82,7 @@ class LabourController extends Controller
     public function edit( Labour $labour)
     {
         return view('labours.edit')->with([
-            'cpage' => "labours",
+            'cpage' => "human-resources",
             'labour' => $labour
         ]);
     }

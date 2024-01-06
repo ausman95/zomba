@@ -22,7 +22,7 @@ class HumanResourceController extends Controller
         $sub = $departments->getSubContractor();
         $employed = $departments->getEmployed();
         return view('human-resources.index')->with([
-            'cpage' => "hr",
+            'cpage' => "human-resources",
             'employees'=>$employees,
             'department'=>$department,
             'employee'=>$employee,
