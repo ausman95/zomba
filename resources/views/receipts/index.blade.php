@@ -83,7 +83,7 @@
                                                         <td>{{$c++}}</td>
                                                         <td>{{date('d F Y', strtotime($payment->t_date)) }}</td>
                                                         <td>{{ucwords(substr($payment->name,0,20)) }}</td>
-                                                        <td>{{number_format($payment->amount) }}</td>
+                                                        <th>{{number_format($payment->amount,2) }}</th>
                                                         <td>{{ucwords($payment->account->name) }}</td>
                                                         <td>
                                                             @if(!@$payment->bank->account_name)
