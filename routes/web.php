@@ -59,10 +59,10 @@ Route::middleware(['auth', 'view.share'])->group(function () {
     Route::get('receipt/ministry/generate/', [\App\Http\Controllers\DeliveryController::class, 'generateReceipt'])->name('ministry-receipt.generate');
     Route::get('receipt/church/generate/', [\App\Http\Controllers\DeliveryController::class, 'generateChurchReceipt'])->name('church-receipt.generate');
 //    Route::post('receipt/generate/', [\App\Http\Controllers\DeliveryController::class, 'generateDeliveryNote'])->name('receipt.generate');
-    Route::post('receipt/report', [\App\Http\Controllers\PaymentController::class, 'generateReceipt'])->name('receipt.generate');
     Route::post('receipt/report', [\App\Http\Controllers\ReceiptController::class, 'generateReceipt'])->name('receipt.produce');
     Route::get('receipt/generate/', [\App\Http\Controllers\OrderController::class, 'generateReceipt'])->name('request.generate');
     Route::get('receipt/member/generate/', [\App\Http\Controllers\DeliveryController::class, 'generateMemberReceiptById'])->name('member-receipt.generate');
+    Route::post('payment/report', [\App\Http\Controllers\PaymentController::class, 'generateReceipt'])->name('receipt.generate');
 
 
 
