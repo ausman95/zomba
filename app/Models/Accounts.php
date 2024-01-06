@@ -15,7 +15,7 @@ class Accounts extends Model
 
     public function getAccountBalance($start_date,$end_date)
     {
-        return $value = Incomes::where(['account_id'=>$this->id])
+        return $value = BankTransaction::where(['account_id'=>$this->id])
             ->whereBetween('created_at',[$start_date,$end_date])
             ->groupBy('account_id')->sum("amount");
     }
