@@ -100,7 +100,7 @@ class ReceiptController extends Controller
         $curl = curl_init();
 
         curl_setopt_array($curl, array(
-            CURLOPT_URL => 'https://mysms.store/api-v2/send',
+            CURLOPT_URL => 'https://telcomw.com/api-v2/send',
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_ENCODING => '',
             CURLOPT_MAXREDIRS => 10,
@@ -117,9 +117,7 @@ class ReceiptController extends Controller
         ));
 
         $response = curl_exec($curl);
-
-
-        curl_close($curl);
+         curl_close($curl);
         return $response;
         //die();
 
@@ -320,6 +318,13 @@ class ReceiptController extends Controller
                 'transaction_type'=>2,
             ];
             $last_id = MemberPayment::create($members);
+            $member = Member::where(['id'=>$request->post('member_id')])->first();
+                $message = 'MALAWI ASSEMBLIES OF GOD ' .
+                    PHP_EOL .PHP_EOL . 'Dear '.$member->name.PHP_EOL .PHP_EOL .' You have Paid the following ' .
+                    PHP_EOL .PHP_EOL .Accounts::where(['id'=>$request->post('account_id')])->first()->name .
+                    ' : MK '.$data['amount'].PHP_EOL
+                    .PHP_EOL.' AREA 25 VICTORY TEMPLE';
+                    $this->sendSms($member->phone_number,$message);
             $order = new DeliveryController();
             $order->generateMemberReceipt($last_id->id,$monthID->name);
         }
