@@ -288,7 +288,8 @@
                                 <option value="">-- Select ---</option>
                                 <option value="1">Cash</option>
                                 <option value="3">Cheque</option>
-                                <option value="4">Online Transfer</option>
+                                <option value="4">Online Transfer </option>
+                                <option value="5">Mobile Money Transfer</option>
                             </select>
                             @error('payment_method')
                             <span class="invalid-feedback">

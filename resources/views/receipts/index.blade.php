@@ -97,8 +97,10 @@
                                                                 CASH
                                                             @elseif($payment->payment_method==3)
                                                                 CHEQUE
-                                                            @else
+                                                            @elseif($payment->payment_method==4)
                                                                 ONLINE TRANSFER
+                                                            @else
+                                                               MOBILE MONEY TRANSFER
                                                             @endif
                                                         </td>
                                                         <td>
