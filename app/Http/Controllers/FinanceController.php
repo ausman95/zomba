@@ -47,10 +47,10 @@ class FinanceController extends Controller
             return back()->with(['error-notification'=>"Please Specify the date correctly!"]);
         }
         if($request->post('end_date')>date('Y-m-d')){
-            return back()->with(['error-notification'=>"Invalid Start Date Entered, You have Entered a Future Date"]);
+            return back()->with(['error-notification'=>"Invalid End Date Entered, You have Entered a Future Date"]);
         }
         if($request->post('start_date')>date('Y-m-d')){
-            return back()->with(['error-notification'=>"Invalid End Date Entered, You have Entered a Future Date"]);
+            return back()->with(['error-notification'=>"Invalid Start Date Entered, You have Entered a Future Date"]);
         }
         activity('ANALYTICS')
             ->log("Accessed Financial Reports")->causer(request()->user());
