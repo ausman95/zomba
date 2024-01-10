@@ -70,7 +70,7 @@ class PurchaseController extends Controller
     public function store (StoreRequest $request)
     {
         if($request->post('date')>date('Y-m-d')){
-            return back()->with(['error-notification'=>"Invalid Date Entered, You have a Future Date"]);
+            return back()->with(['error-notification'=>"Invalid Date Entered, You have Entered a Future Date"]);
         }
         $request->validate([
             'payment_type' => "required",
