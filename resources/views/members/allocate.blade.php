@@ -26,7 +26,7 @@
                 <div class="col-sm-12 col-md-8 col-lg-4">
                     <h4 style="color: red">Allocating {{$member->getName($_GET['id'])}}</h4>
                     <hr>
-                    <form action="{{route('allocations.store')}}" method="POST" autocomplete="off">
+                    <form action="{{route('member_ministries.store')}}" method="POST" autocomplete="off">
                         @csrf
                         <input type="hidden" name="member_id" value="{{$_GET['id']}}">
                         <div class="form-group">
