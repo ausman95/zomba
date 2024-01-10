@@ -268,7 +268,7 @@
                         </div>
                         <div class="form-group">
                             <label>Total Amount</label>
-                            <input type="text" name="amount"
+                            <input type="number" name="amount"
                                    class="form-control @error('amount') is-invalid @enderror"
                                    value="{{old('amount')}}"
                                    placeholder="amount" >
