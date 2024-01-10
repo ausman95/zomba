@@ -41,7 +41,7 @@
                                             <div class="card-body">
                                                 <h5>Financial Reports</h5>
                                                 <div>
-                                                    Total
+                                                    Total Reports Available
                                                 </div>
                                                 <div class="d-flex my-2 justify-content-between">
                                                     <h3 class="text-primary"> 2
@@ -61,10 +61,10 @@
                                             <div class="card-body">
                                                 <h5>Other Accounts Reports</h5>
                                                 <div>
-                                                    Total
+                                                    Total Reports Available
                                                 </div>
                                                 <div class="d-flex my-2 justify-content-between">
-                                                    <h3 class="text-primary"> 3
+                                                    <h3 class="text-primary"> 1
                                                         <a href="{{route('church.reports')}}"
                                                            class="btn btn-md btn-primary rounded-0">
                                                             Go &rarr;
