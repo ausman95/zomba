@@ -11,6 +11,14 @@ use Illuminate\Http\Request;
 
 class MemberController extends Controller
 {
+    public function allocateMinistry( Member $member)
+    {
+        return view('members.allocate')->with([
+            'cpage' => "members",
+            'member'=>$member,
+            'ministries' => Ministry::all(),
+        ]);
+    }
     public function index()
     {
         activity('Members')
@@ -29,10 +37,13 @@ class MemberController extends Controller
             'ministries'=> Ministry::orderBy('id','desc')->get(),
         ]);
     }
-    public function store(StoreRequest $request)
+    public function store(StoreRequest $request, LabourerController $labourerController)
     {
         $data = $request->post();
-
+        if($labourerController->validating($data['phone_number'])==0){
+            // labourer is already part of this project
+            return back()->with(['error-notification'=>"Invalid Phone number"]);
+        }
         Member::create($data);
         activity('members')
             ->log("Created a new member")->causer(request()->user());
@@ -45,6 +56,7 @@ class MemberController extends Controller
         return view('members.show')->with([
             'cpage'=>"members",
             'member'=>$member,
+            'allocations'=>$member->allocations,
             'transactions'=>$member->payments
         ]);
     }

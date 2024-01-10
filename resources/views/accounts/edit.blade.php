@@ -49,8 +49,8 @@
                                     @else
                                         {{"DR"}}
                                     @endif</option>
-                                <option value="2">Dr</option>
-                                <option value="1">Cr</option>
+                                <option value="2">DR</option>
+                                <option value="1">CR</option>
                             </select>
                             @error('type')
                             <span class="invalid-feedback">

@@ -90,7 +90,7 @@
                 <a href="{{route('churches.index')}}"
                    class="sidenav__link {{$cpage === 'churches' ? 'link-active' : ''}}" title="Churches">
                     <i class='fab fa-acquisitions-incorporated sidenav__icon'></i>
-                    <span class="sidenav__name">Home Churches</span>
+                    <span class="sidenav__name">Home Cells</span>
                 </a>
                 <a href="{{route('members.index')}}"
                    class="sidenav__link {{$cpage === 'members' ? 'link-active' : ''}}" title="Members">
@@ -139,15 +139,11 @@
                     <span class="sidenav__name">My Profile</span>
                 </a>
                 @endif
-
-        <form action="{{route('logout')}}" method="POST" id="logout-form">
-            @csrf
-        </form>
-        <a href="#logout" class="sidenav__link" onclick="document.querySelector('#logout-form').submit()"
-           title="Logout">
-            <i class='bx bx-log-out sidenav__icon'></i>
-            <span class="sidenav__name">Log Out</span>
-        </a>
+                <a href="{{route('logout.perform')}}" class="sidenav__link {{$cpage === 'users' ? 'link-active' : ''}}"
+                   title="Logout">
+                    <i class='bx bx-log-out sidenav__icon'></i>
+                    <span class="sidenav__name">Log Out</span>
+                </a>
             </div>
         </div>
 

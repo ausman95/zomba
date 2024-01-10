@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Announcement;
 use App\Models\AssetService;
 use App\Models\Banks;
 use App\Models\Church;
@@ -263,6 +264,7 @@ class HomeController extends Controller
             'analytics' => $analytics,
             'churches' => Church::all(),
             'members' => Member::all(),
+            'announcements' => Announcement::all(),
             'materials' => 0,
             'stocks' => 0,
             'banks' => 0,

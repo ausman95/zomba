@@ -3,15 +3,15 @@
 @section('content')
     <div class="container-fluid ps-1 pt-4">
         <h4>
-            <i class="fa fa-list-ol"></i>Home churches
+            <i class="fa fa-list-ol"></i>Home Cells
         </h4>
         <p>
-            Manage Home churches information
+            Manage Home Cells information
         </p>
         <nav>
             <ol class="breadcrumb bg-transparent">
                 <li class="breadcrumb-item"><a href="{{route('home')}}">Home</a></li>
-                <li class="breadcrumb-item"><a href="{{route('churches.index')}}">Home churches</a></li>
+                <li class="breadcrumb-item"><a href="{{route('churches.index')}}">Home Cells</a></li>
                 <li class="breadcrumb-item active" aria-current="page">{{$church->name}}</li>
             </ol>
         </nav>
@@ -29,7 +29,7 @@
                                 <div class="card-body">
                                 <div class="table-responsive">
                                     <table class="table  table-bordered table-hover table-striped">
-                                        <caption style=" caption-side: top; text-align: center">{{$church->name}} Home Church</caption>
+                                        <caption style=" caption-side: top; text-align: center">{{$church->name}} Home Cell</caption>
                                         <tbody>
                                         <tr>
                                             <td>Name</td>
@@ -63,7 +63,7 @@
                             <div class="col-sm-8 mb-2">
                                 <div class="mt-5">
                                     <h5>
-                                        <i class="fa fa-microscope"></i>Home Church Transactions
+                                        <i class="fa fa-microscope"></i>Home Cell Transactions
                                     </h5>
                                     <div class="card">
                                         <div class="card-body">
@@ -72,7 +72,7 @@
                                             @else
                                                 <div style="overflow-x:auto;">
                                                     <table class="table   table2 table-bordered table-striped" id="incomes-table">
-                                                        <caption style=" caption-side: top; text-align: center">CHURCH TRANSACTIONS</caption>
+                                                        <caption style=" caption-side: top; text-align: center">HOME CELL TRANSACTIONS</caption>
                                                         <thead>
                                                         <tr>
                                                             <th>NO</th>
@@ -113,7 +113,7 @@
                 <div class="col-sm-12 mb-2">
                     <div class="mt-5">
                         <h5>
-                            <i class="fa fa-microscope"></i>Home Church Members
+                            <i class="fa fa-microscope"></i>Home Cell Members
                         </h5>
                         <div class="card">
                             <div class="card-body px-1">
@@ -127,7 +127,7 @@
                                             <tr>
                                                 <th>NO</th>
                                                 <th>NAME</th>
-                                                <th>HOME CHURCH</th>
+                                                <th>HOME CELL</th>
                                                 <th>PHONE</th>
                                                 <th>MINISTRY</th>
                                                 <th>STATUS</th>

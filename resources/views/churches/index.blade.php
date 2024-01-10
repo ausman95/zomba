@@ -7,15 +7,15 @@
 @section('content')
     <div class="container-fluid ps-1 pt-4">
         <h4>
-            <i class="fa fa-list-ol"></i>Church Home Churches
+            <i class="fa fa-list-ol"></i>Church Home Cells
         </h4>
         <p>
-            Manage Home Churches
+            Manage Home Cells
         </p>
         <nav aria-label="breadcrumb">
             <ol class="breadcrumb bg-transparent">
                 <li class="breadcrumb-item"><a href="{{route('home')}}">Home</a></li>
-                <li class="breadcrumb-item active" aria-current="page">Home Churches</li>
+                <li class="breadcrumb-item active" aria-current="page">Home Cells</li>
             </ol>
         </nav>
         <div class="mb-5">
@@ -24,13 +24,13 @@
         <div class="mt-3">
             @if(request()->user()->designation=='administrator')
             <button type="button" class="btn btn-primary rounded-0 btn-md" data-bs-toggle="modal" data-bs-target="#material">
-                <i class="fa fa-plus-circle"></i> New Home Church
+                <i class="fa fa-plus-circle"></i> New Home Cell
             </button>
             <div class="modal " id="material" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
                 <div class="modal-dialog">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h5 class="modal-title" id="staticBackdropLabel">Adding Home Churches</h5>
+                            <h5 class="modal-title" id="staticBackdropLabel">Adding Home Cell</h5>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div class="modal-body">
@@ -41,7 +41,7 @@
                                     <input type="text" name="name"
                                            class="form-control @error('name') is-invalid @enderror"
                                            value="{{old('name')}}"
-                                           placeholder="Home Church Name" >
+                                           placeholder="Home Church Cell" >
                                     @error('name')
                                     <span class="invalid-feedback">
                                {{$message}}
@@ -70,11 +70,11 @@
                         <div class="card " style="min-height: 30em;">
                             <div class="card-body px-1">
                                 @if($churches->count() === 0)
-                                    <i class="fa fa-info-circle"></i>There are no Home Churches!
+                                    <i class="fa fa-info-circle"></i>There are no Home Cells!
                                 @else
                                     <div style="overflow-x:auto;">
                                         <table class="table  table-bordered table-hover table-striped">
-                                            <caption style=" caption-side: top; text-align: center">HOME CHURCHES</caption>
+                                            <caption style=" caption-side: top; text-align: center">HOME CELLS</caption>
                                             <thead>
                                         <tr>
                                             <th>NO</th>

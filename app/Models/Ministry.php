@@ -13,7 +13,7 @@ class Ministry extends Model
     ];
     public function members()
     {
-        return $this->hasMany(Member::class,'ministry_id');
+        return $this->hasMany(MemberMinistry::class,'ministry_id');
     }
     public function payments()
     {

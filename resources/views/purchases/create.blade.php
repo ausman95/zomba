@@ -12,6 +12,7 @@
         <nav aria-label="breadcrumb">
             <ol class="breadcrumb bg-transparent">
                 <li class="breadcrumb-item"><a href="{{route('home')}}">Home</a></li>
+                <li class="breadcrumb-item"><a href="{{route('finances.index')}}">Finances</a></li>
                 <li class="breadcrumb-item"><a href="{{route('purchases.index')}}">Purchases</a></li>
                 <li class="breadcrumb-item active" aria-current="page">Create Purchases</li>
             </ol>
@@ -327,7 +328,7 @@
                         </div>
                         <div class="projects">
                             <div class="form-group">
-                                <label>Department / Project</label>
+                                <label>Department</label>
                                 <select name="project_id"
                                         class="form-select select-relation @error('project_id') is-invalid @enderror" style="width: 100%">
                                     <option value="">-- Select ---</option>

@@ -22,6 +22,9 @@ class AttendanceController extends Controller
     public function store(StoreRequest $request)
     {
         $data = $request->post();
+        if($request->post('date')>date('Y-m-d')){
+            return back()->with(['error-notification'=>"Invalid Date Entered, You have a Future Date"]);
+        }
 
         Attendance::create($data);
         activity('Attendance')

@@ -243,12 +243,23 @@ class LabourerController extends Controller
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @return false
      */
+    public function validating($phone)
+    {
+        $value = 0;
+        if(preg_match('/^[0-9]{10}+$/', $phone)) {
+            $value = 1;
+        }
+        return $value;
+    }
     public function store(StoreRequest $request)
     {
         $data = $request->post();
-
+        if($this->validating($data['phone_number'])==0){
+            // labourer is already part of this project
+            return back()->with(['error-notification'=>"Invalid Phone number"]);
+        }
         Labourer::create($data);
         activity('HUMAN RESOURCES')
             ->log("Created a Labourer")->causer(request()->user());

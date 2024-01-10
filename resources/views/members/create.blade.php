@@ -43,7 +43,6 @@
                         <option value="">-- Select ---</option>
                         <option value="Male">Male</option>
                         <option value="Female">Female</option>
-                        <option value="Customised">Customised</option>
                     </select>
                     @error('gender')
                     <span class="invalid-feedback">
@@ -65,7 +64,7 @@
                     @enderror
                 </div>
                 <div class="form-group">
-                    <label>Home Church</label>
+                    <label>Home Cell</label>
                     <select name="church_id"
                             class="form-select select-relation @error('church_id') is-invalid @enderror" style="width: 100%">
                         <option value="">-- Select ---</option>
@@ -75,22 +74,6 @@
                         @endforeach
                     </select>
                     @error('church_id')
-                    <span class="invalid-feedback">
-                               {{$message}}
-                        </span>
-                    @enderror
-                </div>
-                <div class="form-group">
-                    <label>Ministry</label>
-                    <select name="ministry_id"
-                            class="form-select select-relation @error('ministry_id') is-invalid @enderror" style="width: 100%">
-                        <option value="">-- Select ---</option>
-                        @foreach($ministries as $ministry)
-                            <option value="{{$ministry->id}}"
-                                {{old('ministry_id')===$ministry->id ? 'selected' : ''}}>{{$ministry->name}}</option>
-                        @endforeach
-                    </select>
-                    @error('ministry_id')
                     <span class="invalid-feedback">
                                {{$message}}
                         </span>

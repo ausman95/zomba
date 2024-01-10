@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Allocation;
 use App\Models\Labourer;
 use App\Models\LabourerPayments;
+use App\Models\MemberMinistry;
 use App\Models\ProjectPayment;
 use Illuminate\Http\Request;
 use App\Http\Requests\Allocations\StoreRequest;
@@ -31,45 +32,19 @@ class AllocationController extends Controller
         // something should be done here
 
         $check_data = [
-            'labourer_id'=>$data['labourer_id'],
-            'project_id'=>$data['project_id']
+            'member_id'=>$data['member_id'],
+            'ministry_id'=>$data['ministry_id']
         ];
 
-        if(Allocation::where($check_data)->first()){
+        if(MemberMinistry::where($check_data)->first()){
             // labourer is already part of this project
-            return back()->with(['error-notification'=>"Labourer is already assigned to this project"]);
+            return back()->with(['error-notification'=>"Member is already assigned to this Ministry"]);
         }
-        $bala = LabourerPayments::where(['labourer_id'=>$request->post('labourer_id')])->latest()->first();
-        @$balances = $bala->balance;
-        if(!$balances){
-            $balances = 0;
-        }
-        if(!$request->post('amount')){
-            $amount = 0;
-        }else{
-            $amount =   $request->post('amount');
-        }
-        $data = [
-            'labourer_id'=>$request->post('labourer_id'),
-            'amount'=>$amount,
-            'project_id'=>$request->post('project_id'),
-            'expense_name'=>"Project Agreed Amount",
-            'balance'=>$amount+$balances,
-            'method'=>4,
-            'type'=>1,
-        ];
-        $allocation= [
-            'labourer_id'=>$request->post('labourer_id'),
-            'amount'=>$amount,
-            'project_id'=>$request->post('project_id'),
-        ];
-        Allocation::create($allocation);
-        LabourerPayments::create($data);
+        MemberMinistry::create($data);
         activity('ALLOCATIONS')
-            ->log("Allocated a Labour ")->causer(request()->user());
-
-        return redirect()->route('members.show',$request->labourer_id)->with([
-            'success-notification'=>"Labourer successfully Allocated"
+            ->log("Allocated a Member to a Ministry ")->causer(request()->user());
+        return redirect()->route('members.show',$data['member_id'])->with([
+            'success-notification'=>"Successful"
         ]);
     }
 
@@ -122,18 +97,18 @@ class AllocationController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Allocation  $allocation)
+    public function destroy(MemberMinistry  $memberMinistry)
     {
         try{
-            $allocation->delete();
+            $memberMinistry->delete();
             activity('ALLOCATIONS')
                 ->log("Deleted an Allocation")->causer(request()->user());
-            return redirect()->route('members.show',$allocation->labourer_id)->with([
-                'success-notification'=>"La successfully Deleted"
+            return redirect()->route('members.show',$memberMinistry->labourer_id)->with([
+                'success-notification'=>" Successfully Deleted"
             ]);
 
         }catch (\Exception $exception){
-            return redirect()->route('members.members',$allocation->labourer_id)->with([
+            return redirect()->route('members.show',$memberMinistry->labourer_id)->with([
                 'error-notification'=>"Something went Wrong ".$exception.getMessage()
             ]);
         }

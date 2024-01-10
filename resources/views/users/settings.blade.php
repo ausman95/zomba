@@ -33,13 +33,13 @@
             </div>
             <div class="row">
                 <div class="col-sm-12 col-md-8 col-lg-4">
-                    <form action="{{route('settings.update')}}" method="POST">
+                    <form action="{{route('settings.update')}}" method="POST" autocomplete="off">
                         @csrf
                         <input type="hidden" name="_method" value="PATCH">
                         <div class="form-group">
                             <input type="hidden" name="id"
                                    class="form-control @error('password') is-invalid @enderror"
-                                   value="{{$_GET['id']}}">
+                                   value="{{request()->user()->id}}">
                             <label> User </label>
                             @error('id')
                             <span class="invalid-feedback">

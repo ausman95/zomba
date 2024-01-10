@@ -65,7 +65,7 @@
                                                 </div>
                                                 <div class="d-flex my-2 justify-content-between">
                                                     <h3 class="text-primary"> 3
-                                                        <a href="{{route('labourers.employees')}}"
+                                                        <a href="{{route('church.reports')}}"
                                                            class="btn btn-md btn-primary rounded-0">
                                                             Go &rarr;
                                                         </a></h3>

@@ -5,15 +5,15 @@
     <div class="container-fluid ps-1 pt-4">
 
         <h4>
-            <i class="fa fa-list-ol"></i>Home Churches
+            <i class="fa fa-list-ol"></i>Home Cells
         </h4>
         <p>
-            Update Home Churches Details
+            Update Home Cells Details
         </p>
         <nav>
             <ol class="breadcrumb bg-transparent">
                 <li class="breadcrumb-item"><a href="{{route('home')}}">Home</a></li>
-                <li class="breadcrumb-item"><a href="{{route('churches.index')}}">Home Churches</a></li>
+                <li class="breadcrumb-item"><a href="{{route('churches.index')}}">Home Cells</a></li>
                 <li class="breadcrumb-item"><a href="{{route('churches.show',$church->id)}}">{{$church->name}}</a></li>
                 <li class="breadcrumb-item active" aria-current="page">Update</li>
             </ol>
@@ -32,7 +32,7 @@
                             <input type="text" name="name"
                                    class="form-control @error('name') is-invalid @enderror"
                                    value="{{old('name') ?? $church->name}}"
-                                   placeholder="Home church Name">
+                                   placeholder="Home Cell Name">
                             @error('name')
                             <span class="invalid-feedback">
                                {{$message}}

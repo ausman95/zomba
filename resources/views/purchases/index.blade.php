@@ -83,11 +83,7 @@
                                                 </td>
                                                 <td>{{ucwords($purchase->reference) }}</td>
                                                 <td>
-                                                    @if($purchase->payment_type==2)
-                                                        {{date('d F Y', strtotime($purchase->date)) }}
-                                                    @else
-                                                        {{date('d F Y', strtotime($purchase->created_at)) }}
-                                                    @endif
+                                                    {{date('d F Y', strtotime($purchase->date)) }}
                                                 </td>
 {{--                                                <td class="pt-1">--}}
 {{--                                                    <a href="{{route('purchases.show',$purchase->id)}}"--}}

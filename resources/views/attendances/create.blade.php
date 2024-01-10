@@ -51,7 +51,7 @@
                         </div>
                         @if(!request()->user()->church_id)
                             <div class="form-group">
-                                <label>Church</label>
+                                <label>Home Cell</label>
                                 <select name="church_id"
                                         class="form-select select-relation @error('church_id') is-invalid @enderror" style="width: 100%">
                                     <option value="">-- Select ---</option>

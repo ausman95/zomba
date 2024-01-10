@@ -56,7 +56,6 @@
                                         <option value="">-- Select ---</option>
                                         <option value="Male">Male</option>
                                         <option value="Female">Female</option>
-                                        <option value="Customised">Customised</option>
                                     </select>
                                     @error('gender')
                                     <span class="invalid-feedback">
@@ -78,7 +77,7 @@
                                     @enderror
                                 </div>
                                 <div class="form-group">
-                                    <label>Professional/Labour</label>
+                                    <label>Position</label>
                                     <select name="labour_id"
                                             class="form-select select-relation @error('labour_id') is-invalid @enderror" style="width: 100%">
                                         <option value="">-- Select ---</option>
@@ -103,18 +102,8 @@
                                                 {{old('department_id')===$department->id ? 'selected' : ''}}>{{$department->name}}</option>
                                         @endforeach
                                     </select>
+                                    <input type="hidden" name="type" value="1">
                                     @error('department_id')
-                                    <span class="invalid-feedback">
-                               {{$message}}
-                        </span>
-                                    @enderror
-                                </div>
-                                <div class="form-group">
-                                    <label>Labour Type</label>
-                                    <select name="type" class="form-select select-relation @error('type') is-invalid @enderror" style="width: 100%">{{old('type')}}>
-                                        <option value="1">Employed
-                                    </select>
-                                    @error('type')
                                     <span class="invalid-feedback">
                                {{$message}}
                         </span>

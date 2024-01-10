@@ -146,6 +146,9 @@ class PaymentController extends Controller
         $request->validate([
             'type' => "required",
         ]);
+        if($request->post('t_date')>date('Y-m-d')){
+            return back()->with(['error-notification'=>"Invalid Date Entered, You have a Future Date"]);
+        }
         $monthID  = Month::getActiveMonth();
         $data = $request->all();
         $reference = 'N/A';

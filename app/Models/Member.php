@@ -10,8 +10,17 @@ class Member extends Model
 {
     use HasFactory;
     protected $fillable = [
-        'name','church_id','phone_number','gender','ministry_id','status'
+        'name','church_id','phone_number','gender','status'
     ];
+    public function getName($id)
+    {
+        $name = Member::where(['id'=>$id])->latest()->first();
+        return  $name->name;
+    }
+    public function allocations()
+    {
+        return $this->hasMany(MemberMinistry::class);
+    }
     public function church(): BelongsTo
     {
         return $this->belongsTo(Church::class,'church_id');

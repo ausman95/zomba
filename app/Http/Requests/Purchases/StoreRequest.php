@@ -30,6 +30,7 @@ class StoreRequest extends FormRequest
             'date' => "required|date",
             'payment_type' => "required|numeric",
             'quantity' => "required|numeric|min:1",
+            'amount' => "required|numeric|min:1",
         ];
     }
 }

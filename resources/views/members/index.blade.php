@@ -44,7 +44,6 @@
                                             <th>NAME</th>
                                             <th>HOME CHURCH</th>
                                             <th>PHONE</th>
-                                            <th>MINISTRY</th>
                                             <th>STATUS</th>
                                             <th>ACTION</th>
                                         </tr>
@@ -57,7 +56,6 @@
                                                 <td>{{$member->name}}</td>
                                                 <td>{{$member->church->name}}</td>
                                                 <td>{{$member->phone_number}}</td>
-                                                <td>{{$member->ministry->name}}</td>
                                                 <td>
                                                     @if($member->status==1)
                                                         {{'ACTIVE'}}

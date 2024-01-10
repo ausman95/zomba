@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta http-equiv="refresh" content="{{ config('session.lifetime') * 60 }}; url=/logout">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 {{--    <title>SICO CIVILS - Constructing the Future @yield('page')</title>--}}
         <link rel="stylesheet" href="{{asset('vendors/select2/css/select2.css')}}">
@@ -65,6 +66,52 @@
 
 <script>
     $(document).ready(function () {
+        (function () {
+            const idleDurationSecs = 7200;
+            const warningDurationSecs = 5400;
+            let idleTimeout;
+            let warningTimeout;
+
+            const resetIdleTimeout = function () {
+                clearTimeout(warningTimeout);
+                warningTimeout = setTimeout(
+                    () =>
+                        toastr.warning(
+                            "Please refresh the page to remain active",
+                            "Your session is about to expire",
+                            { timeOut: 1800000 }
+                        ),
+                    warningDurationSecs * 1000
+                );
+                clearTimeout(idleTimeout);
+                idleTimeout = setTimeout(
+                    () => document.getElementById("logout-form").submit(),
+                    idleDurationSecs * 1000
+                );
+            };
+
+            // Key events for reset time
+            resetIdleTimeout();
+            window.onmousemove = resetIdleTimeout;
+            window.onkeypress = resetIdleTimeout;
+            window.click = resetIdleTimeout;
+            window.onclick = resetIdleTimeout;
+            window.touchstart = resetIdleTimeout;
+            window.onfocus = resetIdleTimeout;
+            window.onchange = resetIdleTimeout;
+            window.onmouseover = resetIdleTimeout;
+            window.onmouseout = resetIdleTimeout;
+            window.onmousemove = resetIdleTimeout;
+            window.onmousedown = resetIdleTimeout;
+            window.onmouseup = resetIdleTimeout;
+            window.onkeypress = resetIdleTimeout;
+            window.onkeydown = resetIdleTimeout;
+            window.onkeyup = resetIdleTimeout;
+            window.onsubmit = resetIdleTimeout;
+            window.onreset = resetIdleTimeout;
+            window.onselect = resetIdleTimeout;
+            window.onscroll = resetIdleTimeout;
+        })();
         $("input,textarea").focus(function () {
             $(this).css("background-color", "hsl(0, 100%, 90%)");
         });

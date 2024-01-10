@@ -25,7 +25,7 @@ class StoreRequest extends FormRequest
     {
         return [
             'name' => "required|string",
-            'phone_number' => "required|string|unique:members,phone_number",
+            'phone_number' => "required|string|unique:labourers,phone_number",
             'gender' => "required|string",
             'department_id' => "required|numeric",
             'labour_id' => "required|string",

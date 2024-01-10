@@ -36,13 +36,13 @@
                                 Announcements
                             </div>
                             <div class="d-flex my-2 justify-content-between">
-                                <h3 class="text-primary">
+                                <h3 class="text-primary">{{count($announcements)}}
                                     <a href="{{route('announcements.index')}}"
                                        class="btn btn-md btn-primary rounded-0">
                                         Check &rarr;
                                     </a></h3>
                                 <div>
-                                    <i class="fa fa-file-archive fa-2x"></i>
+                                    <i class="fa fa-list-ol fa-2x"></i>
                                 </div>
                             </div>
                         </div>
@@ -60,10 +60,10 @@
                                 <h3 class="text-primary"> {{count($members)}}
                                     <a href="{{route('members.index')}}"
                                        class="btn btn-md btn-primary rounded-0">
-                                        Go &rarr;
+                                        Check &rarr;
                                     </a></h3>
                                 <div>
-                                    <i class="fa fa-file-archive fa-2x"></i>
+                                    <i class="fa fa-users fa-2x"></i>
                                 </div>
                             </div>
                         </div>
@@ -80,7 +80,7 @@
                                 <h3 class="text-primary"> {{count($churches)}}
                                     <a href="{{route('churches.index')}}"
                                        class="btn btn-md btn-primary rounded-0">
-                                        Go &rarr;
+                                        Check &rarr;
                                     </a></h3>
                                 <div>
                                     <i class="fa fa-file-archive fa-2x"></i>

@@ -27,9 +27,9 @@
             {{--                </a>--}}
             {{--            </div>--}}
             <div class="row">
-                <div class="col-sm-4">
+                <div class="col-sm-6">
                     <h5>
-                        <i class="fa fa-microscope"></i>Member Transactions
+                        <i class="fa fa-microscope"></i>Member Information
                     </h5>
                     <div class="card shadow-sm">
                         <div class="card-body">
@@ -46,11 +46,7 @@
                                         <td>{{($member->phone_number)}}</td>
                                     </tr>
                                     <tr>
-                                        <td>Ministry</td>
-                                        <td>{{$member->ministry->name}}</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Home Church</td>
+                                        <td>Home Cells</td>
                                         <td>{{$member->church->name}}</td>
                                     </tr>
                                     <tr>
@@ -75,6 +71,10 @@
                                 </table>
                                 <div class="mt-3">
                                     <div>
+                                        <a href="{{route('member.allocate')."?id=$member->id"}}"
+                                           class="btn btn-primary btn-md rounded-0" style="margin: 5px">
+                                            <i class="fa fa-list-ol"></i>Allocate to Ministry
+                                        </a>
                                         <a href="{{route('members.edit',$member->id)}}"
                                            class="btn btn-primary rounded-0" style="margin: 2px">
                                             <i class="fa fa-edit"></i>Update
@@ -85,42 +85,39 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-sm-8">
-                        <h5>
-                            <i class="fa fa-microscope"></i>Member Transactions
-                        </h5>
-                        <div class="card shadow-sm">
-                            <div class="card-body">
-                                @if($transactions->count() === 0)
-                                    <i class="fa fa-info-circle"></i>There are no Transactions!
+                <div class="col-sm-6">
+                    <h5>
+                        <i class="fa fa-microscope"></i>Ministries Allocated
+                    </h5>
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                @if($allocations->count() === 0)
+                                    <i class="fa fa-info-circle"></i>There are no Ministry allocations!
                                 @else
                                     <div style="overflow-x:auto;">
-                                        <table class="table table2 table-bordered table-striped" id="incomes-table">
-                                            <caption style=" caption-side: top; text-align: center">MEMBER TRANSACTIONS</caption>
+                                        <table class="table table1 table-primary table-bordered table-hover table-striped" id="project-table">
                                             <thead>
                                             <tr>
                                                 <th>NO</th>
-                                                <th>DATE</th>
-                                                <th>TRANSACTION NAME</th>
-                                                <th>AMOUNT (MK)</th>
-                                                <th>PAYMENT TYPE</th>
+                                                <th>MINISTRY NAME</th>
+                                                <th>CREATED DATE</th>
+                                                <th></th>
                                             </tr>
                                             </thead>
                                             <tbody>
-                                            <?php  $c = 1; $balance = 0;?>
-                                            @foreach($transactions as $transaction)
+                                                <?php $sum = 0; $c = 1;?>
+                                            @foreach($allocations as $allocation)
                                                 <tr>
                                                     <td>{{$c++}}</td>
-                                                    <td>{{date('d F Y', strtotime($transaction->created_at)) }}</td>
-                                                    <td>{{ucwords($transaction->account->name) }}</td>
-                                                    <th>
-                                                        @if($transaction->account->type == 1)
-                                                      ({{number_format($transaction->amount,2) }})
-                                                        @else
-                                                            {{number_format($transaction->amount,2) }}
-                                                        @endif
-                                                    </th>
-                                                    <td>{{ucwords($transaction->account->type == 2 ? "CR" : "DR") }}</td>
+                                                    <td>{{ucwords($allocation->ministry->name) }}</td>
+                                                    <td>{{date('d F Y', strtotime($allocation->created_at)) }}</td>
+                                                    <td class="pt-1">
+                                                        <a href="{{route('member_ministries.destroy',$allocation->id)}}"
+                                                           class="btn btn-danger btn-md rounded-0">
+                                                            <i class="fa fa-trash"></i>Remove
+                                                        </a>
+                                                    </td>
                                                 </tr>
                                             @endforeach
                                             </tbody>
@@ -132,6 +129,53 @@
                     </div>
                 </div>
             </div>
+            <div class="col-sm-12">
+                <h5>
+                    <i class="fa fa-microscope"></i>Member Transactions
+                </h5>
+                <div class="card shadow-sm">
+                    <div class="card-body">
+                        @if($transactions->count() === 0)
+                            <i class="fa fa-info-circle"></i>There are no Transactions!
+                        @else
+                            <div style="overflow-x:auto;">
+                                <table class="table table2 table-bordered table-striped" id="incomes-table">
+                                    <caption style=" caption-side: top; text-align: center">MEMBER TRANSACTIONS</caption>
+                                    <thead>
+                                    <tr>
+                                        <th>NO</th>
+                                        <th>DATE</th>
+                                        <th>TRANSACTION NAME</th>
+                                        <th>AMOUNT (MK)</th>
+                                        <th>PAYMENT TYPE</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                        <?php  $c = 1; $balance = 0;?>
+                                    @foreach($transactions as $transaction)
+                                        <tr>
+                                            <td>{{$c++}}</td>
+                                            <td>{{date('d F Y', strtotime($transaction->created_at)) }}</td>
+                                            <td>{{ucwords($transaction->account->name) }}</td>
+                                            <th>
+                                                @if($transaction->account->type == 1)
+                                                    ({{number_format($transaction->amount,2) }})
+                                                @else
+                                                    {{number_format($transaction->amount,2) }}
+                                                @endif
+                                            </th>
+                                            <td>{{ucwords($transaction->account->type == 2 ? "CR" : "DR") }}</td>
+                                        </tr>
+                                    @endforeach
+                                    </tbody>
+                                </table>
+                            </div>
+                        @endif
+                    </div>
+                </div>
+            </div>
+
+        </div>
     @stop
 
 @section('scripts')
@@ -155,8 +199,6 @@
                     }
                 })
             }
-
-
             $("#delete-btn").on('click', function () {
                 confirmationWindow("Confirm Deletion", "Are you sure you want to delete this Record?", "Yes,Delete", function () {
                     $("#delete-form").submit();

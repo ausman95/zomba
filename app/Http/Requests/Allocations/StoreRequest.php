@@ -24,8 +24,8 @@ class StoreRequest extends FormRequest
     public function rules()
     {
         return [
-            'labourer_id'=>'required|string',
-            'project_id'=>'required|string',
+            'member_id'=>'required|string',
+            'ministry_id'=>'required|string',
         ];
     }
 }
