@@ -58,7 +58,7 @@
                                 </div>
                                 <div class="form-group">
                                     <button class="btn btn-primary rounded-0" type="submit">
-                                        Generate
+                                        View &rarr;
                                     </button>
                                 </div>
                             </form>
