@@ -3,6 +3,7 @@
 <head><script src="{{asset('vendor/bootstrap2/js/color-modes.js')}}"></script>
 
     <meta charset="utf-8">
+    <meta http-equiv="refresh" content="3600">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="">
     <meta name="author" content="Mark Otto, Jacob Thornton, and Bootstrap contributors">
@@ -150,6 +151,7 @@
 
 <main class="form-signin w-100 m-auto">
     <form method="POST" action="{{ route('login') }}">
+        @csrf
         <img style="margin-left: 35%" class="mb-2" src="{{asset('vendor/logo.png')}}" alt="" width="72" height="57">
         <h1 style="margin-left: 17% !important;" class="h3 mb-3 fw-normal">CHURCHBOOK</h1>
         @csrf
