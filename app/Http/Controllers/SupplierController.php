@@ -23,6 +23,7 @@ class SupplierController extends Controller
             'reference'=>"required",
             'supplier_id' => "required",
         ]);
+
         $data = [
             'account_id'=>$request->post('account_id'),
             'name'=>$request->post('name'),
@@ -114,10 +115,13 @@ class SupplierController extends Controller
             'supplier' => $supplier
         ]);
     }
-    public function store (StoreRequest $request)
+    public function store (StoreRequest $request, LabourerController $labourerController)
     {
        $data = $request->post();
-
+        if($labourerController->validating($request->post('phone_number'))==0){
+            // labourer is already part of this project
+            return back()->with(['error-notification'=>"Invalid Phone number"]);
+        }
        Supplier::create($data);
         activity('SUPPLIERS')
             ->log("Created a Supplier")->causer(request()->user());

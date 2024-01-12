@@ -66,8 +66,12 @@ class UserController extends Controller
         ]);
     }
 
-    public function store(StoreRequest $request)
+    public function store(StoreRequest $request, LabourerController $labourerController)
     {
+        if($labourerController->validating($request->post('phone_number'))==0){
+            // labourer is already part of this project
+            return back()->with(['error-notification'=>"Invalid Phone number"]);
+        }
         if ($request->post('password')) {
             $password = bcrypt($request->post('password'));
         }
