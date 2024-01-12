@@ -139,7 +139,15 @@
                     <span class="sidenav__name">My Profile</span>
                 </a>
                 @endif
-                <a href="{{route('logout.perform')}}" class="sidenav__link {{$cpage === 'logout' ? 'link-active' : ''}}"
+{{--                <a href="{{route('logout.perform')}}" class="sidenav__link {{$cpage === 'logout' ? 'link-active' : ''}}"--}}
+{{--                   title="Logout">--}}
+{{--                    <i class='bx bx-log-out sidenav__icon'></i>--}}
+{{--                    <span class="sidenav__name">Log Out</span>--}}
+{{--                </a>--}}
+                <form action="{{route('logout')}}" method="POST" id="logout-form">
+                    @csrf
+                </form>
+                <a href="#logout" class="sidenav__link" onclick="document.querySelector('#logout-form').submit()"
                    title="Logout">
                     <i class='bx bx-log-out sidenav__icon'></i>
                     <span class="sidenav__name">Log Out</span>
