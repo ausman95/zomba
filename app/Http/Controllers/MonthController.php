@@ -94,7 +94,7 @@ class MonthController extends Controller
         Month::create($data);
         activity('Months')
             ->log("Created a month")->causer(request()->user());
-        return redirect()->back()->with([
+        return redirect()->route('months.index')->with([
             'success-notification'=>"Month successfully Created"
         ]);
     }
