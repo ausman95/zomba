@@ -52,22 +52,29 @@
                                             <td>Update ON</td>
                                             <td>{{$supplier->updated_at}}</td>
                                         </tr>
+                                        <tr>
+                                            <td>Status</td>
+                                            <td>
+                                                @if($supplier->soft_delete==1)
+                                                    <p style="color: red">Deleted, and Reserved for Audit</p>
+                                                @else
+                                                    Active
+                                                @endif
+                                            </td>
+                                        </tr>
                                     </table>
                                     <a href="{{route('suppliers.edit',$supplier->id)}}"
                                        class="btn btn-primary btn-md rounded-0" style="margin: 5px">
                                         <i class="fa fa-edit"></i>Update
                                     </a>
-{{--                                    @if( request()->user()->designation==='administrator')--}}
-{{--                                        <div class="">--}}
-{{--                                            <form action="{{route('suppliers.destroy',$supplier->id)}}" method="POST" id="delete-form">--}}
-{{--                                                @csrf--}}
-{{--                                                <input type="hidden" name="_method" value="DELETE">--}}
-{{--                                            </form>--}}
-{{--                                            <button   class="btn btn-danger btn-md rounded-0" style="margin: 5px" id="delete-btn">--}}
-{{--                                                <i class="fa fa-trash"></i>Delete--}}
-{{--                                            </button>--}}
-{{--                                        </div>--}}
-{{--                                    @endif--}}
+                                    <button class="btn btn-danger btn-md rounded-0" id="delete-btn" style="margin: 5px">
+                                        <i class="fa fa-trash"></i>Delete
+                                    </button>
+                                    <form action="{{route('suppliers.destroy',$supplier->id)}}" method="POST" id="delete-form">
+                                        @csrf
+                                        <input type="hidden" name="_method" value="DELETE">
+                                        <input type="hidden" name="id" value="{{$supplier->id}}">
+                                    </form>
 
                                 </div>
                             </div>
@@ -87,7 +94,7 @@
                         <i class="fa fa-info-circle"></i>There are no  Transactions!
                     @else
                         <div style="overflow-x:auto;">
-                            <table class="table table-primary table-bordered table2 table-hover table-striped" id="project-table">
+                            <table class="table  table-bordered table2 table-hover table-striped" id="project-table">
                                 <caption style=" caption-side: top; text-align: center">{{$supplier->name}} Statement</caption>
                                 <thead>
                             <tr>
@@ -104,18 +111,10 @@
                                 <tr>
                                     <td>{{$c++}}</td>
                                     <th>
-                                        @if( $payment->transaction_type==1 && $payment->method==1)
+                                        @if($payment->method==2)
+                                           ( {{number_format($payment->amount)}})
+                                        @else
                                             {{number_format($payment->amount)}}
-                                        @elseif( $payment->transaction_type==1 && $payment->method==2)
-                                            {{number_format($payment->amount)}}
-                                        @elseif( $payment->transaction_type==1 && $payment->method==4)
-                                            {{number_format($payment->amount)}}
-                                        @elseif( $payment->transaction_type==2 && $payment->method==1)
-                                            ({{number_format($payment->amount)}})
-                                        @elseif( $payment->transaction_type==2 && $payment->method==4)
-                                            ({{number_format($payment->amount)}})
-                                        @elseif( $payment->transaction_type==2 && $payment->method==3)
-                                            ({{number_format($payment->amount)}})
                                         @endif
 
                                     </th>

@@ -6,10 +6,12 @@ use App\Http\Requests\Supplier\StoreRequest;
 use App\Http\Requests\Supplier\UpdateRequest;
 use App\Models\Accounts;
 use App\Models\Incomes;
+use App\Models\Material;
 use App\Models\Payment;
 use App\Models\Supplier;
 use App\Models\SupplierPayments;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class SupplierController extends Controller
 {
@@ -82,10 +84,9 @@ class SupplierController extends Controller
     {
         activity('SUPPLIERS')
             ->log("Accessed Suppliers")->causer(request()->user());
-        $suppliers = Supplier::orderBy('id','desc')->get();
         return view('suppliers.index')->with([
             'cpage' => "suppliers",
-            'suppliers'=>$suppliers
+            'suppliers'=>Supplier::where(['soft_delete'=>0])->orderBy('id','desc')->get(),
         ]);
     }
 
@@ -117,6 +118,12 @@ class SupplierController extends Controller
     }
     public function store (StoreRequest $request, LabourerController $labourerController)
     {
+        if(is_numeric($request->post('name'))){
+            return back()->with(['error-notification'=>"Invalid Character Entered on Name"]);
+        }
+        if(is_numeric($request->post('location'))){
+            return back()->with(['error-notification'=>"Invalid Character Entered on Location"]);
+        }
        $data = $request->post();
         if($labourerController->validating($request->post('phone_number'))==0){
             // labourer is already part of this project
@@ -125,15 +132,25 @@ class SupplierController extends Controller
        Supplier::create($data);
         activity('SUPPLIERS')
             ->log("Created a Supplier")->causer(request()->user());
-       return redirect()->back()->with([
+       return redirect()->route('suppliers.index')->with([
            'success-notification'=>"Supplier successfully Created"
        ]);
     }
 
-    public function update(UpdateRequest $request,Supplier $supplier)
+    public function update(UpdateRequest $request,Supplier $supplier,LabourerController $labourerController)
     {
       $data = $request->post();
-
+        if(is_numeric($request->post('name'))){
+            return back()->with(['error-notification'=>"Invalid Character Entered on Name"]);
+        }
+        if(is_numeric($request->post('location'))){
+            return back()->with(['error-notification'=>"Invalid Character Entered on Location"]);
+        }
+        $data = $request->post();
+        if($labourerController->validating($request->post('phone_number'))==0){
+            // labourer is already part of this project
+            return back()->with(['error-notification'=>"Invalid Phone number"]);
+        }
       $supplier->update($data);
         activity('SUPPLIERS')
             ->log("Updated a Supplier")->causer(request()->user());
@@ -142,20 +159,17 @@ class SupplierController extends Controller
         ]);
     }
 
-    public function destroy (Supplier $supplier)
+    public function destroy(Request $request, Supplier $supplier)
     {
-        try{
-            $supplier->delete();
-            activity('SUPPLIERS')
-                ->log("Deleted a Supplier")->causer(request()->user());
-            return redirect()->route('suppliers.index')->with([
-                'success-notification'=>"Supplier successfully Deleted"
-            ]);
 
-        }catch (\Exception $exception){
-            return redirect()->route('suppliers.index')->with([
-                'error-notification'=>"Something went Wrong ".$exception.getMessage()
-            ]);
-        }
+        $data = $request->post();
+        DB::table('suppliers')
+            ->where(['id' => $request->post('id')])
+            ->update(['soft_delete' => '1']);
+        $supplier->update($data);
+
+        return redirect()->route('suppliers.index')->with([
+            'success-notification'=>"Successfully Deleted"
+        ]);
     }
 }

@@ -24,7 +24,10 @@ class UpdateRequest extends FormRequest
     public function rules()
     {
         return [
-            //
+            'labourer_id'=>"required|numeric",
+            'end_date'=>"required|string",
+            'start_date'=>"required|string",
+            'salary'=>"required|numeric|min:1"
         ];
     }
 }

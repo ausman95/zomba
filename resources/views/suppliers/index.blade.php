@@ -23,74 +23,11 @@
             <hr>
         </div>
         <div class="mt-3">
-            <div class="modal " id="supplier" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="staticBackdropLabel">Adding Supplier</h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                        </div>
-                        <div class="modal-body">
-                            <form action="{{route('suppliers.store')}}" method="POST" autocomplete="off">
-                                @csrf
-                                <div class="form-group">
-                                    <label>Name</label>
-                                    <input type="text" name="name"
-                                           class="form-control @error('name') is-invalid @enderror"
-                                           value="{{old('name')}}"
-                                           placeholder="Supplier's name"
-                                    >
-                                    @error('name')
-                                    <span class="invalid-feedback">
-                               {{$message}}
-                        </span>
-                                    @enderror
-                                </div>
-                                <div class="form-group">
-                                    <label>Phone Number</label>
-                                    <input type="number" name="phone_number"
-                                           class="form-control @error('phone_number') is-invalid @enderror"
-                                           value="{{old('phone_number')}}"
-                                           placeholder="Supplier's phone number"
-                                    >
-                                    @error('phone_number')
-                                    <span class="invalid-feedback">
-                               {{$message}}
-                        </span>
-                                    @enderror
-                                </div>
-                                <div class="form-group">
-                                    <label>Location</label>
-                                    <input type="text" name="location"
-                                           class="form-control @error('location') is-invalid @enderror"
-                                           value="{{old('location')}}"
-                                           placeholder="Enter location i.e Lilongwe"
-                                    >
-                                    @error('location')
-                                    <span class="invalid-feedback">
-                               {{$message}}
-                            </span>
-                                    @enderror
-                                </div>
-                                <hr style="height: .3em;" class="border-theme">
-                                <div class="form-group">
-                                    <button class="btn btn-md btn-primary rounded-0">
-                                        <i class="fa fa-paper-plane"></i>Save
-                                    </button>
-
-                                </div>
-                            </form>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"><i class="fa fa-times-circle"></i> Cancel</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <button type="button" class="btn btn-primary rounded-0 btn-md" data-bs-toggle="modal" data-bs-target="#supplier">
-                <i class="fa fa-plus-circle"></i> New Supplier
-            </button>
+            @if(request()->user()->designation=='administrator')
+                <a href="{{route('suppliers.create')}}" class="btn btn-primary btn-md rounded-0">
+                    <i class="fa fa-plus-circle"></i>New Supplier
+                </a>
+            @endif
             <div class="mt-3">
                 <div class="row">
                     <div class="col-sm-12 mb-2 col-md-12 col-lg-12">

@@ -21,7 +21,7 @@ class TransferController extends Controller
     {
         activity('FINANCES')
             ->log("Accessed Bank Transfers")->causer(request()->user());
-        $transfers= Transfer::orderBy('id','desc')->get();;
+        $transfers= Transfer::where(['soft_delete'=>0])->orderBy('id','desc')->get();
         return view('transfers.index')->with([
             'cpage' => "finances",
             'transfers'=>$transfers
@@ -37,7 +37,7 @@ class TransferController extends Controller
     {
         return view('transfers.create')->with([
             'cpage'=>"finances",
-            'banks'=>Banks::orderBy('id','DESC')->get(),
+            'banks'=>Banks::where(['soft_delete'=>0])->orderBy('id','desc')->get(),
         ]);
     }
 

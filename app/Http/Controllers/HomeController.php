@@ -262,9 +262,9 @@ class HomeController extends Controller
         return view('dashboard')->with([
             'cpage' => "dashboard",
             'analytics' => $analytics,
-            'churches' => Church::all(),
-            'members' => Member::all(),
-            'announcements' => Announcement::all(),
+            'churches' => Church::where(['soft_delete'=>0])->get(),
+            'members' => Member::where(['soft_delete'=>0])->get(),
+            'announcements' => Announcement::where(['soft_delete'=>0])->get(),
             'materials' => 0,
             'stocks' => 0,
             'banks' => 0,
@@ -279,9 +279,9 @@ class HomeController extends Controller
     public function analytics()
     {
         activity('ANALYTICS')
-            ->log("Accessed the Analytics page")->causer(request()->user());
+            ->log("Accessed the Report page")->causer(request()->user());
         return view('analytics')->with([
-            'cpage' => "analytics",
+            'cpage' => "finances",
             'suppliers' => Supplier::all(),
             'materials' => Material::all()
         ]);

@@ -49,6 +49,16 @@
                                                 <td>Update ON</td>
                                                 <td>{{$department->updated_at}}</td>
                                             </tr>
+                                            <tr>
+                                                <td>Status</td>
+                                                <td>
+                                                    @if($department->soft_delete==1)
+                                                        <p style="color: red">Deleted, and Reserved for Audit</p>
+                                                    @else
+                                                        Active
+                                                    @endif
+                                                </td>
+                                            </tr>
                                         </table>
                                         @if(request()->user()->designation!='clerk')
                                             <div>
@@ -56,21 +66,16 @@
                                                    class="btn btn-primary btn-md rounded-0" style="margin: 5px">
                                                     <i class="fa fa-edit"></i>Update
                                                 </a>
+                                                <button class="btn btn-danger btn-md rounded-0" id="delete-btn" style="margin: 5px">
+                                                    <i class="fa fa-trash"></i>Delete
+                                                </button>
+                                                <form action="{{route('departments.destroy',$department->id)}}" method="POST" id="delete-form">
+                                                    @csrf
+                                                    <input type="hidden" name="_method" value="DELETE">
+                                                    <input type="hidden" name="id" value="{{$department->id}}">
+                                                </form>
                                             </div>
                                         @endif
-{{--                                        <div class="">--}}
-{{--                                            @if( request()->user()->designation==='administrator')--}}
-{{--                                                <form action="{{route('departments.destroy',$department->id)}}"--}}
-{{--                                                      method="POST" id="delete-form">--}}
-{{--                                                    @csrf--}}
-{{--                                                    <input type="hidden" name="_method" value="DELETE">--}}
-{{--                                                </form>--}}
-{{--                                                <button class="btn btn-danger btn-md rounded-0" id="delete-btn"--}}
-{{--                                                        style="margin: 5px">--}}
-{{--                                                    <i class="fa fa-trash"></i>Delete--}}
-{{--                                                </button>--}}
-{{--                                            @endif--}}
-{{--                                        </div>--}}
                                     </div>
                                 </div>
                             </div>

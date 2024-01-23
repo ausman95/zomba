@@ -59,17 +59,14 @@
                                                 <i class="fa fa-edit"></i>Update
                                             </a>
                                         </div>
-{{--                                        @if(request()->user()->designation==='administrator')--}}
-{{--                                            <div class="">--}}
-{{--                                                <form action="{{route('budgets.destroy',$budget->id)}}" method="POST" id="delete-form">--}}
-{{--                                                    @csrf--}}
-{{--                                                    <input type="hidden" name="_method" value="DELETE">--}}
-{{--                                                </form>--}}
-{{--                                                <button class="btn btn-danger rounded-0" style="margin: 2px" id="delete-btn">--}}
-{{--                                                    <i class="fa fa-trash"></i>Delete--}}
-{{--                                                </button>--}}
-{{--                                            </div>--}}
-{{--                                        @endif--}}
+                                        <button class="btn btn-danger btn-md rounded-0" id="delete-btn" style="margin: 5px">
+                                            <i class="fa fa-trash"></i>Delete
+                                        </button>
+                                        <form action="{{route('budgets.destroy',$budget->id)}}" method="POST" id="delete-form">
+                                            @csrf
+                                            <input type="hidden" name="_method" value="DELETE">
+                                            <input type="hidden" name="id" value="{{$budget->id}}">
+                                        </form>
                                     </div>
                                 </div>
                                 </div>

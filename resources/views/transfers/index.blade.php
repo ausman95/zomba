@@ -16,6 +16,7 @@
             <ol class="breadcrumb bg-transparent">
                 <li class="breadcrumb-item"><a href="{{route('home')}}">Home</a></li>
                 <li class="breadcrumb-item"><a href="{{route('finances.index')}}">Finances</a></li>
+                <li class="breadcrumb-item"><a href="{{route('banks.index')}}">Banks</a></li>
                 <li class="breadcrumb-item active" aria-current="page">Bank Transfers</li>
             </ol>
         </nav>
@@ -35,7 +36,7 @@
                                     <i class="fa fa-info-circle"></i>There are no Bank Transfers!
                                 @else
                                     <div style="overflow-x:auto;">
-                                        <table class="table table-primary table-bordered table-hover table-striped">
+                                        <table class="table  table-bordered table-hover table-striped">
                                             <caption style=" caption-side: top; text-align: center">BANK TRANSFERS</caption>
                                             <thead>
                                         <tr>

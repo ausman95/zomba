@@ -15,6 +15,7 @@
         <nav aria-label="breadcrumb">
             <ol class="breadcrumb bg-transparent">
                 <li class="breadcrumb-item"><a href="{{route('home')}}">Home</a></li>
+                <li class="breadcrumb-item"><a href="{{route('finances.index')}}">Finances</a></li>
                 <li class="breadcrumb-item"><a href="{{route('analytics')}}">Analytics</a></li>
                 <li class="breadcrumb-item active" aria-current="page">Accounts Reports</li>
             </ol>
@@ -28,7 +29,7 @@
                         <form action="{{route('church-report.generate')}}" method="POST">
                             @csrf
                             <div class="row mb-3">
-                                <label for="inputEmail3" class="col-sm-4 col-form-label">Account</label>
+                                <label for="inputEmail3" class="col-sm-4 col-form-label">ACCOUNT</label>
                                 <div class="col-sm-8">
                                     <select name="account_id"
                                             class="form-select select-relation @error('account_id') is-invalid @enderror" style="width: 100%">
@@ -45,7 +46,7 @@
                                 </div>
                             </div>
                             <div class="row mb-3">
-                                <label for="inputEmail3" class="col-sm-4 col-form-label">From</label>
+                                <label for="inputEmail3" class="col-sm-4 col-form-label">FROM</label>
                                 <div class="col-sm-8">
                                     <select name="from_month_id"
                                             class="form-select select-relation @error('month_id') is-invalid @enderror" style="width: 100%">
@@ -62,7 +63,7 @@
                                 </div>
                             </div>
                             <div class="row mb-3">
-                                <label for="inputEmail3" class="col-sm-4 col-form-label">To</label>
+                                <label for="inputEmail3" class="col-sm-4 col-form-label">TO</label>
                                 <div class="col-sm-8">
                                     <select name="to_month_id"
                                             class="form-select select-relation @error('month_id') is-invalid @enderror" style="width: 100%">
@@ -79,7 +80,7 @@
                                 </div>
                             </div>
                             <div class="row mb-3">
-                                <label for="inputEmail3" class="col-sm-4 col-form-label">Desc</label>
+                                <label for="inputEmail3" class="col-sm-4 col-form-label">DESC</label>
                                 <div class="col-sm-8">
                                     <select name="description"
                                             class="form-select select-relation @error('description') is-invalid @enderror" style="width: 100%">
@@ -112,7 +113,7 @@
                                 @if(!@$receipts)
                                     <div class="text-center">
                                         <div class="alert alert-danger">
-                                            Receipt not available at the moment!.
+                                            Select ACCOUNT, FROM and TO then click Generate.
                                         </div>
                                     </div>
                                 @else

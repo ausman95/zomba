@@ -22,14 +22,14 @@
             <hr>
         </div>
         <div class="mt-3">
-            <a href="{{route('labourers.employees')}}" class="btn btn-primary btn-md rounded-0">
-                <i class="fa fa-people-arrows"></i>Employees
+            <a href="{{route('departments.index')}}" class="btn btn-primary btn-md rounded-0">
+                <i class="fa fa-folder"></i>Departments
             </a>
             <a href="{{route('labours.index')}}" class="btn btn-primary btn-md rounded-0">
                 <i class="fa fa-list-ol"></i>Positions
             </a>
-            <a href="{{route('departments.index')}}" class="btn btn-primary btn-md rounded-0">
-                <i class="fa fa-folder"></i>Departments
+            <a href="{{route('labourers.employees')}}" class="btn btn-primary btn-md rounded-0">
+                <i class="fa fa-people-arrows"></i>Employees
             </a>
             <a href="{{route('contracts.index')}}" class="btn btn-primary btn-md rounded-0">
                 <i class="fa fa-file-archive"></i>Contracts
@@ -57,28 +57,8 @@
                                                     Total
                                                 </div>
                                                 <div class="d-flex my-2 justify-content-between">
-                                                    <h3 class="text-primary"> {{$department}}
+                                                    <h3 class="text-primary"> {{count($department)}}
                                                         <a href="{{route('departments.index')}}"
-                                                           class="btn btn-md btn-primary rounded-0">
-                                                            Go &rarr;
-                                                        </a></h3>
-                                                    <div>
-                                                        <i class="fa fa-file-archive fa-2x"></i>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div><!-- ./ analytic -->
-                                    </div>
-                                    <div class="col-sm-12">
-                                        <div class="card shadow-sm my-2">
-                                            <div class="card-body">
-                                                <h5>Employees</h5>
-                                                <div>
-                                                    Total
-                                                </div>
-                                                <div class="d-flex my-2 justify-content-between">
-                                                    <h3 class="text-primary"> {{$employee}}
-                                                        <a href="{{route('labourers.employees')}}"
                                                            class="btn btn-md btn-primary rounded-0">
                                                             Go &rarr;
                                                         </a></h3>
@@ -97,7 +77,7 @@
                                                     Total
                                                 </div>
                                                 <div class="d-flex my-2 justify-content-between">
-                                                    <h3 class="text-primary"> {{$labour}}
+                                                    <h3 class="text-primary"> {{count($labour)}}
                                                         <a href="{{route('labours.index')}}"
                                                            class="btn btn-md btn-primary rounded-0">
                                                             Go &rarr;
@@ -109,6 +89,27 @@
                                             </div>
                                         </div><!-- ./ analytic -->
                                     </div>
+                                    <div class="col-sm-12">
+                                        <div class="card shadow-sm my-2">
+                                            <div class="card-body">
+                                                <h5>Employees</h5>
+                                                <div>
+                                                    Total
+                                                </div>
+                                                <div class="d-flex my-2 justify-content-between">
+                                                    <h3 class="text-primary"> {{count($employee)}}
+                                                        <a href="{{route('labourers.employees')}}"
+                                                           class="btn btn-md btn-primary rounded-0">
+                                                            Go &rarr;
+                                                        </a></h3>
+                                                    <div>
+                                                        <i class="fa fa-file-archive fa-2x"></i>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div><!-- ./ analytic -->
+                                    </div>
+
                                 </div>
                             </div>
                         </div>

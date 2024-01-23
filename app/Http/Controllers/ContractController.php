@@ -4,29 +4,44 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\Contracts\StoreRequest;
 use App\Http\Requests\Contracts\UpdateRequest;
+use App\Models\Announcement;
 use App\Models\Contract;
 use App\Models\ContractType;
 use App\Models\Labourer;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class ContractController extends Controller
 {
+    public function destroy(Request $request, Contract $contract)
+    {
+
+        $data = $request->post();
+        DB::table('contracts')
+            ->where(['id' => $request->post('id')])
+            ->update(['soft_delete' => '1']);
+        $contract->update($data);
+
+        return redirect()->route('contracts.index')->with([
+            'success-notification'=>"Successfully Deleted"
+        ]);
+    }
+
     public function index()
     {
         activity('CONTRACTS')
             ->log("Accessed Contracts")->causer(request()->user());
-        $contracts= Contract::all();
         return view('contracts.index')->with([
             'cpage' => "human-resources",
-            'contracts' => $contracts
+            'contracts' => Contract::where(['soft_delete'=>0])->orderBy('id','desc')->get(),
         ]);
     }
     public function create()
     {
         return view('contracts.create')->with([
             'cpage'=>"human-resources",
-            'labourers'=>Labourer::all(),
-            'contract_types'=>ContractType::all()
+            'labourers'=>Labourer::where(['soft_delete'=>0])->orderBy('id','desc')->get(),
+            'contract_types'=>ContractType::where(['soft_delete'=>0])->orderBy('id','desc')->get(),
         ]);
     }
     public function store(StoreRequest $request)
@@ -34,7 +49,11 @@ class ContractController extends Controller
         $data = $request->post();
         $check_data = [
             'labourer_id'=>$data['labourer_id'],
+            'soft_delete'=>0
         ];
+        if($request->post('start_date')>$request->post('end_date')){
+            return back()->with(['error-notification'=>"Invalid End Date Entered"]);
+        }
 
         if(Contract::where($check_data)->first()){
             // labourer is already part of this project
@@ -43,7 +62,7 @@ class ContractController extends Controller
         Contract::create($data);
         activity('CONTRACTS')
             ->log("Created a Contracts")->causer(request()->user());
-        return redirect()->route('contracts.create')->with([
+        return redirect()->route('contracts.index')->with([
             'success-notification'=>"Contract successfully Created"
         ]);
     }
@@ -54,26 +73,28 @@ class ContractController extends Controller
             'contract'=>$contract
         ]);
     }
-    public function destroy(Contract $contract)
-    {
-        try{
-            $contract->delete();
-            activity('CONTRACTS')
-                ->log("Deleted a Contracts")->causer(request()->user());
-            return redirect()->route('contracts.index')->with([
-                'success-notification'=>"Contract successfully Deleted"
-            ]);
-
-        }catch (\Exception $exception){
-            return redirect()->route('contracts.index')->with([
-                'error-notification'=>"Something went Wrong ".$exception.getMessage()
-            ]);
-        }
-    }
+//    public function destroy(Contract $contract)
+//    {
+//        try{
+//            $contract->delete();
+//            activity('CONTRACTS')
+//                ->log("Deleted a Contracts")->causer(request()->user());
+//            return redirect()->route('contracts.index')->with([
+//                'success-notification'=>"Contract successfully Deleted"
+//            ]);
+//
+//        }catch (\Exception $exception){
+//            return redirect()->route('contracts.index')->with([
+//                'error-notification'=>"Something went Wrong ".$exception.getMessage()
+//            ]);
+//        }
+//    }
     public function update(UpdateRequest $request, Contract $contract)
     {
         $data = $request->post();
-
+        if($request->post('start_date')>$request->post('end_date')){
+            return back()->with(['error-notification'=>"Invalid End Date Entered"]);
+        }
         $contract->update($data);
         activity('CONTRACTS')
             ->log("Updated a Contracts")->causer(request()->user());

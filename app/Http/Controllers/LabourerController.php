@@ -213,8 +213,7 @@ class LabourerController extends Controller
     {
         activity('HUMAN RESOURCES')
             ->log("Accessed Labourers")->causer(request()->user());
-
-        $labourer= Labourer::where(['type'=>1])->orderBy('id','desc')->get();;
+        $labourer= Labourer::where(['type'=>1])->where(['soft_delete'=>0])->orderBy('id','desc')->get();;
         return view('labourers.employees')->with([
             'cpage' => "human-resources",
             'labours'=>Labour::all(),
@@ -230,8 +229,8 @@ class LabourerController extends Controller
      */
     public function create()
     {
-        $labour = Labour::orderBy('id','desc')->get();;
-        $department = Department::all();
+        $labour = Labour::where(['soft_delete'=>0])->orderBy('id','desc')->get();
+        $department = Department::where(['soft_delete'=>0])->orderBy('id','desc')->get();
         return view('labourers.create')->with([
             'cpage'=>"human-resources",
             'labours'=>$labour,
@@ -255,6 +254,9 @@ class LabourerController extends Controller
     }
     public function store(StoreRequest $request)
     {
+        if(is_numeric($request->post('name'))){
+            return back()->with(['error-notification'=>"Invalid Character Entered on Name"]);
+        }
         $data = $request->post();
         if($this->validating($data['phone_number'])==0){
             // labourer is already part of this project
@@ -263,7 +265,7 @@ class LabourerController extends Controller
         Labourer::create($data);
         activity('HUMAN RESOURCES')
             ->log("Created a Labourer")->causer(request()->user());
-        return redirect()->back()->with([
+        return redirect()->route('labourers.employees')->with([
             'success-notification'=>"Successfully Created"
         ]);
     }
@@ -332,11 +334,18 @@ class LabourerController extends Controller
     public function update(UpdateRequest $request, Labourer $labourer)
     {
         $data = $request->post();
-
+        if(is_numeric($request->post('name'))){
+            return back()->with(['error-notification'=>"Invalid Character Entered on Name"]);
+        }
+        $data = $request->post();
+        if($this->validating($data['phone_number'])==0){
+            // labourer is already part of this project
+            return back()->with(['error-notification'=>"Invalid Phone number"]);
+        }
         $labourer->update($data);
         activity('HUMAN RESOURCES')
             ->log("updated a Labourer")->causer(request()->user());
-        return redirect()->route('labourers.show',$labourer->id)->with([
+        return redirect()->route('labourers.employees',$labourer->id)->with([
             'success-notification'=>"Updated Successfully"
         ]);
     }
@@ -348,20 +357,17 @@ class LabourerController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Labourer  $labourer)
+    public function destroy(Request $request, Labourer  $labourer)
     {
-        try{
-            $labourer->delete();
-            activity('HUMAN RESOURCES')
-                ->log("Deleted a Labourer")->causer(request()->user());
-            return redirect()->route('labourers.index')->with([
-                'success-notification'=>"Labourer successfully Deleted"
-            ]);
 
-        }catch (\Exception $exception){
-            return redirect()->route('labourers.index')->with([
-                'error-notification'=>"Something went Wrong ".$exception.getMessage()
-            ]);
-        }
+        $data = $request->post();
+        DB::table('labourers')
+            ->where(['id' => $request->post('id')])
+            ->update(['soft_delete' => '1']);
+        $labourer->update($data);
+
+        return redirect()->route('labourers.employees')->with([
+            'success-notification'=>"Successfully Deleted"
+        ]);
     }
 }

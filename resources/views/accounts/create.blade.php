@@ -41,8 +41,8 @@
                         <div class="form-group">
                             <label>Account Type</label>
                             <select name="type" class="form-control select-relation @error('type') is-invalid @enderror" style="width: 100%">{{old('type')}}>
-                                <option value="1">Cr</option>
-                                <option value="2">Dr</option>
+                                <option value="1">CR</option>
+                                <option value="2">DR</option>
                             </select>
                             @error('type')
                             <span class="invalid-feedback">

@@ -23,46 +23,9 @@
         </div>
         <div class="mt-3">
             @if(request()->user()->designation=='administrator')
-            <button type="button" class="btn btn-primary rounded-0 btn-md" data-bs-toggle="modal" data-bs-target="#material">
-                <i class="fa fa-plus-circle"></i> New Home Cell
-            </button>
-            <div class="modal " id="material" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="staticBackdropLabel">Adding Home Cell</h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                        </div>
-                        <div class="modal-body">
-                            <form action="{{route('churches.store')}}" method="POST" autocomplete="off">
-                                @csrf
-                                <div class="form-group">
-                                    <label>Name</label>
-                                    <input type="text" name="name"
-                                           class="form-control @error('name') is-invalid @enderror"
-                                           value="{{old('name')}}"
-                                           placeholder="Home Church Cell" >
-                                    @error('name')
-                                    <span class="invalid-feedback">
-                               {{$message}}
-                        </span>
-                                    @enderror
-                                </div>
-                                <hr style="height: .3em;" class="border-theme">
-                                <div class="form-group">
-                                    <button class="btn btn-md btn-primary rounded-0">
-                                        <i class="fa fa-paper-plane"></i>Save
-                                    </button>
-
-                                </div>
-                            </form>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"><i class="fa fa-times-circle"></i> Cancel</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
+                <a href="{{route('churches.create')}}" class="btn btn-primary btn-md rounded-0">
+                    <i class="fa fa-plus-circle"></i>New Home Cell
+                </a>
             @endif
             <div class="mt-3">
                 <div class="row">
@@ -79,6 +42,8 @@
                                         <tr>
                                             <th>NO</th>
                                             <th>NAME</th>
+                                            <th>LEADER</th>
+                                            <th>ZONE</th>
                                             <th>MEMBERS</th>
                                             <th>CREATED ON</th>
                                             <th>ACTION</th>
@@ -90,6 +55,8 @@
                                             <tr>
                                                 <td>{{$c++}}</td>
                                                 <td>{{ucwords($church->name) }}</td>
+                                                <td>{{@$church->member->name}}</td>
+                                                <td>{{@$church->zone->name}}</td>
                                                 <td>{{count($church->members) }}</td>
                                                 <td>{{date('d F Y', strtotime($church->created_at)) }}</td>
                                                 <td class="pt-1">

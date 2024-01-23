@@ -29,7 +29,6 @@ class UpdateRequest extends FormRequest
             'name' => "required|string",
             'gender' => "required|string",
             'church_id' => "required|numeric",
-            'ministry_id' => "required|numeric"
         ];
     }
 }

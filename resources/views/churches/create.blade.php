@@ -4,17 +4,16 @@
 @section('content')
     <div class="container-fluid ps-1 pt-4">
         <h4>
-            <i class="fa fa-money-bill-alt"></i>Charts Of Accounts
+            <i class="fa fa-list-ol"></i>Home Cells
         </h4>
         <p>
-            Charts Of Account
+            Home Cells
         </p>
         <nav aria-label="breadcrumb">
             <ol class="breadcrumb bg-transparent">
                 <li class="breadcrumb-item"><a href="{{route('home')}}">Home</a></li>
-                <li class="breadcrumb-item"><a href="{{route('finances.index')}}">Finances</a></li>
-                <li class="breadcrumb-item"><a href="{{route('ministries.index')}}">Accounts</a></li>
-                <li class="breadcrumb-item active" aria-current="page">Create Account</li>
+                <li class="breadcrumb-item"><a href="{{route('churches.index')}}">Home Cells</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Create Home Cells</li>
             </ol>
         </nav>
         <div class="mb-5">
@@ -23,34 +22,37 @@
         <div class="mt-2">
             <div class="row">
                 <div class="col-sm-12 col-md-8 col-lg-4">
-                    <form action="{{route('ministries.store')}}" method="POST" autocomplete="off">
+                    <form action="{{route('churches.store')}}" method="POST" autocomplete="off">
                         @csrf
                         <div class="form-group">
                             <label>Name</label>
                             <input type="text" name="name"
                                    class="form-control @error('name') is-invalid @enderror"
-                                   value="{{old('name')}}"
-                                   placeholder="Account's name" >
+                                   value="{{old('name')}}" required
+                                   placeholder="Home Church Cell" >
                             @error('name')
                             <span class="invalid-feedback">
                                {{$message}}
                         </span>
                             @enderror
                         </div>
-                        <hr style="height: .3em;" class="border-theme">
                         <div class="form-group">
-                            <label>Account Type</label>
-                            <select name="type" class="form-control select-relation @error('type') is-invalid @enderror" style="width: 100%">{{old('type')}}>
-                                <option value="1">Cr</option>
-                                <option value="2">Dr</option>
+                            <label>Zone</label>
+                            <select name="zone_id" required
+                                    class="form-select select-relation @error('zone_id') is-invalid @enderror" style="width: 100%">
+                                <option value="{{@$church->zone->id}}">{{@$church->zone->name}}</option>
+                                @foreach($zones as $zone)
+                                    <option value="{{$zone->id}}"
+                                        {{old('zone_id')===$zone->id ? 'selected' : ''}}>{{$zone->name}}</option>
+                                @endforeach
                             </select>
-                            @error('type')
+                            @error('zone_id')
                             <span class="invalid-feedback">
                                {{$message}}
                         </span>
                             @enderror
                         </div>
-
+                        <hr style="height: .3em;" class="border-theme">
                         <div class="form-group">
                             <button class="btn btn-md btn-primary rounded-0">
                                 <i class="fa fa-paper-plane"></i>Save

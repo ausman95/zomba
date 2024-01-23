@@ -39,7 +39,7 @@
                             <label>Title</label>
                             <input type="text" name="title"
                                    class="form-control @error('title') is-invalid @enderror"
-                                   value="{{old('title')}}"
+                                   value="{{old('title')}}" placeholder="Title"
                                    required>
                             @error('title')
                             <span class="invalid-feedback">

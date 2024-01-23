@@ -53,7 +53,7 @@
                         <hr style="height: .3em;" class="border-theme">
                         <div class="form-group">
                             <label>Account Number</label>
-                            <input type="text" name="account_number"
+                            <input type="number" name="account_number"
                                    class="form-control @error('account_number') is-invalid @enderror"
                                    value="{{old('account_number')}}"
                                    placeholder="Bank Account's number" >

@@ -51,7 +51,7 @@
                         <hr style="height: .3em;" class="border-theme">
                         <div class="form-group">
                             <label>Specifications</label>
-                            <textarea name="specifications" rows="5" placeholder="Provide a short description of the materials"
+                            <textarea name="specifications" rows="3" placeholder="Provide a short description of the materials"
                                       class="form-control @error('specifications') is-invalid @enderror">{{old('specifications')}}</textarea>
                             @error('address')
                             <span class="invalid-feedback">

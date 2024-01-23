@@ -22,9 +22,12 @@ class StoreRequest extends FormRequest
      * @return array
      */
     public function rules()
-    {return [
-        'church_id'=>'required|numeric',
-        'attendance'=>'required|numeric|min:1',
+    {
+        return [
+        'service_id'=>'required|numeric',
+        'male'=>'required|numeric|min:0',
+        'female'=>'required|numeric|min:0',
+        'visitors'=>'required|numeric|min:0',
         'date'=>'required|date',
     ];
     }

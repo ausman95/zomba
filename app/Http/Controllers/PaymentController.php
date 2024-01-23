@@ -123,18 +123,18 @@ class PaymentController extends Controller
      */
     public function create()
     {
-        $suppliers = Supplier::all();
-        $banks = Banks::all();
-        $labourer = Labourer::all();
-        $projects = Department::all();
-        $accounts = Accounts::where(['type'=>2])->get();
+        $suppliers = Supplier::where(['soft_delete'=>0])->orderBy('id','desc')->get();
+        $banks = Banks::where(['soft_delete'=>0])->orderBy('id','desc')->get();
+        $labourer = Labourer::where(['soft_delete'=>0])->orderBy('id','desc')->get();
+        $projects = Department::where(['soft_delete'=>0])->orderBy('id','desc')->get();
+        $accounts = Accounts::where(['soft_delete'=>0])->orderBy('id','desc')->get();
         return view('payments.create')->with([
             'cpage'=>"finances",
             'suppliers'=>$suppliers,
             'banks'=>$banks,
-            'members'=>Member::all(),
-            'churches'=>Church::all(),
-            'ministries'=>Ministry::all(),
+            'members'=>Member::where(['soft_delete'=>0])->orderBy('id','desc')->get(),
+            'churches'=>Church::where(['soft_delete'=>0])->orderBy('id','desc')->get(),
+            'ministries'=>Ministry::where(['soft_delete'=>0])->orderBy('id','desc')->get(),
             'projects'=>$projects,
             'labourers'=>$labourer,
             'accounts'=>$accounts
@@ -376,7 +376,7 @@ class PaymentController extends Controller
         activity('FINANCES')
             ->log("Created a Payment")->causer(request()->user());
         return redirect(
-            route('payments.create') . "?id=success")->with(
+            route('payments.index') . "?id=success")->with(
             ['success-notification'=>"Successfully Created"]
         );
     }

@@ -10,12 +10,12 @@
             <i class="fa fa-list-ol"></i>Home Church Attendances
         </h4>
         <p>
-            Manage Home Church Attendances
+            Manage Church Attendances
         </p>
         <nav aria-label="breadcrumb">
             <ol class="breadcrumb bg-transparent">
                 <li class="breadcrumb-item"><a href="{{route('home')}}">Home</a></li>
-                <li class="breadcrumb-item active" aria-current="page">Home Church Attendances</li>
+                <li class="breadcrumb-item active" aria-current="page">Church Attendances</li>
             </ol>
         </nav>
         <div class="mb-5">
@@ -26,6 +26,9 @@
             <a href="{{route('attendances.create')}}" class="btn btn-primary btn-md rounded-0">
                 <i class="fa fa-plus-circle"></i> New Attendance
             </a>
+            <a href="{{route('member-attendance.reports')}}" class="btn btn-primary btn-md rounded-0">
+                <i class="fa fa-file-archive"></i>Report
+            </a>
             @endif
             <div class="mt-3">
                 <div class="row">
@@ -33,17 +36,20 @@
                         <div class="card " style="min-height: 30em;">
                             <div class="card-body px-1">
                                 @if($attendances->count() === 0)
-                                    <i class="fa fa-info-circle"></i>There are no Class Attendances!
+                                    <i class="fa fa-info-circle"></i>There are no Church Attendances!
                                 @else
                                     <div style="overflow-x:auto;">
                                         <table class="table  table-bordered table-hover table-striped">
-                                            <caption style=" caption-side: top; text-align: center">BIBLE CLASSES ATTENDANCES</caption>
+                                            <caption style=" caption-side: top; text-align: center">CHURCH ATTENDANCES</caption>
                                             <thead>
                                         <tr>
                                             <th>NO</th>
                                             <th>DATE</th>
-                                            <th>CHURCH</th>
-                                            <th>ATTENDANCE</th>
+                                            <th>SERVICE</th>
+                                            <th>MINISTRY</th>
+                                            <th>MALE</th>
+                                            <th>FEMALE</th>
+                                            <th>VISITORS</th>
                                             <th>ACTION</th>
                                         </tr>
                                         </thead>
@@ -54,8 +60,11 @@
                                                 <tr>
                                                     <td>{{$c++}}</td>
                                                     <td>{{date('d F Y', strtotime($attendance->date)) }}</td>
-                                                    <td>{{ucwords($attendance->church->name) }}</td>
-                                                    <td>{{ucwords($attendance->attendance) }}</td>
+                                                    <td>{{ucwords($attendance->service->name) }}</td>
+                                                    <td>{{ucwords(@$attendance->ministry->name) }}</td>
+                                                    <td>{{ucwords($attendance->male) }}</td>
+                                                    <td>{{ucwords($attendance->female) }}</td>
+                                                    <td>{{ucwords($attendance->visitors) }}</td>
                                                     <td class="pt-1">
                                                         @if(request()->user()->designation=='administrator')
                                                         <a href="{{route('attendances.show',$attendance->id)}}"

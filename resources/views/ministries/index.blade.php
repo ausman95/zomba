@@ -15,6 +15,7 @@
         <nav aria-label="breadcrumb">
             <ol class="breadcrumb bg-transparent">
                 <li class="breadcrumb-item"><a href="{{route('home')}}">Home</a></li>
+                <li class="breadcrumb-item"><a href="{{route('setting.index')}}">Settings</a></li>
                 <li class="breadcrumb-item active" aria-current="page">Ministries</li>
             </ol>
         </nav>
@@ -23,46 +24,9 @@
         </div>
         <div class="mt-3">
             @if(request()->user()->designation=='administrator')
-            <button type="button" class="btn btn-primary rounded-0 btn-md" data-bs-toggle="modal" data-bs-target="#material">
-                <i class="fa fa-plus-circle"></i> New Ministry
-            </button>
-            <div class="modal " id="material" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="staticBackdropLabel">Adding Ministries</h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                        </div>
-                        <div class="modal-body">
-                            <form action="{{route('ministries.store')}}" method="POST" autocomplete="off">
-                                @csrf
-                                <div class="form-group">
-                                    <label>Name</label>
-                                    <input type="text" name="name"
-                                           class="form-control @error('name') is-invalid @enderror"
-                                           value="{{old('name')}}"
-                                           placeholder="Ministry Name" >
-                                    @error('name')
-                                    <span class="invalid-feedback">
-                               {{$message}}
-                        </span>
-                                    @enderror
-                                </div>
-                                <hr style="height: .3em;" class="border-theme">
-                                <div class="form-group">
-                                    <button class="btn btn-md btn-primary rounded-0">
-                                        <i class="fa fa-paper-plane"></i>Save
-                                    </button>
-
-                                </div>
-                            </form>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"><i class="fa fa-times-circle"></i> Cancel</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
+                <a href="{{route('ministries.create')}}" class="btn btn-primary btn-md rounded-0">
+                    <i class="fa fa-plus-circle"></i>New Ministry
+                </a>
             @endif
             <div class="mt-3">
                 <div class="row">

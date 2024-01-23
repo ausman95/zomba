@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\Materials\StoreRequest;
 use App\Http\Requests\Materials\UpdateRequest;
+use App\Models\Accounts;
 use App\Models\Material;
 use App\Models\StockFlow;
 use App\Models\Supplier;
@@ -12,6 +13,19 @@ use Illuminate\Support\Facades\DB;
 
 class MaterialController extends Controller
 {
+    public function destroy(Request $request, Material $material)
+    {
+
+        $data = $request->post();
+        DB::table('materials')
+            ->where(['id' => $request->post('id')])
+            ->update(['soft_delete' => '1']);
+        $material->update($data);
+
+        return redirect()->route('materials.index')->with([
+            'success-notification'=>"Successfully Deleted"
+        ]);
+    }
     /**
      * Display a listing of the resource.
      *
@@ -21,10 +35,9 @@ class MaterialController extends Controller
     {
         activity('MATERIALS')
             ->log("Accessed Materials")->causer(request()->user());
-        $materials= Material::orderBy('id','desc')->get();
         return view('materials.index')->with([
             'cpage' => "materials",
-            'materials'=>$materials
+            'materials'=>Material::where(['soft_delete'=>0])->orderBy('id','desc')->get(),
         ]);
     }
 
@@ -48,6 +61,15 @@ class MaterialController extends Controller
      */
     public function store (StoreRequest $request)
     {
+        if(is_numeric($request->post('specifications'))){
+            return back()->with(['error-notification'=>"Invalid Character Entered on Specifications"]);
+        }
+        if(is_numeric($request->post('units'))){
+            return back()->with(['error-notification'=>"Invalid Character Entered on Units"]);
+        }
+        if(is_numeric($request->post('name'))){
+            return back()->with(['error-notification'=>"Invalid Character Entered on Name"]);
+        }
         $data = $request->post();
         $check_data = [
             'name'=>$data['name'],
@@ -62,7 +84,7 @@ class MaterialController extends Controller
         Material::create($data);
         activity('MATERIALS')
             ->log("Created a Material")->causer(request()->user());
-        return redirect()->back()->with([
+        return redirect()->route('materials.index')->with([
             'success-notification'=>"Material successfully Created"
         ]);
     }
@@ -115,7 +137,15 @@ class MaterialController extends Controller
     public function update(UpdateRequest $request,Material $material)
     {
         $data = $request->post();
-
+        if(is_numeric($request->post('specifications'))){
+            return back()->with(['error-notification'=>"Invalid Character Entered on Specifications"]);
+        }
+        if(is_numeric($request->post('units'))){
+            return back()->with(['error-notification'=>"Invalid Character Entered on Units"]);
+        }
+        if(is_numeric($request->post('name'))){
+            return back()->with(['error-notification'=>"Invalid Character Entered on Name"]);
+        }
         $material->update($data);
         activity('MATERIALS')
             ->log("Updated a Material")->causer(request()->user());
@@ -130,20 +160,20 @@ class MaterialController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Material  $material)
-    {
-        try{
-            $material->delete();
-            activity('MATERIALS')
-                ->log("Deleted a Material")->causer(request()->user());
-            return redirect()->route('materials.index')->with([
-                'success-notification'=>"Material successfully Deleted"
-            ]);
-
-        }catch (\Exception $exception){
-            return redirect()->route('materials.index')->with([
-                'error-notification'=>"Something went Wrong ".$exception.getMessage()
-            ]);
-        }
-    }
+//    public function destroy(Material  $material)
+//    {
+//        try{
+//            $material->delete();
+//            activity('MATERIALS')
+//                ->log("Deleted a Material")->causer(request()->user());
+//            return redirect()->route('materials.index')->with([
+//                'success-notification'=>"Material successfully Deleted"
+//            ]);
+//
+//        }catch (\Exception $exception){
+//            return redirect()->route('materials.index')->with([
+//                'error-notification'=>"Something went Wrong ".$exception.getMessage()
+//            ]);
+//        }
+//    }
 }

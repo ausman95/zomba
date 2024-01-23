@@ -10,11 +10,20 @@ class Purchase extends Model
 {
     use HasFactory;
     protected $fillable = [
-        'date',  'material_id', 'supplier_id','quantity','quantity','amount','payment_type','bank_id','stores','account_id','reference'
+        'date',  'material_id',
+        'supplier_id','quantity',
+        'quantity','amount','payment_type',
+        'bank_id','stores','account_id',
+        'reference','department_id'
     ];
+
     public function material(): BelongsTo
     {
         return $this->belongsTo(Material::class, 'material_id', 'id');
+    }
+    public function department(): BelongsTo
+    {
+        return $this->belongsTo(Department::class, 'department_id', 'id');
     }
     public function account(): BelongsTo
     {

@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Month;
+use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rule;
 
 class MonthController extends Controller
@@ -17,10 +19,9 @@ class MonthController extends Controller
     {
         activity('MONTHS')
             ->log("Accessed Months listing")->causer(request()->user());
-        $months= Month::orderBy('id','desc')->get();;
         return view('months.index')->with([
-            'cpage' => "months",
-            'months'=>$months,
+            'cpage' => "settings",
+            'months'=>Month::where(['soft_delete'=>0])->orderBy('id','desc')->get(),
         ]);
     }
 
@@ -31,7 +32,9 @@ class MonthController extends Controller
      */
     public function create()
     {
-        //
+        return view('months.create')->with([
+            'cpage' => "settings",
+        ]);
     }
 
     /**
@@ -42,6 +45,10 @@ class MonthController extends Controller
      */
     public function store (Request $request)
     {
+        if(is_numeric($request->post('name'))){
+            return back()->with(['error-notification'=>"Invalid Character Entered on Name"]);
+        }
+
         $data = $request->post();
         $this->validate($request, ['end_date' => "required|date"]);
         $this->validate($request, ['start_date' => "required|date"]);
@@ -101,7 +108,7 @@ class MonthController extends Controller
     public function show(Month $month)
     {
         return view('months.show')->with([
-            'cpage'=>"months",
+            'cpage' => "settings",
             'month'=>$month,
         ]);
     }
@@ -115,7 +122,7 @@ class MonthController extends Controller
     public function edit(Month $month)
     {
         return view('months.edit')->with([
-            'cpage' => "months",
+            'cpage' => "settings",
             'month' => $month
         ]);
     }
@@ -130,7 +137,9 @@ class MonthController extends Controller
     public function update(Request $request, Month $month)
     {
         $data = $request->post();
-
+        if(is_numeric($request->post('name'))){
+            return back()->with(['error-notification'=>"Invalid Character Entered on Name"]);
+        }
         $this->validate($request, ['end_date' => "required|date"]);
         $this->validate($request, ['start_date' => "required|date"]);
         $this->validate($request, ['name' => "required|string"]);
@@ -150,20 +159,33 @@ class MonthController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Month $month)
+    public function destroy(Request $request, Month $month)
     {
-        try{
-            $month->delete();
-            activity('MONTHS')
-                ->log("Deleted a Month")->causer(request()->user());
-            return redirect()->route('months.index')->with([
-                'success-notification'=>"A month was successfully Deleted"
-            ]);
 
-        }catch (\Exception $exception){
-            return redirect()->route('months.index')->with([
-                'error-notification'=>"Something went Wrong ".$exception.getMessage()
-            ]);
+        $data = $request->post();
+        DB::table('months')
+            ->where(['id' => $request->post('id')])
+            ->update(['soft_delete' => '1']);
+        $month->update($data);
+
+        return redirect()->route('months.index')->with([
+            'success-notification'=>"Successfully Deleted"
+        ]);
     }
-    }
+//    public function destroy(Month $month)
+//    {
+//        try{
+//            $month->delete();
+//            activity('MONTHS')
+//                ->log("Deleted a Month")->causer(request()->user());
+//            return redirect()->route('months.index')->with([
+//                'success-notification'=>"A month was successfully Deleted"
+//            ]);
+//
+//        }catch (\Exception $exception){
+//            return redirect()->route('months.index')->with([
+//                'error-notification'=>"Something went Wrong ".$exception.getMessage()
+//            ]);
+//    }
+//    }
 }

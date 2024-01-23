@@ -13,6 +13,7 @@
             <ol class="breadcrumb bg-transparent">
                 <li class="breadcrumb-item"><a href="{{route('home')}}">Home</a></li>
                 <li class="breadcrumb-item"><a href="{{route('finances.index')}}">Finances</a></li>
+                <li class="breadcrumb-item"><a href="{{route('banks.index')}}">Banks</a></li>
                 <li class="breadcrumb-item"><a href="{{route('transfers.index')}}">Bank Transfers</a></li>
                 <li class="breadcrumb-item active" aria-current="page">Create Bank Transfers</li>
             </ol>
@@ -66,14 +67,14 @@
                             <input type="hidden" name="transaction_type" value="1"
                                    class="form-control @error('transaction_type') is-invalid @enderror"
                                   >
-                            @error('transaction_type')
+                            @error('amount')
                             <span class="invalid-feedback">
                                {{$message}}
                         </span>
                             @enderror
                         </div>
                         <div class="form-group">
-                            <label>Reference</label>
+                            <label>Reference (is Optional)</label>
                             <input type="text" name="cheque_number"
                                    class="form-control @error('cheque_number') is-invalid @enderror"
                                    placeholder="Cheque Number" >

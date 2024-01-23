@@ -17,12 +17,7 @@
                 <li class="breadcrumb-item active" aria-current="page">Create Payments</li>
             </ol>
         </nav>
-        <button type="button" class="btn btn-primary rounded-0 btn-md" data-bs-toggle="modal" data-bs-target="#account">
-            <i class="fa fa-plus-circle"></i> New Chart of Account
-        </button>
-        <button type="button" class="btn btn-primary rounded-0 btn-md" data-bs-toggle="modal" data-bs-target="#supplier">
-            <i class="fa fa-plus-circle"></i> New Supplier
-        </button>
+
         <div class="modal " id="account" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
@@ -146,7 +141,9 @@
                             @csrf
                         <div class="form-group">
                             <label>Payment Description</label>
-                            <select name="type" class="form-select select-relation type @error('type') required is-invalid @enderror" style="width: 100%">{{old('type')}} >
+                            <select name="type"
+                                    required
+                                    class="form-select select-relation type @error('type') required is-invalid @enderror" style="width: 100%">{{old('type')}} >
                                 <option value="">-- Select ---</option>
                                 <option value="5">Members</option>
                                 <option value="6">Home Churches</option>
@@ -287,7 +284,7 @@
                         </div>
                             <div class="form-group">
                                 <label>Account</label>
-                                <select name="account_id"
+                                <select name="account_id" required
                                         class="form-select select-relation @error('account_id') is-invalid @enderror" style="width: 100%">
                                     <option value="">-- Select ---</option>
                                     @foreach($accounts as $account)
@@ -304,7 +301,7 @@
 
                         <div class="form-group ">
                             <label>Bank Account</label>
-                            <select name="bank_id"
+                            <select name="bank_id" required
                                     class="form-select select-relation @error('bank_id') is-invalid @enderror" style="width: 100%">
                                 <option value="">-- Select ---</option>
                                 @foreach($banks as $bank)
@@ -324,7 +321,7 @@
                                    class="form-control @error('cheque_number') is-invalid @enderror"
                                    value="0"
                                    placeholder="Cheque Number">
-                            <input type="number" name="amount"
+                            <input type="number" name="amount" required
                                    class="form-control @error('amount') is-invalid @enderror"
                                    value="{{old('amount')}}"
                                    placeholder="Amount" >
@@ -339,7 +336,7 @@
                         @csrf
                         <div class="form-group">
                             <label>Payment Method</label>
-                            <select name="payment_method" class="form-select select-relation payment_method @error('payment_method') is-invalid @enderror" style="width: 100%">{{old('payment_method')}}>
+                            <select name="payment_method" required class="form-select select-relation payment_method @error('payment_method') is-invalid @enderror" style="width: 100%">{{old('payment_method')}}>
                                 <option value="">-- Select ---</option>
                                 <option value="1">Cash</option>
                                 <option value="3">Cheque</option>
@@ -364,7 +361,7 @@
                         </div>
                         <div class="form-group">
                             <label>Date</label>
-                            <input type="date" name="t_date"
+                            <input type="date" name="t_date" required
                                    class="form-control @error('t_date') is-invalid @enderror">
                             @error('t_date')
                             <span class="invalid-feedback">

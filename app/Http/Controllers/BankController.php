@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Announcement;
 use App\Models\Banks;
 use App\Models\Incomes;
 use Illuminate\Http\Request;
 use App\Http\Requests\Banks\StoreRequest;
 use App\Http\Requests\Banks\UpdateRequest;
+use Illuminate\Support\Facades\DB;
 
 
 class BankController extends Controller
@@ -15,11 +17,22 @@ class BankController extends Controller
     {
         activity('BANKS')
             ->log("Accessed Banks")->causer(request()->user());
-
-        $banks= Banks::orderBy('id','desc')->get();;
         return view('banks.index')->with([
             'cpage' => "finances",
-            'banks'=>$banks
+            'banks'=>Banks::where(['soft_delete'=>0])->orderBy('id','desc')->get(),
+        ]);
+    }
+    public function destroy(Request $request, Banks $banks)
+    {
+
+        $data = $request->post();
+        DB::table('banks')
+            ->where(['id' => $request->post('id')])
+            ->update(['soft_delete' => '1']);
+        $banks->update($data);
+
+        return redirect()->route('banks.index')->with([
+            'success-notification'=>"Successfully Deleted"
         ]);
     }
 
@@ -32,6 +45,18 @@ class BankController extends Controller
 
     public function store(StoreRequest $request)
     {
+        if(is_numeric($request->post('bank_name'))){
+            return back()->with(['error-notification'=>"Invalid Character Entered on Bank Name"]);
+        }
+        if(is_numeric($request->post('account_name'))){
+            return back()->with(['error-notification'=>"Invalid Character Entered on Account Name"]);
+        }
+        if(is_numeric($request->post('service_centre'))){
+            return back()->with(['error-notification'=>"Invalid Character Entered on Service Centre"]);
+        }
+        if(is_numeric($request->post('account_type'))){
+            return back()->with(['error-notification'=>"Invalid Character Entered on Account Type"]);
+        }
         $data = $request->post();
 
         Banks::create($data);
@@ -70,7 +95,18 @@ class BankController extends Controller
     public function update(UpdateRequest $request,Banks $bank)
     {
         $data = $request->post();
-
+        if(is_numeric($request->post('bank_name'))){
+            return back()->with(['error-notification'=>"Invalid Character Entered on Bank Name"]);
+        }
+        if(is_numeric($request->post('account_name'))){
+            return back()->with(['error-notification'=>"Invalid Character Entered on Account Name"]);
+        }
+        if(is_numeric($request->post('service_centre'))){
+            return back()->with(['error-notification'=>"Invalid Character Entered on Service Centre"]);
+        }
+        if(is_numeric($request->post('account_type'))){
+            return back()->with(['error-notification'=>"Invalid Character Entered on Account Type"]);
+        }
         $bank->update($data);
         activity('BANKS')
             ->log("Edited Banks")->causer(request()->user());
@@ -78,21 +114,21 @@ class BankController extends Controller
             'success-notification'=>"Bank Account successfully Updated"
         ]);
     }
-    public function destroy(Banks  $bank)
-    {
-        try{
-            $bank->delete();
-            activity('BANKS')
-                ->log("Deleted a Bank")->causer(request()->user());
-            return redirect()->route('banks.index')->with([
-                'success-notification'=>"Bank Account successfully Deleted"
-            ]);
-
-        }catch (\Exception $exception){
-            return redirect()->route('banks.index')->with([
-                'error-notification'=>"Something went Wrong ".$exception.getMessage()
-            ]);
-        }
-    }
+//    public function destroy(Banks  $bank)
+//    {
+//        try{
+//            $bank->delete();
+//            activity('BANKS')
+//                ->log("Deleted a Bank")->causer(request()->user());
+//            return redirect()->route('banks.index')->with([
+//                'success-notification'=>"Bank Account successfully Deleted"
+//            ]);
+//
+//        }catch (\Exception $exception){
+//            return redirect()->route('banks.index')->with([
+//                'error-notification'=>"Something went Wrong ".$exception.getMessage()
+//            ]);
+//        }
+//    }
 
 }

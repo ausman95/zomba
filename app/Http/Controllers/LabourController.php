@@ -1,12 +1,29 @@
 <?php
 
 namespace App\Http\Controllers;
+use App\Models\Announcement;
 use App\Models\Labour;
 use Illuminate\Http\Request;
 use App\Http\Requests\Labours\StoreRequest;
 use App\Http\Requests\Labours\UpdateRequest;
+use Illuminate\Support\Facades\DB;
+
 class LabourController extends Controller
 {
+    public function destroy(Request $request, Labour $labour)
+    {
+
+        $data = $request->post();
+        DB::table('labours')
+            ->where(['id' => $request->post('id')])
+            ->update(['soft_delete' => '1']);
+        $labour->update($data);
+
+        return redirect()->route('labours.index')->with([
+            'success-notification'=>"Successfully Deleted"
+        ]);
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -16,11 +33,9 @@ class LabourController extends Controller
     {
         activity('HUMAN RESOURCES')
             ->log("Accessed Labours")->causer(request()->user());
-
-        $labour= Labour::orderBy('id','desc')->get();;
         return view('labours.index')->with([
             'cpage' => "human-resources",
-            'labours'=>$labour
+            'labours'=>Labour::where(['soft_delete'=>0])->orderBy('id','desc')->get(),
         ]);
     }
 
@@ -47,6 +62,9 @@ class LabourController extends Controller
      */
     public function store(StoreRequest $request)
     {
+        if(is_numeric($request->post('name'))){
+            return back()->with(['error-notification'=>"Invalid Character Entered on Name"]);
+        }
         $data = $request->post();
 
         Labour::create($data);
@@ -97,7 +115,9 @@ class LabourController extends Controller
     public function update(UpdateRequest $request,Labour $labour)
     {
         $data = $request->post();
-
+        if(is_numeric($request->post('name'))){
+            return back()->with(['error-notification'=>"Invalid Character Entered on Name"]);
+        }
         $labour->update($data);
         activity('HUMAN RESOURCES')
             ->log("Updated a Labour")->causer(request()->user());
@@ -112,20 +132,20 @@ class LabourController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Labour  $labour)
-    {
-        try{
-            $labour->delete();
-            activity('HUMAN RESOURCES')
-                ->log("Deleted a Labour")->causer(request()->user());
-            return redirect()->route('labours.index')->with([
-                'success-notification'=>"Labour successfully Deleted"
-            ]);
-
-        }catch (\Exception $exception){
-            return redirect()->route('labours.index')->with([
-                'error-notification'=>"Something went Wrong ".$exception.getMessage()
-            ]);
-        }
-    }
+//    public function destroy(Labour  $labour)
+//    {
+//        try{
+//            $labour->delete();
+//            activity('HUMAN RESOURCES')
+//                ->log("Deleted a Labour")->causer(request()->user());
+//            return redirect()->route('labours.index')->with([
+//                'success-notification'=>"Labour successfully Deleted"
+//            ]);
+//
+//        }catch (\Exception $exception){
+//            return redirect()->route('labours.index')->with([
+//                'error-notification'=>"Something went Wrong ".$exception.getMessage()
+//            ]);
+//        }
+//    }
 }

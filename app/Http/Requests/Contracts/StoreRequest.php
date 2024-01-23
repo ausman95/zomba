@@ -27,7 +27,7 @@ class StoreRequest extends FormRequest
             'labourer_id'=>"required|numeric",
             'end_date'=>"required|string",
             'start_date'=>"required|string",
-            'salary'=>"required|string"
+            'salary'=>"required|numeric|min:1"
         ];
     }
 }

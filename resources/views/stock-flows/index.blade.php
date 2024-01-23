@@ -2,16 +2,16 @@
 @section('content')
     <div class="container-fluid ps-1 pt-4">
         <h4>
-            <i class="fa fa-list-ul"></i>Stock Flow list
+            <i class="fa fa-list-ul"></i>Material Flow list
         </h4>
         <p>
-            Manage Stock Flow list
+            Manage Material Flow list
         </p>
         <nav aria-label="breadcrumb">
             <ol class="breadcrumb bg-transparent">
                 <li class="breadcrumb-item"><a href="{{route('home')}}">Home</a></li>
                 <li class="breadcrumb-item"><a href="{{route('stores.index')}}">Stores</a></li>
-                <li class="breadcrumb-item active" aria-current="page">Manage Stock Flows</li>
+                <li class="breadcrumb-item active" aria-current="page">Manage Material Flows</li>
             </ol>
         </nav>
         <div class="mb-5">
@@ -20,7 +20,7 @@
         <div class="mt-3">
             @if(request()->user()->designation==='clerk')
             <a href="{{route('stock.next')}}" class="btn btn-primary btn-md rounded-0">
-                <i class="fa fa-plus-circle"></i>New Stock Flow
+                <i class="fa fa-plus-circle"></i>New Material Flow
             </a>
                 <div class="mt-3">
                     <div class="row">
@@ -28,7 +28,7 @@
                             <div class="card " style="min-height: 30em;">
                                 <div class="card-body px-1">
                                     @if($flows->count() === 0)
-                                        <i class="fa fa-info-circle"></i>There are no Stock!
+                                        <i class="fa fa-info-circle"></i>There are no Material!
                                     @else
                                         <div style="overflow-x:auto;">
                                             <table class="table table-bordered table-hover table-striped" id="data-table">
@@ -37,7 +37,7 @@
                                                 <tr>
                                                     <th>NO</th>
                                                     @if(request()->user()->designation!='clerk')
-                                                        <th>DEPARTMENT / PROJECT</th>
+                                                        <th>DEPARTMENT</th>
                                                     @endif
                                                     <th>MATERIAL</th>
                                                     <th>QUANTITY</th>
@@ -100,7 +100,7 @@
                 <div class="mb-5">
                     <hr>
                     <p>
-                        Select Site, Material and click generate.
+                        Select Department, Material and click generate.
                     </p>
                     <div class="col-sm-12 mb-2 md-4">
                         <p class="text-black-50">
@@ -113,7 +113,7 @@
                             <form action="{{route('material.movements')}}" method="POST">
                                 @csrf
                                 <div class="form-group">
-                                    <label>Site / Project</label>
+                                    <label>Department</label>
                                     <select name="project_id"
                                             class="form-select select-relation @error('project_id') is-invalid @enderror" style="width: 100%">
                                         @foreach($departments as $department)

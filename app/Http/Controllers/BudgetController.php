@@ -51,6 +51,10 @@ class BudgetController extends Controller
      */
     public function store(StoreRequest $request)
     {
+        if($request->post('start_date')>$request->post('end_date')){
+            return back()->with(['error-notification'=>"Invalid End Date Entered"]);
+        }
+
         $data = $request->post();
         $check_data = [
             'account_id'=>$data['account_id'],
@@ -111,7 +115,9 @@ class BudgetController extends Controller
     public function update(UpdateRequest $request, Budget $budget)
     {
         $data = $request->post();
-
+        if($request->post('start_date')>$request->post('end_date')){
+            return back()->with(['error-notification'=>"Invalid End Date Entered"]);
+        }
         $budget->update($data);
         activity('BUDGETS')
             ->log("Updated a Budget")->causer(request()->user());

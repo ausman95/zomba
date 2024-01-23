@@ -15,6 +15,7 @@
         <nav aria-label="breadcrumb">
             <ol class="breadcrumb bg-transparent">
                 <li class="breadcrumb-item"><a href="{{route('home')}}">Home</a></li>
+                <li class="breadcrumb-item"><a href="{{route('finances.index')}}">Finances</a></li>
                 <li class="breadcrumb-item"><a href="{{route('analytics')}}">Analytics</a></li>
                 <li class="breadcrumb-item active" aria-current="page">Generate Financial Reports</li>
             </ol>

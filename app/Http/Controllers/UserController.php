@@ -20,10 +20,9 @@ class UserController extends Controller
     {
 //        activity('USERS')
 //            ->log("Accessed Users Audit Trail")->causer(request()->user());
-        $logs = Activity::all();
        // dd($logs);
         return view('users.audits')->with([
-            'logs' => $logs,
+            'logs' => Activity::orderBy('id','desc')->get(),
             'cpage' => 'users'
         ]);
     }
@@ -43,7 +42,7 @@ class UserController extends Controller
         activity('USERS')
             ->log("Accessed users listing")->causer(request()->user());
         return view('users.index')->with([
-            'users' => User::orderBy('id','desc')->get(),
+            'users' => User::where(['soft_delete'=>0])->orderBy('id','desc')->get(),
             'cpage' => 'users'
         ]);
     }
@@ -68,6 +67,16 @@ class UserController extends Controller
 
     public function store(StoreRequest $request, LabourerController $labourerController)
     {
+        if(is_numeric($request->post('last_name'))){
+            return back()->with(['error-notification'=>"Invalid Character Entered on Last Name"]);
+        }
+        if(is_numeric($request->post('first_name'))){
+            return back()->with(['error-notification'=>"Invalid Character Entered on First Name"]);
+        }
+        if(strlen($request->post('password'))<4){
+            return back()->with(['error-notification'=>"The Password should have a minimum of 4 characters"]);
+        }
+
         if($labourerController->validating($request->post('phone_number'))==0){
             // labourer is already part of this project
             return back()->with(['error-notification'=>"Invalid Phone number"]);
@@ -119,10 +128,19 @@ class UserController extends Controller
     }
 
 
-    public function update(UpdateRequest $request, User $user)
+    public function update(UpdateRequest $request, User $user, LabourerController $labourerController)
     {
+        if($labourerController->validating($request->post('phone_number'))==0){
+            // labourer is already part of this project
+            return back()->with(['error-notification'=>"Invalid Phone number"]);
+        }
         $updates = collect($request->post())->except(['password'])->toArray();
-
+        if(is_numeric($request->post('last_name'))){
+            return back()->with(['error-notification'=>"Invalid Character Entered on Last Name"]);
+        }
+        if(is_numeric($request->post('first_name'))){
+            return back()->with(['error-notification'=>"Invalid Character Entered on First Name"]);
+        }
         if ($request->post('password')) {
             $updates['password'] = bcrypt($request->post('password'));
         }
@@ -134,12 +152,18 @@ class UserController extends Controller
         ]);
     }
 
-    public function destroy(User $user)
+    public function destroy(Request $request, User $user)
     {
-        $user->delete();
-        activity('USERS')
-            ->log("Deleted a User")->causer(request()->user());
-        return redirect()->route('users.index')->with(['success-notification' => "User deleted successfully!"]);
+
+        $data = $request->post();
+        DB::table('users')
+            ->where(['id' => $request->post('user_id')])
+            ->update(['soft_delete' => '1']);
+        $user->update($data);
+
+        return redirect()->route('users.index')->with([
+            'success-notification'=>"Successfully Deleted"
+        ]);
     }
 
     /*-------------------------------------

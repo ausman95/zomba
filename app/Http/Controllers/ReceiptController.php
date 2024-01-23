@@ -34,6 +34,29 @@ use Illuminate\Http\Request;
 
 class ReceiptController extends Controller
 {
+    public function generateReceipt(Request $request)
+    {
+        $request->validate([
+            'month_id' => "required|numeric",
+        ]);
+        $month =  Month::where(['id'=>$request->post('month_id')])
+            ->first();
+
+        activity('FINANCES')
+            ->log("Accessed Payments")->causer(request()->user());
+        return view('receipts.index')->with([
+            'cpage' => "finances",
+            'payments'=>Payment::join('accounts', 'accounts.id','=','payments.account_id')
+                ->select(
+                    'payments.*',
+                )
+                ->whereBetween('t_date',[$month->start_date,$month->end_date])
+                ->where(['accounts.type'=>1])
+                ->orderBy('payments.id','desc')->get(),
+            'months'=>Month::orderBY('id','desc')->get()
+        ]);
+    }
+
     public function churchReportGenerate(Request $request, Receipt $receipt)
     {
         $accountID = $request->post('account_id');
@@ -79,7 +102,7 @@ class ReceiptController extends Controller
             'to_month_name'=>$from_month->name,
             'month_id' => $request->post('month_id'),
             'months'=>Month::orderBy('id','desc')->get(),
-            'accounts'=>Accounts::orderBy('id','ASC')->get()
+            'accounts'=>Accounts::where(['type'=>1])->orderBy('id','ASC')->get()
         ]);
     }
 
@@ -90,7 +113,7 @@ class ReceiptController extends Controller
         return view('receipts.division-reports')->with([
             'cpage' => "finances",
             'months'=>Month::orderBy('id','desc')->get(),
-            'accounts'=>Accounts::orderBy('id','ASC')->get()
+            'accounts'=>Accounts::where(['type'=>1])->orderBy('id','ASC')->get()
         ]);
     }
 
@@ -113,7 +136,7 @@ class ReceiptController extends Controller
                 'password' => '@asakala1',
                 'text' => $message,
                 'numbers' => $number,
-                'from' => 'WGIT'),
+                'from' => 'EASYMAOG'),
         ));
 
         $response = curl_exec($curl);
@@ -159,18 +182,18 @@ class ReceiptController extends Controller
     }
     public function create()
     {
-        $suppliers = Supplier::all();
-        $banks = Banks::all();
-        $labourer = Labourer::all();
-        $projects = Department::all();
-        $accounts = Accounts::where(['type'=>1])->get();
+        $suppliers = Supplier::where(['soft_delete'=>0])->orderBy('id','desc')->get();
+        $banks = Banks::where(['soft_delete'=>0])->orderBy('id','desc')->get();
+        $labourer = Labourer::where(['soft_delete'=>0])->orderBy('id','desc')->get();
+        $projects = Department::where(['soft_delete'=>0])->orderBy('id','desc')->get();
+        $accounts = Accounts::where(['type'=>1])->where(['soft_delete'=>0])->orderBy('id','desc')->get();
         return view('receipts.create')->with([
             'cpage'=>"finances",
             'suppliers'=>$suppliers,
             'banks'=>$banks,
-            'members'=>Member::all(),
-            'churches'=>Church::all(),
-            'ministries'=>Ministry::all(),
+            'members'=>Member::where(['soft_delete'=>0])->orderBy('id','desc')->get(),
+            'churches'=>Church::where(['soft_delete'=>0])->orderBy('id','desc')->get(),
+            'ministries'=>Ministry::where(['soft_delete'=>0])->orderBy('id','desc')->get(),
             'projects'=>$projects,
             'labourers'=>$labourer,
             'accounts'=>$accounts
@@ -264,7 +287,7 @@ class ReceiptController extends Controller
         ];
         if(Payment::where($raw_data)->first()){
             return redirect(
-                route('payments.create') . "?id=pending")->with(
+                route('receipts.create') . "?id=pending")->with(
                 ['error-notification'=>"You have already created this transaction Today. Check the Transaction Properly"]
             );
         }
@@ -323,9 +346,9 @@ class ReceiptController extends Controller
             $last_id = MemberPayment::create($members);
             $member = Member::where(['id'=>$request->post('member_id')])->first();
                 $message = 'MALAWI ASSEMBLIES OF GOD ' .
-                    PHP_EOL .PHP_EOL . 'Dear '.$member->name.PHP_EOL .PHP_EOL .' You have Paid the following ' .
+                    PHP_EOL .PHP_EOL . 'Dear '.$member->name.PHP_EOL .PHP_EOL .' You have Paid ' .
                     PHP_EOL .PHP_EOL .Accounts::where(['id'=>$request->post('account_id')])->first()->name .
-                    ' : MK '.$data['amount'].PHP_EOL
+                    ' Amounting to : MK '.number_format($data['amount'],2).PHP_EOL
                     .PHP_EOL.' AREA 25 VICTORY TEMPLE';
                     $this->sendSms($member->phone_number,$message);
             $order = new DeliveryController();

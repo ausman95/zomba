@@ -30,7 +30,7 @@
                     <div class="col-sm-12 col-md-8 col-lg-4">
                         <div class="form-group">
                             <label>Name</label>
-                            <input type="text" name="name"
+                            <input type="text" name="name" required
                                    class="form-control @error('name') is-invalid @enderror"
                                    value="{{old('name') ?? $member->name}}"
                                    placeholder="Member name"
@@ -43,7 +43,7 @@
                         </div>
                         <div class="form-group">
                             <label>Phone Number</label>
-                            <input type="number" name="amount"
+                            <input type="number" name="phone_number" required
                                    class="form-control @error('phone_number') is-invalid @enderror"
                                    value="{{old('phone_number') ?? $member->phone_number}}"
                                    placeholder="Phone Number"
@@ -56,7 +56,7 @@
                         </div>
                         <div class="form-group">
                             <label>Status</label>
-                            <select name="status"
+                            <select name="status" required
                                     class="form-select select-relation @error('status') is-invalid @enderror" style="width: 100%">
                                 <option value="{{$member->status}}">
                                     @if($member->status==1)
@@ -79,7 +79,7 @@
                         </div>
                         <div class="form-group">
                             <label>Gender</label>
-                            <select name="gender" class="form-select select-relation @error('gender') is-invalid @enderror" style="width: 100%">{{old('gender')}}>
+                            <select name="gender" required class="form-select select-relation @error('gender') is-invalid @enderror" style="width: 100%">{{old('gender')}}>
                                 <option value="{{$member->gender}}">{{$member->gender}}</option>
                                 <option value="Male">Male</option>
                                 <option value="Female">Female</option>
@@ -92,7 +92,7 @@
                         </div>
                         <div class="form-group">
                             <label>Home Cell</label>
-                            <select name="church_id"
+                            <select name="church_id" required
                                     class="form-select select-relation @error('church_id') is-invalid @enderror" style="width: 100%">
                                 <option value="">-- Select ---</option>
                                 @foreach($churches as $church)

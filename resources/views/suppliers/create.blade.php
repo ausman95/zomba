@@ -38,20 +38,8 @@
                             @enderror
                         </div>
                         <div class="form-group">
-                            <label>Email</label>
-                            <input type="email" name="email" class="form-control @error('email') is-invalid @enderror"
-                                   value="{{old('email')}}"
-                                   placeholder="Enter Email"
-                            >
-                            @error('email')
-                            <span class="invalid-feedback">
-                               {{$message}}
-                        </span>
-                            @enderror
-                        </div>
-                        <div class="form-group">
                             <label>Phone Number</label>
-                            <input type="text" name="phone_number"
+                            <input type="number" name="phone_number"
                                    class="form-control @error('phone_number') is-invalid @enderror"
                                    value="{{old('phone_number')}}"
                                    placeholder="Supplier's phone number"
@@ -76,17 +64,6 @@
                             @enderror
                         </div>
                         <hr style="height: .3em;" class="border-theme">
-                        <div class="form-group">
-                            <label>Postal Address</label>
-                            <textarea name="address" rows="2"
-                                      class="form-control @error('address') is-invalid @enderror">{{old('address')}}</textarea>
-                            @error('address')
-                            <span class="invalid-feedback">
-                               {{$message}}
-                        </span>
-                            @enderror
-                        </div>
-
                         <div class="form-group">
                             <button class="btn btn-md btn-primary rounded-0">
                                 <i class="fa fa-paper-plane"></i>Save

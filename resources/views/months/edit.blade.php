@@ -13,6 +13,7 @@
         <nav>
             <ol class="breadcrumb bg-transparent">
                 <li class="breadcrumb-item"><a href="{{route('home')}}">Home</a></li>
+                <li class="breadcrumb-item"><a href="{{route('setting.index')}}">Settings</a></li>
                 <li class="breadcrumb-item"><a href="{{route('months.index')}}">Months</a></li>
                 <li class="breadcrumb-item"><a href="{{route('months.show',$month->id)}}">{{$month->name}}</a></li>
                 <li class="breadcrumb-item active" aria-current="page">Update</li>

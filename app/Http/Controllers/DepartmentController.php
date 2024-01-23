@@ -5,7 +5,9 @@ namespace App\Http\Controllers;
 use App\Http\Requests\Departments\StoreRequest;
 use App\Http\Requests\Departments\UpdateRequest;
 use App\Models\Department;
+use App\Models\Labourer;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class DepartmentController extends Controller
 {
@@ -18,10 +20,9 @@ class DepartmentController extends Controller
     {
         activity('DEPARTMENT')
             ->log("Accessed Departments")->causer(request()->user());
-        $department = Department::orderBy('id','desc')->get();;
         return view('departments.index')->with([
             'cpage' => "human-resources",
-            'departments'=>$department
+            'departments'=>Department::where(['soft_delete'=>0])->orderBy('id','desc')->get()
         ]);
     }
 
@@ -45,6 +46,9 @@ class DepartmentController extends Controller
      */
     public function store(StoreRequest $request)
     {
+        if(is_numeric($request->post('name'))){
+            return back()->with(['error-notification'=>"Invalid Character Entered on Name"]);
+        }
         $data = $request->post();
 
         Department::create($data);
@@ -97,7 +101,9 @@ class DepartmentController extends Controller
     public function update(UpdateRequest $request, Department $department)
     {
         $data = $request->post();
-
+        if(is_numeric($request->post('name'))){
+            return back()->with(['error-notification'=>"Invalid Character Entered on Name"]);
+        }
         $department->update($data);
         activity('DEPARTMENT')
             ->log("Updated a Department")->causer(request()->user());
@@ -112,20 +118,17 @@ class DepartmentController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Department $department)
+    public function destroy(Request $request, Department  $department)
     {
-        try{
-            $department->delete();
-            activity('DEPARTMENT')
-                ->log("Deleted a Department")->causer(request()->user());
-            return redirect()->route('departments.index')->with([
-                'success-notification'=>"Department successfully Deleted"
-            ]);
 
-        }catch (\Exception $exception){
-            return redirect()->route('departments.index')->with([
-                'error-notification'=>"Something went Wrong ".$exception.getMessage()
-            ]);
-        }
+        $data = $request->post();
+        DB::table('departments')
+            ->where(['id' => $request->post('id')])
+            ->update(['soft_delete' => '1']);
+        $department->update($data);
+
+        return redirect()->route('departments.index')->with([
+            'success-notification'=>"Successfully Deleted"
+        ]);
     }
 }

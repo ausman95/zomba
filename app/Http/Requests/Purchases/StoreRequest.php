@@ -29,6 +29,7 @@ class StoreRequest extends FormRequest
             'account_id' => "required|numeric",
             'date' => "required|date",
             'payment_type' => "required|numeric",
+            'project_id'=>"required|numeric",
             'quantity' => "required|numeric|min:1",
             'amount' => "required|numeric|min:1",
         ];

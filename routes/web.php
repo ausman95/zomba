@@ -58,6 +58,7 @@ Route::middleware(['preventBackHistory'])->group(function () {
         Route::get('church/reports/', [\App\Http\Controllers\ReceiptController::class, 'churchReports'])->name('church.reports');
         Route::post('church/report/generate', [\App\Http\Controllers\ReceiptController::class, 'churchReportGenerate'])->name('church-report.generate');
         Route::get('church/report/generate', [\App\Http\Controllers\ReceiptController::class, 'churchReportGenerate'])->name('church-report.generate');
+        Route::resource('zones', \App\Http\Controllers\ZoneController::class);
 
         Route::resource('leave-settings', \App\Http\Controllers\LeaveSettingController::class);
         Route::resource('requisitions', RequisitionController::class)->except(['store', 'show', 'destroy']);
@@ -69,7 +70,9 @@ Route::middleware(['preventBackHistory'])->group(function () {
         Route::get('receipt/generate/', [\App\Http\Controllers\OrderController::class, 'generateReceipt'])->name('request.generate');
         Route::get('receipt/member/generate/', [\App\Http\Controllers\DeliveryController::class, 'generateMemberReceiptById'])->name('member-receipt.generate');
         Route::post('payment/report', [\App\Http\Controllers\PaymentController::class, 'generateReceipt'])->name('receipt.generate');
+        Route::resource('pledges', \App\Http\Controllers\PledgeController::class);
 
+        Route::post('pledge/report', [\App\Http\Controllers\PledgeController::class, 'generatePledge'])->name('pledge.generate');
 
         Route::post('leave/summary', [\App\Http\Controllers\LeaveController::class, 'leaveSummary'])->name('leave.summary');
         Route::get('leave/summary', [\App\Http\Controllers\LeaveController::class, 'leaveSummary'])->name('leave.summary');
@@ -102,6 +105,8 @@ Route::middleware(['preventBackHistory'])->group(function () {
         Route::get('users/reset/password', [UserController::class, 'settingsPage'])->name('user.reset');
         Route::get('users/audit-trail', [UserController::class, 'logActivity'])->name('user.audit');
         Route::get('requisitions/pending', [RequisitionController::class, 'pending'])->name('request.pending');
+        Route::post('members/report', [\App\Http\Controllers\MemberController::class, 'generateReport'])->name('member.reports');
+        Route::get('Attendance/report', [\App\Http\Controllers\AttendanceController::class, 'generateReport'])->name('member-attendance.reports');
 
         Route::get('reports/out-tray', [\App\Http\Controllers\ReportController::class, 'archive'])->name('reports.archive');
 
@@ -157,6 +162,8 @@ Route::middleware(['preventBackHistory'])->group(function () {
         /**
          * Human Resource Routes
          */
+        Route::resource('setting', \App\Http\Controllers\SettingController::class);
+
         Route::get('analytics', [HomeController::class, 'analytics'])->name('analytics');
         Route::resource('accounts', \App\Http\Controllers\AccountController::class);
         Route::resource('payments', \App\Http\Controllers\PaymentController::class);
@@ -242,11 +249,9 @@ Route::middleware(['preventBackHistory'])->group(function () {
         Route::resource('categories', \App\Http\Controllers\CategoryController::class);
         Route::resource('material-budgets', \App\Http\Controllers\MaterialBudgetController::class);
         Route::resource('notes', \App\Http\Controllers\NoteController::class);
-
         /**
          * Stores Routes
          */
-
         Route::resource('stores', \App\Http\Controllers\StoreController::class);
         Route::resource('leave-settings', \App\Http\Controllers\LeaveSettingController::class);
         Route::resource('leaves', \App\Http\Controllers\LeaveController::class);
@@ -309,8 +314,6 @@ Route::middleware(['preventBackHistory'])->group(function () {
         Route::post('labourers/subcontractors/store', [\App\Http\Controllers\LabourerController::class, 'subcontractorsStore'])->name('transactions.store');
         Route::post('register/{department}/produce', [AttendanceRegisterController::class, 'produceAttendance'])->name('register.produce');
         Route::post('suppliers/store', [\App\Http\Controllers\SupplierController::class, 'supplierStore'])->name('transaction.store');
-
-
         Route::get('attendance/{department}/record', [AttendanceRegisterController::class, 'showAttendanceForm'])->name('attendance.record');
         Route::get('attendance/{department}/report', [AttendanceRegisterController::class, 'showAttendanceReport'])->name('attendance.report');
         Route::post('attendance/{department}/save', [AttendanceRegisterController::class, 'saveAttendanceData'])->name('attendance.save');

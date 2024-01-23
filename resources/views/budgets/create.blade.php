@@ -25,7 +25,7 @@
                         @csrf
                         <div class="form-group">
                             <label> Account </label>
-                            <select name="account_id"
+                            <select name="account_id" required
                                     class="form-select select-relation @error('account_id') is-invalid @enderror" style="width: 100%">
                                 <option value="">-- Select ---</option>
                                 @foreach($accounts as $account)
@@ -41,11 +41,11 @@
                         </div>
                         <div class="form-group">
                             <label>Amount</label>
-                            <input type="number" name="amount"
+                            <input type="number" name="amount" required
                                    class="form-control @error('amount') is-invalid @enderror"
                                    value="{{old('amount')}}"
                                    placeholder="Amount Allocated" >
-                            @error('transaction_type')
+                            @error('amount')
                             <span class="invalid-feedback">
                                {{$message}}
                         </span>
@@ -54,7 +54,7 @@
 
                         <div class="form-group">
                             <label>From (Start Date)</label>
-                            <input type="date" name="start_date"
+                            <input type="date" name="start_date" required
                                    class="form-control @error('start_date') is-invalid @enderror"
                                    value="{{old('start_date')}}"
                                    placeholder="Start Date" >
@@ -66,7 +66,7 @@
                         </div>
                         <div class="form-group">
                             <label>To (End Date)</label>
-                            <input type="date" name="end_date"
+                            <input type="date" name="end_date" required
                                    class="form-control @error('end_date') is-invalid @enderror"
                                    value="{{old('end_date')}}"
                                    placeholder="End Date" >

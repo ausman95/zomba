@@ -23,10 +23,6 @@
             <hr>
         </div>
         <div class="mt-3">
-
-            <a href="{{route('transfers.index')}}" class="btn btn-primary btn-md rounded-0">
-                <i class="fa fa-folder-open"></i> Bank Transfers
-            </a>
             <a href="{{route('budgets.index')}}" class="btn btn-primary btn-md rounded-0">
                 <i class="fa fa-file-archive"></i> Budgets
             </a>
@@ -45,6 +41,12 @@
             <a href="{{route('receipts.index')}}" class="btn btn-primary btn-md rounded-0">
                 <i class="bx bx-dollar-circle"></i> Church Receipts
             </a>
+{{--            <a href="{{route('pledges.index')}}" class="btn btn-primary btn-md rounded-0">--}}
+{{--                <i class="fa fa-shopping-basket"></i> Church Pledges--}}
+{{--            </a>--}}
+            <a href="{{route('analytics')}}" class="btn btn-primary btn-md rounded-0">
+                <i class="fa fa-cart-plus"></i> Reports
+            </a>
             <div class="mt-3">
                 <div class="row">
                     <div class="col-sm-12 mb-2 col-md-12 col-lg-12">
@@ -54,7 +56,7 @@
                                     <i class="fa fa-info-circle"></i>There are no Bank Accounts!
                                 @else
                                     <div style="overflow-x:auto;">
-                                    <table class="table table-bordered table-primary table-hover table-striped" id="data-table">
+                                    <table class="table table-bordered  table-hover table-striped" id="data-table">
                                         <caption style=" caption-side: top; text-align: center">BANKS</caption>
                                         <thead>
                                         <tr>

@@ -24,7 +24,9 @@ class StoreRequest extends FormRequest
     public function rules()
     {
         return [
-            'name' => "required|string|unique:churches,name"
+            'name' => "required|string|unique:churches,name",
+           'zone_id' => "required|numeric"
         ];
+
     }
 }

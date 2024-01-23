@@ -72,15 +72,7 @@
                                                     @endif
                                                     </td>
                                                <td>{{$purchase->account->name}}</td>
-                                                <td>
-                                                    @if($purchase->store==1)
-                                                        STORES
-                                                    @elseif($purchase->store==2)
-                                                        ADMIN
-                                                    @else
-                                                        PROJECTS
-                                                    @endif
-                                                </td>
+                                                <td>{{ucwords($purchase->department->name) }}</td>
                                                 <td>{{ucwords($purchase->reference) }}</td>
                                                 <td>
                                                     {{date('d F Y', strtotime($purchase->date)) }}

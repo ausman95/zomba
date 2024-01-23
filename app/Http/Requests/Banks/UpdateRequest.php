@@ -31,5 +31,6 @@ class UpdateRequest extends FormRequest
             'service_centre' => "required|string",
             'account_type'=>"required|string"
         ];
+
     }
 }

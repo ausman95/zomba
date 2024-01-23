@@ -26,6 +26,9 @@
             <a href="{{route('banks.create')}}" class="btn btn-primary btn-md rounded-0">
                 <i class="fa fa-plus-circle"></i>New Bank Account
             </a>
+            <a href="{{route('transfers.index')}}" class="btn btn-primary btn-md rounded-0">
+                <i class="fa fa-exchange-alt"></i> Bank Transfers
+            </a>
             <div class="mt-3">
                 <div class="row">
                     <div class="col-sm-12 mb-2 col-md-12 col-lg-12">

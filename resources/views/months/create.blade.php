@@ -4,17 +4,17 @@
 @section('content')
     <div class="container-fluid ps-1 pt-4">
         <h4>
-            <i class="fa fa-money-bill-alt"></i>Charts Of Accounts
+            <i class="fa fa-list-ol"></i>Months
         </h4>
         <p>
-            Charts Of Account
+            Months
         </p>
         <nav aria-label="breadcrumb">
             <ol class="breadcrumb bg-transparent">
                 <li class="breadcrumb-item"><a href="{{route('home')}}">Home</a></li>
-                <li class="breadcrumb-item"><a href="{{route('finances.index')}}">Finances</a></li>
-                <li class="breadcrumb-item"><a href="{{route('ministries.index')}}">Accounts</a></li>
-                <li class="breadcrumb-item active" aria-current="page">Create Account</li>
+                <li class="breadcrumb-item"><a href="{{route('setting.index')}}">Settings</a></li>
+                <li class="breadcrumb-item"><a href="{{route('months.index')}}">Months</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Create Month</li>
             </ol>
         </nav>
         <div class="mb-5">
@@ -23,33 +23,45 @@
         <div class="mt-2">
             <div class="row">
                 <div class="col-sm-12 col-md-8 col-lg-4">
-                    <form action="{{route('ministries.store')}}" method="POST" autocomplete="off">
+                    <form action="{{route('months.store')}}" method="POST" autocomplete="off">
                         @csrf
                         <div class="form-group">
                             <label>Name</label>
                             <input type="text" name="name"
                                    class="form-control @error('name') is-invalid @enderror"
                                    value="{{old('name')}}"
-                                   placeholder="Account's name" >
+                                   placeholder="i.e.June 2022" >
                             @error('name')
                             <span class="invalid-feedback">
                                {{$message}}
                         </span>
                             @enderror
                         </div>
-                        <hr style="height: .3em;" class="border-theme">
                         <div class="form-group">
-                            <label>Account Type</label>
-                            <select name="type" class="form-control select-relation @error('type') is-invalid @enderror" style="width: 100%">{{old('type')}}>
-                                <option value="1">Cr</option>
-                                <option value="2">Dr</option>
-                            </select>
-                            @error('type')
+                            <label>Start Date</label>
+                            <input type="date" name="start_date"
+                                   class="form-control @error('start_date') is-invalid @enderror"
+                                   value="{{old('start_date')}}"
+                            >
+                            @error('start_date')
                             <span class="invalid-feedback">
                                {{$message}}
                         </span>
                             @enderror
                         </div>
+                        <div class="form-group">
+                            <label>End Date</label>
+                            <input type="date" name="end_date"
+                                   class="form-control @error('end_date') is-invalid @enderror"
+                                   value="{{old('end_date')}}"
+                            >
+                            @error('end_date')
+                            <span class="invalid-feedback">
+                               {{$message}}
+                        </span>
+                            @enderror
+                        </div>
+                        <hr style="height: .3em;" class="border-theme">
 
                         <div class="form-group">
                             <button class="btn btn-md btn-primary rounded-0">

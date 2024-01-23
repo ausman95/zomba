@@ -39,6 +39,38 @@
                             </span>
                             @enderror
                         </div>
+                        <div class="form-group">
+                            <label>Zone</label>
+                            <select name="zone_id" required
+                                    class="form-select select-relation @error('zone_id') is-invalid @enderror" style="width: 100%">
+                                <option value="{{@$church->zone->id}}">{{@$church->zone->name}}</option>
+                                @foreach($zones as $zone)
+                                    <option value="{{$zone->id}}"
+                                        {{old('zone_id')===$zone->id ? 'selected' : ''}}>{{$zone->name}}</option>
+                                @endforeach
+                            </select>
+                            @error('zone_id')
+                            <span class="invalid-feedback">
+                               {{$message}}
+                        </span>
+                            @enderror
+                        </div>
+                        <div class="form-group">
+                            <label>Leader</label>
+                            <select name="member_id"
+                                    class="form-select select-relation @error('member_id') is-invalid @enderror" style="width: 100%">
+                                <option value="{{@$church->member->id}}">{{@$church->member->name}}</option>
+                                @foreach($members as $member)
+                                    <option value="{{$member->id}}"
+                                        {{old('member_id')===$member->id ? 'selected' : ''}}>{{$member->name.' - '.$member->phone_number}}</option>
+                                @endforeach
+                            </select>
+                            @error('member_id')
+                            <span class="invalid-feedback">
+                               {{$message}}
+                        </span>
+                            @enderror
+                        </div>
                         <hr style="height: .3em;" class="border-theme">
                         <div class="form-group ">
                             <button class="btn btn-md btn-primary rounded-0">

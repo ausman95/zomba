@@ -17,15 +17,7 @@
                 <li class="breadcrumb-item active" aria-current="page">Create Purchases</li>
             </ol>
         </nav>
-        <button type="button" class="btn btn-primary rounded-0 btn-md" data-bs-toggle="modal" data-bs-target="#material">
-           <i class="fa fa-plus-circle"></i> New Material
-        </button>
-        <button type="button" class="btn btn-primary rounded-0 btn-md" data-bs-toggle="modal" data-bs-target="#account">
-            <i class="fa fa-plus-circle"></i> New Chart of Account
-        </button>
-        <button type="button" class="btn btn-primary rounded-0 btn-md" data-bs-toggle="modal" data-bs-target="#supplier">
-            <i class="fa fa-plus-circle"></i> New Supplier
-        </button>
+
         <div class="modal " id="account" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
@@ -210,7 +202,7 @@
                             @csrf
                         <div class="form-group">
                             <label>Material Name</label>
-                            <select name="material_id"
+                            <select name="material_id" required
                                     class="form-select select-relation @error('material_id') is-invalid @enderror" style="width: 100%">
                                 <option value="">-- Select ---</option>
                                 @foreach($materials as $material)
@@ -226,7 +218,7 @@
                         </div>
                             <div class="form-group">
                                 <label>Account</label>
-                                <select name="account_id"
+                                <select name="account_id" required
                                         class="form-select select-relation @error('account_id') is-invalid @enderror" style="width: 100%">
                                     <option value="">-- Select ---</option>
                                     @foreach($accounts as $account)
@@ -242,7 +234,7 @@
                             </div>
                         <div class="form-group">
                             <label>Purchase Method</label>
-                            <select name="payment_type" class="form-select select-relation payment_type @error('payment_type') is-invalid @enderror" style="width: 100%">{{old('payment_type')}}>
+                            <select name="payment_type" required class="form-select select-relation payment_type @error('payment_type') is-invalid @enderror" style="width: 100%">{{old('payment_type')}}>
                                 <option value="">-- Select ---</option>
                                 <option value="1">Cash</option>
                                 <option value="2">Credit</option>
@@ -256,7 +248,7 @@
                         </div>
                         <div class="form-group">
                             <label>Quantity</label>
-                            <input type="number" name="quantity"
+                            <input type="number" name="quantity" required
                                    class="form-control @error('quantity') is-invalid @enderror"
                                    value="{{old('quantity')}}"
                                    placeholder="Quantity" >
@@ -268,7 +260,7 @@
                         </div>
                         <div class="form-group">
                             <label>Total Amount</label>
-                            <input type="number" name="amount"
+                            <input type="number" name="amount" required
                                    class="form-control @error('amount') is-invalid @enderror"
                                    value="{{old('amount')}}"
                                    placeholder="amount" >
@@ -301,7 +293,7 @@
                         @csrf
                         <div class="form-group">
                             <label>Suppliers</label>
-                            <select name="supplier_id"
+                            <select name="supplier_id" required
                                     class="form-select select-relation @error('supplier_id') is-invalid @enderror" style="width: 100%">
                                 <option value="">-- Select ---</option>
                                 @foreach($suppliers as $supplier)
@@ -316,7 +308,7 @@
                             @enderror
                         </div>
                         <div class="form-group">
-                            <label>Reference</label>
+                            <label>Reference (is Optional)</label>
                             <input type="text" name="reference"
                                    class="form-control @error('reference') is-invalid @enderror"
                                    placeholder="Reference Number" >
@@ -329,7 +321,7 @@
                         <div class="projects">
                             <div class="form-group">
                                 <label>Department</label>
-                                <select name="project_id"
+                                <select name="project_id" required
                                         class="form-select select-relation @error('project_id') is-invalid @enderror" style="width: 100%">
                                     <option value="">-- Select ---</option>
                                     @foreach($projects as $project)
@@ -346,7 +338,7 @@
                         </div>
                         <div class="form-group">
                             <label>Date</label>
-                            <input type="date" name="date"
+                            <input type="date" name="date" required
                                    class="form-control @error('date') is-invalid @enderror"
                                    value="{{old('date')}}"
                                    placeholder="Purchase Date" >

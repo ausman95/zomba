@@ -47,7 +47,7 @@
                                    class="form-control @error('amount') is-invalid @enderror"
                                    value="{{old('amount') ?? $budget->amount}}"
                                    placeholder="Amount Allocated" >
-                            @error('transaction_type')
+                            @error('amount')
                             <span class="invalid-feedback">
                                {{$message}}
                         </span>

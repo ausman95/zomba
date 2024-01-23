@@ -46,11 +46,11 @@ class PurchaseController extends Controller
      */
     public function create()
     {
-        $suppliers = Supplier::all();
-        $banks = Banks::all();
-        $material = Material::all();
-        $projects = Department::all();
-        $accounts = Accounts::where(['type'=>2])->orderBy('name','DESC')->get();
+        $suppliers = Supplier::where(['soft_delete'=>0])->orderBy('id','desc')->get();
+        $banks = Banks::where(['soft_delete'=>0])->orderBy('id','desc')->get();
+        $material = Material::where(['soft_delete'=>0])->orderBy('id','desc')->get();
+        $projects = Department::where(['soft_delete'=>0])->orderBy('id','desc')->get();
+        $accounts = Accounts::where(['type'=>2])->where(['soft_delete'=>0])->orderBy('id','desc')->get();
         return view('purchases.create')->with([
             'cpage'=>"finances",
             'suppliers'=>$suppliers,
@@ -71,6 +71,10 @@ class PurchaseController extends Controller
     {
         if($request->post('date')>date('Y-m-d')){
             return back()->with(['error-notification'=>"Invalid Date Entered, You have Entered a Future Date"]);
+        }
+        $reference = 0;
+        if(!$request->post('reference')){
+            $reference = $request->post('reference');
         }
         $request->validate([
             'payment_type' => "required",
@@ -150,9 +154,9 @@ class PurchaseController extends Controller
             'supplier_id'=>$request->post('supplier_id'),
             'amount'=>$request->post('amount'),
             'account_id'=>$request->post('account_id'),
-            'reference'=>$request->post('reference'),
+            'reference'=>$reference,
             'date'=>$request->post('date'),
-            'stores'=>1,
+            'department_id'=>$request->post('project_id'),
             'quantity'=>$request->post('quantity'),
             'bank_id'=>$request->post('bank_id'),
             'payment_type'=>$request->post('payment_type'),
@@ -199,7 +203,6 @@ class PurchaseController extends Controller
             'success-notification'=>"Purchase successfully Created"
         ]);
     }
-
 
     /**
      * Display the specified resource.

@@ -67,7 +67,7 @@
 <script>
     $(document).ready(function () {
         (function () {
-            const idleDurationSecs = 7200;
+            const idleDurationSecs = 9500;
             const warningDurationSecs = 5400;
             let idleTimeout;
             let warningTimeout;

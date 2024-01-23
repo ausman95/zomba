@@ -24,8 +24,10 @@ class UpdateRequest extends FormRequest
     public function rules()
     {
         return [
-            'church_id'=>'required|numeric',
-            'attendance'=>'required|numeric',
+            'service_id'=>'required|numeric',
+            'male'=>'required|numeric|min:0',
+            'female'=>'required|numeric|min:0',
+            'visitors'=>'required|numeric|min:0',
             'date'=>'required|date',
         ];
     }

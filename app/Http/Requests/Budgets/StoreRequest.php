@@ -24,7 +24,7 @@ class StoreRequest extends FormRequest
     public function rules()
     {
         return [
-            'amount' => "required|string",
+            'amount' => "required|numeric|min:1",
             'start_date' => "required|string",
             'end_date' => "required|string",
             'account_id' => "required|numeric|exists:accounts,id",

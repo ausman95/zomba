@@ -44,21 +44,30 @@
                                                 <td>Update ON</td>
                                                 <td>{{$labour->updated_at}}</td>
                                             </tr>
+                                            <tr>
+                                                <td>Status</td>
+                                                <td>
+                                                    @if($labour->soft_delete==1)
+                                                        <p style="color: red">Deleted, and Reserved for Audit</p>
+                                                    @else
+                                                        Active
+                                                    @endif
+                                                </td>
+                                            </tr>
                                         </table>
                                         <div class="">
                                             <a href="{{route('labours.edit',$labour->id)}}"
                                                class="btn btn-primary btn-md rounded-0" style="margin: 5px">
                                                 <i class="fa fa-edit"></i>Update
                                             </a>
-{{--                                            @if( request()->user()->designation==='administrator')--}}
-{{--                                                <form action="{{route('labours.destroy',$labour->id)}}" method="POST" id="delete-form">--}}
-{{--                                                    @csrf--}}
-{{--                                                    <input type="hidden" name="_method" value="DELETE">--}}
-{{--                                                </form>--}}
-{{--                                                <button class="btn btn-danger btn-md rounded-0" id="delete-btn" style="margin: 5px">--}}
-{{--                                                    <i class="fa fa-trash"></i>Delete--}}
-{{--                                                </button>--}}
-{{--                                            @endif--}}
+                                            <button class="btn btn-danger btn-md rounded-0" id="delete-btn" style="margin: 5px">
+                                                <i class="fa fa-trash"></i>Delete
+                                            </button>
+                                            <form action="{{route('labours.destroy',$labour->id)}}" method="POST" id="delete-form">
+                                                @csrf
+                                                <input type="hidden" name="_method" value="DELETE">
+                                                <input type="hidden" name="id" value="{{$labour->id}}">
+                                            </form>
                                         </div>
                                     </div>
                                 </div>

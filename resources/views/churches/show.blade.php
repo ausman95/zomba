@@ -36,12 +36,30 @@
                                             <td>{{$church->name}}</td>
                                         </tr>
                                         <tr>
+                                            <td>Leader</td>
+                                            <td>{{@$church->member->name}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Zone</td>
+                                            <td>{{@$church->zone->name}}</td>
+                                        </tr>
+                                        <tr>
                                             <td>Created On</td>
                                             <td>{{$church->created_at}}</td>
                                         </tr>
                                         <tr>
                                             <td>Update ON</td>
                                             <td>{{$church->updated_at}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Status</td>
+                                            <td>
+                                                @if($church->soft_delete==1)
+                                                    <p style="color: red">Deleted, and Reserved for Audit</p>
+                                                @else
+                                                    Active
+                                                @endif
+                                            </td>
                                         </tr>
                                     </table>
                                     <div class="mt-3">
@@ -51,6 +69,14 @@
                                                class="btn btn-primary rounded-0" style="margin: 2px">
                                                 <i class="fa fa-edit"></i>Update
                                             </a>
+                                                <button class="btn btn-danger btn-md rounded-0" id="delete-btn" style="margin: 5px">
+                                                    <i class="fa fa-trash"></i>Delete
+                                                </button>
+                                                <form action="{{route('churches.destroy',$church->id)}}" method="POST" id="delete-form">
+                                                    @csrf
+                                                    <input type="hidden" name="_method" value="DELETE">
+                                                    <input type="hidden" name="id" value="{{$church->id}}">
+                                                </form>
                                             @endif
                                         </div>
                                     </div>
@@ -129,7 +155,6 @@
                                                 <th>NAME</th>
                                                 <th>HOME CELL</th>
                                                 <th>PHONE</th>
-                                                <th>MINISTRY</th>
                                                 <th>STATUS</th>
                                                 <th>ACTION</th>
                                             </tr>
@@ -142,7 +167,6 @@
                                                     <td>{{$member->name}}</td>
                                                     <td>{{$member->church->name}}</td>
                                                     <td>{{$member->phone_number}}</td>
-                                                    <td>{{$member->ministry->name}}</td>
                                                     <td>
                                                         @if($member->status==1)
                                                             {{'ACTIVE'}}
@@ -197,7 +221,7 @@
 
 
             $("#delete-btn").on('click', function () {
-                confirmationWindow("Confirm Deletion", "Are you sure you want to delete this account?", "Yes,Delete", function () {
+                confirmationWindow("Confirm Deletion", "Are you sure you want to delete this Home Cell?", "Yes,Delete", function () {
                     $("#delete-form").submit();
                 });
             });

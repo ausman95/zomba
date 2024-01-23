@@ -3,13 +3,29 @@
 namespace App\Http\Controllers;
 
 use App\Models\Accounts;
+use App\Models\Announcement;
 use Illuminate\Http\Request;
 use App\Http\Requests\Accounts\StoreRequest;
 use App\Http\Requests\Accounts\UpdateRequest;
+use Illuminate\Support\Facades\DB;
 
 
 class AccountController extends Controller
 {
+    public function destroy(Request $request, Accounts $accounts)
+    {
+
+        $data = $request->post();
+        DB::table('accounts')
+            ->where(['id' => $request->post('id')])
+            ->update(['soft_delete' => '1']);
+        $accounts->update($data);
+
+        return redirect()->route('accounts.index')->with([
+            'success-notification'=>"Successfully Deleted"
+        ]);
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -19,10 +35,9 @@ class AccountController extends Controller
     {
         activity('ACCOUNTS')
             ->log("Accessed Accounts listing")->causer(request()->user());
-        $accounts= Accounts::orderBy('id','desc')->get();;
         return view('accounts.index')->with([
             'cpage' => "finances",
-            'accounts'=>$accounts,
+            'accounts'=>Accounts::where(['soft_delete'=>0])->orderBy('id','desc')->get(),
         ]);
     }
 
@@ -46,13 +61,15 @@ class AccountController extends Controller
      */
     public function store(StoreRequest $request)
     {
-
+        if(is_numeric($request->post('name'))){
+            return back()->with(['error-notification'=>"Invalid Character Entered on Name"]);
+        }
         $data = $request->post();
 
         Accounts::create($data);
         activity('ACCOUNTS')
             ->log("Created a new Account")->causer(request()->user());
-        return redirect()->back()->with([
+        return redirect()->route('accounts.index')->with([
             'success-notification'=>"Account successfully Created"
         ]);
     }
@@ -97,7 +114,9 @@ class AccountController extends Controller
     public function update(UpdateRequest $request,Accounts $account)
     {
         $data = $request->post();
-
+        if(is_numeric($request->post('name'))){
+            return back()->with(['error-notification'=>"Invalid Character Entered on Name"]);
+        }
         $account->update($data);
         activity('ACCOUNTS')
             ->log("Updated an Account")->causer(request()->user());
@@ -112,20 +131,20 @@ class AccountController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Accounts  $account)
-    {
-        try{
-            $account->delete();
-            activity('ACCOUNTS')
-                ->log("Deleted an Account")->causer(request()->user());
-            return redirect()->route('accounts.index')->with([
-                'success-notification'=>"Account successfully Deleted"
-            ]);
-
-        }catch (\Exception $exception){
-            return redirect()->route('accounts.index')->with([
-                'error-notification'=>"Something went Wrong ".$exception.getMessage()
-            ]);
-        }
-    }
+//    public function destroy(Accounts  $account)
+//    {
+//        try{
+//            $account->delete();
+//            activity('ACCOUNTS')
+//                ->log("Deleted an Account")->causer(request()->user());
+//            return redirect()->route('accounts.index')->with([
+//                'success-notification'=>"Account successfully Deleted"
+//            ]);
+//
+//        }catch (\Exception $exception){
+//            return redirect()->route('accounts.index')->with([
+//                'error-notification'=>"Something went Wrong ".$exception.getMessage()
+//            ]);
+//        }
+//    }
 }

@@ -13,6 +13,7 @@
         <nav>
             <ol class="breadcrumb bg-transparent">
                 <li class="breadcrumb-item"><a href="{{route('home')}}">Home</a></li>
+                <li class="breadcrumb-item"><a href="{{route('setting.index')}}">Settings</a></li>
                 <li class="breadcrumb-item"><a href="{{route('ministries.index')}}">Ministries</a></li>
                 <li class="breadcrumb-item"><a href="{{route('ministries.show',$ministry->id)}}">{{$ministry->name}}</a></li>
                 <li class="breadcrumb-item active" aria-current="page">Update</li>

@@ -11,10 +11,13 @@ class Attendance extends Model
     use HasFactory;
 
     protected $fillable = [
-        'attendance','church_id','date'
+        'attendance','ministry_id','service_id',
+        'date','male','female','visitors','month_id'
     ];
-
-    public function church (){
-        return $this->belongsTo(Church::class,'church_id');
+    public function ministry (){
+        return $this->belongsTo(Ministry::class,'ministry_id');
+    }
+    public function service (){
+        return $this->belongsTo(Service::class,'service_id');
     }
 }

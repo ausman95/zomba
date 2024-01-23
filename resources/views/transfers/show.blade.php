@@ -13,6 +13,7 @@
             <ol class="breadcrumb bg-transparent">
                 <li class="breadcrumb-item"><a href="{{route('home')}}">Home</a></li>
                 <li class="breadcrumb-item"><a href="{{route('finances.index')}}">Finances</a></li>
+                <li class="breadcrumb-item"><a href="{{route('banks.index')}}">Banks</a></li>
                 <li class="breadcrumb-item"><a href="{{route('transfers.index')}}">Bank Transfers</a></li>
                 <li class="breadcrumb-item active" aria-current="page">{{$transfer->id}}</li>
             </ol>

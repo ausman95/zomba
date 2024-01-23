@@ -57,11 +57,6 @@
                     <i class='bx bxs-file-archive sidenav__icon'></i>
                     <span class="sidenav__name">Finances</span>
                 </a>
-                <a href="{{route('analytics')}}" class="sidenav__link {{$cpage === 'analytics' ? 'link-active' : ''}}"
-                   title="Analytics">
-                    <i class='bx bx-bar-chart-alt-2 sidenav__icon'></i>
-                    <span class="sidenav__name">Reports</span>
-                </a>
                 <a href="{{route('suppliers.index')}}"
                    class="sidenav__link {{$cpage === 'suppliers' ? 'link-active' : ''}}" title="Suppliers">
                     <i class='bx bxs-file-archive sidenav__icon'></i>
@@ -82,10 +77,15 @@
                     <i class='bx bxs-file-archive sidenav__icon'></i>
                     <span class="sidenav__name">Stores</span>
                 </a>
-                <a href="{{route('ministries.index')}}"
-                   class="sidenav__link {{$cpage === 'ministries' ? 'link-active' : ''}}" title="Ministries">
-                    <i class='bx bxs-city sidenav__icon'></i>
-                    <span class="sidenav__name">Ministries</span>
+{{--                <a href="{{route('ministries.index')}}"--}}
+{{--                   class="sidenav__link {{$cpage === 'ministries' ? 'link-active' : ''}}" title="Ministries">--}}
+{{--                    <i class='bx bxs-city sidenav__icon'></i>--}}
+{{--                    <span class="sidenav__name">Ministries</span>--}}
+{{--                </a>--}}
+                <a href="{{route('zones.index')}}"
+                   class="sidenav__link {{$cpage === 'zones' ? 'link-active' : ''}}" title="Zones">
+                    <i class='fa fa-list-ol sidenav__icon'></i>
+                    <span class="sidenav__name">Zones</span>
                 </a>
                 <a href="{{route('churches.index')}}"
                    class="sidenav__link {{$cpage === 'churches' ? 'link-active' : ''}}" title="Churches">
@@ -116,15 +116,11 @@
                 @endif
                 @if(request()->user()->designation=='administrator')
 
-                <a href="{{route('months.index')}}" class="sidenav__link {{$cpage === 'months' ? 'link-active' : ''}}"
-                   title="Months">
-                    <i class='bx bxs-file sidenav__icon'></i>
-                    <span class="sidenav__name">Months</span>
+                <a href="{{route('setting.index')}}" class="sidenav__link {{$cpage === 'settings' ? 'link-active' : ''}}"
+                   title="Settings">
+                    <i class='fa fa-cog sidenav__icon'></i>
+                    <span class="sidenav__name">Settings</span>
                 </a>
-
-
-
-
                 <a href="{{route('users.index')}}" class="sidenav__link {{$cpage === 'users' ? 'link-active' : ''}}"
                    title="Users">
                     <i class='bx bx-user sidenav__icon'></i>

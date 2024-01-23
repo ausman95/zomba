@@ -7,10 +7,10 @@
 @section('content')
     <div class="container-fluid ps-1 pt-4">
         <h4>
-            <i class="fa fa-list-ul"></i>Stock list
+            <i class="fa fa-list-ul"></i>Material list
         </h4>
         <p>
-            Manage Stock list
+            Manage Material list
         </p>
         <nav aria-label="breadcrumb">
             <ol class="breadcrumb bg-transparent">
@@ -24,7 +24,7 @@
         <div class="mt-3">
             @if(request()->user()->designation!='other' )
             <a href="{{route('stock-flows.index')}}" class="btn btn-primary btn-md rounded-0">
-                <i class="fa fa-exchange-alt"></i>Stock Flow
+                <i class="fa fa-exchange-alt"></i>Material Flow
             </a>
             @endif
             <div class="mt-3">
@@ -33,7 +33,7 @@
                         <div class="card " style="min-height: 30em;">
                             <div class="card-body px-1">
                                 @if($stores->count() === 0)
-                                    <i class="fa fa-info-circle"></i>There are no Stock!
+                                    <i class="fa fa-info-circle"></i>There are no Material!
                                 @else
                                     <div style="overflow-x:auto;">
                                     <table class="table table-bordered table-hover table-striped" id="data-table">

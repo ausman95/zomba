@@ -11,6 +11,7 @@
         <nav aria-label="breadcrumb">
             <ol class="breadcrumb bg-transparent">
                 <li class="breadcrumb-item"><a href="{{route('home')}}">Home</a></li>
+                <li class="breadcrumb-item"><a href="{{route('setting.index')}}">Settings</a></li>
                 <li class="breadcrumb-item active" aria-current="page">Months</li>
             </ol>
         </nav>
@@ -18,72 +19,9 @@
             <hr>
         </div>
         <div class="mt-3">
-            <button type="button" class="btn btn-primary rounded-0 btn-md" data-bs-toggle="modal" data-bs-target="#material">
-                <i class="fa fa-plus-circle"></i> New Month
-            </button>
-            <div class="modal " id="material" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="staticBackdropLabel">Adding Month</h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                        </div>
-                        <div class="modal-body">
-                            <form action="{{route('months.store')}}" method="POST" autocomplete="off">
-                                @csrf
-                                <div class="form-group">
-                                    <label>Name</label>
-                                    <input type="text" name="name"
-                                           class="form-control @error('name') is-invalid @enderror"
-                                           value="{{old('name')}}"
-                                           placeholder="i.e.June 2022" >
-                                    @error('name')
-                                    <span class="invalid-feedback">
-                               {{$message}}
-                        </span>
-                                    @enderror
-                                </div>
-                                <div class="form-group">
-                                    <label>Start Date</label>
-                                    <input type="date" name="start_date"
-                                           class="form-control @error('start_date') is-invalid @enderror"
-                                           value="{{old('start_date')}}"
-                                           >
-                                    @error('start_date')
-                                    <span class="invalid-feedback">
-                               {{$message}}
-                        </span>
-                                    @enderror
-                                </div>
-                                <div class="form-group">
-                                    <label>End Date</label>
-                                    <input type="date" name="end_date"
-                                           class="form-control @error('end_date') is-invalid @enderror"
-                                           value="{{old('end_date')}}"
-                                            >
-                                    @error('end_date')
-                                    <span class="invalid-feedback">
-                               {{$message}}
-                        </span>
-                                    @enderror
-                                </div>
-                                <hr style="height: .3em;" class="border-theme">
-
-                                <div class="form-group">
-                                    <button class="btn btn-md btn-primary rounded-0">
-                                        <i class="fa fa-paper-plane"></i>Save
-                                    </button>
-
-                                </div>
-                            </form>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"><i class="fa fa-times-circle"></i> Cancel</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
+            <a href="{{route('months.create')}}" class="btn btn-primary btn-md rounded-0">
+                <i class="fa fa-user-plus"></i>New Month
+            </a>
             <div class="mt-3">
                 <div class="row">
                     <div class="col-sm-12 mb-2 col-md-12 col-lg-12">

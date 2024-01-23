@@ -24,7 +24,7 @@ class FinanceController extends Controller
     {
         activity('FINANCES')
             ->log("Accessed Finances")->causer(request()->user());
-        $banks = Banks::all();
+        $banks = Banks::where(['soft_delete'=>0])->orderBy('id','desc')->get();
         return view('finances.index')->with([
             'cpage' => "finances",
             'banks' => $banks

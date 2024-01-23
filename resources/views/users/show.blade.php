@@ -40,6 +40,16 @@
                                class="btn btn-primary btn-md rounded-0" style="margin: 2px">
                                 <i class="fa fa-unlock-alt"></i>Reset Password
                             </a>
+                            <div class="">
+                                <form action="{{route('users.destroy',$user->id)}}" method="POST" id="delete-form">
+                                    @csrf
+                                    <input type="hidden" name="_method" value="DELETE">
+                                    <input type="hidden" name="user_id" value="{{$user->id}}">
+                                </form>
+                                <button class="btn btn-danger btn-md rounded-0" id="delete-btn" style="margin: 5px">
+                                    <i class="fa fa-trash"></i>Delete
+                                </button>
+                            </div>
                         </div>
 {{--                        <div class="">--}}
 {{--                            @if(request()->user()->designation==='administrator')--}}
@@ -81,6 +91,16 @@
                                             <tr>
                                                 <td>Role</td>
                                                 <td>{{$user->designation}}</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Status</td>
+                                                <td>
+                                                    @if($user->soft_delete==1)
+                                                   <p style="color: red">Deleted, and Reserved for Audit</p>
+                                                    @else
+                                                        Active
+                                                    @endif
+                                                </td>
                                             </tr>
                                             <tr>
                                                 <td>Created at</td>

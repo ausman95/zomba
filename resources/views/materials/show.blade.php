@@ -54,6 +54,16 @@
                                             <td>Update ON</td>
                                             <td>{{$material->updated_at}}</td>
                                         </tr>
+                                        <tr>
+                                            <td>Status</td>
+                                            <td>
+                                                @if($material->soft_delete==1)
+                                                    <p style="color: red">Deleted, and Reserved for Audit</p>
+                                                @else
+                                                    Active
+                                                @endif
+                                            </td>
+                                        </tr>
                                     </table>
                                     <div class="mt-3">
                                         <div>
@@ -61,6 +71,14 @@
                                                class="btn btn-primary rounded-0" style="margin: 2px">
                                                 <i class="fa fa-edit"></i>Update
                                             </a>
+                                            <button class="btn btn-danger btn-md rounded-0" id="delete-btn" style="margin: 5px">
+                                                <i class="fa fa-trash"></i>Delete
+                                            </button>
+                                            <form action="{{route('materials.destroy',$material->id)}}" method="POST" id="delete-form">
+                                                @csrf
+                                                <input type="hidden" name="_method" value="DELETE">
+                                                <input type="hidden" name="id" value="{{$material->id}}">
+                                            </form>
                                         </div>
                                         <div class="">
 {{--                                            @if( request()->user()->designation==='administrator')--}}
