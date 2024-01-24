@@ -14,6 +14,6 @@ class Labour extends Model
     public function labourers()
     {
         return $this->hasMany(Labourer::class,'labour_id')
-            ->where(['soft_delete'=>0])->orderBy('id','desc')->get();
+            ->where(['soft_delete'=>0])->orderBy('id','desc');
     }
 }
