@@ -78,7 +78,7 @@ class MemberController extends Controller
             'ministries'=> Ministry::where(['soft_delete'=>0])->orderBy('id','desc')->get(),
         ]);
     }
-    public function store(StoreRequest $request, LabourerController $labourerController)
+    public function store(ReceiptController $receiptController, StoreRequest $request, LabourerController $labourerController)
     {
         if(is_numeric($request->post('name'))){
             return back()->with(['error-notification'=>"Invalid Character Entered on Member Name"]);
@@ -100,6 +100,10 @@ class MemberController extends Controller
                 MemberMinistry::create($data);
             }
         }
+        $message = 'MALAWI ASSEMBLIES OF GOD' .
+            PHP_EOL.PHP_EOL.'Dear '.$request->post('name').PHP_EOL.PHP_EOL.' You have been registered into the new church system ' .
+            PHP_EOL.PHP_EOL.PHP_EOL.' AREA 25 VICTORY TEMPLE';
+        $receiptController->sendSms($request->post('phone_number'),$message);
         activity('members')
             ->log("Created a new member")->causer(request()->user());
         return redirect()->route('members.index')->with([
