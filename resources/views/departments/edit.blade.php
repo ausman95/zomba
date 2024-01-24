@@ -14,7 +14,7 @@
             <ol class="breadcrumb bg-transparent">
                 <li class="breadcrumb-item"><a href="{{route('home')}}">Home</a></li>
                 <li class="breadcrumb-item"><a href="{{route('human-resources.index')}}">Human Resources</a></li>
-                <li class="breadcrumb-item"><a href="{{route('ministries.index')}}">Project</a></li>
+                <li class="breadcrumb-item"><a href="{{route('departments.index')}}">Project</a></li>
                 <li class="breadcrumb-item"><a href="{{route('departments.show',$department->id)}}">{{$department->name}}</a></li>
                 <li class="breadcrumb-item active" aria-current="page">Update</li>
             </ol>

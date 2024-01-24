@@ -101,9 +101,9 @@
                                                 <th>HOME CHURCH</th>
                                                 <th>PHONE</th>
                                                 <th>STATUS</th>
-                                                @if(@!$report)
+{{--                                                @if(@!$report)--}}
                                                 <th>ACTION</th>
-                                                @endif
+{{--                                                @endif--}}
                                             </tr>
                                             </thead>
                                             <tbody>
@@ -124,7 +124,7 @@
                                                             {{'DECEASED'}}
                                                         @endif
                                                     </td>
-                                                    @if(@!$report)
+{{--                                                    @if(@!$report)--}}
                                                     <td class="pt-1">
                                                         {{--                                                    @if(request()->user()->member_id==$member->id)--}}
                                                         <a href="{{route('members.show',$member->id)}}"
@@ -133,7 +133,7 @@
                                                         </a>
                                                         {{--                                                    @endif--}}
                                                     </td>
-                                                    @endif
+{{--                                                    @endif--}}
                                                 </tr>
                                             @endforeach
                                             </tbody>
