@@ -261,7 +261,6 @@
                             <label>Payment Method</label>
                             <select name="payment_method" required
                                     class="form-select select-relation payment_method @error('payment_method') is-invalid @enderror" style="width: 100%">{{old('payment_method')}}>
-                                <option value="">-- Select ---</option>
                                 <option value="1">Cash</option>
                                 <option value="3">Cheque</option>
                                 <option value="4">Online Transfer </option>
