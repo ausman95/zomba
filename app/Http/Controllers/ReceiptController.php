@@ -186,7 +186,7 @@ class ReceiptController extends Controller
         $banks = Banks::where(['soft_delete'=>0])->orderBy('id','desc')->get();
         $labourer = Labourer::where(['soft_delete'=>0])->orderBy('id','desc')->get();
         $projects = Department::where(['soft_delete'=>0])->orderBy('id','desc')->get();
-        $accounts = Accounts::where(['type'=>1])->where(['soft_delete'=>0])->orderBy('id','desc')->get();
+        $accounts = Accounts::where(['type'=>1])->where(['soft_delete'=>0])->orderBy('id','ASC')->get();
         return view('receipts.create')->with([
             'cpage'=>"finances",
             'suppliers'=>$suppliers,

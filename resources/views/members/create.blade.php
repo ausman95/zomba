@@ -74,7 +74,7 @@
                 </div>
                 <div class="form-group">
                     <label>Phone Number</label>
-                    <input type="text" name="phone_number"
+                    <input type="number" name="phone_number"
                            class="form-control @error('phone_number') is-invalid @enderror"
                            value="{{old('phone_number')}}"
                            placeholder="Phone number"
