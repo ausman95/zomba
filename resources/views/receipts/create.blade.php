@@ -226,7 +226,6 @@
                             <label>Bank Account</label>
                             <select name="bank_id" required
                                     class="form-select select-relation @error('bank_id') is-invalid @enderror" style="width: 100%">
-                                <option value="">-- Select ---</option>
                                 @foreach($banks as $bank)
                                     <option value="{{$bank->id}}"
                                         {{old('bank_id')===$bank->id ? 'selected' : ''}}>{{$bank->account_name.' '.$bank->account_number}}</option>
