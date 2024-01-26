@@ -43,7 +43,7 @@
                         </div>
                         <div class="form-group">
                             <label>Phone Number</label>
-                            <input type="number" name="phone_number" required
+                            <input type="number" name="phone_number"
                                    class="form-control @error('phone_number') is-invalid @enderror"
                                    value="{{old('phone_number') ?? $member->phone_number}}"
                                    placeholder="Phone Number"

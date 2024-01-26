@@ -345,12 +345,14 @@ class ReceiptController extends Controller
             ];
             $last_id = MemberPayment::create($members);
             $member = Member::where(['id'=>$request->post('member_id')])->first();
+            if($member->phone_number!=0) {
                 $message = 'MALAWI ASSEMBLIES OF GOD ' .
-                    PHP_EOL .PHP_EOL . 'Dear '.$member->name.PHP_EOL .PHP_EOL .' You have Paid ' .
-                    PHP_EOL .PHP_EOL .Accounts::where(['id'=>$request->post('account_id')])->first()->name .
-                    ' Amounting to : MK '.number_format($data['amount'],2).PHP_EOL
-                    .PHP_EOL.' AREA 25 VICTORY TEMPLE';
-                    $this->sendSms($member->phone_number,$message);
+                    PHP_EOL . PHP_EOL . 'Dear ' . $member->name . PHP_EOL . PHP_EOL . ' You have Paid ' .
+                    PHP_EOL . PHP_EOL . Accounts::where(['id' => $request->post('account_id')])->first()->name .
+                    ' Amounting to : MK ' . number_format($data['amount'], 2) . PHP_EOL
+                    . PHP_EOL . ' AREA 25 VICTORY TEMPLE';
+                $this->sendSms($member->phone_number, $message);
+            }
             $order = new DeliveryController();
             $order->generateMemberReceipt($last_id->id,$monthID->name);
         }

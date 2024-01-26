@@ -84,10 +84,10 @@ class MemberController extends Controller
             return back()->with(['error-notification'=>"Invalid Character Entered on Member Name"]);
         }
         $data = $request->post();
-        if($labourerController->validating($data['phone_number'])==0){
-            // labourer is already part of this project
-            return back()->with(['error-notification'=>"Invalid Phone number"]);
-        }
+//        if($labourerController->validating($data['phone_number'])==0){
+//            // labourer is already part of this project
+//            return back()->with(['error-notification'=>"Invalid Phone number"]);
+//        }
         $member = Member::create($data);
         $ministries = Ministry::where(['soft_delete'=>0])->orderBy('id','desc')->get();
         foreach ($ministries as $ministry) {
@@ -100,10 +100,12 @@ class MemberController extends Controller
                 MemberMinistry::create($data);
             }
         }
-        $message = 'MALAWI ASSEMBLIES OF GOD' .
-            PHP_EOL.PHP_EOL.'Dear '.$request->post('name').PHP_EOL.PHP_EOL.' You have been registered into the new church system ' .
-            PHP_EOL.PHP_EOL.PHP_EOL.' AREA 25 VICTORY TEMPLE';
-        $receiptController->sendSms($request->post('phone_number'),$message);
+        if($request->post('phone_number')!=0) {
+            $message = 'MALAWI ASSEMBLIES OF GOD' .
+                PHP_EOL . PHP_EOL . 'Dear ' . $request->post('name') . PHP_EOL . PHP_EOL . ' You have been registered into the new church system ' .
+                PHP_EOL . PHP_EOL . PHP_EOL . ' AREA 25 VICTORY TEMPLE';
+            $receiptController->sendSms($request->post('phone_number'), $message);
+        }
         activity('members')
             ->log("Created a new member")->causer(request()->user());
         return redirect()->route('members.index')->with([
@@ -134,10 +136,10 @@ class MemberController extends Controller
         if(is_numeric($request->post('name'))){
             return back()->with(['error-notification'=>"Invalid Character Entered on Member Name"]);
         }
-        if($labourerController->validating($data['phone_number'])==0){
-            // labourer is already part of this project
-            return back()->with(['error-notification'=>"Invalid Phone number"]);
-        }
+//        if($labourerController->validating($request->post('phone_number'))==0){
+//            // labourer is already part of this project
+//            return back()->with(['error-notification'=>"Invalid Phone number"]);
+//        }
         $member->update($data);
         activity('members')
             ->log("Updated an member")->causer(request()->user());
