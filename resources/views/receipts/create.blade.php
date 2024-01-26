@@ -210,7 +210,6 @@
                             <label>Account</label>
                             <select name="account_id" required
                                     class="form-select select-relation @error('account_id') is-invalid @enderror" style="width: 100%">
-                                <option value="">-- Select ---</option>
                                 @foreach($accounts as $account)
                                     <option value="{{$account->id}}"
                                         {{old('account_id')===$account->id ? 'selected' : ''}}>{{$account->name}}</option>
