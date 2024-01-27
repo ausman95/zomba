@@ -218,7 +218,10 @@ class ReceiptController extends Controller
         $transactions_name = 'Admin';
 
         switch ($data['type']){
-
+            case '1':{
+                $transactions_name = 'Main Church ';
+                break;
+            }
             case '5':{
                 $request->validate(['member_id' => "required"]);
                 $transactions_name = Member::where(['id'=>$request->post('member_id')])->first()->name;
@@ -264,14 +267,6 @@ class ReceiptController extends Controller
             'balance'=>$new_balance
         ];
 
-        // Supplier Balance
-        $bal = SupplierPayments::where(['supplier_id'=>$request->post('supplier_id')])->orderBy('id','desc')->first();
-        @$balance = $bal->balance;
-        if(!$balance){
-            $balance = 0;
-        }
-        $supplier_balance = $balance-$request->post('amount');
-        //
         $data = $request->post();
 
         $raw_data = [
@@ -299,33 +294,7 @@ class ReceiptController extends Controller
         if(!$balances){
             $balances = 0;
         }
-        if($account_type=='2'){
-            $new_balances = $balances+$request->post('amount');
-        }else{
-            $new_balances = $balances-$request->post('amount');
-        }
 
-        if($request->type==3){
-            $suppliers = [
-                'expenses_id'=>'1111111',
-                'supplier_id'=>$request->post('supplier_id'),
-                'amount'=>$request->post('amount'),
-                'method'=>$request->post('payment_method'),
-                'balance'=>$supplier_balance,
-                'transaction_type'=>2,
-            ];
-            SupplierPayments::create($suppliers);
-        }
-        if($request->type==1){
-            $project_payment = [
-                'project_id'=>$request->post('project_id'),
-                'amount'=>$request->post('amount'),
-                'balance'=>$new_balances,
-                'payment_name'=>$transactions_name.' For '.$account->name,
-                'payment_type'=>'1'
-            ];
-            ProjectPayment::create($project_payment);
-        }
         if($request->type==5){
             $bala = MemberPayment::where(['member_id'=>$request->post('member_id')])->orderBy('id','desc')->first();
             @$balances = $bala->balance;
@@ -393,6 +362,10 @@ class ReceiptController extends Controller
             $last_id =MinistryPayment::create($ministries);
             $order = new DeliveryController();
             $order->generateMinistryReceipt($last_id->id,$monthID->name);
+        }
+        if($request->type==1){
+            $order = new DeliveryController();
+            $order->generateAdminReceipt($payments->id,$monthID->name);
         }
 
         BankTransaction::create($transactions);

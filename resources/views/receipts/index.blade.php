@@ -105,7 +105,7 @@
                                                         </td>
                                                         <td>
                                                             @if($payment->type==1)
-                                                                DEPARTMENT
+                                                                MAIN CHURCH
                                                             @elseif($payment->type==2)
                                                                 ADMIN
                                                             @elseif($payment->type==3)

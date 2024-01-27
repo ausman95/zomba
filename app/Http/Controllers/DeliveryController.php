@@ -199,6 +199,32 @@ class DeliveryController extends \FPDF
         $this->Output('libs/receipt.pdf', 'F');
 
     }
+    public function generateAdminReceipt($id,$monthId)
+    {
+        $payment = Payment::where(['id'=>$id])->first();
+        $account = Accounts::where(['id'=>$payment->account_id])->first();
+        $totalInWords = $payment->amount;
+        $total = $totalInWords;
+        $totalInWords = str_replace('  ',' ',str_replace(
+            '.',' Kwacha ',strtolower(numberToWords($totalInWords))));
+
+        $this->monthOf = $monthId;
+        $this->date = date('d-m-Y');
+        $this->kwachaFigure = $total;
+        $this->sumOf = ucwords($totalInWords);
+        $this->paidFor = $account->name;
+        $this->receivedFrom = 'Main Church';
+        $this->SD = 'AOG-'.$id;
+
+        $this->SetMargins(5,5,5);
+        $this->AddPage('P','struck');
+        $this->AliasNbPages();
+        $this->header();
+        $this->content();
+        $this->footer_note();
+        $this->Output('libs/receipt.pdf', 'F');
+
+    }
     public function generateReceipt()
     {
         $id = new Payment();
