@@ -143,7 +143,7 @@ class MemberController extends Controller
         }
         activity('members')
             ->log("Created a new member")->causer(request()->user());
-        return redirect()->route('members.index')->with([
+        return redirect()->route('members.create')->with([
             'success-notification'=>"Successfully Created"
         ]);
     }
