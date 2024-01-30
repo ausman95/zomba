@@ -323,7 +323,9 @@ class ReceiptController extends Controller
                 $this->sendSms($member->phone_number, $message);
             }
             $order = new DeliveryController();
-            $order->generateMemberReceipt($last_id->id,$monthID->name);
+            if($request->post('amount')>0){
+                $order->generateMemberReceipt($last_id->id,$monthID->name);
+            }
         }
         if($request->type==6){
             $bala = ChurchPayment::where(['church_id'=>$request->post('church_id')])->orderBy('id','desc')->first();
@@ -342,7 +344,9 @@ class ReceiptController extends Controller
             ];
             $last_id = ChurchPayment::create($churches);
             $order = new DeliveryController();
-            $order->generateHomeReceipt($last_id->id,$monthID->name);
+            if($request->post('amount')>0) {
+                $order->generateHomeReceipt($last_id->id, $monthID->name);
+            }
         }
         if($request->type==7){
             $bala = MinistryPayment::where(['ministry_id'=>$request->post('ministry_id')])->orderBy('id','desc')->first();
@@ -361,11 +365,15 @@ class ReceiptController extends Controller
             ];
             $last_id =MinistryPayment::create($ministries);
             $order = new DeliveryController();
-            $order->generateMinistryReceipt($last_id->id,$monthID->name);
+            if($request->post('amount')>0) {
+                $order->generateMinistryReceipt($last_id->id, $monthID->name);
+            }
         }
         if($request->type==1){
             $order = new DeliveryController();
-            $order->generateAdminReceipt($payments->id,$monthID->name);
+            if($request->post('amount')>0) {
+                $order->generateAdminReceipt($payments->id, $monthID->name);
+            }
         }
 
         BankTransaction::create($transactions);
