@@ -26,6 +26,7 @@ class Accounts extends Model
             ->join('accounts', 'accounts.id','=','bank_transactions.account_id')
             ->select('accounts.*',DB::raw('SUM(bank_transactions.amount) as amount'))
             ->where(['accounts.type'=>1])
+            ->where('accounts.soft_delete','=',0)
             ->where('accounts.id','!=',134)
             ->whereBetween('bank_transactions.created_at',[$start_date,$end_date])
             ->groupBy('accounts.id')
