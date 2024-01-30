@@ -40,7 +40,6 @@ class Incomes extends Model
             ->select('accounts.*',DB::raw('SUM(bank_transactions.amount) as amount'))
             ->where(['accounts.type'=>2])
             ->where('accounts.soft_delete','=',0)
-            ->where('bank_transactions.soft_delete','=',0)
             ->where('bank_transactions.type','!=',2)
             ->whereBetween('bank_transactions.t_date',[$start_date,$end_date])
             ->groupBy('accounts.id')
