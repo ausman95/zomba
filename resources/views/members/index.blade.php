@@ -26,6 +26,9 @@
                 <a href="{{route('members.create')}}" class="btn btn-primary btn-md rounded-0">
                     <i class="fa fa-plus-circle"></i>New Member
                 </a>
+                <a href="{{route('member.merge')}}" class="btn btn-primary btn-md rounded-0">
+                    <i class="fa fa-list-ol"></i>Merge Members
+                </a>
             @endif
             <div class="card container-fluid" style="min-height: 30em;">
                 <div class="row">

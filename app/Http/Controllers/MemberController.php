@@ -7,6 +7,7 @@ use App\Http\Requests\members\UpdateRequest;
 use App\Models\Church;
 use App\Models\Member;
 use App\Models\MemberMinistry;
+use App\Models\MemberPayment;
 use App\Models\Ministry;
 use App\Models\Zone;
 use Illuminate\Http\Request;
@@ -14,6 +15,40 @@ use Illuminate\Support\Facades\DB;
 
 class MemberController extends Controller
 {
+    public function merge(Request $request )
+    {
+        $request->validate([
+            'member_id_to_delete' => "required|numeric",
+            'member_to_keep' => "required|numeric",
+        ]);
+        if($request->post('member_to_keep')==$request->post('member_id_to_delete')){
+            return redirect()->route('member.merge')->with([
+                'error-notification'=>"Check the Inputs and Try again "
+            ]);
+        }
+        MemberPayment::where(['member_id' => $request->post('member_id_to_delete')])
+            ->update(['member_id' => $request->post('member_to_keep')]);
+
+//        Member::where(['id' => $request->post('member_id_to_delete')])
+//            ->delete();
+
+        Member::where(['id' => $request->post('member_id_to_delete')])
+            ->update(['soft_delete' => 1]);
+
+        activity('members')
+            ->log("Merged some members")->causer(request()->user());
+        return redirect()->route('members.index')->with([
+            'success-notification'=>"Successfully"
+        ]);
+    }
+    public function memberMerge()
+    {
+
+        return view('members.merge')->with([
+            'cpage'=>"members",
+            'members'=>Member::where(['soft_delete'=>0])->orderBy('name','ASC')->get(),
+        ]);
+    }
     public function allocateMinistry( Member $member)
     {
         return view('members.allocate')->with([
