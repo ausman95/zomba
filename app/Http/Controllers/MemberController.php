@@ -46,7 +46,7 @@ class MemberController extends Controller
 
         return view('members.merge')->with([
             'cpage'=>"members",
-            'members'=>Member::where(['soft_delete'=>0])->orderBy('name','ASC')->get(),
+            'members'=>Member::orderBy('name','ASC')->get(),
         ]);
     }
     public function allocateMinistry( Member $member)
