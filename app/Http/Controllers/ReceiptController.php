@@ -162,14 +162,14 @@ class ReceiptController extends Controller
             ->log("Accessed Receipts")->causer(request()->user());
         return view('receipts.index')->with([
             'cpage' => "finances",
-            'months'=>Month::where(['accounts.soft_delete'=>0])->orderBy('id','desc')->get(),
-            'churches'=>Church::where(['accounts.soft_delete'=>0])->orderBy('id','desc')->get(),
-            'ministries'=>Ministry::where(['accounts.soft_delete'=>0])->orderBy('id','desc')->get(),
+            'months'=>Month::where(['soft_delete'=>0])->orderBy('id','desc')->get(),
+            'churches'=>Church::where(['soft_delete'=>0])->orderBy('id','desc')->get(),
+            'ministries'=>Ministry::where(['soft_delete'=>0])->orderBy('id','desc')->get(),
             'account_id'=>'1',
             'description'=>0,
             'type'=>'0',
             'account_name'=>"SCHOOL FEES",
-            'term_name'=>Month::where(['accounts.soft_delete'=>0])->where(['id'=>$month->id])->first()->name,
+            'term_name'=>Month::where(['soft_delete'=>0])->where(['id'=>$month->id])->first()->name,
             'payments'=> BankTransaction::join('accounts', 'accounts.id','=','bank_transactions.account_id')
                 ->select(
                     'bank_transactions.*',
