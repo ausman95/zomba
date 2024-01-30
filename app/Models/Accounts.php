@@ -32,6 +32,17 @@ class Accounts extends Model
             ->get();
         return $credits;
     }
+    public static  function allAccounts($start_date,$end_date)
+    {
+        $credits = DB::table('bank_transactions')
+            ->join('accounts', 'accounts.id','=','bank_transactions.account_id')
+            ->select('accounts.*',DB::raw('SUM(bank_transactions.amount) as amount'))
+            ->where('accounts.id','!=',134)
+            ->where(['soft_delete'=>0])
+            ->whereBetween('bank_transactions.created_at',[$start_date,$end_date])
+            ->get();
+        return $credits;
+    }
 
     public static  function getAccountBalanceAdmin($start_date,$end_date)
     {

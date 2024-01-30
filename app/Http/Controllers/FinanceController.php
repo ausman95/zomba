@@ -61,7 +61,7 @@ class FinanceController extends Controller
             'statement' => $request->post('statement'),
             'start_date'=>$request->post('start_date'),
             'end_date'=>$request->post('end_date'),
-            'accounts' => Accounts::where('id','!=',134)->where(['soft_delete'=>0])->get(),
+            'accounts' => Accounts::allAccounts($request->post('start_date'),$request->post('end_date')),
             'credits' => Accounts::getAccountBalanceDebits($request->post('start_date'),$request->post('end_date')),
             'debits' => Incomes::accountAll($request->post('start_date'),$request->post('end_date')),
             'expenses' => Incomes::accountExpensesAll($request->post('start_date'),$request->post('end_date')),
