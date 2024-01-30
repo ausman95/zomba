@@ -124,13 +124,13 @@
                                                 <td>{{$c++}}</td>
                                                 <td>{{ucwords($account->name) }}</td>
                                                 @if($account->type==2)
-                                                <td>{{number_format($account->getAccountBalance($start_date,$end_date))}}</td>
+                                                <td>{{number_format($account->getAccountBalance($start_date,$end_date),2)}}</td>
                                                     <p class="d-none">{{$b1 = $b1+$account->getAccountBalance($start_date,$end_date)}}</p>
                                                     <td>-</td>
                                                 @endif
                                                 @if($account->type==1)
                                                     <td>-</td>
-                                                    <td>{{number_format($account->getAccountBalance($start_date,$end_date))}}</td>
+                                                    <td>{{number_format($account->getAccountBalance($start_date,$end_date),2)}}</td>
                                                     <p class="d-none">{{$b2 = $b2+$account->getAccountBalance($start_date,$end_date)}}</p>
                                                 @endif
                                             </tr>
@@ -140,10 +140,10 @@
                                             <td>Difference</td>
                                             @if($b1>$b2)
                                                <td>-</td>
-                                                <td>{{number_format($b1-$b2)}}</td>
+                                                <td>{{number_format($b1-$b2,2)}}</td>
                                             @endif
                                             @if($b2>$b1)
-                                                <td>{{number_format($b2-$b1)}}</td>
+                                                <td>{{number_format($b2-$b1,2)}}</td>
                                                 <td>-</td>
                                             @endif
                                             @if($b2==$b1)
@@ -155,11 +155,11 @@
                                             <td>{{$c++}}</td>
                                             <th>Totals</th>
                                             @if($b1>=$b2)
-                                                <th>{{number_format($b1)}}</th>
-                                                <th>{{number_format($b1)}}</th>
+                                                <th>{{number_format($b1,2)}}</th>
+                                                <th>{{number_format($b1,2)}}</th>
                                             @else
-                                                <th>{{number_format($b2)}}</th>
-                                                <th>{{number_format($b2)}}</th>
+                                                <th>{{number_format($b2,2)}}</th>
+                                                <th>{{number_format($b2,2)}}</th>
                                             @endif
                                         </tr>
                                         </tbody>
@@ -202,7 +202,7 @@
                                                         <td>{{ucwords($credit->name) }}</td>
                                                         <td></td>
                                                         <td></td>
-                                                        <td>{{number_format($credit->amount)}}</td>
+                                                        <td>{{number_format($credit->amount,2)}}</td>
                                                         <p class="d-none">{{$b1 = $b1+$credit->amount}}</p>
                                                     </tr>
                                                 @endforeach
@@ -212,7 +212,7 @@
                                                     <td></td>
                                                     <td></td>
                                                     <td></td>
-                                                    <td><b>{{number_format($b1)}}</b> </td>
+                                                    <td><b>{{number_format($b1,2)}}</b> </td>
                                                 </tr>
                                                 <tr>
                                                     <td>{{$c++}}</td>
@@ -228,7 +228,7 @@
                                                         <td></td>
                                                         <td>{{ucwords($debit->name) }}</td>
                                                         <td></td>
-                                                        <td>{{number_format($debit->amount)}}</td>
+                                                        <td>{{number_format($debit->amount,2)}}</td>
                                                         <p class="d-none">{{$b2 = $b2+$debit->amount}}</p>
                                                         <td></td>
                                                     </tr>
@@ -239,7 +239,7 @@
                                                     <td></td>
                                                     <td></td>
                                                     <td></td>
-                                                    <td><b><u>({{number_format($b2)}})</u></b> </td>
+                                                    <td><b><u>({{number_format($b2,2)}})</u></b> </td>
                                                 </tr>
                                                 <tr>
                                                     <td>{{$c++}}</td>
@@ -247,7 +247,7 @@
                                                     <td></td>
                                                     <td></td>
                                                     <td></td>
-                                                    <td><b>{{number_format($b1-$b2)}}</b> </td>
+                                                    <td><b>{{number_format($b1-$b2,2)}}</b> </td>
                                                 </tr>
                                                 <tr>
                                                     <td>{{$c++}}</td>
@@ -263,7 +263,7 @@
                                                         <td></td>
                                                         <td>{{ucwords($admin->name) }}</td>
                                                         <td></td>
-                                                        <td>{{number_format($admin->amount)}}</td>
+                                                        <td>{{number_format($admin->amount,2)}}</td>
                                                         <p class="d-none">{{$b3 = $b3+$admin->amount}}</p>
                                                         <td></td>
                                                     </tr>
@@ -274,7 +274,7 @@
                                                     <td></td>
                                                     <td></td>
                                                     <td></td>
-                                                    <td><b><u>({{number_format($b3)}})</u></b> </td>
+                                                    <td><b><u>({{number_format($b3,2)}})</u></b> </td>
                                                 </tr>
                                                 <tr>
                                                     <td>{{$c++}}</td>
@@ -282,7 +282,7 @@
                                                     <td></td>
                                                     <td></td>
                                                     <td></td>
-                                                    <td><b>{{number_format($b1-$b2-$b3)}}</b> </td>
+                                                    <td><b>{{number_format($b1-$b2-$b3,2)}}</b> </td>
                                                 </tr>
                                                 </tbody>
                                             </table>
