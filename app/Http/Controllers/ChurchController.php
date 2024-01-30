@@ -56,8 +56,8 @@ class ChurchController extends Controller
     {
         return view('churches.edit')->with([
             'cpage' => "churches",
-            'zones' => Zone::all(),
-            'members' => Member::all(),
+            'zones' => Zone::where(['soft_delete'=>0])->orderBy('id','desc')->get(),
+            'members' => Member::where(['soft_delete'=>0])->orderBy('id','desc')->get(),
             'church' => $church
         ]);
     }

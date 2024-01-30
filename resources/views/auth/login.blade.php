@@ -8,14 +8,13 @@
     <meta name="description" content="">
     <meta name="author" content="Mark Otto, Jacob Thornton, and Bootstrap contributors">
     <meta name="generator" content="Hugo 0.112.5">
-    <title>Signin · 25VICTEMPLEAPP</title>
+    <title>Signin · 25VICTEMPLEAP</title>
     <link rel="icon" href="{{asset('images/logo.png')}}">
     <link rel="canonical" href="https://getbootstrap.com/docs/5.3/examples/sign-in/">
     <link rel="stylesheet" href="{{asset('vendor/bootstrap2/assets/dist/css/bootstrap.min.css')}}">
 
     <style>
-        .bd-placeholder-img {
-            font-size: 1.125rem;
+        .bd-placeholder-img {font-size: 1.125rem;
             text-anchor: middle;
             -webkit-user-select: none;
             -moz-user-select: none;
