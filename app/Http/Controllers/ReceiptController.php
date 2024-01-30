@@ -162,22 +162,23 @@ class ReceiptController extends Controller
             ->log("Accessed Receipts")->causer(request()->user());
         return view('receipts.index')->with([
             'cpage' => "finances",
-            'months'=>Month::orderBy('id','desc')->get(),
-            'churches'=>Church::orderBy('id','desc')->get(),
-            'ministries'=>Ministry::orderBy('id','desc')->get(),
+            'months'=>Month::where(['accounts.soft_delete'=>0])->orderBy('id','desc')->get(),
+            'churches'=>Church::where(['accounts.soft_delete'=>0])->orderBy('id','desc')->get(),
+            'ministries'=>Ministry::where(['accounts.soft_delete'=>0])->orderBy('id','desc')->get(),
             'account_id'=>'1',
             'description'=>0,
             'type'=>'0',
             'account_name'=>"SCHOOL FEES",
-            'term_name'=>Month::where(['id'=>$month->id])->first()->name,
-            'payments'=> Payment::join('accounts', 'accounts.id','=','payments.account_id')
+            'term_name'=>Month::where(['accounts.soft_delete'=>0])->where(['id'=>$month->id])->first()->name,
+            'payments'=> BankTransaction::join('accounts', 'accounts.id','=','bank_transactions.account_id')
                 ->select(
-                    'payments.*',
+                    'bank_transactions.*',
                 )
                 ->whereBetween('t_date',[$month->start_date,$month->end_date])
                 ->where(['accounts.type'=>1])
-                ->orderBy('payments.id','desc')->get(),
-            'accounts'=>Accounts::orderBy('id','ASC')->get()
+                ->where(['accounts.soft_delete'=>0])
+                ->orderBy('bank_transactions.id','desc')->get(),
+            'accounts'=>Accounts::where(['soft_delete'=>0])->orderBy('id','ASC')->get()
         ]);
     }
     public function create()
