@@ -59,6 +59,6 @@ class Accounts extends Model
 
     public function incomes()
     {
-        return  $this->hasMany(Incomes::class,'account_id');
+        return  $this->hasMany(BankTransaction::class,'account_id');
     }
 }
