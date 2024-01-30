@@ -35,7 +35,7 @@ class Accounts extends Model
     public static  function allAccounts($start_date,$end_date)
     {
         return BankTransaction::join('accounts', 'accounts.id','=','bank_transactions.account_id')
-            ->select('accounts.id')
+            ->select('accounts.*')
             ->where('accounts.id','!=',134)
             ->where(['soft_delete'=>0])
             ->whereBetween('bank_transactions.created_at',[$start_date,$end_date])
