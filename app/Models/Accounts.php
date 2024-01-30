@@ -39,6 +39,7 @@ class Accounts extends Model
             ->where('accounts.id','!=',134)
             ->where(['soft_delete'=>0])
             ->whereBetween('bank_transactions.created_at',[$start_date,$end_date])
+            ->groupBy('accounts.id')
             ->get();
     }
 
