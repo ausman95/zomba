@@ -8,7 +8,7 @@
     <meta name="description" content="">
     <meta name="author" content="Mark Otto, Jacob Thornton, and Bootstrap contributors">
     <meta name="generator" content="Hugo 0.112.5">
-    <title>Signin · 25VICTEMPLEAP</title>
+    <title>Signin · VICTORY TEMPLE</title>
     <link rel="icon" href="{{asset('images/logo.png')}}">
     <link rel="canonical" href="https://getbootstrap.com/docs/5.3/examples/sign-in/">
     <link rel="stylesheet" href="{{asset('vendor/bootstrap2/assets/dist/css/bootstrap.min.css')}}">
@@ -147,7 +147,7 @@
     <form method="POST" action="{{ route('login') }}">
         @csrf
         <img style="margin-left: 35%" class="mb-2" src="{{asset('vendor/logo.png')}}" alt="" width="72" height="57">
-        <h1 style="margin-left: 17% !important;" class="h3 mb-3 fw-normal">25VICTEMPLEAPP</h1>
+        <h1 style="margin-left: 17% !important;" class="h3 mb-3 fw-normal">VICTORY TEMPLE</h1>
         @csrf
         <div class="form-floating">
             <input id="floatingInput" type="email" class="form-control @error('email') is-invalid @enderror"
