@@ -27,7 +27,10 @@
                         @csrf
                         <div class="form-group">
                             <label>Name</label>
-                            <input type="text" name="name"
+                            <input type="hidden" name="created_by" value="{{request()->user()->id}}">
+                            <input type="hidden" name="updated_by" value="{{request()->user()->id}}">
+
+                            <input type="text" name="name" required
                                    class="form-control @error('name') is-invalid @enderror"
                                    value="{{old('name')}}"
                                    placeholder="Category name" >
@@ -39,7 +42,7 @@
                         </div>
                         <div class="form-group">
                             <label>It Depreciate</label>
-                            <select name="status" class="form-control select-relation @error('type') is-invalid @enderror" style="width: 100%">{{old('status')}}>
+                            <select name="status" required class="form-control select-relation @error('type') is-invalid @enderror" style="width: 100%">{{old('status')}}>
                                 <option value="1">Yes</option>
                                 <option value="2">No</option>
                             </select>

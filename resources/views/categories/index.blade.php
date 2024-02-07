@@ -23,60 +23,11 @@
             <hr>
         </div>
         <div class="mt-3">
-            <div class="modal " id="material" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="staticBackdropLabel">Adding Asset Category</h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                        </div>
-                        <div class="modal-body">
-                            <form action="{{route('categories.store')}}" method="POST" autocomplete="off">
-                                @csrf
-                                <div class="form-group">
-                                    <label>Name</label>
-                                    <input type="text" name="name"
-                                           class="form-control @error('name') is-invalid @enderror"
-                                           value="{{old('name')}}"
-                                           placeholder="Category name" >
-                                    @error('name')
-                                    <span class="invalid-feedback">
-                               {{$message}}
-                        </span>
-                                    @enderror
-                                </div>
-                                <div class="form-group">
-                                    <label>It Depreciate</label>
-                                    <select name="status" class="form-control select-relation @error('type') is-invalid @enderror" style="width: 100%">{{old('status')}}>
-                                        <option value="1">Yes</option>
-                                        <option value="2">No</option>
-                                    </select>
-                                    @error('type')
-                                    <span class="invalid-feedback">
-                               {{$message}}
-                        </span>
-                                    @enderror
-                                </div>
-                                <hr style="height: .3em;" class="border-theme">
-                                <div class="form-group">
-                                    <button class="btn btn-md btn-primary rounded-0">
-                                        <i class="fa fa-paper-plane"></i>Save
-                                    </button>
-
-                                </div>
-                            </form>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"><i class="fa fa-times-circle"></i> Cancel</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
 
         @if(request()->user()->designation==='administrator'||request()->user()->designation==='accountant')
-                <button type="button" class="btn btn-primary rounded-0 btn-md" data-bs-toggle="modal" data-bs-target="#material">
-                    <i class="fa fa-plus-circle"></i> New Category
-                </button>
+                <a href="{{route('categories.create')}}" class="btn btn-primary btn-md rounded-0">
+                    <i class="fa fa-plus-circle"></i>New Asset Category
+                </a>
             @endif
             <div class="mt-3">
                 <div class="row">
@@ -96,6 +47,7 @@
                                             <th>ID</th>
                                             <th>DEPRECIATION</th>
                                             <th>DATE CREATED</th>
+                                            <th>CREATED BY</th>
                                             <th>ACTION</th>
                                         </tr>
                                         </thead>
@@ -114,7 +66,7 @@
                                                     @endif
                                                 </td>
                                                 <td>{{ucwords($category->created_at) }}</td>
-
+                                                <td>{{@$category->userName($category->updated_by)}}</td>
                                                 <td class="pt-1">
                                                     <a href="{{route('categories.show',$category->id)}}"
                                                        class="btn btn-primary btn-md rounded-0">

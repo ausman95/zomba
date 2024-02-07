@@ -30,6 +30,7 @@
                         <input type="hidden" name="_method" value="PATCH">
                         <div class="form-group">
                             <label>Name</label>
+                            <input type="hidden" name="updated_by" value="{{request()->user()->id}}">
                             <input type="text" name="name"
                                    class="form-control @error('name') is-invalid @enderror"
                                    value="{{old('name') ?? $category->name}}"

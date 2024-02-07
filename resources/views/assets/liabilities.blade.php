@@ -28,73 +28,39 @@
                     <div class="col-sm-12 mb-2 col-md-12 col-lg-6">
                         <div class="card " style="min-height: 30em;">
                             <div class="card-body px-1">
-                                @if($suppliers->count() === 0)
-                                    <i class="fa fa-info-circle"></i>There are no  Suppliers!
+                                @if($banks->count() === 0)
+                                    <i class="fa fa-info-circle"></i>There are no Bank Accounts!
                                 @else
                                     <div style="overflow-x:auto;">
                                         <table class="table table-bordered  table-hover table-striped" id="data-table">
-                                            <caption style=" caption-side: top; text-align: center">(Debtors)/Suppliers</caption>
+                                            <caption style=" caption-side: top; text-align: center">BANKS</caption>
                                             <thead>
                                             <tr>
                                                 <th>NO</th>
                                                 <th>NAME</th>
-                                                <th>AMOUNT(MK)</th>
+                                                <th>AMOUNT (MK)</th>
                                             </tr>
                                             </thead>
                                             <tbody>
-                                            <?php $c = 1;?>
-                                            @foreach($suppliers as $supplier)
-                                                @if($supplier->getBalance($supplier->id)>0)
-                                                <tr>
-                                                    <td>{{$c++}}</td>
-                                                    <td>{{$supplier->name}}</td>
-                                                    <td>
-                                                        @if($supplier->getBalance($supplier->id)<0)
-                                                            ( {{number_format($supplier->getBalance($supplier->id)*(-1))}})
-                                                        @else
-                                                            {{number_format($supplier->getBalance($supplier->id))}}
-                                                        @endif
-                                                    </td>
-                                                </tr>
-                                                @endif
-                                            @endforeach
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                @endif
-                            </div>
-                        </div>
-
-                    </div>
-                    <div class="col-sm-12 mb-2 col-md-12 col-lg-6">
-                        <div class="card " style="min-height: 30em;">
-                            <div class="card-body px-1">
-                                @if($labourers->count() === 0)
-                                    <i class="fa fa-info-circle"></i>There are no  Sub-Contractors!
-                                @else
-                                    <div style="overflow-x:auto;">
-                                        <table class="table table-bordered table-primary table-hover table-striped" id="data-table">
-                                            <caption style=" caption-side: top; text-align: center">Debtors (Sub-Contractors)</caption>
-                                            <thead>
-                                            <tr>
-                                                <th>NO</th>
-                                                <th>NAME</th>
-                                                <th>AMOUNT(MK)</th>
-                                            </tr>
-                                            </thead>
-                                            <tbody>
-                                            <?php $c = 1;?>
-                                            @foreach($labourers as $labourer)
-                                                @if($labourer->type==2)
-                                                @if($labourer->getBalance($labourer->id)>0)
+                                                <?php  $c= 1;?>
+                                            @foreach($banks as $bank)
+                                                @if($bank->getBalance()<0)
                                                     <tr>
                                                         <td>{{$c++}}</td>
-                                                        <td>{{$labourer->name}}</td>
-                                                        <td>
-                                                            {{number_format($labourer->getBalance($labourer->id))}}
-                                                        </td>
+                                                        <td>{{ucwords($bank->account_name) }}</td>
+                                                        <th>
+                                                            {{number_format($bank->getBalance(),2)}}
+                                                        </th>
                                                     </tr>
                                                 @endif
+                                            @endforeach
+                                            @foreach($suppliers as $supplier)
+                                                @if($supplier->getBalance($supplier->id)<0)
+                                                    <tr>
+                                                        <td>{{$c++}}</td>
+                                                        <td>{{$supplier->name}}</td>
+                                                        <th>{{number_format($supplier->getBalance($supplier->id),2)}}</th>
+                                                    </tr>
                                                 @endif
                                             @endforeach
                                             </tbody>
@@ -103,7 +69,6 @@
                                 @endif
                             </div>
                         </div>
-
                     </div>
                 </div>
             </div>

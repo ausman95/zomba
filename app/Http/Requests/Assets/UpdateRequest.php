@@ -25,11 +25,11 @@ class UpdateRequest extends FormRequest
     {
         return [
             'name'=>"required|string",
-            'cost'=>"required|numeric",
+            'cost'=>"required|numeric|min:1",
             'condition'=>"required|string",
             'location'=>"required|string",
-            'quantity'=>"required|numeric",
-            'depreciation'=>"required|numeric",
+            'quantity'=>"required|numeric|min:1",
+            'depreciation'=>"required|numeric|min:1",
         ];
     }
 }

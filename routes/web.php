@@ -35,7 +35,9 @@ Route::middleware(['preventBackHistory'])->group(function () {
         Route::get('/home', [HomeController::class, 'index'])->name('home');
         Route::get('members/merge', [\App\Http\Controllers\MemberController::class, 'memberMerge'])->name('member.merge');
         Route::post('members/merging', [\App\Http\Controllers\MemberController::class, 'merge'])->name('member.edit-merge');
-
+        Route::get('assets/liabilities', [\App\Http\Controllers\AssetController::class, 'liabilities'])->name('liabilities');
+        Route::get('assets/current', [\App\Http\Controllers\AssetController::class, 'currentAssets'])->name('current-assets');
+        Route::get('assets/capital', [\App\Http\Controllers\AssetController::class, 'capital'])->name('capital');
         Route::resource('churches', \App\Http\Controllers\ChurchController::class);
         Route::resource('payments', \App\Http\Controllers\PaymentController::class);
         Route::resource('purchases', \App\Http\Controllers\PurchaseController::class);

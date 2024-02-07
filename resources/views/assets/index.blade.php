@@ -29,20 +29,17 @@
             <a href="{{route('categories.index')}}" class="btn btn-primary btn-md rounded-0">
                 <i class="fa fa-divide"></i>Assets Categories
             </a>
-            <a href="{{route('asset-services.index')}}" class="btn btn-primary btn-md rounded-0">
-                <i class="fa fa-list-ol"></i>Assets Services
-            </a>
-            <a href="{{route('services.index')}}" class="btn btn-primary btn-md rounded-0">
-                <i class="fa fa-list-ol"></i>Service Providers
-            </a>
+{{--            <a href="{{route('asset-services.index')}}" class="btn btn-primary btn-md rounded-0">--}}
+{{--                <i class="fa fa-list-ol"></i>Assets Services--}}
+{{--            </a>--}}
+{{--            <a href="{{route('services.index')}}" class="btn btn-primary btn-md rounded-0">--}}
+{{--                <i class="fa fa-list-ol"></i>Service Providers--}}
+{{--            </a>--}}
             <a href="{{route('current-assets')}}" class="btn btn-primary btn-md rounded-0">
                 <i class="fa fa-money-bill-alt"></i>Current Assets
             </a>
             <a href="{{route('liabilities')}}" class="btn btn-primary btn-md rounded-0">
                 <i class="fa fa-folder-open"></i>Liabilities
-            </a>
-            <a href="{{route('capital')}}" class="btn btn-primary btn-md rounded-0">
-                <i class="fa fa-folder-open"></i>Capital
             </a>
             @endif
             <div class="mt-3">
@@ -63,12 +60,14 @@
                                             <th>SERIAL / REG NUMBER</th>
                                             <th>CATEGORY</th>
                                             <th>QUANTITY</th>
-                                            <th>TOTAL COST (MK)</th>
+                                            <th>@ COST (MK)</th>
+                                            <th>ACQ. DATE</th>
+                                            <th>EST. LIFE</th>
                                             <th>LOCATION</th>
                                             <th>CONDITION</th>
-                                            <th>DEPRECIATION %</th>
-                                            <th>DEPRECIATION (MK)</th>
-                                            <th>NETBOOK VALUE (MK)</th>
+                                            <th>DEPCTN %</th>
+                                            <th>DEPCTN (MK)</th>
+                                            <th>NETBOOK (MK)</th>
                                             <th></th>
                                         </tr>
                                         </thead>
@@ -82,12 +81,14 @@
                                                 <td>{{ucwords($asset->category->name) }}</td>
                                                 <td>{{number_format($asset->quantity) }}</td>
                                                 <td>{{number_format($asset->cost*$asset->quantity) }}</td>
+                                                <td>{{date('d F Y', strtotime($asset->t_date)) }}</td>
+                                                <td>{{ucwords($asset->life) }}</td>
                                                 <td>{{ucwords($asset->location) }}</td>
                                                 <td>{{ucwords($asset->condition) }}</td>
                                                 <td>{{number_format($asset->depreciation) }}</td>
                                                 @if($asset->depreciation)
-                                                <td>{{number_format(($asset->depreciation/100)*($asset->cost*$asset->quantity)) }}</td>
-                                                <td>{{number_format(($asset->cost*$asset->quantity)-(($asset->depreciation/100)*$asset->cost*$asset->quantity)) }}</td>
+                                                <td>{{number_format($asset->cost - $asset->getDays($asset->t_date,$asset->life,$asset->cost,$asset->depreciation,$asset->quantity),2) }}</td>
+                                                <td>{{number_format($asset->getDays($asset->t_date,$asset->life,$asset->cost,$asset->depreciation,$asset->quantity),2) }}</td>
                                                 @else
                                                     <td>-</td>
                                                     <td>{{number_format($asset->cost*$asset->quantity) }}</td>

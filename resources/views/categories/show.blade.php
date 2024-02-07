@@ -43,6 +43,14 @@
                                             <td>Update ON</td>
                                             <td>{{$category->updated_at}}</td>
                                         </tr>
+                                        <tr>
+                                            <td>Update By</td>
+                                            <td>{{@$category->userName($category->updated_by)}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Created By</td>
+                                            <td>{{@$category->userName($category->created_by)}}</td>
+                                        </tr>
                                     </table>
                                     <div class="mt-3">
                                         @if(request()->user()->designation==='administrator'||request()->user()->designation==='accountant')
@@ -51,6 +59,14 @@
                                                    class="btn btn-primary rounded-0" style="margin: 2px">
                                                     <i class="fa fa-edit"></i>Update
                                                 </a>
+                                                <button class="btn btn-danger btn-md rounded-0" id="delete-btn" style="margin: 5px">
+                                                    <i class="fa fa-trash"></i>Delete
+                                                </button>
+                                                <form action="{{route('categories.destroy',$category->id)}}" method="POST" id="delete-form">
+                                                    @csrf
+                                                    <input type="hidden" name="_method" value="DELETE">
+                                                    <input type="hidden" name="id" value="{{$category->id}}">
+                                                </form>
                                             </div>
 {{--                                            @if(request()->user()->designation==='administrator')--}}
 {{--                                                <div class="">--}}

@@ -28,113 +28,47 @@
                     <div class="col-sm-12 mb-2 col-md-12 col-lg-4">
                         <div class="card " style="min-height: 30em;">
                             <div class="card-body px-1">
-                                @if($materials->count() === 0)
-                                    <i class="fa fa-info-circle"></i>There are no  Suppliers!
+                                @if($banks->count() === 0)
+                                    <i class="fa fa-info-circle"></i>There are no Bank Accounts!
                                 @else
                                     <div style="overflow-x:auto;">
-                                        <table class="table table-bordered table-primary table-hover table-striped" id="data-table">
-                                            <caption style=" caption-side: top; text-align: center">Inventory</caption>
+                                        <table class="table table-bordered  table-hover table-striped" id="data-table">
+                                            <caption style=" caption-side: top; text-align: center">BANKS</caption>
                                             <thead>
                                             <tr>
                                                 <th>NO</th>
-                                                <th>MATERIAL</th>
-                                                <th>AMOUNT(MK)</th>
+                                                <th>NAME</th>
+                                                <th>AMOUNT (MK)</th>
                                             </tr>
                                             </thead>
                                             <tbody>
-                                            <?php $c = 1;?>
-                                            @foreach($materials as $material)
-                                                @if($material->getQuantity($material->id)>0)
+                                                <?php  $c= 1;?>
+                                            @foreach($banks as $bank)
+                                                @if($bank->getBalance()>0)
                                                 <tr>
                                                     <td>{{$c++}}</td>
-                                                    <td>{{$material->name}}</td>
-                                                    <td>
-                                                        {{number_format($material->getQuantity($material->id)*$material->getPrice($material->id))}}
-                                                    </td>
+                                                    <td>{{ucwords($bank->account_name) }}</td>
+                                                    <th>
+                                                         {{number_format($bank->getBalance(),2)}}
+                                                    </th>
                                                 </tr>
                                                 @endif
                                             @endforeach
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                @endif
-                            </div>
-                        </div>
-
-                    </div>
-                    <div class="col-sm-12 mb-2 col-md-12 col-lg-4">
-                        <div class="card " style="min-height: 30em;">
-                            <div class="card-body px-1">
-                                @if($banks->count() === 0)
-                                    <i class="fa fa-info-circle"></i>There are no  Bank Accounts!
-                                @else
-                                    <div style="overflow-x:auto;">
-                                        <table class="table table-bordered table-primary table-hover table-striped" id="data-table">
-                                            <caption style=" caption-side: top; text-align: center">Bank</caption>
-                                            <thead>
-                                            <tr>
-                                                <th>NO</th>
-                                                <th>NAME</th>
-                                                <th>AMOUNT(MK)</th>
-                                            </tr>
-                                            </thead>
-                                            <tbody>
-                                            <?php $c = 1;?>
-                                            @foreach($banks as $bank)
-                                                @if($bank->getBalance($bank->id)>0)
-                                                    <tr>
-                                                        <td>{{$c++}}</td>
-                                                        <td>{{$bank->account_name}}</td>
-                                                        <td>
-                                                            {{number_format($bank->getBalance($bank->id))}}
-                                                        </td>
-                                                    </tr>
-                                                @endif
-                                            @endforeach
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                @endif
-                            </div>
-                        </div>
-
-                    </div>
-                    <div class="col-sm-12 mb-2 col-md-12 col-lg-4">
-                        <div class="card " style="min-height: 30em;">
-                            <div class="card-body px-1">
-                                @if($suppliers->count() === 0)
-                                    <i class="fa fa-info-circle"></i>There are no  Suppliers!
-                                @else
-                                    <div style="overflow-x:auto;">
-                                        <table class="table table-bordered table-primary table-hover table-striped" id="data-table">
-                                            <caption style=" caption-side: top; text-align: center">(Creditors)/Suppliers</caption>
-                                            <thead>
-                                            <tr>
-                                                <th>NO</th>
-                                                <th>NAME</th>
-                                                <th>AMOUNT(MK)</th>
-                                            </tr>
-                                            </thead>
-                                            <tbody>
-                                            <?php $c = 1;?>
-                                            @foreach($suppliers as $supplier)
-                                                @if($supplier->getBalance($supplier->id)<0)
-                                                    <tr>
+                                                @foreach($suppliers as $supplier)
+                                                    @if($supplier->getBalance($supplier->id)>0)
+                                                        <tr>
                                                         <td>{{$c++}}</td>
                                                         <td>{{$supplier->name}}</td>
-                                                        <td>
-                                                          {{number_format($supplier->getBalance($supplier->id)*(-1))}}
-                                                        </td>
+                                                        <th>{{number_format($supplier->getBalance($supplier->id),2)}}</th>
                                                     </tr>
-                                                @endif
-                                            @endforeach
+                                                    @endif
+                                                @endforeach
                                             </tbody>
                                         </table>
                                     </div>
                                 @endif
                             </div>
                         </div>
-
                     </div>
                 </div>
             </div>

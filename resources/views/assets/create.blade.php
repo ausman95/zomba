@@ -26,7 +26,9 @@
                         @csrf
                         <div class="form-group">
                             <label>Name</label>
-                            <input type="text" name="name"
+                            <input type="hidden" name="created_by" value="{{request()->user()->id}}">
+                            <input type="hidden" name="updated_by" value="{{request()->user()->id}}">
+                            <input type="text" name="name" required
                                    class="form-control @error('name') is-invalid @enderror"
                                    value="{{old('name')}}"
                                    placeholder="Asset name" >
@@ -38,7 +40,7 @@
                         </div>
                         <div class="form-group">
                             <label>Quantity</label>
-                            <input type="number" name="quantity"
+                            <input type="number" name="quantity" required
                                    class="form-control @error('quantity') is-invalid @enderror"
                                    value="{{old('quantity')}}"
                                    placeholder="Quantity" >
@@ -50,10 +52,10 @@
                         </div>
                         <div class="form-group">
                             <label>Opening Balance</label>
-                            <input type="number" name="cost"
+                            <input type="number" name="cost" required
                                    class="form-control @error('cost') is-invalid @enderror"
                                    value="{{old('cost')}}"
-                                   placeholder="Opening Balance" >
+                                   placeholder="Opening Balance">
                             @error('cost')
                             <span class="invalid-feedback">
                                {{$message}}
@@ -62,7 +64,7 @@
                         </div>
                         <div class="form-group">
                             <label> Category </label>
-                            <select name="category_id"
+                            <select name="category_id" required
                                     class="form-select select-relation @error('category_id') is-invalid @enderror" style="width: 100%">
                                 <option value="">-- Select ---</option>
                                 @foreach($categories as $category)
@@ -78,7 +80,7 @@
                         </div>
                         <div class="form-group">
                             <label>Serial / Reg Number</label>
-                            <input type="text" name="serial_number"
+                            <input type="text" name="serial_number" required
                                    class="form-control @error('cost') is-invalid @enderror"
                                    value="{{old('serial_number')}}"
                                    placeholder="Serial Number" >
@@ -90,7 +92,7 @@
                         </div>
                         <div class="form-group">
                             <label>Depreciation %</label>
-                            <input type="number" name="depreciation"
+                            <input type="number" name="depreciation" required
                                    class="form-control @error('life') is-invalid @enderror"
                                    value="{{old('depreciation')}}"
                                    placeholder="Depreciation %" >
@@ -102,7 +104,7 @@
                         </div>
                         <div class="form-group">
                             <label> Condition </label>
-                            <select name="condition"
+                            <select name="condition" required
                                     class="form-select select-relation @error('condition') is-invalid @enderror" style="width: 100%">
                                 <option value="Good">Good</option>
                                 <option value="Bad">Bad</option>
@@ -115,11 +117,35 @@
                         </div>
                         <div class="form-group">
                             <label>Location</label>
-                            <input type="text" name="location"
+                            <input type="text" name="location" required
                                    class="form-control @error('life') is-invalid @enderror"
                                    value="{{old('location')}}"
                                    placeholder="Location of the Asset" >
                             @error('location')
+                            <span class="invalid-feedback">
+                               {{$message}}
+                        </span>
+                            @enderror
+                        </div>
+                        <div class="form-group">
+                            <label>Expected Life</label>
+                            <input type="number" name="life" required
+                                   class="form-control @error('life') is-invalid @enderror"
+                                   value="{{old('life')}}"
+                                   placeholder="Expected Life">
+                            @error('life')
+                            <span class="invalid-feedback">
+                               {{$message}}
+                        </span>
+                            @enderror
+                        </div>
+                        <div class="form-group">
+                            <label>Date of Acquisition</label>
+                            <input type="date" name="t_date" required
+                                   class="form-control @error('t_date') is-invalid @enderror"
+                                   value="{{old('t_date')}}"
+                                   placeholder="Date of Acquisition">
+                            @error('t_date')
                             <span class="invalid-feedback">
                                {{$message}}
                         </span>

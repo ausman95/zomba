@@ -77,11 +77,11 @@
                     <i class='bx bxs-file-archive sidenav__icon'></i>
                     <span class="sidenav__name">Stores</span>
                 </a>
-{{--                <a href="{{route('ministries.index')}}"--}}
-{{--                   class="sidenav__link {{$cpage === 'ministries' ? 'link-active' : ''}}" title="Ministries">--}}
-{{--                    <i class='bx bxs-city sidenav__icon'></i>--}}
-{{--                    <span class="sidenav__name">Ministries</span>--}}
-{{--                </a>--}}
+                <a href="{{route('assets.index')}}"
+                   class="sidenav__link {{$cpage === 'assets' ? 'link-active' : ''}}" title="Assets">
+                    <i class='bx bxs-car sidenav__icon'></i>
+                    <span class="sidenav__name">Assets</span>
+                </a>
                 <a href="{{route('zones.index')}}"
                    class="sidenav__link {{$cpage === 'zones' ? 'link-active' : ''}}" title="Zones">
                     <i class='fa fa-list-ol sidenav__icon'></i>
