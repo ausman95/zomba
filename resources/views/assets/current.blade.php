@@ -25,7 +25,7 @@
 
             <div class="mt-3">
                 <div class="row">
-                    <div class="col-sm-12 mb-2 col-md-12 col-lg-4">
+                    <div class="col-sm-12 mb-2 col-md-12 col-lg-8">
                         <div class="card " style="min-height: 30em;">
                             <div class="card-body px-1">
                                 @if($banks->count() === 0)
