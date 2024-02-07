@@ -130,7 +130,30 @@
                         </span>
                             @enderror
                         </div>
-                        <hr style="height: .3em;" class="border-theme">
+                        <div class="form-group">
+                            <label>Expected Life</label>
+                            <input type="number" name="life" required
+                                   class="form-control @error('life') is-invalid @enderror"
+                                   value="{{old('life') ?? $asset->life}}"
+                                   placeholder="Expected Life">
+                            @error('life')
+                            <span class="invalid-feedback">
+                               {{$message}}
+                        </span>
+                            @enderror
+                        </div>
+                        <div class="form-group">
+                            <label>Date of Acquisition</label>
+                            <input type="date" name="t_date" required
+                                   class="form-control @error('t_date') is-invalid @enderror"
+                                   value="{{old('t_date') ?? $asset->t_date}}"
+                                   placeholder="Date of Acquisition">
+                            @error('t_date')
+                            <span class="invalid-feedback">
+                               {{$message}}
+                        </span>
+                            @enderror
+                        </div>
                         <div class="form-group ">
                             <button class="btn btn-md btn-primary rounded-0">
                                 <i class="fa fa-edit"></i>Update

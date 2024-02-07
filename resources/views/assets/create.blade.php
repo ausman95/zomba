@@ -151,7 +151,6 @@
                         </span>
                             @enderror
                         </div>
-                        <hr style="height: .3em;" class="border-theme">
                         <div class="form-group">
                             <button class="btn btn-md btn-primary rounded-0">
                                 <i class="fa fa-paper-plane"></i>Save
