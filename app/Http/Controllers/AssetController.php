@@ -68,7 +68,7 @@ class AssetController extends Controller
     }
     public function create()
     {
-        $category = Categories::all();
+        $category = Categories::where(['soft_delete'=>0])->orderBy('id','desc')->get();
         return view('assets.create')->with([
             'cpage'=>"assets",
             'categories'=>$category
