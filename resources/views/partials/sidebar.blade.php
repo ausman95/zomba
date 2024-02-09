@@ -102,11 +102,11 @@
                     <i class='bx bx-bar-chart-alt-2 sidenav__icon'></i>
                     <span class="sidenav__name">Attendances</span>
                 </a>
-                <a href="{{route('announcements.index')}}" class="sidenav__link {{$cpage === 'announcements' ? 'link-active' : ''}}"
-                   title="Announcements">
-                    <i class='bx bx-list-ol sidenav__icon'></i>
-                    <span class="sidenav__name">Announcements</span>
-                </a>
+{{--                <a href="{{route('announcements.index')}}" class="sidenav__link {{$cpage === 'announcements' ? 'link-active' : ''}}"--}}
+{{--                   title="Announcements">--}}
+{{--                    <i class='bx bx-list-ol sidenav__icon'></i>--}}
+{{--                    <span class="sidenav__name">Announcements</span>--}}
+{{--                </a>--}}
                 @if(request()->user()->designation!='administrator')
                     <a href="{{route('members.show',request()->user()->member_id)}}"
                        class="sidenav__link {{$cpage === 'members' ? 'link-active' : ''}}" title="Tithe">
