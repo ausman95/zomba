@@ -87,7 +87,7 @@
                                                 <td>{{ucwords($asset->condition) }}</td>
                                                 <td>{{number_format($asset->depreciation) }}</td>
                                                 @if($asset->depreciation)
-                                                <td>{{number_format($asset->cost - $asset->getDays($asset->t_date,$asset->life,$asset->cost,$asset->depreciation,$asset->quantity),2) }}</td>
+                                                <td>{{number_format(($asset->quantity*$asset->cost) - ($asset->getDays($asset->t_date,$asset->life,$asset->cost,$asset->depreciation,$asset->quantity)),2) }}</td>
                                                 <td>{{number_format($asset->getDays($asset->t_date,$asset->life,$asset->cost,$asset->depreciation,$asset->quantity),2) }}</td>
                                                 @else
                                                     <td>-</td>
