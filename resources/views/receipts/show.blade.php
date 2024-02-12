@@ -109,10 +109,10 @@
                                     <div>
                                         @if($transaction->status==0)
                                             @if(request()->user()->id ==$transaction->created_by)
-                                            <a href="{{route('payments.edit',$transaction->id)}}"
-                                               class="btn btn-primary rounded-0" style="margin: 2px">
-                                                <i class="fa fa-edit"></i>Update
-                                            </a>
+{{--                                            <a href="{{route('payments.edit',$transaction->id)}}"--}}
+{{--                                               class="btn btn-primary rounded-0" style="margin: 2px">--}}
+{{--                                                <i class="fa fa-edit"></i>Update--}}
+{{--                                            </a>--}}
                                         <button class="btn btn-success  rounded-0" id="delete-btn" style="margin: 5px">
                                             <i class="fa fa-check-circle"></i>Verify
                                         </button>
