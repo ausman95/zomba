@@ -28,6 +28,8 @@
                         @csrf
                         <div class="form-group">
                             <label>Bank Account From</label>
+                            <input type="hidden"  name="updated_by" value="{{request()->user()->id}}" required>
+                            <input type="hidden"  name="created_by" value="{{request()->user()->id}}" required>
                             <select name="from_account_id"
                                     class="form-select select-relation @error('from_account_id') is-invalid @enderror" style="width: 100%">
                                 <option value="">-- Select ---</option>

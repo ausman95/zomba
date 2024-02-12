@@ -10,7 +10,10 @@ class SupplierPayments extends Model
 {
     use HasFactory;
     protected $fillable = [
-        'amount','supplier_id','address','expenses_id','transaction_type','method','balance'
+        'amount','supplier_id',
+        'address','expenses_id',
+        'transaction_type','method',
+        'balance','created_by','updated_by'
     ];
     public function supplier(): BelongsTo
     {

@@ -44,6 +44,8 @@
                                             <th>NAME</th>
                                             <th>LEADER</th>
                                             <th>CREATED ON</th>
+                                            <th>CREATED BY</th>
+                                            <th>UPDATED BY</th>
                                             <th>ACTION</th>
                                         </tr>
                                         </thead>
@@ -55,6 +57,8 @@
                                                 <td>{{ucwords($zone->name) }}</td>
                                                 <td>{{@$zone->member->name}}</td>
                                                 <td>{{date('d F Y', strtotime($zone->created_at)) }}</td>
+                                                <td>{{\App\Models\Budget::userName($zone->created_by)}}</td>
+                                                <td>{{\App\Models\Budget::userName($zone->updated_by)}}</td>
                                                 <td class="pt-1">
                                                     <a href="{{route('zones.show',$zone->id)}}"
                                                        class="btn btn-primary btn-md rounded-0">

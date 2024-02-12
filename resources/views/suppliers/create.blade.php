@@ -25,6 +25,8 @@
                     <form action="{{route('suppliers.store')}}" method="POST" autocomplete="off">
                         @csrf
                         <div class="form-group">
+                            <input type="hidden"  name="updated_by" value="{{request()->user()->id}}" required>
+                            <input type="hidden"  name="created_by" value="{{request()->user()->id}}" required>
                             <label>Name</label>
                             <input type="text" name="name"
                                    class="form-control @error('name') is-invalid @enderror"

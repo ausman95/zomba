@@ -50,6 +50,8 @@
                                             <th>MALE</th>
                                             <th>FEMALE</th>
                                             <th>VISITORS</th>
+                                            <th>CREATED BY</th>
+                                            <th>UPDATED BY</th>
                                             <th>ACTION</th>
                                         </tr>
                                         </thead>
@@ -65,6 +67,8 @@
                                                     <td>{{ucwords($attendance->male) }}</td>
                                                     <td>{{ucwords($attendance->female) }}</td>
                                                     <td>{{ucwords($attendance->visitors) }}</td>
+                                                    <td>{{\App\Models\Budget::userName($attendance->created_by)}}</td>
+                                                    <td>{{\App\Models\Budget::userName($attendance->updated_by)}}</td>
                                                     <td class="pt-1">
                                                         @if(request()->user()->designation=='administrator')
                                                         <a href="{{route('attendances.show',$attendance->id)}}"

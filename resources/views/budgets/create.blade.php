@@ -25,6 +25,8 @@
                         @csrf
                         <div class="form-group">
                             <label> Account </label>
+                            <input type="hidden"  name="updated_by" value="{{request()->user()->id}}" required>
+                            <input type="hidden"  name="created_by" value="{{request()->user()->id}}" required>
                             <select name="account_id" required
                                     class="form-select select-relation @error('account_id') is-invalid @enderror" style="width: 100%">
                                 <option value="">-- Select ---</option>

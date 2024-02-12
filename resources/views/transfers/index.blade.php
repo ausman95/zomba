@@ -43,11 +43,13 @@
                                             <th>NO</th>
                                             <th>FROM ACC NAME</th>
                                             <th>FROM ACC NUMBER</th>
-                                            <th>AMOUNT</th>
+                                            <th>AMOUNT (MK)</th>
                                             <th>DATE</th>
                                             <th>REF</th>
                                             <th>TO ACC NAME</th>
                                             <th>TO ACC NUMBER</th>
+                                            <th>CREATED BY</th>
+                                            <th>UPDATED BY</th>
                                             <th></th>
                                         </tr>
                                         </thead>
@@ -58,12 +60,13 @@
                                                 <td>{{$c++}}</td>
                                                 <td>{{ucwords($transfer->accountFrom->account_name) }}</td>
                                                 <td>{{ucwords($transfer->accountFrom->account_number) }}</td>
-                                                <th>{{number_format($transfer->amount) }}</th>
+                                                <th>{{number_format($transfer->amount,2) }}</th>
                                                 <td>{{ucwords($transfer->created_at) }}</td>
                                                 <td>{{ucwords($transfer->cheque_number) }}</td>
                                                 <td>{{ucwords($transfer->accountTo->account_name) }}</td>
                                                 <td>{{ucwords($transfer->accountTo->account_number) }}</td>
-
+                                                <td>{{\App\Models\Budget::userName($transfer->created_by)}}</td>
+                                                <td>{{\App\Models\Budget::userName($transfer->updated_by)}}</td>
                                                 <td class="pt-1">
                                                     <a href="{{route('transfers.show',$transfer->id)}}"
                                                        class="btn btn-primary btn-md rounded-0">

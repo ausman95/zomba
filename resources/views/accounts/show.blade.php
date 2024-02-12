@@ -41,7 +41,8 @@
                                                     {{"CR"}}
                                                 @else
                                                     {{"DR"}}
-                                                @endif</td>
+                                                @endif
+                                            </td>
                                         </tr>
                                         <tr>
                                             <td>Created On</td>
@@ -52,6 +53,14 @@
                                             <td>{{$account->updated_at}}</td>
                                         </tr>
                                         <tr>
+                                            <td>Update By</td>
+                                            <td>{{@$account->userName($account->updated_by)}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Created By</td>
+                                            <td>{{@$account->userName($account->created_by)}}</td>
+                                        </tr>
+                                        <tr>
                                             <td>Status</td>
                                             <td>
                                                 @if($account->soft_delete==1)
@@ -60,6 +69,7 @@
                                                     Active
                                                 @endif
                                             </td>
+
                                         </tr>
                                     </table>
                                     <div class="mt-3">

@@ -10,7 +10,8 @@ class Zone extends Model
 {
     use HasFactory;
     protected $fillable = [
-        'name','member_id'
+        'name','member_id',
+        'created_by','updated_by'
     ];
     public function churches()
     {

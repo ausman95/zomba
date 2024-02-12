@@ -49,6 +49,8 @@
                                             <th>ACCOUNT NUMBER</th>
                                             <th>SERVICE CENTRE</th>
                                             <th>ACCOUNT TYPE</th>
+                                            <th>CREATED BY</th>
+                                            <th>UPDATED BY</th>
                                             <th>ACTION</th>
                                         </tr>
                                         </thead>
@@ -69,6 +71,8 @@
                                                 <td>{{ucwords($bank->account_number) }}</td>
                                                 <td>{{ucwords($bank->service_centre) }}</td>
                                                 <td>{{ucwords($bank->account_type) }}</td>
+                                                <td>{{\App\Models\Budget::userName($bank->created_by)}}</td>
+                                                <td>{{\App\Models\Budget::userName($bank->updated_by)}}</td>
                                                 <td>
                                                     <a href="{{route('banks.show',$bank->id)}}"
                                                        class="btn btn-primary btn-md rounded-0">

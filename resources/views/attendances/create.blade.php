@@ -26,6 +26,8 @@
                         @csrf
                         <div class="form-group">
                             <label>Service</label>
+                            <input type="hidden"  name="updated_by" value="{{request()->user()->id}}" required>
+                            <input type="hidden"  name="created_by" value="{{request()->user()->id}}" required>
                             <select name="service_id"
                                     class="form-select select-relation @error('service_id') is-invalid @enderror" style="width: 100%" required>
                                 @foreach($services as $service)

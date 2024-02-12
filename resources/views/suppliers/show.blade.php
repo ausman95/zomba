@@ -53,6 +53,14 @@
                                             <td>{{$supplier->updated_at}}</td>
                                         </tr>
                                         <tr>
+                                            <td>Update By</td>
+                                            <td>{{\App\Models\Budget::userName($supplier->updated_by)}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Created By</td>
+                                            <td>{{@\App\Models\Budget::userName($supplier->created_by)}}</td>
+                                        </tr>
+                                        <tr>
                                             <td>Status</td>
                                             <td>
                                                 @if($supplier->soft_delete==1)
@@ -103,6 +111,8 @@
                                 <th>BALANCE</th>
                                 <th>DATE</th>
                                 <th>DESCRIPTION</th>
+                                <th>CREATED BY</th>
+                                <th>UPDATED BY</th>
                             </tr>
                             </thead>
                             <tbody>
@@ -125,7 +135,6 @@
                                            {{number_format($payment->balance) }}
                                        @endif
                                     <td>{{date('d F Y', strtotime($payment->created_at)) }}</td>
-
                                     <th>
                                         @if( $payment->transaction_type==1 && $payment->method==1)
                                             {{ "Bought on Cash"}}
@@ -141,6 +150,8 @@
                                             {{ "Payment by Online-Transfer"}}
                                         @endif
                                     </th>
+                                    <td>{{\App\Models\Budget::userName($payment->created_by)}}</td>
+                                    <td>{{\App\Models\Budget::userName($payment->updated_by)}}</td>
                                 </tr>
                             @endforeach
                             </tbody>

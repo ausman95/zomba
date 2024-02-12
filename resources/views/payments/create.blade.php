@@ -17,122 +17,6 @@
                 <li class="breadcrumb-item active" aria-current="page">Create Payments</li>
             </ol>
         </nav>
-
-        <div class="modal " id="account" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="staticBackdropLabel">Adding Chart of Accounts</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                        <form action="{{route('accounts.store')}}" method="POST" autocomplete="off">
-                            @csrf
-                            <div class="form-group">
-                                <label>Name</label>
-                                <input type="text" name="name"
-                                       class="form-control @error('name') is-invalid @enderror"
-                                       value="{{old('name')}}"
-                                       placeholder="Account's name" >
-                                @error('name')
-                                <span class="invalid-feedback">
-                               {{$message}}
-                        </span>
-                                @enderror
-                            </div>
-                            <hr style="height: .3em;" class="border-theme">
-                            <div class="form-group">
-                                <label>Account Type</label>
-                                <select name="type" class="form-control select-relation @error('type') is-invalid @enderror" style="width: 100%">{{old('type')}}>
-                                    <option value="1">Cr</option>
-                                    <option value="2">Dr</option>
-                                </select>
-                                @error('type')
-                                <span class="invalid-feedback">
-                               {{$message}}
-                        </span>
-                                @enderror
-                            </div>
-
-                            <div class="form-group">
-                                <button class="btn btn-md btn-primary rounded-0">
-                                    <i class="fa fa-paper-plane"></i>Save
-                                </button>
-
-                            </div>
-                        </form>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"><i class="fa fa-times-circle"></i> Cancel</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="modal " id="supplier" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="staticBackdropLabel">Adding Supplier</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                        <form action="{{route('suppliers.store')}}" method="POST" autocomplete="off">
-                            @csrf
-                            <div class="form-group">
-                                <label>Name</label>
-                                <input type="text" name="name"
-                                       class="form-control @error('name') is-invalid @enderror"
-                                       value="{{old('name')}}"
-                                       placeholder="Supplier's name"
-                                >
-                                @error('name')
-                                <span class="invalid-feedback">
-                               {{$message}}
-                        </span>
-                                @enderror
-                            </div>
-                            <div class="form-group">
-                                <label>Phone Number</label>
-                                <input type="number" name="phone_number"
-                                       class="form-control @error('phone_number') is-invalid @enderror"
-                                       value="{{old('phone_number')}}"
-                                       placeholder="Supplier's phone number"
-                                >
-                                @error('phone_number')
-                                <span class="invalid-feedback">
-                               {{$message}}
-                        </span>
-                                @enderror
-                            </div>
-                            <div class="form-group">
-                                <label>Location</label>
-                                <input type="text" name="location"
-                                       class="form-control @error('location') is-invalid @enderror"
-                                       value="{{old('location')}}"
-                                       placeholder="Enter location i.e Lilongwe"
-                                >
-                                @error('location')
-                                <span class="invalid-feedback">
-                               {{$message}}
-                            </span>
-                                @enderror
-                            </div>
-                            <hr style="height: .3em;" class="border-theme">
-                            <div class="form-group">
-                                <button class="btn btn-md btn-primary rounded-0">
-                                    <i class="fa fa-paper-plane"></i>Save
-                                </button>
-
-                            </div>
-                        </form>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"><i class="fa fa-times-circle"></i> Cancel</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
         <hr>
         <div class="mt-2">
             <form action="{{route('payments.store')}}" method="POST" autocomplete="off">
@@ -141,6 +25,8 @@
                             @csrf
                         <div class="form-group">
                             <label>Payment Description</label>
+                            <input type="hidden"  name="updated_by" value="{{request()->user()->id}}" required>
+                            <input type="hidden"  name="created_by" value="{{request()->user()->id}}" required>
                             <select name="type"
                                     required
                                     class="form-select select-relation type @error('type') required is-invalid @enderror" style="width: 100%">{{old('type')}} >

@@ -10,7 +10,7 @@ class Banks extends Model
 {
     use HasFactory;
     protected $fillable = [
-        'account_name', 'account_type','account_number','service_centre','bank_name'
+        'account_name', 'account_type','account_number','service_centre','bank_name','created_by','updated_by'
     ];
     public function transfersTo()
     {

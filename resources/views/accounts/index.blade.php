@@ -45,6 +45,8 @@
                                             <th>NO</th>
                                             <th>NAME</th>
                                             <th>TYPE</th>
+                                            <th>CREATED BY</th>
+                                            <th>UPDATED BY</th>
                                             <th>ACTION</th>
                                         </tr>
                                         </thead>
@@ -61,6 +63,8 @@
                                                         {{"DR"}}
                                                         @endif
                                                 </td>
+                                                <td>{{$account->userName($account->created_by)}}</td>
+                                                <td>{{$account->userName($account->updated_by)}}</td>
                                                 <td class="pt-1">
                                                     <a href="{{route('accounts.show',$account->id)}}"
                                                        class="btn btn-primary btn-md rounded-0">

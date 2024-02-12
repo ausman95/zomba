@@ -26,6 +26,7 @@
                     <form action="{{route('attendances.update',$attendance->id)}}" method="POST" autocomplete="off">
                         @csrf
                         <input type="hidden" name="_method" value="PATCH">
+                        <input type="hidden"  name="updated_by" value="{{request()->user()->id}}" required>
                         <div class="form-group">
                             <label>Service</label>
                             <select name="service_id"

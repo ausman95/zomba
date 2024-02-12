@@ -10,7 +10,10 @@ class StockFlow extends Model
 {
     use HasFactory;
     protected $fillable = [
-        'material_id', 'quantity','amount','flow','department_id','balance','status','activity'
+        'material_id', 'quantity',
+        'amount','flow','department_id',
+        'balance','status','activity',
+        'created_by','updated_by'
     ];
     public function flows()
     {

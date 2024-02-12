@@ -13,8 +13,13 @@
             <ol class="breadcrumb bg-transparent">
                 <li class="breadcrumb-item"><a href="{{route('home')}}">Home</a></li>
                 <li class="breadcrumb-item"><a href="{{route('finances.index')}}">Finances</a></li>
+                @if($_GET['verified']==0)
                 <li class="breadcrumb-item"><a href="{{route('receipts.index')}}">Receipts</a></li>
-                <li class="breadcrumb-item active" aria-current="page">{{$transaction->id}}</li>
+                @endif
+            @if($_GET['verified']==1)
+                    <li class="breadcrumb-item"><a href="{{route('receipt.unverified')}}">Un~Verified Transactions</a></li>
+                @endif
+                    <li class="breadcrumb-item active" aria-current="page">{{$transaction->id}}</li>
             </ol>
         </nav>
 
@@ -80,6 +85,10 @@
                                         <td>{{ucwords($transaction->reference) }}</td>
                                     </tr>
                                     <tr>
+                                        <td>Status</td>
+                                        <th>{{ucwords($transaction->status == 1 ? "VERIFIED" : "UN~VERIFIED") }}</th>
+                                    </tr>
+                                    <tr>
                                         <td>Created On</td>
                                         <td>{{date('d F Y', strtotime($transaction->created_at)) }}</td>
                                     </tr>
@@ -87,23 +96,50 @@
                                         <td>Update ON</td>
                                         <td>{{date('d F Y', strtotime($transaction->updated_at)) }}</td>
                                     </tr>
+                                    <tr>
+                                        <td>Update By</td>
+                                        <td>{{\App\Models\Budget::userName($transaction->updated_by)}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Created By</td>
+                                        <td>{{@\App\Models\Budget::userName($transaction->created_by)}}</td>
+                                    </tr>
                                 </table>
                                 <div class="mt-3">
                                     <div>
+                                        @if($transaction->status==0)
+                                            @if(request()->user()->id ==$transaction->created_by)
+                                            <a href="{{route('payments.edit',$transaction->id)}}"
+                                               class="btn btn-primary rounded-0" style="margin: 2px">
+                                                <i class="fa fa-edit"></i>Update
+                                            </a>
+                                        <button class="btn btn-success  rounded-0" id="delete-btn" style="margin: 5px">
+                                            <i class="fa fa-check-circle"></i>Verify
+                                        </button>
+                                            @endif
+                                        <form action="{{route('payments.destroy',$transaction->id)}}" method="POST" id="delete-form">
+                                            @csrf
+                                            <input type="hidden" name="_method" value="DELETE">
+                                            <input type="hidden" name="id" value="{{$transaction->id}}">
+                                            <input type="hidden" name="type" value="{{$transaction->type}}">
+                                            <input type="hidden" name="amount" value="{{$transaction->amount}}">
+                                            <input type="hidden" name="account" value="{{$transaction->account->name}}">
+                                        </form>
+                                        @endif
                                         @if($transaction->type==5)
                                             <a href="{{route('member-receipt.generate')."?id=".$transaction->id}}"
                                                class="btn btn-primary rounded-0" style="margin: 2px" target="_blank">
-                                                <i class="fa fa-edit"></i>Receipt
+                                                <i class="fa fa-print"></i>Receipt
                                             </a>
                                         @elseif($transaction->type==6)
                                             <a href="{{route('church-receipt.generate')."?id=".$transaction->id}}"
                                                class="btn btn-primary rounded-0" style="margin: 2px" target="_blank">
-                                                <i class="fa fa-edit"></i>Receipt
+                                                <i class="fa fa-print"></i>Receipt
                                             </a>
                                         @elseif($transaction->type==7)
                                             <a href="{{route('ministry-receipt.generate')."?id=".$transaction->id}}"
                                                class="btn btn-primary rounded-0" style="margin: 2px" target="_blank">
-                                                <i class="fa fa-edit"></i>Receipt
+                                                <i class="fa fa-print"></i>Receipt
                                             </a>
                                         @endif
 
@@ -141,7 +177,7 @@
 
 
             $("#delete-btn").on('click', function () {
-                confirmationWindow("Confirm Deletion", "Are you sure you want to Reverse this Transaction ?", "Yes,Delete", function () {
+                confirmationWindow("Confirm Deletion", "Are you sure you want Verify this Record ?", "Yes,Continue", function () {
                     $("#delete-form").submit();
                 });
             });

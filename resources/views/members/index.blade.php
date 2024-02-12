@@ -105,6 +105,8 @@
                                                 <th>PHONE</th>
                                                 <th>STATUS</th>
 {{--                                                @if(@!$report)--}}
+                                                <th>CREATED BY</th>
+                                                <th>UPDATED BY</th>
                                                 <th>ACTION</th>
 {{--                                                @endif--}}
                                             </tr>
@@ -127,6 +129,8 @@
                                                             {{'DECEASED'}}
                                                         @endif
                                                     </td>
+                                                    <td>{{\App\Models\Budget::userName($member->created_by)}}</td>
+                                                    <td>{{\App\Models\Budget::userName($member->updated_by)}}</td>
 {{--                                                    @if(@!$report)--}}
                                                     <td class="pt-1">
                                                         {{--                                                    @if(request()->user()->member_id==$member->id)--}}

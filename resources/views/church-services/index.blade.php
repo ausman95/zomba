@@ -44,6 +44,8 @@
                                             <th>NO</th>
                                             <th>NAME</th>
                                             <th>CREATED ON</th>
+                                            <th>CREATED BY</th>
+                                            <th>UPDATED BY</th>
                                             <th>ACTION</th>
                                         </tr>
                                         </thead>
@@ -54,6 +56,8 @@
                                                 <td>{{$c++}}</td>
                                                 <td>{{ucwords($service->name) }}</td>
                                                 <td>{{date('d F Y', strtotime($service->created_at)) }}</td>
+                                                <td>{{\App\Models\Budget::userName($service->created_by)}}</td>
+                                                <td>{{\App\Models\Budget::userName($service->updated_by)}}</td>
                                                 <td class="pt-1">
                                                     <a href="{{route('services.show',$service->id)}}"
                                                        class="btn btn-primary btn-md rounded-0">

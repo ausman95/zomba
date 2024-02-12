@@ -10,6 +10,8 @@ class Ministry extends Model
     use HasFactory;
     protected $fillable = [
         'name',
+        'created_by',
+        'updated_by'
     ];
     public function members()
     {

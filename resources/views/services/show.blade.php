@@ -60,6 +60,14 @@
                                             <td>Updated At</td>
                                             <td>{{$service->updated_at}}</td>
                                         </tr>
+                                        <tr>
+                                            <td>Update By</td>
+                                            <td>{{\App\Models\Budget::userName($service->updated_by)}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Created By</td>
+                                            <td>{{@\App\Models\Budget::userName($service->created_by)}}</td>
+                                        </tr>
                                     </table>
                                     <div class="mt-3">
                                         <div>

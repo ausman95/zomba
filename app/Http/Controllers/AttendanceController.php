@@ -53,6 +53,8 @@ class AttendanceController extends Controller
             'month_id'=>$monthID->id,
             'female'=>$data['female'],
             'male'=>$data['male'],
+            'created_by'=>$data['created_by'],
+            'updated_by'=>$data['updated_by'],
             'visitors'=>$data['visitors'],
             'service_id'=>$data['service_id'],
             'ministry_id'=>$data['ministry_id']

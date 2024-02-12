@@ -50,6 +50,8 @@
                                             <th>DESTINATION</th>
                                             <th>REF</th>
                                             <th>DATE</th>
+                                            <th>CREATED BY</th>
+                                            <th>UPDATED BY</th>
                                         </tr>
                                         </thead>
                                         <tbody>
@@ -77,6 +79,8 @@
                                                 <td>
                                                     {{date('d F Y', strtotime($purchase->date)) }}
                                                 </td>
+                                                <td>{{\App\Models\Budget::userName($purchase->created_by)}}</td>
+                                                <td>{{\App\Models\Budget::userName($purchase->updated_by)}}</td>
 {{--                                                <td class="pt-1">--}}
 {{--                                                    <a href="{{route('purchases.show',$purchase->id)}}"--}}
 {{--                                                       class="btn btn-md btn-outline-success">--}}

@@ -14,7 +14,8 @@ class Purchase extends Model
         'supplier_id','quantity',
         'quantity','amount','payment_type',
         'bank_id','stores','account_id',
-        'reference','department_id'
+        'reference','department_id',
+        'created_by','updated_by'
     ];
 
     public function material(): BelongsTo

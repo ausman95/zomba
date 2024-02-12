@@ -64,6 +64,7 @@ Route::middleware(['preventBackHistory'])->group(function () {
         Route::post('church/report/generate', [\App\Http\Controllers\ReceiptController::class, 'churchReportGenerate'])->name('church-report.generate');
         Route::get('church/report/generate', [\App\Http\Controllers\ReceiptController::class, 'churchReportGenerate'])->name('church-report.generate');
         Route::resource('zones', \App\Http\Controllers\ZoneController::class);
+        Route::get('receipt/unverified', [\App\Http\Controllers\ReceiptController::class, 'unverified'])->name('receipt.unverified');
 
         Route::resource('leave-settings', \App\Http\Controllers\LeaveSettingController::class);
         Route::resource('requisitions', RequisitionController::class)->except(['store', 'show', 'destroy']);

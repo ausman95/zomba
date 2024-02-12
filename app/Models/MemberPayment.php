@@ -15,6 +15,7 @@ class MemberPayment extends Model
         'member_id','name',
         'transaction_type','payment_id',
         'account_id','t_date','month_id'
+        ,'created_by','updated_by'
     ];
     public function account(): BelongsTo
     {

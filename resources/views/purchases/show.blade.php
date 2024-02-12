@@ -89,6 +89,14 @@
                                             <td>Update ON</td>
                                             <td>{{$transfer->updated_at}}</td>
                                         </tr>
+                                        <tr>
+                                            <td>Update By</td>
+                                            <td>{{\App\Models\Budget::userName($transfer->updated_by)}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Created By</td>
+                                            <td>{{@\App\Models\Budget::userName($transfer->created_by)}}</td>
+                                        </tr>
                                     </table>
                                 </div>
                             </div>

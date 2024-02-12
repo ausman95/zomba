@@ -45,6 +45,14 @@
                                             <td>{{$ministry->updated_at}}</td>
                                         </tr>
                                         <tr>
+                                            <td>Update By</td>
+                                            <td>{{\App\Models\Budget::userName($ministry->updated_by)}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Created By</td>
+                                            <td>{{@\App\Models\Budget::userName($ministry->created_by)}}</td>
+                                        </tr>
+                                        <tr>
                                             <td>Status</td>
                                             <td>
                                                 @if($ministry->soft_delete==1)
@@ -152,16 +160,17 @@
                                             <tbody>
                                             <?php $c = 1;?>
                                             @foreach($ministry->members as $member)
+                                                @if(@$member->member->status==1 || @$member->member->status ==2)
                                                 <tr>
                                                     <td>{{$c++}}</td>
-                                                    <td>{{$member->member->name}}</td>
+                                                    <td>{{@$member->member->name}}</td>
                                                     <td>{{@$member->member->church->name}}</td>
                                                     <td>{{@$member->member->phone_number}}</td>
                                                     <td>{{@$member->ministry->name}}</td>
                                                     <td>
-                                                        @if($member->member->status==1)
+                                                        @if(@$member->member->status==1)
                                                             {{'ACTIVE'}}
-                                                        @elseif($member->member->status==2)
+                                                        @elseif(@$member->member->status==2)
                                                             {{'MOVED'}}
                                                         @else
                                                             {{'DECEASED'}}
@@ -169,13 +178,14 @@
                                                     </td>
                                                     <td class="pt-1">
                                                         @if(request()->user()->designation=='administrator')
-                                                            <a href="{{route('members.show',$member->id)}}"
+                                                            <a href="{{route('members.show',@$member->id)}}"
                                                                class="btn btn-primary btn-md rounded-0">
                                                                 <i class="fa fa-list-ol"></i>  Manage
                                                             </a>
                                                         @endif
                                                     </td>
                                                 </tr>
+                                                @endif
                                             @endforeach
                                             </tbody>
                                         </table>

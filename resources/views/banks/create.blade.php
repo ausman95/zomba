@@ -27,6 +27,8 @@
                         @csrf
                         <div class="form-group">
                             <label>Bank Name</label>
+                            <input type="hidden"  name="updated_by" value="{{request()->user()->id}}" required>
+                            <input type="hidden"  name="created_by" value="{{request()->user()->id}}" required>
                             <input type="text" name="bank_name"
                                    class="form-control @error('bank_name')
                                     is-invalid @enderror"

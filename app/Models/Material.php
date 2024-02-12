@@ -9,7 +9,7 @@ class Material extends Model
 {
     use HasFactory;
     protected $fillable = [
-        'name','specifications','units'
+        'name','specifications','units','created_by','updated_by'
     ];
     public function getBalance2($materialID)
     {

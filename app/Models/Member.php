@@ -11,7 +11,9 @@ class Member extends Model
 {
     use HasFactory;
     protected $fillable = [
-        'name','church_id','phone_number','gender','status'
+        'name','church_id',
+        'phone_number','gender',
+        'status','created_by','updated_by'
     ];
     public function getName($id)
     {

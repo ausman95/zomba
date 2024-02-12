@@ -45,6 +45,8 @@
                                             <th>EMAIL</th>
                                             <th>PHONE</th>
                                             <th>ADDRESS</th>
+                                            <th>CREATED BY</th>
+                                            <th>UPDATED BY</th>
                                             <th>ACTION</th>
                                         </tr>
                                         </thead>
@@ -58,6 +60,8 @@
                                                 <td>{{$service->email}}</td>
                                                 <td>{{$service->phone}}</td>
                                                 <td>{{$service->address}}</td>
+                                                <td>{{\App\Models\Budget::userName($service->created_by)}}</td>
+                                                <td>{{\App\Models\Budget::userName($service->updated_by)}}</td>
                                                 <td class="pt-1">
                                                     <a href="{{route('services.show',$service->id)}}"
                                                        class="btn btn-primary btn-md rounded-0">

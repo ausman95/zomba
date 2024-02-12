@@ -148,6 +148,8 @@
                                     <th>TRANSACTION NAME</th>
                                     <th>AMOUNT (MK)</th>
                                     <th>PAYMENT TYPE</th>
+                                    <th>CREATED BY</th>
+                                    <th>UPDATED BY</th>
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -165,6 +167,8 @@
                                             @endif
                                         </th>
                                         <td>{{ucwords($transaction->account->type == 2 ? "CR" : "DR") }}</td>
+                                        <td>{{\App\Models\Budget::userName($transaction->created_by)}}</td>
+                                        <td>{{\App\Models\Budget::userName($transaction->updated_by)}}</td>
                                     </tr>
                                 @endforeach
                                 </tbody>

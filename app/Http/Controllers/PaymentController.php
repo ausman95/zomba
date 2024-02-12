@@ -89,9 +89,10 @@ class PaymentController extends Controller
                     'payments.*',
                 )
                 ->whereBetween('t_date',[$month->start_date,$month->end_date])
+                ->where(['payments.status'=>1])
                 ->where(['accounts.type'=>2])
                 ->orderBy('payments.id','desc')->get(),
-            'months'=>Month::orderBY('id','desc')->get()
+            'months'=>Month::where(['soft_delete'=>0])->orderBY('id','desc')->get()
         ]);
     }
     public function generateReceipt(Request $request)
@@ -156,7 +157,6 @@ class PaymentController extends Controller
             $reference = $data['reference'];
         }
         $transactions_name = 'Admin';
-
         switch ($data['type']){
             case '1':{
                 $request->validate(['project_id' => "required"]);
@@ -192,10 +192,8 @@ class PaymentController extends Controller
                 break;
             }
         }
-
         $account = Accounts::where(['id'=>$request->post('account_id')])->first();
         $account_type = $account->type;
-
         // dd($project_id);
         $bal = BankTransaction::where(['bank_id'=>$request->post('bank_id')])->orderBy('id','desc')->first();
         @$balance = $bal->balance;
@@ -220,7 +218,6 @@ class PaymentController extends Controller
             'method'=>$request->post('payment_method'),
             'balance'=>$new_balance
         ];
-
         // Supplier Balance
         $bal = SupplierPayments::where(['supplier_id'=>$request->post('supplier_id')])->orderBy('id','desc')->first();
         @$balance = $bal->balance;
@@ -228,15 +225,15 @@ class PaymentController extends Controller
             $balance = 0;
         }
         $supplier_balance = $balance-$request->post('amount');
-        //
         $data = $request->post();
-
         $raw_data = [
             'account_id'=>$data['account_id'],
             'amount'=>$data['amount'],
             'name'=>$transactions_name,
             't_date'=>$data['t_date'],
             'month_id'=>$monthID->id,
+            'created_by'=>$request->post('created_by'),
+            'updated_by'=>$request->post('updated_by'),
             'bank_id'=>$data['bank_id'],
             'type'=>$data['type'],
             'payment_method'=>$data['payment_method'],
@@ -249,7 +246,6 @@ class PaymentController extends Controller
             );
         }
         $payments = Payment::create($raw_data);
-
         $payment = $payments->id;
         $bala = ProjectPayment::where(['project_id'=>$request->post('project_id')])->orderBy('id','desc')->first();
         @$balances = $bala->balance;
@@ -261,7 +257,6 @@ class PaymentController extends Controller
         }else{
             $new_balances = $balances-$request->post('amount');
         }
-
         if($request->type==4){
             $bala = LabourerPayments::where(['labourer_id'=>$request->post('labourer_id')])->orderBy('id','desc')->first();
             @$balances = $bala->balance;
@@ -274,6 +269,8 @@ class PaymentController extends Controller
                 'amount'=>$request->post('amount'),
                 'account_id'=>$request->post('account_id'),
                 'description'=>$request->post('description'),
+                'created_by'=>$request->post('created_by'),
+                'updated_by'=>$request->post('updated_by'),
                 'project_id'=>$labour_project_id,
                 'balance'=>$balances-$request->post('amount'),
                 'method'=>$request->post('payment_method'),
@@ -294,6 +291,8 @@ class PaymentController extends Controller
                 'expenses_id'=>'1111111',
                 'supplier_id'=>$request->post('supplier_id'),
                 'amount'=>$request->post('amount'),
+                'created_by'=>$request->post('created_by'),
+                'updated_by'=>$request->post('updated_by'),
                 'method'=>$request->post('payment_method'),
                 'balance'=>$supplier_balance,
                 'transaction_type'=>2,
@@ -305,6 +304,8 @@ class PaymentController extends Controller
                 'project_id'=>$request->post('project_id'),
                 'amount'=>$request->post('amount'),
                 'balance'=>$new_balances,
+                'created_by'=>$request->post('created_by'),
+                'updated_by'=>$request->post('updated_by'),
                 'payment_name'=>$transactions_name.' For '.$account->name,
                 'payment_type'=>'1'
             ];
@@ -320,15 +321,14 @@ class PaymentController extends Controller
                 'name'=>$transactions_name.' For '.$account->name,
                 'member_id'=>$request->post('member_id'),
                 'amount'=>$request->post('amount'),
+                'created_by'=>$request->post('created_by'),
+                'updated_by'=>$request->post('updated_by'),
                 'account_id'=>$request->post('account_id'),
                 'balance'=>$balances+$request->post('amount'),
                 'payment_id'=>$payment,
                 'transaction_type'=>2,
             ];
             MemberPayment::create($members);
-//            $last_id = MemberPayment::create($members);
-//            $order = new DeliveryController();
-//            $order->generateMemberReceipt($last_id->id);
         }
         if($request->type==6){
             $bala = ChurchPayment::where(['church_id'=>$request->post('church_id')])->orderBy('id','desc')->first();
@@ -340,15 +340,14 @@ class PaymentController extends Controller
                 'name'=>$transactions_name.' For '.$account->name,
                 'church_id'=>$request->post('church_id'),
                 'amount'=>$request->post('amount'),
+                'created_by'=>$request->post('created_by'),
+                'updated_by'=>$request->post('updated_by'),
                 'account_id'=>$request->post('account_id'),
                 'balance'=>$balances+$request->post('amount'),
                 'payment_id'=>$payment,
                 'transaction_type'=>2,
             ];
-                ChurchPayment::create($churches);
-//            $last_id = ChurchPayment::create($churches);
-//            $order = new DeliveryController();
-//            $order->generateHomeReceipt($last_id->id);
+            ChurchPayment::create($churches);
         }
         if($request->type==7){
             $bala = MinistryPayment::where(['ministry_id'=>$request->post('ministry_id')])->orderBy('id','desc')->first();
@@ -360,17 +359,15 @@ class PaymentController extends Controller
                 'name'=>$transactions_name.' For '.$account->name,
                 'ministry_id'=>$request->post('ministry_id'),
                 'amount'=>$request->post('amount'),
+                'created_by'=>$request->post('created_by'),
+                'updated_by'=>$request->post('updated_by'),
                 'account_id'=>$request->post('account_id'),
                 'balance'=>$balances+$request->post('amount'),
                 'payment_id'=>$payment,
                 'transaction_type'=>2,
             ];
             MinistryPayment::create($ministries);
-//            $last_id =MinistryPayment::create($ministries);
-//            $order = new DeliveryController();
-//            $order->generateMinistryReceipt($last_id->id);
         }
-
         BankTransaction::create($transactions);
         //code to generate an invoice
         activity('FINANCES')
@@ -424,8 +421,41 @@ class PaymentController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Request $request,ReceiptController $receiptController)
     {
-        //
+        $data=array('status'=>1,'updated_by'=> request()->user()->id) ;
+        DB::table('payments')
+            ->where(['id' => $request->post('id')])
+            ->update($data);
+        if($request->post('type')==6) {
+            DB::table('church_payments')
+                ->where(['payment_id' => $request->post('id')])
+                ->update($data);
+        }
+        if($request->post('type')==6) {
+            DB::table('ministry_payments')
+                ->where(['payment_id' => $request->post('id')])
+                ->update($data);
+        }
+        if($request->post('type')==5){
+            DB::table('member_payments')
+                ->where(['payment_id' => $request->post('id')])
+                ->update($data);
+
+            $member = MemberPayment::where(['member_payments.payment_id'=> $request->post('id')])
+                ->join('members', 'members.id', '=', 'member_payments.member_id')
+                ->first();
+            if($member->phone_number!=0) {
+                $message = 'MALAWI ASSEMBLIES OF GOD ' .
+                    PHP_EOL . PHP_EOL . 'Dear ' . $member->name . PHP_EOL . PHP_EOL . ' You have Paid ' .
+                    PHP_EOL . PHP_EOL . $request->post('account') .
+                    ' Amounting to : MK ' . number_format($request->post('amount'), 2) . PHP_EOL
+                    . PHP_EOL . ' AREA 25 VICTORY TEMPLE';
+                $receiptController->sendSms($member->phone_number, $message);
+            }
+        }
+        return redirect()->route('receipt.unverified')->with([
+            'success-notification'=>"Successfully"
+        ]);
     }
 }

@@ -29,6 +29,7 @@
                     <form action="{{route('users.update',$user->id)}}" method="POST" autocomplete="off">
                         @csrf
                         <input type="hidden" name="_method" value="PATCH">
+                        <input type="hidden"  name="updated_by" value="{{request()->user()->id}}" required>
                         <div class="form-group">
                             <label>Email</label>
                             <input type="email" name="email" class="form-control @error('email') is-invalid @enderror"

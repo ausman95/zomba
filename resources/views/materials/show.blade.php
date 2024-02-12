@@ -55,6 +55,14 @@
                                             <td>{{$material->updated_at}}</td>
                                         </tr>
                                         <tr>
+                                            <td>Update By</td>
+                                            <td>{{\App\Models\Budget::userName($material->updated_by)}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Created By</td>
+                                            <td>{{@\App\Models\Budget::userName($material->created_by)}}</td>
+                                        </tr>
+                                        <tr>
                                             <td>Status</td>
                                             <td>
                                                 @if($material->soft_delete==1)

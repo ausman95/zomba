@@ -28,6 +28,7 @@
                     <form action="{{route('banks.update',$bank->id)}}" method="POST" autocomplete="off">
                         @csrf
                         <input type="hidden" name="_method" value="PATCH">
+                        <input type="hidden"  name="updated_by" value="{{request()->user()->id}}" required>
                         <div class="form-group">
                             <label>Bank Name</label>
                             <input type="text" name="bank_name"

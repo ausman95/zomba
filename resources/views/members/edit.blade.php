@@ -30,6 +30,7 @@
                     <div class="col-sm-12 col-md-8 col-lg-4">
                         <div class="form-group">
                             <label>Name</label>
+                            <input type="hidden"  name="updated_by" value="{{request()->user()->id}}" required>
                             <input type="text" name="name" required
                                    class="form-control @error('name') is-invalid @enderror"
                                    value="{{old('name') ?? $member->name}}"

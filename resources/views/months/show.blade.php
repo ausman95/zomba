@@ -51,6 +51,14 @@
                                             <td>{{date('d F Y', strtotime($month->updated_date)) }}</td>
                                         </tr>
                                         <tr>
+                                            <td>Update By</td>
+                                            <td>{{\App\Models\Budget::userName($month->updated_by)}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Created By</td>
+                                            <td>{{@\App\Models\Budget::userName($month->created_by)}}</td>
+                                        </tr>
+                                        <tr>
                                             <td>Status</td>
                                             <td>
                                                 @if($month->soft_delete==1)

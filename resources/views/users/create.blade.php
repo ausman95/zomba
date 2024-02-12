@@ -26,6 +26,8 @@
                         @csrf
                         <div class="form-group">
                             <label>Email</label>
+                            <input type="hidden"  name="updated_by" value="{{request()->user()->id}}" required>
+                            <input type="hidden"  name="created_by" value="{{request()->user()->id}}" required>
                             <input type="email" name="email" class="form-control @error('email') is-invalid @enderror"
                                    value="{{old('email')}}"
                                    placeholder="Enter Email"

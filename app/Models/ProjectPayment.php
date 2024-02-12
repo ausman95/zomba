@@ -9,6 +9,8 @@ class ProjectPayment extends Model
 {
     use HasFactory;
     protected $fillable = [
-        'project_id', 'payment_name','amount','payment_type','balance'
+        'project_id', 'payment_name',
+        'amount','payment_type',
+        'balance','created_by','updated_by'
     ];
 }

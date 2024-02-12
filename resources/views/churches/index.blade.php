@@ -46,6 +46,8 @@
                                             <th>ZONE</th>
                                             <th>MEMBERS</th>
                                             <th>CREATED ON</th>
+                                            <th>CREATED BY</th>
+                                            <th>UPDATED BY</th>
                                             <th>ACTION</th>
                                         </tr>
                                         </thead>
@@ -59,6 +61,8 @@
                                                 <td>{{@$church->zone->name}}</td>
                                                 <td>{{count($church->members) }}</td>
                                                 <td>{{date('d F Y', strtotime($church->created_at)) }}</td>
+                                                <td>{{\App\Models\Budget::userName($church->created_by)}}</td>
+                                                <td>{{\App\Models\Budget::userName($church->updated_by)}}</td>
                                                 <td class="pt-1">
                                                     <a href="{{route('churches.show',$church->id)}}"
                                                        class="btn btn-primary btn-md rounded-0">

@@ -56,6 +56,14 @@
                                                 <td>{{$bank->updated_at}}</td>
                                             </tr>
                                             <tr>
+                                                <td>Update By</td>
+                                                <td>{{\App\Models\Budget::userName($bank->updated_by)}}</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Created By</td>
+                                                <td>{{@\App\Models\Budget::userName($bank->created_by)}}</td>
+                                            </tr>
+                                            <tr>
                                                 <td>Status</td>
                                                 <td>
                                                     @if($bank->soft_delete==1)
@@ -108,6 +116,8 @@
                                         <th>AMOUNT (MK)</th>
                                         <th>BALANCE (MK)</th>
                                         <th>TYPE</th>
+                                        <th>CREATED BY</th>
+                                        <th>UPDATED BY</th>
                                     </tr>
                                     </thead>
                                     <tbody>
@@ -133,6 +143,8 @@
                                                 {{number_format($transaction->balance)}}
                                             </th>
                                             <td>{{ucwords($transaction->type==1 ? "CR" : "DR") }}</td>
+                                            <td>{{\App\Models\Budget::userName($transaction->created_by)}}</td>
+                                            <td>{{\App\Models\Budget::userName($transaction->updated_by)}}</td>
                                         </tr>
                                     @endforeach
                                     </tbody>

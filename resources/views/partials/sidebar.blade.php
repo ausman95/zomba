@@ -75,12 +75,12 @@
                 <a href="{{route('stores.index')}}"
                    class="sidenav__link {{$cpage === 'stores' ? 'link-active' : ''}}" title="Stores">
                     <i class='bx bxs-file-archive sidenav__icon'></i>
-                    <span class="sidenav__name">Stores</span>
+                    <span class="sidenav__name">Stores </span>
                 </a>
                 <a href="{{route('assets.index')}}"
                    class="sidenav__link {{$cpage === 'assets' ? 'link-active' : ''}}" title="Assets">
                     <i class='bx bxs-car sidenav__icon'></i>
-                    <span class="sidenav__name">Assets</span>
+                    <span class="sidenav__name">Assets & Liabilities</span>
                 </a>
                 <a href="{{route('zones.index')}}"
                    class="sidenav__link {{$cpage === 'zones' ? 'link-active' : ''}}" title="Zones">

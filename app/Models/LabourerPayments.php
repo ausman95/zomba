@@ -10,7 +10,11 @@ class LabourerPayments extends Model
 {
     use HasFactory;
     protected $fillable = [
-        'account_id','amount','labourer_id','expense_name','method','project_id','balance','type','description'
+        'account_id','amount',
+        'labourer_id','expense_name',
+        'method','project_id',
+        'balance','type',
+        'description','created_by','updated_by'
     ];
     public function labourer(): BelongsTo
     {

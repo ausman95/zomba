@@ -110,6 +110,14 @@
                                                 <td>Updated at</td>
                                                 <td>{{$user->updated_at}}</td>
                                             </tr>
+                                            <tr>
+                                                <td>Update By</td>
+                                                <td>{{\App\Models\Budget::userName($user->updated_by)}}</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Created By</td>
+                                                <td>{{@\App\Models\Budget::userName($user->created_by)}}</td>
+                                            </tr>
                                         </table>
                                     </div>
                                 </div>

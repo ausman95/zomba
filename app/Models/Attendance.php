@@ -12,7 +12,9 @@ class Attendance extends Model
 
     protected $fillable = [
         'attendance','ministry_id','service_id',
-        'date','male','female','visitors','month_id'
+        'date','male','female',
+        'visitors','month_id',
+        'created_by','updated_by'
     ];
     public function ministry (){
         return $this->belongsTo(Ministry::class,'ministry_id');

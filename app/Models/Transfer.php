@@ -10,7 +10,7 @@ class Transfer extends Model
 {
     use HasFactory;
     protected $fillable = [
-        'cheque_number', 'amount','to_account_id','from_account_id'
+        'cheque_number', 'amount','to_account_id','from_account_id','created_by','updated_by'
     ];
 
     public function accountTo(): BelongsTo

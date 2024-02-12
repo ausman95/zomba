@@ -69,6 +69,14 @@
                                         <td>{{$member->updated_at}}</td>
                                     </tr>
                                     <tr>
+                                        <td>Update By</td>
+                                        <td>{{\App\Models\Budget::userName($member->updated_by)}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Created By</td>
+                                        <td>{{@\App\Models\Budget::userName($member->created_by)}}</td>
+                                    </tr>
+                                    <tr>
                                         <td>Status</td>
                                         <td>
                                             @if($member->soft_delete==1)
@@ -166,6 +174,9 @@
                                         <th>TRANSACTION NAME</th>
                                         <th>AMOUNT (MK)</th>
                                         <th>PAYMENT TYPE</th>
+                                        <th>STATUS</th>
+                                        <th>CREATED BY</th>
+                                        <th>UPDATED BY</th>
                                     </tr>
                                     </thead>
                                     <tbody>
@@ -183,6 +194,9 @@
                                                 @endif
                                             </th>
                                             <td>{{ucwords($transaction->account->type == 2 ? "CR" : "DR") }}</td>
+                                            <th>{{ucwords($transaction->status == 1 ? "VERIFIED" : "UN~VERIFIED") }}</th>
+                                            <td>{{\App\Models\Budget::userName($transaction->created_by)}}</td>
+                                            <td>{{\App\Models\Budget::userName($transaction->updated_by)}}</td>
                                         </tr>
                                     @endforeach
                                     </tbody>

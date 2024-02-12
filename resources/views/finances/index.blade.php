@@ -39,11 +39,14 @@
                 <i class="fa fa-money-bill-wave"></i> Payments
             </a>
             <a href="{{route('receipts.index')}}" class="btn btn-primary btn-md rounded-0">
-                <i class="bx bx-dollar-circle"></i> Church Receipts
+                <i class="bx bx-dollar-circle"></i> Receipts
             </a>
-{{--            <a href="{{route('pledges.index')}}" class="btn btn-primary btn-md rounded-0">--}}
-{{--                <i class="fa fa-shopping-basket"></i> Church Pledges--}}
-{{--            </a>--}}
+            <a href="{{route('receipt.unverified')}}" class="btn btn-primary btn-md rounded-0">
+                <i class="fa fa-plus-circle"></i>Un~Verified Transactions
+            </a>
+            <a href="{{route('pledges.index')}}" class="btn btn-primary btn-md rounded-0">
+                <i class="fa fa-shopping-basket"></i> Pledges
+            </a>
             <a href="{{route('analytics')}}" class="btn btn-primary btn-md rounded-0">
                 <i class="fa fa-cart-plus"></i> Reports
             </a>
@@ -65,7 +68,8 @@
                                             <th>BALANCE (MK)</th>
                                             <th>ACCOUNT NUMBER</th>
                                             <th>SERVICE CENTRE</th>
-                                            <th>ACCOUNT TYPE</th>
+                                            <th>CREATED BY</th>
+                                            <th>UPDATED BY</th>
                                             <th>ACTION</th>
                                         </tr>
                                         </thead>
@@ -84,8 +88,8 @@
                                                 </th>
                                                 <td>{{ucwords($bank->account_number) }}</td>
                                                 <td>{{ucwords($bank->service_centre) }}</td>
-                                                <td>{{ucwords($bank->account_type) }}</td>
-
+                                                <td>{{\App\Models\Budget::userName($bank->created_by)}}</td>
+                                                <td>{{\App\Models\Budget::userName($bank->updated_by)}}</td>
                                                 <td class="pt-1">
                                                     <a href="{{route('banks.show',$bank->id)}}"
                                                        class="btn btn-primary btn-md rounded-0">

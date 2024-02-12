@@ -27,6 +27,7 @@
                     <form action="{{route('suppliers.update',$supplier->id)}}" method="POST" autocomplete="off">
                         @csrf
                         <input type="hidden" name="_method" value="PATCH">
+                        <input type="hidden"  name="updated_by" value="{{request()->user()->id}}" required>
                         <div class="form-group">
                             <label>Name</label>
                             <input type="text" name="name"

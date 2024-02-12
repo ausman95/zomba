@@ -51,6 +51,14 @@
                                             <td>Update ON</td>
                                             <td>{{$budget->updated_at}}</td>
                                         </tr>
+                                        <tr>
+                                            <td>Update By</td>
+                                            <td>{{\App\Models\Budget::userName($budget->updated_by)}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Created By</td>
+                                            <td>{{@\App\Models\Budget::userName($budget->created_by)}}</td>
+                                        </tr>
                                     </table>
                                     <div class="mt-3">
                                         <div>

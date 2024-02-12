@@ -10,7 +10,8 @@ class Church extends Model
 {
     use HasFactory;
     protected $fillable = [
-        'name','member_id','zone_id'
+        'name','member_id','zone_id',
+        'created_by','updated_by'
     ];
     public function members()
     {

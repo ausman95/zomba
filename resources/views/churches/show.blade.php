@@ -52,6 +52,14 @@
                                             <td>{{$church->updated_at}}</td>
                                         </tr>
                                         <tr>
+                                            <td>Update By</td>
+                                            <td>{{\App\Models\Budget::userName($church->updated_by)}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Created By</td>
+                                            <td>{{@\App\Models\Budget::userName($church->created_by)}}</td>
+                                        </tr>
+                                        <tr>
                                             <td>Status</td>
                                             <td>
                                                 @if($church->soft_delete==1)

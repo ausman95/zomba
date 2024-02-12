@@ -7,55 +7,24 @@
 @section('content')
     <div class="container-fluid ps-1 pt-4">
         <h4>
-            <i class="fa fa-cash-register"></i>Church Receipts
+            <i class="fa fa-cash-register"></i>Church Un~Verified Receipts
         </h4>
         <p>
-            Manage Church Receipts
+            Manage Church Un~Verified Receipts
         </p>
         <nav aria-label="breadcrumb">
             <ol class="breadcrumb bg-transparent">
                 <li class="breadcrumb-item"><a href="{{route('home')}}">Home</a></li>
                 <li class="breadcrumb-item"><a href="{{route('finances.index')}}">Finances</a></li>
-                <li class="breadcrumb-item active" aria-current="page">Church Receipts</li>
+                <li class="breadcrumb-item active" aria-current="page">Church Un~Verified Transactions</li>
             </ol>
         </nav>
         <hr>
         <div class="mt-3">
-            <a href="{{route('receipts.create')}}" class="btn btn-primary btn-md rounded-0">
-                <i class="fa fa-plus-circle"></i>New Receipt
-            </a>
-            <a href="{{route('receipt.unverified')}}" class="btn btn-primary btn-md rounded-0">
-                <i class="fa fa-plus-circle"></i>Un~Verified Transactions
-            </a>
             <div class="mt-3">
                 <div class="card container-fluid" style="min-height: 30em;">
                     <div class="row">
-                        <div class="col-sm-12 mb-2 col-md-2 col-lg-2">
-                            <hr>
-                            <form action="{{route('receipt.produce')}}" method="POST">
-                                @csrf
-                                <div class="form-group">
-                                    <select name="month_id"
-                                            class="form-select select-relation @error('month_id') is-invalid @enderror" style="width: 100%">
-                                        @foreach($months as $month)
-                                            <option value="{{$month->id}}"
-                                                {{old('month')===$month->id ? 'selected' : ''}}>{{$month->name}}</option>
-                                        @endforeach
-                                    </select>
-                                    @error('month_id')
-                                    <span class="invalid-feedback">
-                               {{$message}}
-                        </span>
-                                    @enderror
-                                </div>
-                                <div class="form-group">
-                                    <button class="btn btn-primary rounded-0" type="submit">
-                                        View &rarr;
-                                    </button>
-                                </div>
-                            </form>
-                        </div>
-                        <div class="col-sm-12 mb-2 col-md-11 col-lg-10">
+                        <div class="col-sm-12 mb-2 col-md-12 col-lg-12">
                             <br>
                             <div class="card container-fluid" style="min-height: 30em;">
                                 <div class="card-body px-1">
@@ -64,7 +33,7 @@
                                     @else
                                         <div style="overflow-x:auto;">
                                             <table class="table  table-bordered table-hover table-striped">
-                                                <caption style=" caption-side: top; text-align: center">VERIFIED RECEIPTS</caption>
+                                                <caption style=" caption-side: top; text-align: center">UN~VERIFIED TRANSACTIONS</caption>
                                                 <thead>
                                                 <tr>
                                                     <th>NO</th>
@@ -76,7 +45,7 @@
                                                     <th>METHOD</th>
                                                     <th>TYPE</th>
                                                     <th>CREATED BY</th>
-                                                    <th>VERIFIED BY</th>
+                                                    <th>STATUS</th>
                                                     <th>ACTION</th>
                                                 </tr>
                                                 </thead>
@@ -127,10 +96,10 @@
                                                             @endif
                                                         </td>
                                                         <td>{{\App\Models\Budget::userName($payment->created_by)}}</td>
-                                                        <td>{{\App\Models\Budget::userName($payment->updated_by)}}</td>
+                                                        <th>{{ucwords($payment->status == 1 ? "VERIFIED" : "UN~VERIFIED") }}</th>
                                                         <td class="pt-1">
-                                                            <a href="{{route('payments.show',$payment->id)."?verified=0"}}"
-                                                               class="btn btn-primary btn-md rounded-0">
+                                                            <a href="{{route('payments.show',$payment->id)."?verified=1"}}"
+                                                               class="btn btn-primary rounded-0">
                                                                 <i class="fa fa-list-ol"></i>   Details
                                                             </a>
                                                         </td>

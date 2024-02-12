@@ -53,7 +53,7 @@
                             <div class="card">
                                 <div class="card-body">
                                 <div class="table-responsive">
-                                    <table class="table table-primary table-bordered table-hover table-striped">
+                                    <table class="table table-bordered table-hover table-striped">
                                         <caption style=" caption-side: top; text-align: center">BANK TRANSFER DETAILS</caption>
                                         <tbody>
                                         <tr>
@@ -95,6 +95,14 @@
                                         <tr>
                                             <td>Update ON</td>
                                             <td>{{$transfer->updated_at}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Update By</td>
+                                            <td>{{\App\Models\Budget::userName($transfer->updated_by)}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Created By</td>
+                                            <td>{{@\App\Models\Budget::userName($transfer->created_by)}}</td>
                                         </tr>
                                     </table>
                                 </div>

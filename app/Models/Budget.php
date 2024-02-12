@@ -11,7 +11,9 @@ class Budget extends Model
 {
     use HasFactory;
     protected $fillable = [
-        'amount', 'account_id','start_date','end_date'
+        'amount', 'account_id',
+        'start_date','end_date',
+        'created_by','updated_by'
     ];
     public function account(): BelongsTo
     {
@@ -44,5 +46,15 @@ class Budget extends Model
     public function project()
     {
         return $this->belongsTo(Project::class,'project_id');
+    }
+    public static function  userName($id)
+    {
+        $name =  User::where(['id'=>$id])->first();
+        if($name){
+            $verified = $name->name;
+        }else{
+            $verified = "N0T-YET";
+        }
+        return $verified;
     }
 }

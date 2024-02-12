@@ -26,6 +26,9 @@
             <a href="{{route('payments.create')}}" class="btn btn-primary btn-md rounded-0">
                 <i class="fa fa-plus-circle"></i>New Payment
             </a>
+            <a href="{{route('receipt.unverified')}}" class="btn btn-primary btn-md rounded-0">
+                <i class="fa fa-plus-circle"></i>Un~Verified Transactions
+            </a>
 {{--            <a href="{{route('member.transaction')}}" class="btn btn-primary btn-md rounded-0">--}}
 {{--                <i class="fa fa-user-circle"></i><i class="fa fa-list-ol"></i>Member Transactions--}}
 {{--            </a>--}}
@@ -84,6 +87,8 @@
                                                     <th>METHOD</th>
                                                     <th>TYPE</th>
                                                     <th>REF</th>
+                                                    <th>CREATED BY</th>
+                                                    <th>UPDATED BY</th>
                                                     {{--                                            <th>ACTION</th>--}}
                                                 </tr>
                                                 </thead>
@@ -132,6 +137,8 @@
                                                             @endif
                                                         </td>
                                                         <td>{{ucwords($payment->reference) }}</td>
+                                                        <td>{{\App\Models\Budget::userName($payment->created_by)}}</td>
+                                                        <td>{{\App\Models\Budget::userName($payment->updated_by)}}</td>
                                                         {{--                                                <td>--}}
                                                         {{--                                                    <a href="{{route('delivery-note.generate')."?id={$flow->id}"}}" target="_blank" class="btn btn-primary rounded-0" style="margin: 2px">--}}
                                                         {{--                                                        <i class="fa fa-vote-yea"></i> Generate--}}

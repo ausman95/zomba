@@ -41,7 +41,6 @@ class ReceiptController extends Controller
         ]);
         $month =  Month::where(['id'=>$request->post('month_id')])
             ->first();
-
         activity('FINANCES')
             ->log("Accessed Payments")->causer(request()->user());
         return view('receipts.index')->with([
@@ -56,7 +55,6 @@ class ReceiptController extends Controller
             'months'=>Month::orderBY('id','desc')->get()
         ]);
     }
-
     public function churchReportGenerate(Request $request, Receipt $receipt)
     {
         $accountID = $request->post('account_id');
@@ -105,7 +103,6 @@ class ReceiptController extends Controller
             'accounts'=>Accounts::where(['type'=>1])->orderBy('id','ASC')->get()
         ]);
     }
-
     public function churchReports()
     {
         activity('Receipts')
@@ -116,7 +113,6 @@ class ReceiptController extends Controller
             'accounts'=>Accounts::where(['type'=>1])->orderBy('id','ASC')->get()
         ]);
     }
-
     public function sendSms($number, $message)
     {
         //dd($message);
@@ -170,14 +166,38 @@ class ReceiptController extends Controller
             'type'=>'0',
             'account_name'=>"SCHOOL FEES",
             'term_name'=>Month::where(['soft_delete'=>0])->where(['id'=>$month->id])->first()->name,
-            'payments'=> BankTransaction::join('accounts', 'accounts.id','=','bank_transactions.account_id')
+            'payments'=> Payment::join('accounts', 'accounts.id','=','payments.account_id')
                 ->select(
-                    'bank_transactions.*',
+                    'payments.*',
                 )
                 ->whereBetween('t_date',[$month->start_date,$month->end_date])
+                ->where(['payments.status'=>1])
                 ->where(['accounts.type'=>1])
                 ->where(['accounts.soft_delete'=>0])
-                ->orderBy('bank_transactions.id','desc')->get(),
+                ->orderBy('payments.id','desc')->get(),
+            'accounts'=>Accounts::where(['soft_delete'=>0])->orderBy('id','ASC')->get()
+        ]);
+    }
+    public function unverified(Receipt $receipt)
+    {
+        activity('Receipts')
+            ->log("Accessed Receipts")->causer(request()->user());
+        return view('receipts.unverified')->with([
+            'cpage' => "finances",
+            'months'=>Month::where(['soft_delete'=>0])->orderBy('id','desc')->get(),
+            'churches'=>Church::where(['soft_delete'=>0])->orderBy('id','desc')->get(),
+            'ministries'=>Ministry::where(['soft_delete'=>0])->orderBy('id','desc')->get(),
+            'account_id'=>'1',
+            'description'=>0,
+            'type'=>'0',
+            'account_name'=>"SCHOOL FEES",
+            'payments'=> Payment::join('accounts', 'accounts.id','=','payments.account_id')
+                ->select(
+                    'payments.*',
+                )
+                ->where(['payments.status'=>0])
+                ->where(['accounts.soft_delete'=>0])
+                ->orderBy('payments.id','desc')->get(),
             'accounts'=>Accounts::where(['soft_delete'=>0])->orderBy('id','ASC')->get()
         ]);
     }
@@ -276,6 +296,8 @@ class ReceiptController extends Controller
             'name'=>$transactions_name,
             't_date'=>$data['t_date'],
             'bank_id'=>$data['bank_id'],
+            'created_by'=>$request->post('created_by'),
+            'updated_by'=>$request->post('updated_by'),
             'month_id'=>$monthID->id,
             'type'=>$data['type'],
             'payment_method'=>$data['payment_method'],
@@ -308,21 +330,14 @@ class ReceiptController extends Controller
                 'amount'=>$request->post('amount'),
                 't_date'=>$request->post('t_date'),
                 'month_id'=>$monthID->id,
+                'created_by'=>$request->post('created_by'),
+                'updated_by'=>$request->post('updated_by'),
                 'account_id'=>$request->post('account_id'),
                 'balance'=>$balances+$request->post('amount'),
                 'payment_id'=>$payment,
                 'transaction_type'=>2,
             ];
             $last_id = MemberPayment::create($members);
-            $member = Member::where(['id'=>$request->post('member_id')])->first();
-            if($member->phone_number!=0) {
-                $message = 'MALAWI ASSEMBLIES OF GOD ' .
-                    PHP_EOL . PHP_EOL . 'Dear ' . $member->name . PHP_EOL . PHP_EOL . ' You have Paid ' .
-                    PHP_EOL . PHP_EOL . Accounts::where(['id' => $request->post('account_id')])->first()->name .
-                    ' Amounting to : MK ' . number_format($data['amount'], 2) . PHP_EOL
-                    . PHP_EOL . ' AREA 25 VICTORY TEMPLE';
-                $this->sendSms($member->phone_number, $message);
-            }
             $order = new DeliveryController();
             if($request->post('amount')>0){
                 $order->generateMemberReceipt($last_id->id,$monthID->name);
@@ -339,6 +354,8 @@ class ReceiptController extends Controller
                 'church_id'=>$request->post('church_id'),
                 'amount'=>$request->post('amount'),
                 'account_id'=>$request->post('account_id'),
+                'created_by'=>$request->post('created_by'),
+                'updated_by'=>$request->post('updated_by'),
                 'balance'=>$balances+$request->post('amount'),
                 'payment_id'=>$payment,
                 'transaction_type'=>2,
@@ -359,6 +376,8 @@ class ReceiptController extends Controller
                 'name'=>$transactions_name.' For '.$account->name,
                 'ministry_id'=>$request->post('ministry_id'),
                 'amount'=>$request->post('amount'),
+                'created_by'=>$request->post('created_by'),
+                'updated_by'=>$request->post('updated_by'),
                 'account_id'=>$request->post('account_id'),
                 'balance'=>$balances+$request->post('amount'),
                 'payment_id'=>$payment,
@@ -376,7 +395,6 @@ class ReceiptController extends Controller
                 $order->generateAdminReceipt($payments->id, $monthID->name);
             }
         }
-
         BankTransaction::create($transactions);
         //code to generate an invoice
         activity('FINANCES')

@@ -40,6 +40,8 @@
                                             <th>START DATE</th>
                                             <th>END DATE</th>
                                             <th>STATUS</th>
+                                            <th>CREATED BY</th>
+                                            <th>UPDATED BY</th>
                                             <th>ACTION</th>
                                         </tr>
                                         </thead>
@@ -60,6 +62,8 @@
                                                        NOT ACTIVE
                                                     @endif
                                                 </th>
+                                                <td>{{\App\Models\Budget::userName($month->created_by)}}</td>
+                                                <td>{{\App\Models\Budget::userName($month->updated_by)}}</td>
                                                 <td class="pt-1">
                                                     <a href="{{route('months.show',$month->id)}}"
                                                        class="btn btn-primary btn-md rounded-0">

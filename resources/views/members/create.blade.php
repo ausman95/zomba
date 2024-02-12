@@ -45,6 +45,8 @@
                 @csrf
                 <div class="form-group">
                     <label>Name</label>
+                    <input type="hidden"  name="updated_by" value="{{request()->user()->id}}" required>
+                    <input type="hidden"  name="created_by" value="{{request()->user()->id}}" required>
                     <input type="hidden" name="check" value="1">
                     <input type="text" name="name"
                            class="form-control @error('name') is-invalid @enderror"

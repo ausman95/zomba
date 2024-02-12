@@ -46,6 +46,8 @@
                                             <th>BUDGETED AMOUNT (MK)</th>
                                             <th>ACTUAL AMOUNT (MK)</th>
                                             <th>VARIANCE (MK)</th>
+                                            <th>CREATED BY</th>
+                                            <th>UPDATED BY</th>
                                             <th>ACTION</th>
                                         </tr>
                                         </thead>
@@ -57,13 +59,15 @@
                                                 <td>{{ucwords($budget->account->name) }}</td>
                                                 <td>{{date('d F Y', strtotime($budget->start_date)) }}</td>
                                                 <td>{{date('d F Y', strtotime($budget->end_date)) }}</td>
-                                                <td>{{number_format($budget->amount) }}</td>
+                                                <td>{{number_format($budget->amount,2) }}</td>
                                                 <td>{{number_format($budget->getAllocated($budget->account_id,
                                                         $budget->start_date,
-                                                        $budget->end_date)) }}</td>
+                                                        $budget->end_date),2) }}</td>
                                                 <td>{{number_format($budget->getAllocated($budget->account_id,
                                                         $budget->start_date,
-                                                        $budget->end_date)-$budget->amount) }}</td>
+                                                        $budget->end_date)-$budget->amount,2) }}</td>
+                                                <td>{{\App\Models\Budget::userName($budget->created_by)}}</td>
+                                                <td>{{\App\Models\Budget::userName($budget->updated_by)}}</td>
                                                 <td class="pt-1">
                                                     <a href="{{route('budgets.show',$budget->id)}}"
                                                        class="btn btn-primary btn-md rounded-0">

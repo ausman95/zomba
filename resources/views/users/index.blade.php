@@ -49,6 +49,8 @@
                                             <th>LEVEL</th>
                                             <th>LAST LOGIN</th>
                                             <th>STATUS</th>
+                                            <th>CREATED BY</th>
+                                            <th>UPDATED BY</th>
                                             <th>ACTION</th>
                                         </tr>
                                         </thead>
@@ -70,6 +72,8 @@
                                                         <span class="text-danger">Offline</span>
                                                     @endif
                                                 </td>
+                                                <td>{{\App\Models\Budget::userName($user->created_by)}}</td>
+                                                <td>{{\App\Models\Budget::userName($user->updated_by)}}</td>
                                                 <td class="pt-1">
                                                     <a href="{{route('users.show',$user->id)}}"
                                                        class="btn btn-primary btn-md rounded-0">

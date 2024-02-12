@@ -46,6 +46,8 @@
                                             <th>PHONE</th>
                                             <th>LOCATION</th>
                                             <th>BALANCE (MK)</th>
+                                            <th>CREATED BY</th>
+                                            <th>UPDATED BY</th>
                                             <th>ACTION</th>
                                         </tr>
                                         </thead>
@@ -58,6 +60,8 @@
                                                 <td>{{$supplier->phone_number}}</td>
                                                 <td>{{$supplier->location}}</td>
                                                 <td>{{number_format($supplier->getBalance($supplier->id),2)}}</td>
+                                                <td>{{\App\Models\Budget::userName($supplier->created_by)}}</td>
+                                                <td>{{\App\Models\Budget::userName($supplier->updated_by)}}</td>
                                                 <td class="pt-1">
                                                     <a href="{{route('suppliers.show',$supplier->id)}}"
                                                        class="btn btn-primary btn-md rounded-0">

@@ -45,8 +45,10 @@
                                             <th>NAME</th>
                                             <th>SPECIFICATIONS</th>
                                             <th>UNIT OF MEASUREMENTS</th>
-                                            @if( request()->user()->designation!='clerk')
                                             <th>CREATED AT</th>
+                                            <th>CREATED BY</th>
+                                            <th>UPDATED BY</th>
+                                            @if( request()->user()->designation!='clerk')
                                             <th>ACTION</th>
                                             @endif
                                         </tr>
@@ -59,8 +61,10 @@
                                                 <td>{{ucwords($material->name) }}</td>
                                                 <td>{{ucwords($material->specifications)}}</td>
                                                 <td>{{ucwords($material->units)}}</td>
-                                                @if( request()->user()->designation!='clerk')
                                                 <td>{{$material->created_at}}</td>
+                                                    <td>{{\App\Models\Budget::userName($material->created_by)}}</td>
+                                                    <td>{{\App\Models\Budget::userName($material->updated_by)}}</td>
+                                                @if( request()->user()->designation!='clerk')
                                                 <td class="pt-1">
                                                     <a href="{{route('materials.show',$material->id)}}"
                                                        class="btn btn-primary btn-md rounded-0">

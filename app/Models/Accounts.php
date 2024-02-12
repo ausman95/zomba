@@ -10,7 +10,7 @@ class Accounts extends Model
 {
     use HasFactory;
     protected $fillable = [
-        'name', 'type'
+        'name', 'type','created_by','updated_by'
     ];
 
     public function getAccountBalance($start_date,$end_date)
@@ -61,5 +61,9 @@ class Accounts extends Model
     public function incomes()
     {
         return  $this->hasMany(BankTransaction::class,'account_id');
+    }
+    public function userName($id)
+    {
+        return User::where(['id'=>$id])->first()->name;
     }
 }
