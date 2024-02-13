@@ -10,7 +10,7 @@
             <i class="fa fa-cash-register"></i>Church Un~Verified Receipts
         </h4>
         <p>
-            Manage Church Un~Verified Receipts
+            Manage Church Un~Verified Transactions
         </p>
         <nav aria-label="breadcrumb">
             <ol class="breadcrumb bg-transparent">
@@ -37,12 +37,13 @@
                                                 <tr>
                                                     <th>NO</th>
                                                     <th>DATE</th>
-                                                    <th>DESC</th>
+                                                    <th>FOR</th>
                                                     <th>AMOUNT (MK)</th>
                                                     <th>ACCOUNT</th>
                                                     <th>BANK</th>
                                                     <th>METHOD</th>
                                                     <th>TYPE</th>
+                                                    <th>DESC</th>
                                                     <th>CREATED BY</th>
                                                     <th>STATUS</th>
                                                     <th>ACTION</th>
@@ -94,6 +95,7 @@
                                                                 OTHERS
                                                             @endif
                                                         </td>
+                                                        <th>{{ucwords($payment->pledge == 0 ? "NORMAL" : "PLEDGES") }}</th>
                                                         <td>{{\App\Models\Budget::userName($payment->created_by)}}</td>
                                                         <th>{{ucwords($payment->status == 1 ? "VERIFIED" : "UN~VERIFIED") }}</th>
                                                         <td class="pt-1">

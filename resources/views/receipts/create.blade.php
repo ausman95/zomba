@@ -109,7 +109,6 @@
                             </span>
                             @enderror
                         </div>
-
                         <div class="form-group ">
                             <label>Bank Account</label>
                             <select name="bank_id" required
@@ -178,6 +177,18 @@
                             <span class="invalid-feedback">
                                {{$message}}
                         </span>
+                            @enderror
+                        </div>
+                        <div class="form-group">
+                            <label>Type</label>
+                            <select name="pledge" required class="form-select select-relation @error('pledge') required is-invalid @enderror" style="width: 100%">{{old('pledge')}} >
+                                <option value="1">Normal</option>
+                                <option value="2">Pledges</option>
+                            </select>
+                            @error('pledge')
+                            <span class="invalid-feedback">
+                                   {{$message}}
+                            </span>
                             @enderror
                         </div>
                     </div>

@@ -27,9 +27,9 @@
             </a>
             <div class="mt-3">
                 <div class="row">
-                    <div class="col-sm-12 mb-2 col-md-11 col-lg-10">
+                    <div class="col-sm-12 mb-2 col-md-12 col-lg-12">
                         <div class="card " style="min-height: 30em;">
-                            @if(!@$year_id)
+                            @if(!@$pledges)
                                 <div class="text-center">
                                     <div class="alert alert-danger">
                                         Pledges not available at the moment!.
@@ -47,12 +47,12 @@
                                                         <thead>
                                                         <tr>
                                                             <th>NO</th>
+                                                            <th>DATE</th>
                                                             <th>MEMBER</th>
+                                                            <th>HOME CELL</th>
                                                             <th>PHONE</th>
+                                                            <th>ACCOUNT</th>
                                                             <th>AMOUNT (MK)</th>
-                                                            <th>CHURCH</th>
-                                                            <th>YEAR</th>
-                                                            <th>BALANCE</th>
                                                             <th>ACTION</th>
                                                         </tr>
                                                         </thead>
@@ -61,12 +61,18 @@
                                                         @foreach($pledges as $pledge)
                                                             <tr>
                                                                 <td>{{$c++}}</td>
+                                                                <td>{{date('d F Y', strtotime($pledge->date)) }}</td>
                                                                 <td>{{ucwords($pledge->member->name) }}</td>
+                                                                <td>{{ucwords($pledge->member->church->name) }}</td>
                                                                 <td>{{ucwords($pledge->member->phone_number) }}</td>
-                                                                <td>{{number_format($pledge->amount) }}</td>
-                                                                <td>{{ucwords($pledge->member->church->church->name) }}</td>
-                                                                <td>{{number_format($pledge->amount*12) }}</td>
-                                                                <td>{{number_format($pledge->balance) }}</td>
+                                                                <td>{{ucwords($pledge->account->name) }}</td>
+                                                                <th>
+                                                                    @if($pledge->type==2)
+                                                                        ( {{number_format($pledge->amount,2) }})
+                                                                    @else
+                                                                         {{number_format($pledge->amount,2) }}
+                                                                    @endif
+                                                                </th>
                                                                 <td class="pt-1">
                                                                     <a href="{{route('pledges.show',$pledge->id)}}"
                                                                        class="btn btn-primary btn-md rounded-0">

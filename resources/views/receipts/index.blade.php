@@ -69,12 +69,13 @@
                                                 <tr>
                                                     <th>NO</th>
                                                     <th>DATE</th>
-                                                    <th>DESC</th>
+                                                    <th>FOR</th>
                                                     <th>AMOUNT (MK)</th>
                                                     <th>ACCOUNT</th>
                                                     <th>BANK</th>
                                                     <th>METHOD</th>
                                                     <th>TYPE</th>
+                                                    <th>DESC</th>
                                                     <th>CREATED BY</th>
                                                     <th>VERIFIED BY</th>
                                                     <th>ACTION</th>
@@ -126,6 +127,7 @@
                                                                 OTHERS
                                                             @endif
                                                         </td>
+                                                        <th>{{ucwords($payment->pledge == 0 ? "NORMAL" : "PLEDGES") }}</th>
                                                         <td>{{\App\Models\Budget::userName($payment->created_by)}}</td>
                                                         <td>{{\App\Models\Budget::userName($payment->updated_by)}}</td>
                                                         <td class="pt-1">

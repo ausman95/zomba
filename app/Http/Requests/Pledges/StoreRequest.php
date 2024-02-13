@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Requests\Payments;
+namespace App\Http\Requests\Pledges;
 
 use Illuminate\Foundation\Http\FormRequest;
 
@@ -24,13 +24,10 @@ class StoreRequest extends FormRequest
     public function rules()
     {
         return [
-            'account_id'=>"required|numeric",
-            'bank_id'=>"required|numeric",
-            'amount'=>"required|numeric",
-            'type'=>"required|numeric",
-            't_date'=>"required|date",
-            'pledge'=>"required|numeric",
-            'payment_method'=>"required|numeric",
+            'account_id' =>"required|numeric",
+            'member_id'=>"required|numeric",
+            'date'=>"required|date",
+            'amount'=>"required|numeric|min:1"
         ];
     }
 }

@@ -69,4 +69,8 @@ class Member extends Model
     {
         return  $this->hasMany(MemberPayment::class,'member_id')->orderByDesc('id');
     }
+    public function pledges()
+    {
+        return  $this->hasMany(Pledge::class,'member_id')->orderByDesc('id');
+    }
 }

@@ -157,6 +157,56 @@
             </div>
             <div class="col-sm-12">
                 <h5>
+                    <i class="fa fa-microscope"></i>Member Pledges
+                </h5>
+                <div class="card shadow-sm">
+                    <div class="card-body">
+                        @if($member->pledges->count() === 0)
+                            <i class="fa fa-info-circle"></i>There are no Pledges!
+                        @else
+                            <div style="overflow-x:auto;">
+                                <table class="table  table2 table-bordered table-hover table-striped">
+                                    <caption style=" caption-side: top; text-align: center">Pledges</caption>
+                                    <thead>
+                                    <tr>
+                                        <th>NO</th>
+                                        <th>DATE</th>
+                                        <th>ACCOUNT</th>
+                                        <th>AMOUNT (MK)</th>
+                                        <th>ACTION</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                        <?php  $c= 1;?>
+                                    @foreach($member->pledges as $pledge)
+                                        <tr>
+                                            <td>{{$c++}}</td>
+                                            <td>{{date('d F Y', strtotime($pledge->date)) }}</td>
+                                            <td>{{ucwords($pledge->account->name) }}</td>
+                                            <th>
+                                                @if($pledge->type == 1)
+                                                    ({{number_format($pledge->amount,2) }})
+                                                @else
+                                                    {{number_format($pledge->amount,2) }}
+                                                @endif
+                                            </th>
+                                            <td class="pt-1">
+                                                <a href="{{route('pledges.show',$pledge->id)}}"
+                                                   class="btn btn-primary btn-md rounded-0">
+                                                    <i class="fa fa-list-ol"></i> Manage
+                                                </a>
+                                            </td>
+                                        </tr>
+                                    @endforeach
+                                    </tbody>
+                                </table>
+                            </div>
+                        @endif
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-12">
+                <h5>
                     <i class="fa fa-microscope"></i>Member Transactions
                 </h5>
                 <div class="card shadow-sm">

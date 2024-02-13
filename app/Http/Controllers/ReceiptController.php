@@ -22,6 +22,7 @@ use App\Models\MinistryPayment;
 use App\Models\Month;
 use App\Models\Pastor;
 use App\Models\Payment;
+use App\Models\Pledge;
 use App\Models\ProjectPayment;
 use App\Models\Receipt;
 use App\Models\Section;
@@ -289,7 +290,10 @@ class ReceiptController extends Controller
         ];
 
         $data = $request->post();
-
+        $pledge = 0;
+        if($request->post('pledge')==2) {
+            $pledge = 1;
+        }
         $raw_data = [
             'account_id'=>$data['account_id'],
             'amount'=>$data['amount'],
@@ -300,6 +304,7 @@ class ReceiptController extends Controller
             'updated_by'=>$request->post('updated_by'),
             'month_id'=>$monthID->id,
             'type'=>$data['type'],
+            'pledge'=>$pledge,
             'payment_method'=>$data['payment_method'],
             'reference'=>$reference,
         ];
@@ -317,8 +322,19 @@ class ReceiptController extends Controller
         if(!$balances){
             $balances = 0;
         }
-
         if($request->type==5){
+            if($request->post('pledge')==2) {
+                $pledges_data = [
+                    'member_id' => $request->post('member_id'),
+                    'account_id' => $request->post('account_id'),
+                    'amount' => $request->post('amount'),
+                    'date' => $request->post('t_date'),
+                    'type' => 2,
+                    'created_by' => $request->post('created_by'),
+                    'updated_by' => $request->post('updated_by'),
+                ];
+                Pledge::create($pledges_data);
+            }
             $bala = MemberPayment::where(['member_id'=>$request->post('member_id')])->orderBy('id','desc')->first();
             @$balances = $bala->balance;
             if(!$balances){
@@ -330,6 +346,7 @@ class ReceiptController extends Controller
                 'amount'=>$request->post('amount'),
                 't_date'=>$request->post('t_date'),
                 'month_id'=>$monthID->id,
+                'pledge'=>$pledge,
                 'created_by'=>$request->post('created_by'),
                 'updated_by'=>$request->post('updated_by'),
                 'account_id'=>$request->post('account_id'),

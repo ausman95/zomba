@@ -16,23 +16,25 @@
                 <li class="breadcrumb-item active" aria-current="page">Create Pledges</li>
             </ol>
         </nav>
-        <a href="{{route('members.create')}}" class="btn btn-primary btn-md rounded-0">
-            <i class="fa fa-plus-circle"></i>New Member
-        </a>
+{{--        <a href="{{route('members.create')}}" class="btn btn-primary btn-md rounded-0">--}}
+{{--            <i class="fa fa-plus-circle"></i>New Member--}}
+{{--        </a>--}}
         <hr>
         <div class="mt-2">
             <form action="{{route('pledges.store')}}" method="POST" autocomplete="off">
                 <div class="row">
                     <div class="col-sm-12 col-md-8 col-lg-4">
                             @csrf
-                            <div class="form-group">
+                       <div class="form-group">
                                 <label>Member</label>
+                           <input type="hidden"  name="updated_by" value="{{request()->user()->id}}" required>
+                           <input type="hidden"  name="created_by" value="{{request()->user()->id}}" required>
                                 <select name="member_id"
                                         class="form-select select-relation @error('member_id') is-invalid @enderror" style="width: 100%">
                                     <option value="">-- Select ---</option>
                                     @foreach($members as $member)
                                         <option value="{{$member->id}}"
-                                            {{old('member_id')===$member->id ? 'selected' : ''}}>{{$member->name.' '.$member->church->church->name}}</option>
+                                            {{old('member_id')===$member->id ? 'selected' : ''}}>{{$member->name.' of '.$member->church->name}}</option>
                                     @endforeach
                                 </select>
                                 @error('member_id')
@@ -42,28 +44,40 @@
                                 @enderror
                             </div>
                         <div class="form-group">
-                            <label>Year</label>
-                            <select name="year_id"
-                                    class="form-select select-relation @error('year_id') is-invalid @enderror" style="width: 100%">
+                            <label>Accounts</label>
+                            <select name="account_id"
+                                    class="form-select select-relation @error('account_id') is-invalid @enderror" style="width: 100%">
                                 <option value="">-- Select ---</option>
-                                @foreach($years as $year)
-                                    <option value="{{$year->id}}"
-                                        {{old('year_id')===$year->id ? 'selected' : ''}}>{{$year->name.' - '.$year->start_date.' to '.$year->end_date}}</option>
+                                @foreach($accounts as $account)
+                                    <option value="{{$account->id}}"
+                                        {{old('account_id')===$account->id ? 'selected' : ''}}>{{$account->name}}</option>
                                 @endforeach
                             </select>
-                            @error('year_id')
+                            @error('account_id')
                             <span class="invalid-feedback">
-                               {{$message}}
-                        </span>
+                                   {{$message}}
+                            </span>
                             @enderror
                         </div>
                         <div class="form-group">
-                            <label>Pledge Amount / Month</label>
+                            <label>Pledge Amount</label>
                             <input type="number" name="amount"
                                    class="form-control @error('amount') is-invalid @enderror"
                                    value="{{old('amount')}}"
                                    placeholder="Amount" >
                             @error('amount')
+                            <span class="invalid-feedback">
+                                   {{$message}}
+                            </span>
+                            @enderror
+                        </div>
+                        <div class="form-group">
+                            <label>Date</label>
+                            <input type="date" name="date"
+                                   class="form-control @error('date') is-invalid @enderror"
+                                   value="{{old('date')}}" required
+                                   placeholder="Date" >
+                            @error('date')
                             <span class="invalid-feedback">
                                    {{$message}}
                             </span>

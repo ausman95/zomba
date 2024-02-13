@@ -14,7 +14,7 @@ class Payment extends Model
         'name','amount',
         'payment_method','reference',
         'type','t_date','month_id',
-        'created_by','updated_by'
+        'created_by','updated_by','pledge'
     ];
     public function account(): BelongsTo
     {
