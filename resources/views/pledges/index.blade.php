@@ -15,6 +15,7 @@
         <nav aria-label="breadcrumb">
             <ol class="breadcrumb bg-transparent">
                 <li class="breadcrumb-item"><a href="{{route('home')}}">Home</a></li>
+                <li class="breadcrumb-item"><a href="{{route('finances.index')}}">Finances</a></li>
                 <li class="breadcrumb-item active" aria-current="page">Pledges</li>
             </ol>
         </nav>
@@ -53,6 +54,8 @@
                                                             <th>PHONE</th>
                                                             <th>ACCOUNT</th>
                                                             <th>AMOUNT (MK)</th>
+                                                            <th>CREATED BY</th>
+                                                            <th>UPDATED BY</th>
                                                             <th>ACTION</th>
                                                         </tr>
                                                         </thead>
@@ -73,6 +76,8 @@
                                                                          {{number_format($pledge->amount,2) }}
                                                                     @endif
                                                                 </th>
+                                                                <td>{{\App\Models\Budget::userName($pledge->created_by)}}</td>
+                                                                <td>{{\App\Models\Budget::userName($pledge->updated_by)}}</td>
                                                                 <td class="pt-1">
                                                                     <a href="{{route('pledges.show',$pledge->id)}}"
                                                                        class="btn btn-primary btn-md rounded-0">

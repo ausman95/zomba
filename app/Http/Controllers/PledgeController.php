@@ -58,6 +58,7 @@ class PledgeController extends Controller
         }
         $check_data = [
             'member_id'=>$data['member_id'],
+            'date'=>$data['date'],
             'account_id'=>$data['account_id']
         ];
 
@@ -90,6 +91,13 @@ class PledgeController extends Controller
             ->log("Created a Pledge")->causer(request()->user());
         return redirect()->route('pledges.index')->with([
             'success-notification'=>"Pledge successfully Created"
+        ]);
+    }
+    public function show(Pledge $pledge)
+    {
+        return view('pledges.show')->with([
+            'cpage'=>"finances",
+            'pledge'=>$pledge,
         ]);
     }
 }
