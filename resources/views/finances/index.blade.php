@@ -81,9 +81,9 @@
                                                 <td>{{ucwords($bank->account_name) }}</td>
                                                 <th>
                                                     @if($bank->getBalance()<0)
-                                                    ({{number_format($bank->getBalance()*(-1))}})
+                                                    ({{number_format($bank->getBalance()*(-1),2)}})
                                                     @else
-                                                    {{number_format($bank->getBalance())}}
+                                                    {{number_format($bank->getBalance(),2)}}
                                                     @endif
                                                 </th>
                                                 <td>{{ucwords($bank->account_number) }}</td>
