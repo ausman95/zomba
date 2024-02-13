@@ -21,7 +21,6 @@
         </nav>
         <hr>
         <div class="mt-3">
-            <div class="mt-3">
                 <div class="card container-fluid" style="min-height: 30em;">
                     <div class="row">
                         <div class="col-sm-12 mb-2 col-md-12 col-lg-12">
@@ -114,7 +113,6 @@
                         </div>
                     </div>
                 </div>
-            </div>
         </div>
     </div>
 @stop
