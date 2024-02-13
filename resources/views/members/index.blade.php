@@ -103,7 +103,7 @@
                                                 <th>GENDER</th>
                                                 <th>HOME CHURCH</th>
                                                 <th>PHONE</th>
-                                                <th>STATUS</th>
+                                                <th>CREATED ON</th>
 {{--                                                @if(@!$report)--}}
                                                 <th>CREATED BY</th>
                                                 <th>UPDATED BY</th>
@@ -120,15 +120,7 @@
                                                     <td>{{$member->gender}}</td>
                                                     <td>{{$member->church->name}}</td>
                                                     <td>{{$member->phone_number}}</td>
-                                                    <td>
-                                                        @if($member->status==1)
-                                                            {{'ACTIVE'}}
-                                                        @elseif($member->status==2)
-                                                            {{'MOVED'}}
-                                                        @else
-                                                            {{'DECEASED'}}
-                                                        @endif
-                                                    </td>
+                                                    <td>{{date('d F Y', strtotime($member->created_at)) }}</td>
                                                     <td>{{\App\Models\Budget::userName($member->created_by)}}</td>
                                                     <td>{{\App\Models\Budget::userName($member->updated_by)}}</td>
 {{--                                                    @if(@!$report)--}}
