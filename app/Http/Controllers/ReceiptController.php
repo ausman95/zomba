@@ -172,7 +172,6 @@ class ReceiptController extends Controller
                     'payments.*',
                 )
                 ->whereBetween('t_date',[$month->start_date,$month->end_date])
-                ->where(['payments.status'=>1])
                 ->where(['accounts.type'=>1])
                 ->where(['accounts.soft_delete'=>0])
                 ->orderBy('payments.id','desc')->get(),

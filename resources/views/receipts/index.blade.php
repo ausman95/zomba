@@ -76,6 +76,7 @@
                                                     <th>METHOD</th>
                                                     <th>TYPE</th>
                                                     <th>DESC</th>
+                                                    <th>STATUS</th>
                                                     <th>CREATED BY</th>
                                                     <th>VERIFIED BY</th>
                                                     <th>ACTION</th>
@@ -128,6 +129,7 @@
                                                             @endif
                                                         </td>
                                                         <th>{{ucwords($payment->pledge == 0 ? "NORMAL" : "PLEDGES") }}</th>
+                                                        <th>{{ucwords($payment->status == 1 ? "VERIFIED" : "UN~VERIFIED") }}</th>
                                                         <td>{{\App\Models\Budget::userName($payment->created_by)}}</td>
                                                         <td>{{\App\Models\Budget::userName($payment->updated_by)}}</td>
                                                         <td class="pt-1">
