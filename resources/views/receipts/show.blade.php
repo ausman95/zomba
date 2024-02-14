@@ -42,6 +42,15 @@
                                         <td>Description</td>
                                         <td>{{$transaction->name}}</td>
                                     </tr>
+                                    @if($transaction->type==5)
+                                        <tr>
+                                            <th>Phone Number</th>
+                                            <td>{{\App\Models\MemberPayment::where(['member_payments.payment_id'=>$transaction->id])
+                                                    ->join('members', 'members.id', '=', 'member_payments.member_id')
+                                                    ->first()->phone_number}}
+                                            </td>
+                                        </tr>
+                                    @endif
                                     <tr>
                                         <td>Amount</td>
                                         <td>MK {{number_format($transaction->amount,2)}}</td>
