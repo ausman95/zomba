@@ -108,7 +108,7 @@
                                 <div class="mt-3">
                                     <div>
                                         @if($transaction->status==0)
-                                            @if(request()->user()->id ==$transaction->created_by)
+                                            @if(request()->user()->id !=$transaction->created_by)
 {{--                                            <a href="{{route('payments.edit',$transaction->id)}}"--}}
 {{--                                               class="btn btn-primary rounded-0" style="margin: 2px">--}}
 {{--                                                <i class="fa fa-edit"></i>Update--}}
