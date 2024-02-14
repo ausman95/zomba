@@ -138,7 +138,7 @@
                                                             @endif
                                                         </td>
                                                         <td>{{ucwords($payment->reference) }}</td>
-                                                        <th>{{ucwords($payment->pledge == 0 ? "NORMAL" : "PLEDGES") }}</th>
+                                                        <th>{{ucwords($payment->status == 1 ? "VERIFIED" : "UN~VERIFIED") }}</th>
                                                         <td>{{\App\Models\Budget::userName($payment->created_by)}}</td>
                                                         <td>{{\App\Models\Budget::userName($payment->updated_by)}}</td>
                                                         {{--                                                <td>--}}
