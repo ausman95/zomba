@@ -87,6 +87,7 @@
                                                     <th>METHOD</th>
                                                     <th>TYPE</th>
                                                     <th>REF</th>
+                                                    <th>STATUS</th>
                                                     <th>CREATED BY</th>
                                                     <th>UPDATED BY</th>
                                                     {{--                                            <th>ACTION</th>--}}
@@ -137,6 +138,7 @@
                                                             @endif
                                                         </td>
                                                         <td>{{ucwords($payment->reference) }}</td>
+                                                        <th>{{ucwords($payment->pledge == 0 ? "NORMAL" : "PLEDGES") }}</th>
                                                         <td>{{\App\Models\Budget::userName($payment->created_by)}}</td>
                                                         <td>{{\App\Models\Budget::userName($payment->updated_by)}}</td>
                                                         {{--                                                <td>--}}

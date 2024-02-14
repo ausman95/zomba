@@ -29,7 +29,6 @@ class StoreRequest extends FormRequest
             'amount'=>"required|numeric",
             'type'=>"required|numeric",
             't_date'=>"required|date",
-            'pledge'=>"required|numeric",
             'payment_method'=>"required|numeric",
         ];
     }

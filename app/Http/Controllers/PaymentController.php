@@ -89,7 +89,6 @@ class PaymentController extends Controller
                     'payments.*',
                 )
                 ->whereBetween('t_date',[$month->start_date,$month->end_date])
-                ->where(['payments.status'=>1])
                 ->where(['accounts.type'=>2])
                 ->orderBy('payments.id','desc')->get(),
             'months'=>Month::where(['soft_delete'=>0])->orderBY('id','desc')->get()
