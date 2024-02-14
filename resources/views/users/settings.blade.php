@@ -39,7 +39,7 @@
                         <div class="form-group">
                             <input type="hidden" name="id"
                                    class="form-control @error('password') is-invalid @enderror"
-                                   value="{{request()->user()->id}}">
+                                   value="{{$_GET['user_id']}}">
                             <label> User </label>
                             @error('id')
                             <span class="invalid-feedback">
