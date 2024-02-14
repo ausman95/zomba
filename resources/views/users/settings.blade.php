@@ -15,7 +15,8 @@
                 @if(request()->user()->designation==='administrator')
                     <li class="breadcrumb-item"><a href="{{route('users.index')}}">Users</a></li>
                 @endif
-                <li class="breadcrumb-item"><a href="{{route('users.show',$user->id)}}">{{$user->first_name.' '.$user->last_name}}</a></li>
+                <li class="breadcrumb-item"><a href="{{route('users.show',$user->id)}}">{{{\App\Models\User::where(['id'=>$_GET['user_id']])
+                                                    ->first()->email}}}}</a></li>
                 <li class="breadcrumb-item active" aria-current="page">Settings</li>
             </ol>
         </nav>
@@ -25,7 +26,9 @@
         <div class="mt-2">
             <div class="my-3">
                 <p>
-                    Hi, <strong> {{$user->name}} &lt;{{$user->email}}&gt;</strong>
+                    Hi, <strong> {{\App\Models\User::where(['id'=>$_GET['user_id']])
+                                                    ->first()->email}}
+                    </strong>
                 </p>
                 <p>
                     You can update users passwords in the form below.
