@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Accounts;
 use App\Models\Announcement;
+use App\Models\Categories;
 use Illuminate\Http\Request;
 use App\Http\Requests\Accounts\StoreRequest;
 use App\Http\Requests\Accounts\UpdateRequest;
@@ -49,7 +50,8 @@ class AccountController extends Controller
     public function create()
     {
        return view('accounts.create')->with([
-            'cpage'=>"finances"
+            'cpage'=>"finances",
+           'categories'=>Categories::where(['soft_delete'=>0])->orderBy('id','desc')->get(),
         ]);
     }
 
@@ -100,7 +102,8 @@ class AccountController extends Controller
     {
        return view('accounts.edit')->with([
             'cpage' => "finances",
-            'account' => $account
+           'categories'=>Categories::where(['soft_delete'=>0])->orderBy('id','desc')->get(),
+           'account' => $account
         ]);
     }
 

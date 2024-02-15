@@ -39,7 +39,6 @@
                         </span>
                             @enderror
                         </div>
-                        <hr style="height: .3em;" class="border-theme">
                         <div class="form-group">
                             <label>Account Type</label>
                             <select name="type" class="form-control select-relation @error('type') is-invalid @enderror" style="width: 100%">{{old('type')}}>
@@ -52,10 +51,28 @@
                         </span>
                             @enderror
                         </div>
-
+                        <div class="form-group">
+                            <label> Category </label>
+                            <select name="category_id" required
+                                    class="form-select select-relation @error('category_id') is-invalid @enderror" style="width: 100%">
+                                <option value="">-- Select ---</option>
+                                @foreach($categories as $category)
+                                    @if($category->status==2)
+                                        <option value="{{$category->id}}"
+                                            {{old('category_id')===$category->id ? 'selected' : ''}}>{{$category->name}}</option>
+                                    @endif
+                                @endforeach
+                            </select>
+                            @error('category_id')
+                            <span class="invalid-feedback">
+                               {{$message}}
+                        </span>
+                            @enderror
+                        </div>
+                        <hr style="height: .3em;" class="border-theme">
                         <div class="form-group">
                             <button class="btn btn-md btn-primary rounded-0">
-                                <i class="fa fa-paper-plane"></i>Save
+                                <i class="fa fa-check-circle"></i>Save
                             </button>
 
                         </div>

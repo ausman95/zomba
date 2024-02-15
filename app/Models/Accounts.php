@@ -10,7 +10,7 @@ class Accounts extends Model
 {
     use HasFactory;
     protected $fillable = [
-        'name', 'type','created_by','updated_by'
+        'name', 'type','created_by','updated_by','category_id'
     ];
 
     public function getAccountBalance($start_date,$end_date)
@@ -20,17 +20,30 @@ class Accounts extends Model
             ->groupBy('account_id')->sum("amount");
     }
 
-    public static  function getAccountBalanceDebits($start_date,$end_date)
+    public static  function getAccountBalanceDebits($statement,$start_date,$end_date)
     {
-        $credits = DB::table('bank_transactions')
-            ->join('accounts', 'accounts.id','=','bank_transactions.account_id')
-            ->select('accounts.*',DB::raw('SUM(bank_transactions.amount) as amount'))
-            ->where(['accounts.type'=>1])
-            ->where('accounts.soft_delete','=',0)
-            ->where('accounts.id','!=',134)
-            ->whereBetween('bank_transactions.created_at',[$start_date,$end_date])
-            ->groupBy('accounts.id')
-            ->get();
+        if($statement==3){
+            $credits = DB::table('bank_transactions')
+                ->join('accounts', 'accounts.id', '=', 'bank_transactions.account_id')
+                ->join('categories', 'categories.id', '=', 'accounts.category_id')
+                ->select('categories.*', DB::raw('SUM(bank_transactions.amount) as amount'))
+                ->where(['accounts.type' => 1])
+                ->where('accounts.soft_delete', '=', 0)
+                ->where('accounts.id', '!=', 134)
+                ->whereBetween('bank_transactions.created_at', [$start_date, $end_date])
+                ->groupBy('categories.id')
+                ->get();
+        }else {
+            $credits = DB::table('bank_transactions')
+                ->join('accounts', 'accounts.id', '=', 'bank_transactions.account_id')
+                ->select('accounts.*', DB::raw('SUM(bank_transactions.amount) as amount'))
+                ->where(['accounts.type' => 1])
+                ->where('accounts.soft_delete', '=', 0)
+                ->where('accounts.id', '!=', 134)
+                ->whereBetween('bank_transactions.created_at', [$start_date, $end_date])
+                ->groupBy('accounts.id')
+                ->get();
+        }
         return $credits;
     }
     public static  function allAccounts($start_date,$end_date)
@@ -44,23 +57,40 @@ class Accounts extends Model
             ->get();
     }
 
-    public static  function getAccountBalanceAdmin($start_date,$end_date)
+    public static  function getAccountBalanceAdmin($statement,$start_date,$end_date)
     {
-        $credits = DB::table('bank_transactions')
-            ->join('accounts', 'accounts.id','=','bank_transactions.account_id')
-            ->select('accounts.*',DB::raw('SUM(bank_transactions.amount) as amount'))
-            ->where(['accounts.type'=>2])
-            ->where('accounts.id','!=',134)
-            ->where('bank_transactions.type','=',2)
-            ->whereBetween('bank_transactions.t_date',[$start_date,$end_date])
-            ->groupBy('accounts.id')
-            ->get();
+        if($statement==3){
+            $credits = DB::table('payments')
+                ->join('accounts', 'accounts.id', '=', 'payments.account_id')
+                ->join('categories', 'categories.id', '=', 'accounts.category_id')
+                ->select('categories.*', DB::raw('SUM(payments.amount) as amount'))
+                ->where(['accounts.type' => 2])
+                ->where('accounts.id', '!=', 134)
+//                ->where('bank_transactions.type', '=', 2)
+                ->whereBetween('payments.t_date', [$start_date, $end_date])
+                ->groupBy('categories.id')
+                ->get();
+        }else {
+            $credits = DB::table('bank_transactions')
+                ->join('accounts', 'accounts.id', '=', 'bank_transactions.account_id')
+                ->select('accounts.*', DB::raw('SUM(bank_transactions.amount) as amount'))
+                ->where(['accounts.type' => 2])
+                ->where('accounts.id', '!=', 134)
+//                ->where('bank_transactions.type', '=', 2)
+                ->whereBetween('bank_transactions.t_date', [$start_date, $end_date])
+                ->groupBy('accounts.id')
+                ->get();
+        }
         return $credits;
     }
 
     public function incomes()
     {
         return  $this->hasMany(BankTransaction::class,'account_id');
+    }
+    public function category()
+    {
+        return  $this->belongsTo(Categories::class,'category_id');
     }
     public function userName($id)
     {

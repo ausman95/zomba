@@ -25,7 +25,8 @@ class StoreRequest extends FormRequest
     {
         return [
             'name' => "required|string|unique:ministries,name",
-            'type'=>"required|string"
+            'type'=>"required|string",
+            'category_id'=>"required|numeric",
         ];
     }
 }

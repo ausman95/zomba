@@ -43,6 +43,7 @@ class FinanceController extends Controller
             'start_date'=>"required|date",
             'end_date'=>"required|date",
         ]);
+        $statement = $request->post('statement');
         if($request->post('end_date')< $request->post('start_date')){
             return back()->with(['error-notification'=>"Please Specify the date correctly!"]);
         }
@@ -58,14 +59,14 @@ class FinanceController extends Controller
 
         return view('finances.reports')->with([
             'cpage' => "finances",
-            'statement' => $request->post('statement'),
+            'statement' => $statement,
             'start_date'=>$request->post('start_date'),
             'end_date'=>$request->post('end_date'),
             'accounts' => Accounts::allAccounts($request->post('start_date'),$request->post('end_date')),
-            'credits' => Accounts::getAccountBalanceDebits($request->post('start_date'),$request->post('end_date')),
+            'credits' => Accounts::getAccountBalanceDebits($statement,$request->post('start_date'),$request->post('end_date')),
             'debits' => Incomes::accountAll($request->post('start_date'),$request->post('end_date')),
-            'expenses' => Incomes::accountExpensesAll($request->post('start_date'),$request->post('end_date')),
-            'admins' => Accounts::getAccountBalanceAdmin($request->post('start_date'),$request->post('end_date')),
+            'expenses' => Incomes::accountExpensesAll($statement,$request->post('start_date'),$request->post('end_date')),
+            'admins' => Accounts::getAccountBalanceAdmin($statement,$request->post('start_date'),$request->post('end_date')),
         ]);
     }
 }

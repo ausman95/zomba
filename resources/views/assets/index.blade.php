@@ -26,9 +26,6 @@
             <a href="{{route('assets.create')}}" class="btn btn-primary btn-md rounded-0">
                 <i class="fa fa-plus-circle"></i>New Assets
             </a>
-            <a href="{{route('categories.index')}}" class="btn btn-primary btn-md rounded-0">
-                <i class="fa fa-divide"></i>Assets Categories
-            </a>
 {{--            <a href="{{route('asset-services.index')}}" class="btn btn-primary btn-md rounded-0">--}}
 {{--                <i class="fa fa-list-ol"></i>Assets Services--}}
 {{--            </a>--}}

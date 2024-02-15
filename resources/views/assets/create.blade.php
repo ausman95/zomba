@@ -68,8 +68,10 @@
                                     class="form-select select-relation @error('category_id') is-invalid @enderror" style="width: 100%">
                                 <option value="">-- Select ---</option>
                                 @foreach($categories as $category)
+                                    @if($category->status==1)
                                     <option value="{{$category->id}}"
                                         {{old('category_id')===$category->id ? 'selected' : ''}}>{{$category->name}}</option>
+                                    @endif
                                 @endforeach
                             </select>
                             @error('category_id')

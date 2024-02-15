@@ -58,8 +58,10 @@
                                 <option value="{{$asset->category_id}}">{{$asset->category->name}}</option>
                                 <option value="">====Select Category====</option>
                                 @foreach($categories as $category)
-                                    <option value="{{$category->id}}"
-                                        {{(old('category_id')==$category->id) ? 'selected' : ''}}>{{$category->name}}</option>
+                                    @if($category->status==2)
+                                        <option value="{{$category->id}}"
+                                            {{old('category_id')===$category->id ? 'selected' : ''}}>{{$category->name}}</option>
+                                    @endif
                                 @endforeach
                             </select>
                             @error('category_id')

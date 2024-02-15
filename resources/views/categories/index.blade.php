@@ -7,16 +7,17 @@
 @section('content')
     <div class="container-fluid ps-1 pt-4">
         <h4>
-            <i class="fa fa-car"></i>Assets Categories
+            <i class="fa fa-list-ol"></i>Accounts Categories
         </h4>
         <p>
-            Manage Assets Categories
+            Manage Accounts Categories
         </p>
         <nav aria-label="breadcrumb">
             <ol class="breadcrumb bg-transparent">
                 <li class="breadcrumb-item"><a href="{{route('home')}}">Home</a></li>
-                <li class="breadcrumb-item"><a href="{{route('assets.index')}}">Assets</a></li>
-                <li class="breadcrumb-item active" aria-current="page">Assets Categories</li>
+                <li class="breadcrumb-item"><a href="{{route('finances.index')}}">Finances</a></li>
+                <li class="breadcrumb-item"><a href="{{route('accounts.index')}}">Chart of Accounts</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Categories</li>
             </ol>
         </nav>
         <div class="mb-5">
@@ -26,7 +27,7 @@
 
         @if(request()->user()->designation==='administrator'||request()->user()->designation==='accountant')
                 <a href="{{route('categories.create')}}" class="btn btn-primary btn-md rounded-0">
-                    <i class="fa fa-plus-circle"></i>New Asset Category
+                    <i class="fa fa-plus-circle"></i>New Category
                 </a>
             @endif
             <div class="mt-3">
@@ -35,17 +36,16 @@
                         <div class="card " style="min-height: 30em;">
                             <div class="card-body px-1">
                                 @if($categories->count() === 0)
-                                    <i class="fa fa-info-circle"></i>There are no Asset Category!
+                                    <i class="fa fa-info-circle"></i>There are no Category!
                                 @else
                                     <div style="overflow-x:auto;">
                                         <table class="table table-bordered table-hover table-striped" id="data-table">
-                                            <caption style=" caption-side: top; text-align: center">ASSET CATEGORIES</caption>
+                                            <caption style=" caption-side: top; text-align: center">CATEGORIES</caption>
                                             <thead>
                                         <tr>
                                             <th>NO</th>
                                             <th>NAME</th>
-                                            <th>ID</th>
-                                            <th>DEPRECIATION</th>
+                                            <th>TYPE</th>
                                             <th>DATE CREATED</th>
                                             <th>CREATED BY</th>
                                             <th>ACTION</th>
@@ -57,12 +57,11 @@
                                             <tr>
                                                 <td>{{$c++}}</td>
                                                 <td>{{ucwords($category->name) }}</td>
-                                                <td>{{ucwords($category->id) }}</td>
                                                 <td>
                                                     @if($category->status==1)
-                                                        Yes, It Depreciate
+                                                       BALANCE SHEET ITEM
                                                     @else
-                                                        No, It Appreciate
+                                                        P&L ITEM
                                                     @endif
                                                 </td>
                                                 <td>{{ucwords($category->created_at) }}</td>

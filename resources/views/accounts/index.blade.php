@@ -27,6 +27,9 @@
                 <a href="{{route('accounts.create')}}" class="btn btn-primary btn-md rounded-0">
                     <i class="fa fa-plus-circle"></i>New Chart of Account
                 </a>
+                <a href="{{route('categories.index')}}" class="btn btn-primary btn-md rounded-0">
+                    <i class="fa fa-list-ol"></i>Summarized Categories
+                </a>
             @endif
 
             <div class="mt-3">
@@ -45,6 +48,7 @@
                                             <th>NO</th>
                                             <th>NAME</th>
                                             <th>TYPE</th>
+                                            <th>CATEGORY</th>
                                             <th>CREATED BY</th>
                                             <th>UPDATED BY</th>
                                             <th>ACTION</th>
@@ -63,6 +67,7 @@
                                                         {{"DR"}}
                                                         @endif
                                                 </td>
+                                                <td>{{ucwords(@$account->category->name) }}</td>
                                                 <td>{{$account->userName($account->created_by)}}</td>
                                                 <td>{{$account->userName($account->updated_by)}}</td>
                                                 <td class="pt-1">

@@ -45,6 +45,10 @@
                                             </td>
                                         </tr>
                                         <tr>
+                                            <td>Category</td>
+                                            <td>{{@$account->category->name}}</td>
+                                        </tr>
+                                        <tr>
                                             <td>Created On</td>
                                             <td>{{$account->created_at}}</td>
                                         </tr>
@@ -130,7 +134,7 @@
                                 @foreach($transactions as $transfer)
                                     <tr>
                                         <td>{{$c++}}</td>
-                                        <td>{{number_format($transfer->amount) }}</td>
+                                        <th>{{number_format($transfer->amount,2) }}</th>
                                         <td>{{ucwords($transfer->description) }}</td>
                                         <td>{{ucwords($transfer->created_at) }}</td>
                                         <td>{{ucwords($transfer->transaction_type == 1 ? "CR" : "DR") }}</td>

@@ -1,19 +1,23 @@
 @extends('layouts.app')
 
+@section('stylesheets')
+    <link rel="stylesheet" href="{{asset('vendor/simple-datatable/simple-datatable.css')}}">
+@stop
+
 @section('content')
     <div class="container-fluid ps-1 pt-4">
-
         <h4>
-            <i class="fa fa-car"></i>Asset Category
+            <i class="fa fa-list-ol"></i>Accounts Categories
         </h4>
         <p>
-            Manage Asset Category
+            Manage Accounts Categories
         </p>
-        <nav>
+        <nav aria-label="breadcrumb">
             <ol class="breadcrumb bg-transparent">
                 <li class="breadcrumb-item"><a href="{{route('home')}}">Home</a></li>
-                <li class="breadcrumb-item"><a href="{{route('assets.index')}}">Assets</a></li>
-                <li class="breadcrumb-item"><a href="{{route('categories.index')}}">Asset Categories</a></li>
+                <li class="breadcrumb-item"><a href="{{route('finances.index')}}">Finances</a></li>
+                <li class="breadcrumb-item"><a href="{{route('accounts.index')}}">Chart of Accounts</a></li>
+                <li class="breadcrumb-item"><a href="{{route('categories.index')}}">Accounts Categories</a></li>
                 <li class="breadcrumb-item active" aria-current="page">{{$category->name}}</li>
             </ol>
         </nav>

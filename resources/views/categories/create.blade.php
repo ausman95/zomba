@@ -1,19 +1,23 @@
 @extends('layouts.app')
 
+@section('stylesheets')
+    <link rel="stylesheet" href="{{asset('vendor/simple-datatable/simple-datatable.css')}}">
+@stop
 
 @section('content')
     <div class="container-fluid ps-1 pt-4">
         <h4>
-            <i class="fa fa-car"></i>Asset Category
+            <i class="fa fa-list-ol"></i>Accounts Categories
         </h4>
         <p>
-            Asset Category
+            Manage Accounts Categories
         </p>
         <nav aria-label="breadcrumb">
             <ol class="breadcrumb bg-transparent">
                 <li class="breadcrumb-item"><a href="{{route('home')}}">Home</a></li>
-                <li class="breadcrumb-item"><a href="{{route('assets.index')}}">Assets</a></li>
-                <li class="breadcrumb-item"><a href="{{route('categories.index')}}">Assets Category</a></li>
+                <li class="breadcrumb-item"><a href="{{route('finances.index')}}">Finances</a></li>
+                <li class="breadcrumb-item"><a href="{{route('accounts.index')}}">Chart of Accounts</a></li>
+                <li class="breadcrumb-item"><a href="{{route('categories.index')}}">Accounts Categories</a></li>
                 <li class="breadcrumb-item active" aria-current="page">Create Asset Category</li>
             </ol>
         </nav>
@@ -41,10 +45,10 @@
                             @enderror
                         </div>
                         <div class="form-group">
-                            <label>It Depreciate</label>
+                            <label>Type</label>
                             <select name="status" required class="form-control select-relation @error('type') is-invalid @enderror" style="width: 100%">{{old('status')}}>
-                                <option value="1">Yes</option>
-                                <option value="2">No</option>
+                                <option value="2">Income Statement Item</option>
+                                <option value="1">Balance Sheet Item</option>
                             </select>
                             @error('type')
                             <span class="invalid-feedback">
@@ -66,8 +70,6 @@
     </div>
 @stop
 @section('scripts')
-    <script src="{{asset('vendor/simple-datatable/simple-datatable.js')}}"></script>
-    <script src="{{asset('vendor/jquery-3.4.1.min.js')}}"></script>
     <script>
         $(document).ready(function () {
             // $('.btn-success').click(function () {

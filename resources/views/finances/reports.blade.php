@@ -40,7 +40,8 @@
                             <select name="statement" class="form-select select-relation @error('statement') is-invalid @enderror" style="width: 100%">
                                 <option value="">-- Select report --</option>
                                 <option value="1">Trial Balance </option>
-                                <option value="2">Income Statement </option>
+                                <option value="2">Detailed Income Statement </option>
+                                <option value="3">Summarized Income Statement </option>
                             </select>
                             @error('statement')
                             <span class="invalid-feedback">
@@ -166,7 +167,7 @@
                                     </table>
                                     @elseif($statement==2)
                                             <table class="table table-bordered table-hover table-striped" id="data-table">
-                                                <caption style="caption-side:top">                                            Income Statement from {{date('d F Y', strtotime($start_date))}} To {{date('d F Y', strtotime($end_date))}}
+                                                <caption style="caption-side:top">                                           Detailed Income Statement from {{date('d F Y', strtotime($start_date))}} To {{date('d F Y', strtotime($end_date))}}
                                                 </caption>
                                                 <thead>
                                                 <tr>
@@ -286,6 +287,101 @@
                                                 </tr>
                                                 </tbody>
                                             </table>
+                                    @elseif($statement==3)
+                                        <table class="table table-bordered table-hover table-striped" id="data-table">
+                                            <caption style="caption-side:top">                                           Summarized Income Statement from {{date('d F Y', strtotime($start_date))}} To {{date('d F Y', strtotime($end_date))}}
+                                            </caption>
+                                            <thead>
+                                            <tr>
+                                                <th>NO</th>
+                                                <th>ACCOUNT</th>
+                                                <th></th>
+                                                <th></th>
+                                                <th>AMOUNT (MK)</th>
+                                                <th>AMOUNT (MK)</th>
+
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                                <?php
+                                                $c = 1;
+                                                $b1 = 0;
+                                                $b2 = 0;
+                                                $b3 = 0;
+                                                $df = 0;
+                                                ?>
+                                            <tr>
+                                                <td>{{$c++}}</td>
+                                                <td> <b>CHURCH INCOME</b></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                            </tr>
+                                            @foreach($credits as $credit)
+                                                <tr>
+                                                    <td>{{$c++}}</td>
+                                                    <td></td>
+                                                    <td>{{ucwords($credit->name) }}</td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td>{{number_format($credit->amount,2)}}</td>
+                                                    <p class="d-none">{{$b1 = $b1+$credit->amount}}</p>
+                                                </tr>
+                                            @endforeach
+                                            <tr>
+                                                <td>{{$c++}}</td>
+                                                <td><b>TOTAL CHURCH INCOME </b></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td><b>{{number_format($b1,2)}}</b> </td>
+                                            </tr>
+                                                <tr>
+                                                    <td>{{$c++}}</td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                </tr>
+                                            <tr>
+                                                <td>{{$c++}}</td>
+                                                <td> <b>DIRECT COSTS</b></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                            </tr>
+                                            @foreach($admins as $admin)
+                                                <tr>
+                                                    <td>{{$c++}}</td>
+                                                    <td></td>
+                                                    <td>{{ucwords($admin->name) }}</td>
+                                                    <td></td>
+                                                    <td>{{number_format($admin->amount,2)}}</td>
+                                                    <p class="d-none">{{$b3 = $b3+$admin->amount}}</p>
+                                                    <td></td>
+                                                </tr>
+                                            @endforeach
+                                            <tr>
+                                                <td>{{$c++}}</td>
+                                                <td><b>TOTAL OVERHEADS</b></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td><b><u>({{number_format($b3,2)}})</u></b> </td>
+                                            </tr>
+                                            <tr>
+                                                <td>{{$c++}}</td>
+                                                <td><b>SURPLUS/SHORTFALL</b></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td><b>{{number_format($b1-$b3,2)}}</b> </td>
+                                            </tr>
+                                            </tbody>
+                                        </table>
                                         @endif
                                 </div>
                                     </div>

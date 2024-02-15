@@ -22,7 +22,7 @@ class CategoryController extends Controller
             ->log("Accessed Asset Category")->causer(request()->user());
         $category= Categories::where(['soft_delete'=>0])->orderBy('id','desc')->get();
         return view('categories.index')->with([
-            'cpage' => "assets",
+            'cpage' => "finances",
             'categories'=>$category,
         ]);
     }
@@ -35,7 +35,7 @@ class CategoryController extends Controller
     public function create()
     {
         return view('categories.create')->with([
-            'cpage'=>"assets"
+            'cpage'=>"finances"
         ]);
     }
 
@@ -69,7 +69,7 @@ class CategoryController extends Controller
     {
         $asset = $category->assets;
         return view('categories.show')->with([
-            'cpage'=>"assets",
+            'cpage'=>"finances",
             'category'=>$category,
             'assets'=>$asset,
         ]);
@@ -84,7 +84,7 @@ class CategoryController extends Controller
     public function edit(Categories $category)
     {
         return view('categories.edit')->with([
-            'cpage' => "assets",
+            'cpage' => "finances",
             'category' => $category
         ]);
     }

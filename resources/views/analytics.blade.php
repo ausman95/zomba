@@ -45,7 +45,7 @@
                                                     Total Reports Available
                                                 </div>
                                                 <div class="d-flex my-2 justify-content-between">
-                                                    <h3 class="text-primary"> 2
+                                                    <h3 class="text-primary"> 3
                                                         <a href="{{route('financial.statements')}}"
                                                            class="btn btn-md btn-primary rounded-0">
                                                             Go &rarr;

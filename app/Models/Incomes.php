@@ -34,18 +34,32 @@ class Incomes extends Model
             ->get();
         return $credits;
     }
-    public static  function accountExpensesAll($start_date,$end_date)
+    public static  function accountExpensesAll($statement,$start_date,$end_date)
     {
-        $credits = DB::table('bank_transactions')
-            ->join('accounts', 'accounts.id','=','bank_transactions.account_id')
-            ->select('accounts.*',DB::raw('SUM(bank_transactions.amount) as amount'))
-            ->where(['accounts.type'=>2])
-            ->where('accounts.id','!=',134)
-            ->where('accounts.soft_delete','=',0)
-            ->where('bank_transactions.type','!=',2)
-            ->whereBetween('bank_transactions.t_date',[$start_date,$end_date])
-            ->groupBy('accounts.id')
-            ->get();
+        if($statement==3){
+            $credits = DB::table('bank_transactions')
+                ->join('accounts', 'accounts.id', '=', 'bank_transactions.account_id')
+                ->join('categories', 'categories.id', '=', 'accounts.category_id')
+                ->select('categories.*', DB::raw('SUM(bank_transactions.amount) as amount'))
+                ->where(['accounts.type' => 2])
+                ->where('accounts.id', '!=', 134)
+                ->where('accounts.soft_delete', '=', 0)
+                ->where('bank_transactions.type', '!=', 2)
+                ->whereBetween('bank_transactions.t_date', [$start_date, $end_date])
+                ->groupBy('categories.id')
+                ->get();
+        }else {
+            $credits = DB::table('bank_transactions')
+                ->join('accounts', 'accounts.id', '=', 'bank_transactions.account_id')
+                ->select('accounts.*', DB::raw('SUM(bank_transactions.amount) as amount'))
+                ->where(['accounts.type' => 2])
+                ->where('accounts.id', '!=', 134)
+                ->where('accounts.soft_delete', '=', 0)
+                ->where('bank_transactions.type', '!=', 2)
+                ->whereBetween('bank_transactions.t_date', [$start_date, $end_date])
+                ->groupBy('accounts.id')
+                ->get();
+        }
         return $credits;
     }
 

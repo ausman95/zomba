@@ -186,7 +186,7 @@
 
 
             $("#delete-btn").on('click', function () {
-                confirmationWindow("Confirm Deletion", "Are you sure you want Verify this Record ?", "Yes,Continue", function () {
+                confirmationWindow("Confirm Verification", "Are you sure you want Verify this Record ?", "Yes,Continue", function () {
                     $("#delete-form").submit();
                 });
             });
