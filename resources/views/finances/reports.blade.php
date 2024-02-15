@@ -190,7 +190,7 @@
                                                 ?>
                                                 <tr>
                                                     <td>{{$c++}}</td>
-                                                    <td> <b>CHURCH INCOME</b></td>
+                                                    <th> <b>CHURCH INCOME</b></th>
                                                     <td></td>
                                                     <td></td>
                                                     <td></td>
@@ -212,7 +212,7 @@
                                                             <td></td>
                                                             <td>{{ucwords(@$credit->name) }}</td>
                                                             <td></td>
-                                                            <td>{{number_format($credit->amount,2)}}</td>
+                                                            <th>{{number_format($credit->amount,2)}}</th>
                                                             <p class="d-none">{{$b1 = $b1+$credit->amount}}</p>
                                                         </tr>
                                                     @endforeach
@@ -235,11 +235,11 @@
                                                 </tr>
                                                 <tr>
                                                     <td>{{$c++}}</td>
-                                                    <td><b>TOTAL INCOME</b></td>
+                                                    <th><b>TOTAL INCOME</b></th>
                                                     <td></td>
                                                     <td></td>
                                                     <td></td>
-                                                    <td><b>{{number_format($b1,2)}}</b> </td>
+                                                    <th><b>{{number_format($b1,2)}}</b> </th>
                                                 </tr>
                                                 <tr>
                                                     <td>{{$c++}}</td>
@@ -251,7 +251,7 @@
                                                 </tr>
                                                 <tr>
                                                     <td>{{$c++}}</td>
-                                                    <td> <b>EXPENDITURES</b></td>
+                                                    <th> <b>EXPENDITURES</b></th>
                                                     <td></td>
                                                     <td></td>
                                                     <td></td>
@@ -273,7 +273,7 @@
                                                             <td></td>
                                                             <td>{{ucwords(@$credit->name) }}</td>
                                                             <td></td>
-                                                            <td>{{number_format($credit->amount,2)}}</td>
+                                                            <th>{{number_format($credit->amount,2)}}</th>
                                                             <p class="d-none">{{$b2 = $b2+$credit->amount}}</p>
                                                         </tr>
                                                     @endforeach
@@ -296,11 +296,11 @@
                                                 </tr>
                                                 <tr>
                                                     <td>{{$c++}}</td>
-                                                    <td><b>TOTAL EXPENDITURES</b></td>
+                                                    <th><b>TOTAL EXPENDITURES</b></th>
                                                     <td></td>
                                                     <td></td>
                                                     <td></td>
-                                                    <td><b>{{number_format($b2,2)}}</b> </td>
+                                                    <th><b>{{number_format($b2,2)}}</b> </th>
                                                 </tr>
                                                 <tr>
                                                     <td>{{$c++}}</td>
@@ -312,7 +312,7 @@
                                                 </tr>
                                                 <tr>
                                                     <td>{{$c++}}</td>
-                                                    <td><b>SURPLUS/SHORTFALL</b></td>
+                                                    <th><b>SURPLUS/SHORTFALL</b></th>
                                                     <td></td>
                                                     <td></td>
                                                     <td></td>
@@ -345,7 +345,7 @@
                                                 ?>
                                             <tr>
                                                 <td>{{$c++}}</td>
-                                                <td> <b>CHURCH INCOME</b></td>
+                                                <th> <b>CHURCH INCOME</b></th>
                                                 <td></td>
                                                 <td></td>
                                                 <td></td>
@@ -358,17 +358,17 @@
                                                     <td>{{ucwords($credit->name) }}</td>
                                                     <td></td>
                                                     <td></td>
-                                                    <td>{{number_format($credit->amount,2)}}</td>
+                                                    <th>{{number_format($credit->amount,2)}}</th>
                                                     <p class="d-none">{{$b1 = $b1+$credit->amount}}</p>
                                                 </tr>
                                             @endforeach
                                             <tr>
                                                 <td>{{$c++}}</td>
-                                                <td><b>TOTAL CHURCH INCOME </b></td>
+                                                <th><b>TOTAL CHURCH INCOME </b></th>
                                                 <td></td>
                                                 <td></td>
                                                 <td></td>
-                                                <td><b>{{number_format($b1,2)}}</b> </td>
+                                                <th><b>{{number_format($b1,2)}}</b> </th>
                                             </tr>
                                                 <tr>
                                                     <td>{{$c++}}</td>
@@ -380,7 +380,7 @@
                                                 </tr>
                                             <tr>
                                                 <td>{{$c++}}</td>
-                                                <td> <b>DIRECT COSTS</b></td>
+                                                <th> <b>DIRECT COSTS</b></th>
                                                 <td></td>
                                                 <td></td>
                                                 <td></td>
@@ -392,26 +392,26 @@
                                                     <td></td>
                                                     <td>{{ucwords($admin->name) }}</td>
                                                     <td></td>
-                                                    <td>{{number_format($admin->amount,2)}}</td>
+                                                    <th>{{number_format($admin->amount,2)}}</th>
                                                     <p class="d-none">{{$b3 = $b3+$admin->amount}}</p>
                                                     <td></td>
                                                 </tr>
                                             @endforeach
                                             <tr>
                                                 <td>{{$c++}}</td>
-                                                <td><b>TOTAL OVERHEADS</b></td>
+                                                <th><b>TOTAL OVERHEADS</b></th>
                                                 <td></td>
                                                 <td></td>
                                                 <td></td>
-                                                <td><b><u>({{number_format($b3,2)}})</u></b> </td>
+                                                <th><b><u>({{number_format($b3,2)}})</u></b> </th>
                                             </tr>
                                             <tr>
                                                 <td>{{$c++}}</td>
-                                                <td><b>SURPLUS/SHORTFALL</b></td>
+                                                <th><b>SURPLUS/SHORTFALL</b></th>
                                                 <td></td>
                                                 <td></td>
                                                 <td></td>
-                                                <td><b>{{number_format($b1-$b3,2)}}</b> </td>
+                                                <th><b>{{number_format($b1-$b3,2)}}</b> </th>
                                             </tr>
                                             </tbody>
                                         </table>
