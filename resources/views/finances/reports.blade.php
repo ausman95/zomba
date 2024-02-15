@@ -272,8 +272,8 @@
                                                             <td></td>
                                                             <td></td>
                                                             <td>{{ucwords(@$credit->name) }}</td>
-                                                            <td></td>
                                                             <th>{{number_format($credit->amount,2)}}</th>
+                                                            <td></td>
                                                             <p class="d-none">{{$b2 = $b2+$credit->amount}}</p>
                                                         </tr>
                                                     @endforeach
@@ -282,8 +282,9 @@
                                                         <td></td>
                                                         <td></td>
                                                         <th>SUB-TOTAL</th>
-                                                        <td></td>
                                                         <th>{{number_format($tuple->amount,2)}}</th>
+                                                        <td></td>
+
                                                     </tr>
                                                 @endforeach
                                                 <tr>
@@ -300,7 +301,7 @@
                                                     <td></td>
                                                     <td></td>
                                                     <td></td>
-                                                    <th><b>{{number_format($b2,2)}}</b> </th>
+                                                    <th><b>({{number_format($b2,2)}})</b> </th>
                                                 </tr>
                                                 <tr>
                                                     <td>{{$c++}}</td>
