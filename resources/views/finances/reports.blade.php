@@ -167,7 +167,7 @@
                                     </table>
                                     @elseif($statement==2)
                                             <table class="table table-bordered table-hover table-striped" id="data-table">
-                                                <caption style="caption-side:top">                                           Detailed Income Statement from {{date('d F Y', strtotime($start_date))}} To {{date('d F Y', strtotime($end_date))}}
+                                                <caption style="caption-side:top">    Detailed Income Statement from {{date('d F Y', strtotime($start_date))}} To {{date('d F Y', strtotime($end_date))}}
                                                 </caption>
                                                 <thead>
                                                 <tr>
@@ -190,26 +190,52 @@
                                                 ?>
                                                 <tr>
                                                     <td>{{$c++}}</td>
-                                                    <td> <b>Church Revenue</b></td>
+                                                    <td> <b>CHURCH INCOME</b></td>
                                                     <td></td>
                                                     <td></td>
                                                     <td></td>
                                                     <td></td>
                                                 </tr>
-                                                @foreach($credits as $credit)
+                                                @foreach($catCredits as $tuple)
                                                     <tr>
                                                         <td>{{$c++}}</td>
                                                         <td></td>
-                                                        <td>{{ucwords($credit->name) }}</td>
+                                                        <th>{{ucwords($tuple->name) }}</th>
                                                         <td></td>
                                                         <td></td>
-                                                        <td>{{number_format($credit->amount,2)}}</td>
-                                                        <p class="d-none">{{$b1 = $b1+$credit->amount}}</p>
+                                                        <td></td>
+                                                    </tr>
+                                                    @foreach($tuple->getAccountBalanceByAccountIdDebits($tuple->id,$start_date,$end_date) as $credit)
+                                                        <tr>
+                                                            <td>{{$c++}}</td>
+                                                            <td></td>
+                                                            <td></td>
+                                                            <td>{{ucwords(@$credit->name) }}</td>
+                                                            <td></td>
+                                                            <td>{{number_format($credit->amount,2)}}</td>
+                                                            <p class="d-none">{{$b1 = $b1+$credit->amount}}</p>
+                                                        </tr>
+                                                    @endforeach
+                                                    <tr>
+                                                        <td>{{$c++}}</td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <th>SUB-TOTAL</th>
+                                                        <td></td>
+                                                        <th>{{number_format($tuple->amount,2)}}</th>
                                                     </tr>
                                                 @endforeach
                                                 <tr>
                                                     <td>{{$c++}}</td>
-                                                    <td><b>Total Church Revenue</b></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                </tr>
+                                                <tr>
+                                                    <td>{{$c++}}</td>
+                                                    <td><b>TOTAL INCOME</b></td>
                                                     <td></td>
                                                     <td></td>
                                                     <td></td>
@@ -217,30 +243,64 @@
                                                 </tr>
                                                 <tr>
                                                     <td>{{$c++}}</td>
-                                                    <td> <b>Less Cost of Church Revenue</b></td>
+                                                    <td></td>
                                                     <td></td>
                                                     <td></td>
                                                     <td></td>
                                                     <td></td>
                                                 </tr>
-                                                @foreach($expenses as $debit)
+                                                <tr>
+                                                    <td>{{$c++}}</td>
+                                                    <td> <b>EXPENDITURES</b></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                </tr>
+                                                @foreach($catDebits as $tuple)
                                                     <tr>
                                                         <td>{{$c++}}</td>
                                                         <td></td>
-                                                        <td>{{ucwords($debit->name) }}</td>
+                                                        <th>{{ucwords($tuple->name) }}</th>
                                                         <td></td>
-                                                        <td>{{number_format($debit->amount,2)}}</td>
-                                                        <p class="d-none">{{$b2 = $b2+$debit->amount}}</p>
                                                         <td></td>
+                                                        <td></td>
+                                                    </tr>
+                                                    @foreach($tuple->getAccountBalanceByAccountIdDebits($tuple->id,$start_date,$end_date) as $credit)
+                                                        <tr>
+                                                            <td>{{$c++}}</td>
+                                                            <td></td>
+                                                            <td></td>
+                                                            <td>{{ucwords(@$credit->name) }}</td>
+                                                            <td></td>
+                                                            <td>{{number_format($credit->amount,2)}}</td>
+                                                            <p class="d-none">{{$b2 = $b2+$credit->amount}}</p>
+                                                        </tr>
+                                                    @endforeach
+                                                    <tr>
+                                                        <td>{{$c++}}</td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <th>SUB-TOTAL</th>
+                                                        <td></td>
+                                                        <th>{{number_format($tuple->amount,2)}}</th>
                                                     </tr>
                                                 @endforeach
                                                 <tr>
                                                     <td>{{$c++}}</td>
-                                                    <td><b>Total cost of Church Revenue </b></td>
                                                     <td></td>
                                                     <td></td>
                                                     <td></td>
-                                                    <td><b><u>({{number_format($b2,2)}})</u></b> </td>
+                                                    <td></td>
+                                                    <td> </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>{{$c++}}</td>
+                                                    <td><b>TOTAL EXPENDITURES</b></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td><b>{{number_format($b2,2)}}</b> </td>
                                                 </tr>
                                                 <tr>
                                                     <td>{{$c++}}</td>
@@ -248,42 +308,15 @@
                                                     <td></td>
                                                     <td></td>
                                                     <td></td>
-                                                    <td><b>{{number_format($b1-$b2,2)}}</b> </td>
+                                                    <td></td>
                                                 </tr>
                                                 <tr>
                                                     <td>{{$c++}}</td>
-                                                    <td> <b>Less Administration  Costs</b></td>
+                                                    <td><b>SURPLUS/SHORTFALL</b></td>
                                                     <td></td>
                                                     <td></td>
                                                     <td></td>
-                                                    <td></td>
-                                                </tr>
-                                                @foreach($admins as $admin)
-                                                    <tr>
-                                                        <td>{{$c++}}</td>
-                                                        <td></td>
-                                                        <td>{{ucwords($admin->name) }}</td>
-                                                        <td></td>
-                                                        <td>{{number_format($admin->amount,2)}}</td>
-                                                        <p class="d-none">{{$b3 = $b3+$admin->amount}}</p>
-                                                        <td></td>
-                                                    </tr>
-                                                @endforeach
-                                                <tr>
-                                                    <td>{{$c++}}</td>
-                                                    <td><b>Total Administration Cost </b></td>
-                                                    <td></td>
-                                                    <td></td>
-                                                    <td></td>
-                                                    <td><b><u>({{number_format($b3,2)}})</u></b> </td>
-                                                </tr>
-                                                <tr>
-                                                    <td>{{$c++}}</td>
-                                                    <td><b>Profit For the Period</b></td>
-                                                    <td></td>
-                                                    <td></td>
-                                                    <td></td>
-                                                    <td><b>{{number_format($b1-$b2-$b3,2)}}</b> </td>
+                                                    <th style="text-underline: #0c0c0c"><u>{{number_format($b1-$b2,2)}}</u> </th>
                                                 </tr>
                                                 </tbody>
                                             </table>
