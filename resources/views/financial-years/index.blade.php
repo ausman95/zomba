@@ -15,7 +15,7 @@
         <nav aria-label="breadcrumb">
             <ol class="breadcrumb bg-transparent">
                 <li class="breadcrumb-item"><a href="{{route('home')}}">Home</a></li>
-                <li class="breadcrumb-item"><a href="{{route('finances.index')}}">Finances</a></li>
+                <li class="breadcrumb-item"><a href="{{route('setting.index')}}">Settings</a></li>
                 <li class="breadcrumb-item active" aria-current="page">Financial Years</li>
             </ol>
         </nav>
@@ -35,7 +35,7 @@
                                     <i class="fa fa-info-circle"></i>There are no Financial Years!
                                 @else
                                     <div style="overflow-x:auto;">
-                                        <table class="table table-primary table-bordered table-hover table-striped">
+                                        <table class="table  table-bordered table-hover table-striped">
                                             <caption style=" caption-side: top; text-align: center">FINANCIAL YEARS</caption>
                                             <thead>
                                         <tr>

@@ -12,12 +12,16 @@ class Budget extends Model
     use HasFactory;
     protected $fillable = [
         'amount', 'account_id',
-        'start_date','end_date',
+        'start_date','end_date','year_id',
         'created_by','updated_by'
     ];
     public function account(): BelongsTo
     {
         return $this->belongsTo(Accounts::class,'account_id');
+    }
+    public function years(): BelongsTo
+    {
+        return $this->belongsTo(FinancialYear::class,'year_id');
     }
     public function getAllocated($accountId,$start_date,$end_date)
     {

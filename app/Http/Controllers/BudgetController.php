@@ -6,6 +6,7 @@ use App\Http\Requests\Budgets\StoreRequest;
 use App\Http\Requests\Budgets\UpdateRequest;
 use App\Models\Accounts;
 use App\Models\Budget;
+use App\Models\FinancialYear;
 use App\Models\Incomes;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -21,7 +22,7 @@ class BudgetController extends Controller
     {
         activity('BUDGETS')
             ->log("Accessed a Budget")->causer(request()->user());
-        $budget = Budget::orderBy('id','desc')->get();;
+        $budget = Budget::orderBy('id','desc')->get();
         return view('budgets.index')->with([
             'cpage' => "finances",
             'budgets'=>$budget
@@ -36,10 +37,10 @@ class BudgetController extends Controller
      */
     public function create()
     {
-        $accounts = Accounts::all();
         return view('budgets.create')->with([
             'cpage'=>"finances",
-            'accounts' => $accounts,
+            'accounts' => Accounts::where(['soft_delete'=>0])->orderBy('id','desc')->get(),
+            'years' => FinancialYear::where(['soft_delete'=>0])->orderBy('id','desc')->get(),
         ]);
     }
 
@@ -59,6 +60,7 @@ class BudgetController extends Controller
         $check_data = [
             'account_id'=>$data['account_id'],
             'start_date'=>$data['start_date'],
+            'year_id'=>$data['year_id'],
             'end_date'=>$data['end_date']
         ];
 
@@ -101,6 +103,7 @@ class BudgetController extends Controller
         return view('budgets.edit')->with([
             'cpage' => "finances",
             'budget' => $budget,
+            'years' => FinancialYear::where(['soft_delete'=>0])->orderBy('id','desc')->get(),
             'accounts' => $accounts,
         ]);
     }

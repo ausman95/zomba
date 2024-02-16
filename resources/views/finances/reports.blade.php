@@ -175,9 +175,9 @@
                                                     <th>ACCOUNT</th>
                                                     <th></th>
                                                     <th></th>
-                                                    <th>AMOUNT (MK)</th>
-                                                    <th>AMOUNT (MK)</th>
-
+                                                    <th>ACTUAL (MK)</th>
+                                                    <th>BUDGETED (MK)</th>
+                                                    <th>% VARIANCE </th>
                                                 </tr>
                                                 </thead>
                                                 <tbody>
@@ -195,12 +195,14 @@
                                                     <td></td>
                                                     <td></td>
                                                     <td></td>
+                                                    <td></td>
                                                 </tr>
                                                 @foreach($catCredits as $tuple)
                                                     <tr>
                                                         <td>{{$c++}}</td>
                                                         <td></td>
                                                         <th>{{ucwords($tuple->name) }}</th>
+                                                        <td></td>
                                                         <td></td>
                                                         <td></td>
                                                         <td></td>
@@ -211,8 +213,9 @@
                                                             <td></td>
                                                             <td></td>
                                                             <td>{{ucwords(@$credit->name) }}</td>
-                                                            <td></td>
                                                             <th>{{number_format($credit->amount,2)}}</th>
+                                                            <td></td>
+{{--                                                            <th>{{number_format(getBudgetByAccountId($credit->amount,2)}}</th>--}}
                                                             <p class="d-none">{{$b1 = $b1+$credit->amount}}</p>
                                                         </tr>
                                                     @endforeach
@@ -221,12 +224,14 @@
                                                         <td></td>
                                                         <td></td>
                                                         <th>SUB-TOTAL</th>
-                                                        <td></td>
                                                         <th>{{number_format($tuple->amount,2)}}</th>
+                                                        <td></td>
+                                                        <td></td>
                                                     </tr>
                                                 @endforeach
                                                 <tr>
                                                     <td>{{$c++}}</td>
+                                                    <td></td>
                                                     <td></td>
                                                     <td></td>
                                                     <td></td>
@@ -238,11 +243,13 @@
                                                     <th><b>TOTAL INCOME</b></th>
                                                     <td></td>
                                                     <td></td>
-                                                    <td></td>
                                                     <th><b>{{number_format($b1,2)}}</b> </th>
+                                                    <td></td>
+                                                    <td></td>
                                                 </tr>
                                                 <tr>
                                                     <td>{{$c++}}</td>
+                                                    <td></td>
                                                     <td></td>
                                                     <td></td>
                                                     <td></td>
@@ -256,12 +263,14 @@
                                                     <td></td>
                                                     <td></td>
                                                     <td></td>
+                                                    <td></td>
                                                 </tr>
                                                 @foreach($catDebits as $tuple)
                                                     <tr>
                                                         <td>{{$c++}}</td>
                                                         <td></td>
                                                         <th>{{ucwords($tuple->name) }}</th>
+                                                        <td></td>
                                                         <td></td>
                                                         <td></td>
                                                         <td></td>
@@ -274,6 +283,7 @@
                                                             <td>{{ucwords(@$credit->name) }}</td>
                                                             <th>{{number_format($credit->amount,2)}}</th>
                                                             <td></td>
+                                                            <td></td>
                                                             <p class="d-none">{{$b2 = $b2+$credit->amount}}</p>
                                                         </tr>
                                                     @endforeach
@@ -284,7 +294,7 @@
                                                         <th>SUB-TOTAL</th>
                                                         <th>{{number_format($tuple->amount,2)}}</th>
                                                         <td></td>
-
+                                                        <td></td>
                                                     </tr>
                                                 @endforeach
                                                 <tr>
@@ -294,17 +304,20 @@
                                                     <td></td>
                                                     <td></td>
                                                     <td> </td>
+                                                    <td> </td>
                                                 </tr>
                                                 <tr>
                                                     <td>{{$c++}}</td>
                                                     <th><b>TOTAL EXPENDITURES</b></th>
                                                     <td></td>
                                                     <td></td>
-                                                    <td></td>
                                                     <th><b>({{number_format($b2,2)}})</b> </th>
+                                                    <td></td>
+                                                    <td></td>
                                                 </tr>
                                                 <tr>
                                                     <td>{{$c++}}</td>
+                                                    <td></td>
                                                     <td></td>
                                                     <td></td>
                                                     <td></td>
@@ -316,8 +329,9 @@
                                                     <th><b>SURPLUS/SHORTFALL</b></th>
                                                     <td></td>
                                                     <td></td>
-                                                    <td></td>
                                                     <th style="text-underline: #0c0c0c"><u>{{number_format($b1-$b2,2)}}</u> </th>
+                                                    <td></td>
+                                                    <td></td>
                                                 </tr>
                                                 </tbody>
                                             </table>

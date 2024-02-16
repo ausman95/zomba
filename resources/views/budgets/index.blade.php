@@ -41,11 +41,12 @@
                                         <tr>
                                             <th>NO</th>
                                             <th>ACCOUNT NAME</th>
+                                            <th>FINANCIAL YEAR</th>
                                             <th>START DATE</th>
                                             <th>END DATE</th>
                                             <th>BUDGETED AMOUNT (MK)</th>
-                                            <th>ACTUAL AMOUNT (MK)</th>
-                                            <th>VARIANCE (MK)</th>
+{{--                                            <th>ACTUAL AMOUNT (MK)</th>--}}
+{{--                                            <th>VARIANCE (MK)</th>--}}
                                             <th>CREATED BY</th>
                                             <th>UPDATED BY</th>
                                             <th>ACTION</th>
@@ -57,15 +58,16 @@
                                             <tr>
                                                 <td>{{$c++}}</td>
                                                 <td>{{ucwords($budget->account->name) }}</td>
+                                                <td>{{ucwords($budget->years->name) }}</td>
                                                 <td>{{date('d F Y', strtotime($budget->start_date)) }}</td>
                                                 <td>{{date('d F Y', strtotime($budget->end_date)) }}</td>
                                                 <td>{{number_format($budget->amount,2) }}</td>
-                                                <td>{{number_format($budget->getAllocated($budget->account_id,
-                                                        $budget->start_date,
-                                                        $budget->end_date),2) }}</td>
-                                                <td>{{number_format($budget->getAllocated($budget->account_id,
-                                                        $budget->start_date,
-                                                        $budget->end_date)-$budget->amount,2) }}</td>
+{{--                                                <td>{{number_format($budget->getAllocated($budget->account_id,--}}
+{{--                                                        $budget->start_date,--}}
+{{--                                                        $budget->end_date),2) }}</td>--}}
+{{--                                                <td>{{number_format($budget->getAllocated($budget->account_id,--}}
+{{--                                                        $budget->start_date,--}}
+{{--                                                        $budget->end_date)-$budget->amount,2) }}</td>--}}
                                                 <td>{{\App\Models\Budget::userName($budget->created_by)}}</td>
                                                 <td>{{\App\Models\Budget::userName($budget->updated_by)}}</td>
                                                 <td class="pt-1">

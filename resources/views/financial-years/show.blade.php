@@ -12,7 +12,7 @@
         <nav>
             <ol class="breadcrumb bg-transparent">
                 <li class="breadcrumb-item"><a href="{{route('home')}}">Home</a></li>
-                <li class="breadcrumb-item"><a href="{{route('finances.index')}}">Finances</a></li>
+                <li class="breadcrumb-item"><a href="{{route('setting.index')}}">Settings</a></li>
                 <li class="breadcrumb-item"><a href="{{route('financial-years.index')}}">Financial Years</a></li>
                 <li class="breadcrumb-item active" aria-current="page">{{$financial_year->name}}</li>
             </ol>
@@ -28,7 +28,7 @@
                             <div class="card">
                                 <div class="card-body">
                                 <div class="table-responsive">
-                                    <table class="table table-primary table-bordered table-hover table-striped">
+                                    <table class="table  table-bordered table-hover table-striped">
                                         <caption style=" caption-side: top; text-align: center">{{$financial_year->name}} INFORMATION</caption>
                                         <tbody>
                                         <tr>

@@ -79,6 +79,22 @@
                             @enderror
                         </div>
                         <div class="form-group">
+                            <label> Financial Year </label>
+                            <select name="year_id" required
+                                    class="form-select select-relation @error('year_id') is-invalid @enderror" style="width: 100%">
+                                <option value="">-- Select ---</option>
+                                @foreach($years as $year)
+                                    <option value="{{$year->id}}"
+                                        {{old('year_id')===$year->id ? 'selected' : ''}}>{{$year->name}}</option>
+                                @endforeach
+                            </select>
+                            @error('year_id')
+                            <span class="invalid-feedback">
+                               {{$message}}
+                        </span>
+                            @enderror
+                        </div>
+                        <div class="form-group">
                             <button class="btn btn-md btn-primary rounded-0">
                                 <i class="fa fa-paper-plane"></i>Save
                             </button>

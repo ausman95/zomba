@@ -12,7 +12,7 @@
         <nav aria-label="breadcrumb">
             <ol class="breadcrumb bg-transparent">
                 <li class="breadcrumb-item"><a href="{{route('home')}}">Home</a></li>
-                <li class="breadcrumb-item"><a href="{{route('finances.index')}}">Finances</a></li>
+                <li class="breadcrumb-item"><a href="{{route('setting.index')}}">Settings</a></li>
                 <li class="breadcrumb-item"><a href="{{route('financial-years.index')}}">Financial Years</a></li>
                 <li class="breadcrumb-item active" aria-current="page">Create Financial Year</li>
             </ol>

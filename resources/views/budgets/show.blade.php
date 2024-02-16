@@ -41,7 +41,7 @@
                                         </tr>
                                         <tr>
                                             <td>Amount (MK)</td>
-                                            <td>{{ number_format($budget->amount)}}</td>
+                                            <td>{{ number_format($budget->amount,2)}}</td>
                                         </tr>
                                         <tr>
                                             <td>Created On</td>

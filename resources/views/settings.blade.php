@@ -32,6 +32,9 @@
                 <a href="{{route('services.index')}}" class="btn btn-primary rounded-0" >
                     <i class="fa fa-folder-plus"></i>  Services
                 </a>
+                <a href="{{route('financial-years.index')}}" class="btn btn-primary rounded-0" >
+                    <i class="fa fa-calendar-alt"></i>  Financial Years
+                </a>
             </div>
             <div class="mt-3">
                 <div class="row">
