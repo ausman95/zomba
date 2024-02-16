@@ -500,13 +500,13 @@
                                                 <td></td>
                                                 <td></td>
                                             </tr>
-                                            @foreach($admins as $admin)
+                                            @foreach($admins as $credit)
                                                 <tr>
                                                     <td>{{$c++}}</td>
                                                     <td></td>
-                                                    <td>{{ucwords($admin->name) }}</td>
-                                                    <th>{{number_format($admin->amount,2)}}</th>
-                                                    <p class="d-none">{{$b3 = $b3+$admin->amount}}</p>
+                                                    <td>{{ucwords($credit->name) }}</td>
+                                                    <th>{{number_format($credit->amount,2)}}</th>
+                                                    <p class="d-none">{{$b3 = $b3+$credit->amount}}</p>
                                                     <th>{{number_format($credit->getBudgetByAccountId(2,$credit->id,$start_date,$end_date),2)}}</th>
                                                     <th>
                                                         @if($credit->getBudgetByAccountId(2,$credit->id,$start_date,$end_date)!=0)

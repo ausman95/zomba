@@ -105,14 +105,13 @@ class Accounts extends Model
     public static  function getAccountBalanceAdmin($statement,$start_date,$end_date)
     {
         if($statement==3){
-            $credits = DB::table('payments')
-                ->join('accounts', 'accounts.id', '=', 'payments.account_id')
+            $credits = BankTransaction::join('accounts', 'accounts.id', '=', 'bank_transactions.account_id')
                 ->join('categories', 'categories.id', '=', 'accounts.category_id')
-                ->select('categories.*', DB::raw('SUM(payments.amount) as amount'))
+                ->select('categories.*', DB::raw('SUM(bank_transactions.amount) as amount'))
                 ->where(['accounts.type' => 2])
                 ->where('accounts.id', '!=', 134)
 //                ->where('bank_transactions.type', '=', 2)
-                ->whereBetween('payments.t_date', [$start_date, $end_date])
+                ->whereBetween('bank_transactions.t_date', [$start_date, $end_date])
                 ->groupBy('categories.id')
                 ->get();
         }else {
