@@ -61,7 +61,7 @@
                                                 <td>{{ucwords($budget->years->name) }}</td>
                                                 <td>{{date('d F Y', strtotime($budget->start_date)) }}</td>
                                                 <td>{{date('d F Y', strtotime($budget->end_date)) }}</td>
-                                                <td>{{number_format($budget->amount,2) }}</td>
+                                                <th>{{number_format($budget->amount,2) }}</th>
 {{--                                                <td>{{number_format($budget->getAllocated($budget->account_id,--}}
 {{--                                                        $budget->start_date,--}}
 {{--                                                        $budget->end_date),2) }}</td>--}}
