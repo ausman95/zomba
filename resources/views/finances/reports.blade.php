@@ -166,7 +166,7 @@
                                         </tbody>
                                     </table>
                                     @elseif($statement==2)
-                                            <table class="table table-bordered table-hover table-striped" id="data-table">
+                                            <table data-page-length='100'  class="table table-bordered table-hover table-striped" id="data-table">
                                                 <caption style="caption-side:top">    Detailed Income Statement from {{date('d F Y', strtotime($start_date))}} To {{date('d F Y', strtotime($end_date))}}
                                                 </caption>
                                                 <thead>
@@ -178,6 +178,7 @@
                                                     <th>ACTUAL (MK)</th>
                                                     <th>BUDGETED (MK)</th>
                                                     <th>% VARIANCE </th>
+                                                    <th>VARIANCE (MK)</th>
                                                 </tr>
                                                 </thead>
                                                 <tbody>
@@ -186,11 +187,17 @@
                                                 $b1 = 0;
                                                 $b2 = 0;
                                                 $b3 = 0;
-                                                $df = 0;
+                                                $percent = 0;
+                                                $variance = 0;
+                                                $budget = 0;
+                                                    $e_percent = 0;
+                                                    $e_variance = 0;
+                                                    $e_budget = 0;
                                                 ?>
                                                 <tr>
                                                     <td>{{$c++}}</td>
                                                     <th> <b>CHURCH INCOME</b></th>
+                                                    <td></td>
                                                     <td></td>
                                                     <td></td>
                                                     <td></td>
@@ -206,6 +213,7 @@
                                                         <td></td>
                                                         <td></td>
                                                         <td></td>
+                                                        <td></td>
                                                     </tr>
                                                     @foreach($tuple->getAccountBalanceByAccountIdDebits($tuple->id,$start_date,$end_date) as $credit)
                                                         <tr>
@@ -214,9 +222,19 @@
                                                             <td></td>
                                                             <td>{{ucwords(@$credit->name) }}</td>
                                                             <th>{{number_format($credit->amount,2)}}</th>
-                                                            <td></td>
-{{--                                                            <th>{{number_format(getBudgetByAccountId($credit->amount,2)}}</th>--}}
+                                                            <th>{{number_format($credit->getBudgetByAccountId(1,$credit->id,$start_date,$end_date),2)}}</th>
+                                                            <th>
+                                                                @if($credit->getBudgetByAccountId(1,$credit->id,$start_date,$end_date)!=0)
+                                                                {{number_format((($credit->amount-$credit->getBudgetByAccountId(1,$credit->id,$start_date,$end_date))/$credit->getBudgetByAccountId(1,$credit->id,$start_date,$end_date)*100),2)}}
+{{--                                                                    <p class="d-none">{{$percent = $percent+(($credit->amount-$credit->getBudgetByAccountId(1,$credit->id,$start_date,$end_date))/$credit->getBudgetByAccountId($credit->id,$start_date,$end_date)*100)}}</p>--}}
+                                                                @else
+                                                                   BUDGET NOT-SET
+                                                                @endif
+                                                                </th>
+                                                            <th>{{number_format($credit->amount-$credit->getBudgetByAccountId(1,$credit->id,$start_date,$end_date),2)}}</th>
                                                             <p class="d-none">{{$b1 = $b1+$credit->amount}}</p>
+
+
                                                         </tr>
                                                     @endforeach
                                                     <tr>
@@ -225,12 +243,28 @@
                                                         <td></td>
                                                         <th>SUB-TOTAL</th>
                                                         <th>{{number_format($tuple->amount,2)}}</th>
-                                                        <td></td>
-                                                        <td></td>
+                                                        <th>{{number_format($credit->getBudgetByAccountId(2,$tuple->id,$start_date,$end_date),2)}}</th>
+                                                        <th>
+                                                            @if($credit->getBudgetByAccountId(2,$tuple->id,$start_date,$end_date)!=0)
+                                                                {{number_format((($tuple->amount-$credit->
+                                                                        getBudgetByAccountId(2,$tuple->id,$start_date,$end_date))/$credit->
+                                                                            getBudgetByAccountId(2,$tuple->id,$start_date,$end_date)*100),2)}}
+                                                                <p class="d-none">{{$percent = $percent+(($tuple->amount-$credit->
+                                                                        getBudgetByAccountId(2,$tuple->id,$start_date,$end_date))/$credit->
+                                                                            getBudgetByAccountId(2,$tuple->id,$start_date,$end_date)*100)}}</p>
+                                                            @else
+                                                                BUDGET NOT-SET
+                                                            @endif
+                                                        </th>
+                                                        <th>{{number_format($tuple->amount-$credit->getBudgetByAccountId(2,$tuple->id,$start_date,$end_date),2)}}</th>
+                                                        <p class="d-none">{{$budget = $budget+$credit->getBudgetByAccountId(2,$tuple->id,$start_date,$end_date)}}</p>
+                                                        <p class="d-none">{{$variance = $variance+$tuple->amount-$credit->getBudgetByAccountId(2,$tuple->id,$start_date,$end_date)}}</p>
+
                                                     </tr>
                                                 @endforeach
                                                 <tr>
                                                     <td>{{$c++}}</td>
+                                                    <td></td>
                                                     <td></td>
                                                     <td></td>
                                                     <td></td>
@@ -244,11 +278,13 @@
                                                     <td></td>
                                                     <td></td>
                                                     <th><b>{{number_format($b1,2)}}</b> </th>
-                                                    <td></td>
-                                                    <td></td>
+                                                    <th><b>{{number_format($budget,2)}}</b> </th>
+                                                    <th><b>{{number_format($percent,2)}}</b> </th>
+                                                    <th><b>{{number_format($variance,2)}}</b> </th>
                                                 </tr>
                                                 <tr>
                                                     <td>{{$c++}}</td>
+                                                    <td></td>
                                                     <td></td>
                                                     <td></td>
                                                     <td></td>
@@ -264,12 +300,14 @@
                                                     <td></td>
                                                     <td></td>
                                                     <td></td>
+                                                    <td></td>
                                                 </tr>
                                                 @foreach($catDebits as $tuple)
                                                     <tr>
                                                         <td>{{$c++}}</td>
                                                         <td></td>
                                                         <th>{{ucwords($tuple->name) }}</th>
+                                                        <td></td>
                                                         <td></td>
                                                         <td></td>
                                                         <td></td>
@@ -282,9 +320,16 @@
                                                             <td></td>
                                                             <td>{{ucwords(@$credit->name) }}</td>
                                                             <th>{{number_format($credit->amount,2)}}</th>
-                                                            <td></td>
-                                                            <td></td>
-                                                            <p class="d-none">{{$b2 = $b2+$credit->amount}}</p>
+                                                            <th>{{number_format($credit->getBudgetByAccountId(1,$credit->id,$start_date,$end_date),2)}}</th>
+                                                            <th>
+                                                                @if($credit->getBudgetByAccountId(1,$credit->id,$start_date,$end_date)!=0)
+                                                                    {{number_format((($credit->amount-$credit->getBudgetByAccountId(1,$credit->id,$start_date,$end_date))/$credit->getBudgetByAccountId(1,$credit->id,$start_date,$end_date)*100),2)}}%
+                                                                @else
+                                                                    BUDGET NOT-SET
+                                                                @endif
+                                                            </th>
+                                                            <th>{{number_format($credit->amount-$credit->getBudgetByAccountId(1,$credit->id,$start_date,$end_date),2)}}</th>
+                                                           <p class="d-none">{{$b2 = $b2+$credit->amount}}</p>
                                                         </tr>
                                                     @endforeach
                                                     <tr>
@@ -293,8 +338,23 @@
                                                         <td></td>
                                                         <th>SUB-TOTAL</th>
                                                         <th>{{number_format($tuple->amount,2)}}</th>
-                                                        <td></td>
-                                                        <td></td>
+                                                        <th>{{number_format($credit->getBudgetByAccountId(2,$tuple->id,$start_date,$end_date),2)}}</th>
+                                                        <th>
+                                                            @if($credit->getBudgetByAccountId(2,$tuple->id,$start_date,$end_date)!=0)
+                                                                {{number_format((($tuple->amount-$credit->
+                                                                        getBudgetByAccountId(2,$tuple->id,$start_date,$end_date))/$credit->
+                                                                            getBudgetByAccountId(2,$tuple->id,$start_date,$end_date)*100),2)}}
+                                                                <p class="d-none">{{$e_percent = $e_percent+(($tuple->amount-$credit->
+                                                                        getBudgetByAccountId(2,$tuple->id,$start_date,$end_date))/$credit->
+                                                                            getBudgetByAccountId(2,$tuple->id,$start_date,$end_date)*100)}}</p>
+                                                            @else
+                                                                BUDGET NOT-SET
+                                                            @endif
+                                                        </th>
+                                                        <th>{{number_format($tuple->amount-$credit->getBudgetByAccountId(2,$tuple->id,$start_date,$end_date),2)}}</th>
+                                                        <p class="d-none">{{$e_budget = $e_budget+$credit->getBudgetByAccountId(2,$tuple->id,$start_date,$end_date)}}</p>
+                                                        <p class="d-none">{{$e_variance = $e_variance+$tuple->amount-$credit->getBudgetByAccountId(2,$tuple->id,$start_date,$end_date)}}</p>
+
                                                     </tr>
                                                 @endforeach
                                                 <tr>
@@ -305,6 +365,7 @@
                                                     <td></td>
                                                     <td> </td>
                                                     <td> </td>
+                                                    <td></td>
                                                 </tr>
                                                 <tr>
                                                     <td>{{$c++}}</td>
@@ -312,11 +373,18 @@
                                                     <td></td>
                                                     <td></td>
                                                     <th><b>({{number_format($b2,2)}})</b> </th>
-                                                    <td></td>
-                                                    <td></td>
+                                                    <th><b>{{number_format($e_budget,2)}}</b> </th>
+                                                    <th><b>@if($e_budget!=0)
+                                                            {{number_format($e_variance/$e_budget*100,2)}}</b>
+                                                        @else
+                                                            NOT SET
+                                                        @endif
+                                                    </th>
+                                                    <th><b>{{number_format($e_variance,2)}}</b> </th>
                                                 </tr>
                                                 <tr>
                                                     <td>{{$c++}}</td>
+                                                    <td></td>
                                                     <td></td>
                                                     <td></td>
                                                     <td></td>
@@ -330,13 +398,21 @@
                                                     <td></td>
                                                     <td></td>
                                                     <th style="text-underline: #0c0c0c"><u>{{number_format($b1-$b2,2)}}</u> </th>
-                                                    <td></td>
-                                                    <td></td>
+                                                    <th><b>{{number_format($budget-$e_budget,2)}}</b> </th>
+                                                    <th><b>
+                                                            @if($budget-$e_budget!=0)
+                                                                {{number_format(($variance-$e_variance)/($budget-$e_budget)*100,2)}}
+                                                            @else
+                                                                BUDGET NOT SET
+                                                            @endif
+
+                                                        </b> </th>
+                                                    <th><b>{{number_format($variance-$e_variance,2)}}</b> </th>
                                                 </tr>
                                                 </tbody>
                                             </table>
                                     @elseif($statement==3)
-                                        <table class="table table-bordered table-hover table-striped" id="data-table">
+                                        <table data-page-length='100' class="table table-javascript table-bordered table-hover table-striped" id="data-table">
                                             <caption style="caption-side:top">                                           Summarized Income Statement from {{date('d F Y', strtotime($start_date))}} To {{date('d F Y', strtotime($end_date))}}
                                             </caption>
                                             <thead>
@@ -344,10 +420,10 @@
                                                 <th>NO</th>
                                                 <th>ACCOUNT</th>
                                                 <th></th>
-                                                <th></th>
-                                                <th>AMOUNT (MK)</th>
-                                                <th>AMOUNT (MK)</th>
-
+                                                <th>ACTUAL (MK)</th>
+                                                <th>BUDGETED (MK)</th>
+                                                <th>% VARIANCE </th>
+                                                <th>VARIANCE (MK)</th>
                                             </tr>
                                             </thead>
                                             <tbody>
@@ -356,11 +432,17 @@
                                                 $b1 = 0;
                                                 $b2 = 0;
                                                 $b3 = 0;
-                                                $df = 0;
+                                                $budget = 0;
+                                                $variance = 0;
+                                                $e_budget = 0;
+                                                $e_variance = 0;
+                                                $e_percent = 0;
+                                                $percent = 0;
                                                 ?>
                                             <tr>
                                                 <td>{{$c++}}</td>
                                                 <th> <b>CHURCH INCOME</b></th>
+                                                <td></td>
                                                 <td></td>
                                                 <td></td>
                                                 <td></td>
@@ -371,22 +453,38 @@
                                                     <td>{{$c++}}</td>
                                                     <td></td>
                                                     <td>{{ucwords($credit->name) }}</td>
-                                                    <td></td>
-                                                    <td></td>
                                                     <th>{{number_format($credit->amount,2)}}</th>
+                                                    <th>{{number_format($credit->getBudgetByAccountId(2,$credit->id,$start_date,$end_date),2)}}</th>
+                                                    <th>
+                                                        @if($credit->getBudgetByAccountId(2,$credit->id,$start_date,$end_date)!=0)
+                                                            {{number_format((($credit->amount-$credit->
+                                                                    getBudgetByAccountId(2,$credit->id,$start_date,$end_date))/$credit->
+                                                                        getBudgetByAccountId(2,$credit->id,$start_date,$end_date)*100),2)}}
+                                                            <p class="d-none">{{$percent = $percent+(($credit->amount-$credit->
+                                                                        getBudgetByAccountId(2,$credit->id,$start_date,$end_date))/$credit->
+                                                                            getBudgetByAccountId(2,$credit->id,$start_date,$end_date)*100)}}</p>
+                                                        @else
+                                                            BUDGET NOT-SET
+                                                        @endif
+                                                    </th>
+                                                    <th>{{number_format($credit->amount-$credit->getBudgetByAccountId(1,$credit->id,$start_date,$end_date),2)}}</th>
                                                     <p class="d-none">{{$b1 = $b1+$credit->amount}}</p>
+                                                    <p class="d-none">{{$budget = $budget+$credit->getBudgetByAccountId(2,$credit->id,$start_date,$end_date)}}</p>
+                                                    <p class="d-none">{{$variance = $variance+$credit->amount-$credit->getBudgetByAccountId(2,$credit->id,$start_date,$end_date)}}</p>
                                                 </tr>
                                             @endforeach
                                             <tr>
                                                 <td>{{$c++}}</td>
                                                 <th><b>TOTAL CHURCH INCOME </b></th>
                                                 <td></td>
-                                                <td></td>
-                                                <td></td>
                                                 <th><b>{{number_format($b1,2)}}</b> </th>
+                                                <th><b>{{number_format($budget,2)}}</b> </th>
+                                                <th><b>{{number_format($percent*100,2)}}</b> </th>
+                                                <th><b>{{number_format($variance,2)}}</b> </th>
                                             </tr>
                                                 <tr>
                                                     <td>{{$c++}}</td>
+                                                    <td></td>
                                                     <td></td>
                                                     <td></td>
                                                     <td></td>
@@ -400,33 +498,57 @@
                                                 <td></td>
                                                 <td></td>
                                                 <td></td>
+                                                <td></td>
                                             </tr>
                                             @foreach($admins as $admin)
                                                 <tr>
                                                     <td>{{$c++}}</td>
                                                     <td></td>
                                                     <td>{{ucwords($admin->name) }}</td>
-                                                    <td></td>
                                                     <th>{{number_format($admin->amount,2)}}</th>
                                                     <p class="d-none">{{$b3 = $b3+$admin->amount}}</p>
-                                                    <td></td>
+                                                    <th>{{number_format($credit->getBudgetByAccountId(2,$credit->id,$start_date,$end_date),2)}}</th>
+                                                    <th>
+                                                        @if($credit->getBudgetByAccountId(2,$credit->id,$start_date,$end_date)!=0)
+                                                            {{number_format((($credit->amount-$credit->
+                                                                    getBudgetByAccountId(2,$credit->id,$start_date,$end_date))/$credit->
+                                                                        getBudgetByAccountId(2,$credit->id,$start_date,$end_date)*100),2)}}
+                                                            <p class="d-none">{{$e_percent = $e_percent+(($credit->amount-$credit->
+                                                                        getBudgetByAccountId(2,$credit->id,$start_date,$end_date))/$credit->
+                                                                            getBudgetByAccountId(2,$credit->id,$start_date,$end_date)*100)}}</p>
+                                                        @else
+                                                            BUDGET NOT-SET
+                                                        @endif
+                                                    </th>
+                                                    <th>{{number_format($credit->amount-$credit->getBudgetByAccountId(1,$credit->id,$start_date,$end_date),2)}}</th>
+                                                    <p class="d-none">{{$e_budget = $e_budget+$credit->getBudgetByAccountId(2,$credit->id,$start_date,$end_date)}}</p>
+                                                    <p class="d-none">{{$e_variance = $e_variance+$credit->amount-$credit->getBudgetByAccountId(2,$credit->id,$start_date,$end_date)}}</p>
                                                 </tr>
                                             @endforeach
                                             <tr>
                                                 <td>{{$c++}}</td>
                                                 <th><b>TOTAL OVERHEADS</b></th>
                                                 <td></td>
-                                                <td></td>
-                                                <td></td>
                                                 <th><b><u>({{number_format($b3,2)}})</u></b> </th>
+                                                <th><b><u>({{number_format($e_budget,2)}})</u></b> </th>
+                                                <th><b><u>({{number_format($e_percent,2)}})</u></b> </th>
+                                                <th><b><u>({{number_format($e_variance,2)}})</u></b> </th>
                                             </tr>
                                             <tr>
                                                 <td>{{$c++}}</td>
                                                 <th><b>SURPLUS/SHORTFALL</b></th>
                                                 <td></td>
-                                                <td></td>
-                                                <td></td>
                                                 <th><b>{{number_format($b1-$b3,2)}}</b> </th>
+                                                <th><b><u>({{number_format($budget-$e_budget,2)}})</u></b> </th>
+                                                <th>
+                                                    @if($budget-$e_budget!=0)
+                                                        ({{number_format(($variance-$e_variance)/($budget-$e_budget)*100,2)}})
+                                                    @else
+                                                        BUDGET NOT SET
+                                                    @endif
+                                                    <b><u>
+                                                        </u></b> </th>
+                                                <th><b><u>({{number_format($variance-$e_variance,2)}})</u></b> </th>
                                             </tr>
                                             </tbody>
                                         </table>
@@ -445,32 +567,5 @@
 
 @stop
 @section('scripts')
-    <script src="{{asset('vendor/simple-datatable/simple-datatable.js')}}"></script>
-    <script>
-        function confirmationWindow(title, message, primaryLabel, callback) {
-            Swal.fire({
-                title: title,
-                text: message,
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#3085d6',
-                cancelButtonColor: '#d33',
-                confirmButtonText: primaryLabel
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    callback();
-                }
-            })
-        }
-        $(document).ready(function () {
-            $(".delete-btn").on('click', function () {
-                $url = $(this).attr('data-target-url');
 
-                $("#delete-form").attr('action', $url);
-                confirmationWindow("Confirm Deletion", "Are you sure you want to delete this position?", "Yes,Delete", function () {
-                    $("#delete-form").submit();
-                })
-            });
-        })
-    </script>
 @stop

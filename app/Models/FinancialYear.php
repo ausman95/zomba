@@ -11,5 +11,9 @@ class FinancialYear extends Model
     protected $fillable = [
         'name', 'start_date','end_date','status'
     ];
-
+    public static function getYear($start_date,$end_date){
+        return FinancialYear::where('start_date','<=',$start_date)
+            ->where('end_date','>=',$end_date)
+            ->first();
+    }
 }

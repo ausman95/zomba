@@ -23,8 +23,7 @@ class Accounts extends Model
     public static  function getAccountBalanceDebits($statement,$start_date,$end_date)
     {
         if($statement==3){
-            $credits = DB::table('bank_transactions')
-                ->join('accounts', 'accounts.id', '=', 'bank_transactions.account_id')
+            $credits = BankTransaction::join('accounts', 'accounts.id', '=', 'bank_transactions.account_id')
                 ->join('categories', 'categories.id', '=', 'accounts.category_id')
                 ->select('categories.*', DB::raw('SUM(bank_transactions.amount) as amount'))
                 ->where(['accounts.type' => 1])

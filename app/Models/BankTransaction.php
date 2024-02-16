@@ -6,6 +6,7 @@ use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Support\Facades\DB;
 
 class BankTransaction extends Model
 {
@@ -24,14 +25,49 @@ class BankTransaction extends Model
     {
         return $this->belongsTo(Accounts::class,'account_id');
     }
-//    public function getBudgetByAccountId($accountId,$start_date,$end_date)
-//    {
-//        $start_date = Carbon::parse($serviceDueDate);
-//        $end_date = Carbon::parse(date('Y-m-d'));
-//         $start_date->diffInDays($end_date);
-//
-//         $value = Budget::where(['account_id'=>$accountId])
-//            ->whereBetween('created_at',[$start_date,$end_date])
-//            ->groupBy('account_id')->sum("amount");
-//    }
+    public function getBudgetByAccountId($status,$accountId,$start_date,$end_date)
+    {
+
+         // financial year get number of days
+        $year = FinancialYear::getYear($start_date,$end_date);
+        $fin_start_date = Carbon::parse($year->start_date);
+        $fin_end_date = Carbon::parse($year->end_date);
+        $fin_day_different  = $fin_start_date->diffInDays($fin_end_date);
+
+        // get number of selected day
+        $select_start_date = Carbon::parse($start_date);
+        $select_end_date = Carbon::parse($end_date);
+        $different_selected_days  = $select_start_date->diffInDays($select_end_date);
+
+        $value_amount = 0;
+        if($status==1) {
+            $value = Budget::where(['account_id' => $accountId])
+                ->where(['year_id' => $year->id])
+                ->select(
+                    DB::raw('SUM(amount) as amount')
+                )
+                ->groupBy('account_id')
+                ->first();
+        }else{
+            $value = Budget::where(['category_id' => $accountId])
+                ->join('accounts', 'accounts.id', '=', 'budgets.account_id')
+                ->where(['year_id' => $year->id])
+                ->select(
+                    DB::raw('SUM(amount) as amount')
+                )
+                ->groupBy('category_id')
+                ->first();
+        }
+        if($value){
+            if($fin_day_different<$different_selected_days){
+                $value_amount = $value->amount*$fin_day_different/$different_selected_days;
+            }else{
+                $value_amount = $value->amount*$different_selected_days/$fin_day_different;
+            }
+        }
+
+        // find budget proportional
+
+        return $value_amount;
+    }
 }

@@ -63,7 +63,6 @@
 <script src="https://cdn.datatables.net/buttons/2.2.3/js/buttons.print.min.js"></script>
 <script src="https://cdn.datatables.net/buttons/2.2.3/js/buttons.colVis.min.js"></script>
 <script src="{{asset('vendors/select2/js/select2.full.js')}}"></script>
-
 <script>
     $(document).ready(function () {
         (function () {
@@ -177,7 +176,9 @@
     </script>
 @elseif(session()->has('error-notification') || count($errors)!=0)
     <script>
+
         $(document).ready(function () {
+
             "use strict";
             Swal.fire({
                 icon: 'error',
@@ -185,6 +186,12 @@
                 text: '{{session('error-notification')}}',
             })
             $('.table').DataTable({
+                cache: false,
+                height: 400,
+                striped: true,
+                pagination: true,
+                pageSize: 1115, //specify 5 here
+                pageList: [5, 10, 25, 50, 100, 200],
                 dom: "Bfrtip",
                 //responsive:true,
                 buttons: [
