@@ -59,8 +59,8 @@
                                                 <td>{{$c++}}</td>
                                                 <td>{{ucwords($budget->account->name) }}</td>
                                                 <td>{{ucwords($budget->years->name) }}</td>
-                                                <td>{{date('d F Y', strtotime($budget->start_date)) }}</td>
-                                                <td>{{date('d F Y', strtotime($budget->end_date)) }}</td>
+                                                <td>{{date('d F Y', strtotime($budget->years->start_date)) }}</td>
+                                                <td>{{date('d F Y', strtotime($budget->years->end_date)) }}</td>
                                                 <th>{{number_format($budget->amount,2) }}</th>
 {{--                                                <td>{{number_format($budget->getAllocated($budget->account_id,--}}
 {{--                                                        $budget->start_date,--}}

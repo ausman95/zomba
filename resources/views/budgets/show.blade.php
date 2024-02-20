@@ -32,12 +32,16 @@
                                             <td>{{$budget->account->name}}</td>
                                         </tr>
                                         <tr>
+                                            <td>Financial Year </td>
+                                            <td>{{$budget->years->name}}</td>
+                                        </tr>
+                                        <tr>
                                             <td>From (Start Date)</td>
-                                            <td>{{date('d F Y', strtotime($budget->start_date)) }}</td>
+                                            <td>{{date('d F Y', strtotime($budget->years->start_date)) }}</td>
                                         </tr>
                                         <tr>
                                             <td>To (End Date)</td>
-                                            <td>{{date('d F Y', strtotime($budget->end_date)) }}</td>
+                                            <td>{{date('d F Y', strtotime($budget->years->end_date)) }}</td>
                                         </tr>
                                         <tr>
                                             <td>Amount (MK)</td>

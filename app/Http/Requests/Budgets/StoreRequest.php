@@ -25,8 +25,6 @@ class StoreRequest extends FormRequest
     {
         return [
             'amount' => "required|numeric|min:1",
-            'start_date' => "required|string",
-            'end_date' => "required|string",
             'year_id' => "required|numeric",
             'account_id' => "required|numeric|exists:accounts,id",
         ];

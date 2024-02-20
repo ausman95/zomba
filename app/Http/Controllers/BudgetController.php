@@ -59,9 +59,7 @@ class BudgetController extends Controller
         $data = $request->post();
         $check_data = [
             'account_id'=>$data['account_id'],
-            'start_date'=>$data['start_date'],
             'year_id'=>$data['year_id'],
-            'end_date'=>$data['end_date']
         ];
 
         if(Budget::where($check_data)->first()){
