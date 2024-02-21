@@ -16,7 +16,7 @@
                     <li class="breadcrumb-item"><a href="{{route('users.index')}}">Users</a></li>
                 @endif
                 <li class="breadcrumb-item"><a href="{{route('users.show',$user->id)}}">{{{\App\Models\User::where(['id'=>$_GET['user_id']])
-                                                    ->first()->email}}}}</a></li>
+                                                    ->first()->email}}}</a></li>
                 <li class="breadcrumb-item active" aria-current="page">Settings</li>
             </ol>
         </nav>
@@ -25,14 +25,8 @@
         </div>
         <div class="mt-2">
             <div class="my-3">
-                <p>
-                    Hi, <strong> {{\App\Models\User::where(['id'=>$_GET['user_id']])
-                                                    ->first()->email}}
-                    </strong>
-                </p>
-                <p>
-                    You can update users passwords in the form below.
-                </p>
+
+
             </div>
             <div class="row">
                 <div class="col-sm-12 col-md-8 col-lg-4">
@@ -43,7 +37,8 @@
                             <input type="hidden" name="id"
                                    class="form-control @error('password') is-invalid @enderror"
                                    value="{{$_GET['user_id']}}">
-                            <label> User </label>
+                            <label> User : {{\App\Models\User::where(['id'=>$_GET['user_id']])
+                                                    ->first()->email}}</label>
                             @error('id')
                             <span class="invalid-feedback">
                                {{$message}}
@@ -55,7 +50,7 @@
                             <input type="password" name="password"
                                    class="form-control @error('password') is-invalid @enderror"
                                    value="{{old('password')}}"
-                                   placeholder="Enter secret password"
+                                   placeholder="Enter New Password"
                             >
                             @error('password')
                             <span class="invalid-feedback">
@@ -68,7 +63,7 @@
                             <input type="password" name="password_confirmation"
                                    class="form-control @error('password_confirmation') is-invalid @enderror"
                                    value="{{old('password_confirmation')}}"
-                                   placeholder="Confirm secret password"
+                                   placeholder="Confirm New Password"
                             >
                             @error('password_confirmation')
                             <span class="invalid-feedback">

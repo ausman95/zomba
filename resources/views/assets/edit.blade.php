@@ -27,6 +27,7 @@
                     <form action="{{route('assets.update',$asset->id)}}" method="POST" autocomplete="off">
                         @csrf
                         <input type="hidden" name="_method" value="PATCH">
+                        <input type="hidden" name="updated_by" value="{{request()->user()->id}}">
                         <div class="form-group">
                             <label>Name</label>
                             <input type="text" name="name"
@@ -58,7 +59,7 @@
                                 <option value="{{$asset->category_id}}">{{$asset->category->name}}</option>
                                 <option value="">====Select Category====</option>
                                 @foreach($categories as $category)
-                                    @if($category->status==2)
+                                    @if($category->status==1)
                                         <option value="{{$category->id}}"
                                             {{old('category_id')===$category->id ? 'selected' : ''}}>{{$category->name}}</option>
                                     @endif

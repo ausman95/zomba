@@ -57,7 +57,7 @@
                                         @foreach($budgets as $budget)
                                             <tr>
                                                 <td>{{$c++}}</td>
-                                                <td>{{ucwords($budget->account->name) }}</td>
+                                                <td>{{ucwords(@$budget->account->name) }}</td>
                                                 <td>{{ucwords($budget->years->name) }}</td>
                                                 <td>{{date('d F Y', strtotime($budget->years->start_date)) }}</td>
                                                 <td>{{date('d F Y', strtotime($budget->years->end_date)) }}</td>
