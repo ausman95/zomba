@@ -35,11 +35,12 @@
                                     <i class="fa fa-info-circle"></i>There are no budgets!
                                 @else
                                     <div style="overflow-x:auto;">
-                                        <table class="table table-bordered table-hover table-striped" id="data-table">
+                                        <table data-page-length='100' class="table table-bordered table-hover table-striped" id="data-table">
                                             <caption style=" caption-side: top; text-align: center">BUDGETS</caption>
                                             <thead>
                                         <tr>
                                             <th>NO</th>
+                                            <th>ACCOUNT ID</th>
                                             <th>ACCOUNT NAME</th>
                                             <th>ACCOUNT TYPE</th>
                                             <th>FINANCIAL YEAR</th>
@@ -58,6 +59,7 @@
                                         @foreach($budgets as $budget)
                                             <tr>
                                                 <td>{{$c++}}</td>
+                                                <td>{{ucwords(@$budget->account->id) }}</td>
                                                 <td>{{ucwords(@$budget->account->name) }}</td>
                                                 <td>
                                                     @if($budget->account->type==1)
