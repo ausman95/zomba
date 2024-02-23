@@ -41,6 +41,7 @@
                                         <tr>
                                             <th>NO</th>
                                             <th>ACCOUNT NAME</th>
+                                            <th>ACCOUNT TYPE</th>
                                             <th>FINANCIAL YEAR</th>
                                             <th>START DATE</th>
                                             <th>END DATE</th>
@@ -58,6 +59,13 @@
                                             <tr>
                                                 <td>{{$c++}}</td>
                                                 <td>{{ucwords(@$budget->account->name) }}</td>
+                                                <td>
+                                                    @if($budget->account->type==1)
+                                                        {{"CR"}}
+                                                    @else
+                                                        {{"DR"}}
+                                                    @endif
+                                                </td>
                                                 <td>{{ucwords(@$budget->years->name) }}</td>
                                                 <td>{{date('d F Y', strtotime(@$budget->years->start_date)) }}</td>
                                                 <td>{{date('d F Y', strtotime(@$budget->years->end_date)) }}</td>
