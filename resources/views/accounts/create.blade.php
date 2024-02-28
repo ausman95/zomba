@@ -74,7 +74,6 @@
                             <button class="btn btn-md btn-primary rounded-0">
                                 <i class="fa fa-check-circle"></i>Save
                             </button>
-
                         </div>
                     </form>
                 </div>

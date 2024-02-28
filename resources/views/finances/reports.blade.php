@@ -234,7 +234,6 @@
                                                                 <th>{{number_format($credit->amount-$credit->getBudgetByAccountId(1,$credit->id,$start_date,$end_date),2)}}</th>
                                                                 <p class="d-none">{{$b1 = $b1+$credit->amount}}</p>
 
-
                                                             </tr>
                                                         @endforeach
                                                         <tr>
@@ -323,12 +322,14 @@
                                                                 <th>{{number_format($credit->getBudgetByAccountId(1,$credit->id,$start_date,$end_date),2)}}</th>
                                                                 <th>
                                                                     @if($credit->getBudgetByAccountId(1,$credit->id,$start_date,$end_date)!=0)
-                                                                        {{number_format((($credit->amount-$credit->getBudgetByAccountId(1,$credit->id,$start_date,$end_date))/$credit->getBudgetByAccountId(1,$credit->id,$start_date,$end_date)*100),2)}}%
+                                                                        {{number_format((($credit->
+                                                                                            getBudgetByAccountId(1,$credit->id,$start_date,$end_date)-$credit->amount)/$credit->
+                                                                                                    getBudgetByAccountId(1,$credit->id,$start_date,$end_date)*100),2)}}
                                                                     @else
                                                                         BUDGET NOT-SET
                                                                     @endif
                                                                 </th>
-                                                                <th>{{number_format($credit->amount-$credit->getBudgetByAccountId(1,$credit->id,$start_date,$end_date),2)}}</th>
+                                                                <th>{{number_format($credit->getBudgetByAccountId(1,$credit->id,$start_date,$end_date)-$credit->amount,2)}}</th>
                                                                 <p class="d-none">{{$b2 = $b2+$credit->amount}}</p>
                                                             </tr>
                                                         @endforeach
@@ -341,19 +342,19 @@
                                                             <th>{{number_format($credit->getBudgetByAccountId(2,$tuple->id,$start_date,$end_date),2)}}</th>
                                                             <th>
                                                                 @if($credit->getBudgetByAccountId(2,$tuple->id,$start_date,$end_date)!=0)
-                                                                    {{number_format((($tuple->amount-$credit->
-                                                                            getBudgetByAccountId(2,$tuple->id,$start_date,$end_date))/$credit->
+                                                                    {{number_format((($credit->
+                                                                            getBudgetByAccountId(2,$tuple->id,$start_date,$end_date)-$tuple->amount)/$credit->
                                                                                 getBudgetByAccountId(2,$tuple->id,$start_date,$end_date)*100),2)}}
-                                                                    <p class="d-none">{{$e_percent = $e_percent+(($tuple->amount-$credit->
-                                                                        getBudgetByAccountId(2,$tuple->id,$start_date,$end_date))/$credit->
+                                                                    <p class="d-none">{{$e_percent = $e_percent+(($credit->
+                                                                        getBudgetByAccountId(2,$tuple->id,$start_date,$end_date)-$tuple->amount)/$credit->
                                                                             getBudgetByAccountId(2,$tuple->id,$start_date,$end_date)*100)}}</p>
                                                                 @else
                                                                     BUDGET NOT-SET
                                                                 @endif
                                                             </th>
-                                                            <th>{{number_format($tuple->amount-$credit->getBudgetByAccountId(2,$tuple->id,$start_date,$end_date),2)}}</th>
+                                                            <th>{{number_format($credit->getBudgetByAccountId(2,$tuple->id,$start_date,$end_date)-$tuple->amount,2)}}</th>
                                                             <p class="d-none">{{$e_budget = $e_budget+$credit->getBudgetByAccountId(2,$tuple->id,$start_date,$end_date)}}</p>
-                                                            <p class="d-none">{{$e_variance = $e_variance+$tuple->amount-$credit->getBudgetByAccountId(2,$tuple->id,$start_date,$end_date)}}</p>
+                                                            <p class="d-none">{{$e_variance = $e_variance+$credit->getBudgetByAccountId(2,$tuple->id,$start_date,$end_date)-$tuple->amount}}</p>
 
                                                         </tr>
                                                     @endforeach
@@ -510,19 +511,19 @@
                                                             <th>{{number_format($credit->getBudgetByAccountId(2,$credit->id,$start_date,$end_date),2)}}</th>
                                                             <th>
                                                                 @if($credit->getBudgetByAccountId(2,$credit->id,$start_date,$end_date)!=0)
-                                                                    {{number_format((($credit->amount-$credit->
-                                                                            getBudgetByAccountId(2,$credit->id,$start_date,$end_date))/$credit->
+                                                                    {{number_format((($credit->
+                                                                            getBudgetByAccountId(2,$credit->id,$start_date,$end_date)-$credit->amount)/$credit->
                                                                                 getBudgetByAccountId(2,$credit->id,$start_date,$end_date)*100),2)}}
-                                                                    <p class="d-none">{{$e_percent = $e_percent+(($credit->amount-$credit->
-                                                                        getBudgetByAccountId(2,$credit->id,$start_date,$end_date))/$credit->
+                                                                    <p class="d-none">{{$e_percent = $e_percent+(($credit->
+                                                                        getBudgetByAccountId(2,$credit->id,$start_date,$end_date)-$credit->amount)/$credit->
                                                                             getBudgetByAccountId(2,$credit->id,$start_date,$end_date)*100)}}</p>
                                                                 @else
                                                                     BUDGET NOT-SET
                                                                 @endif
                                                             </th>
-                                                            <th>{{number_format($credit->amount-$credit->getBudgetByAccountId(2,$credit->id,$start_date,$end_date),2)}}</th>
+                                                            <th>{{number_format($credit->getBudgetByAccountId(2,$credit->id,$start_date,$end_date)-$credit->amount,2)}}</th>
                                                             <p class="d-none">{{$e_budget = $e_budget+$credit->getBudgetByAccountId(2,$credit->id,$start_date,$end_date)}}</p>
-                                                            <p class="d-none">{{$e_variance = $e_variance+$credit->amount-$credit->getBudgetByAccountId(2,$credit->id,$start_date,$end_date)}}</p>
+                                                            <p class="d-none">{{$e_variance = $e_variance+($credit->getBudgetByAccountId(2,$credit->id,$start_date,$end_date)-$credit->amount)}}</p>
                                                         </tr>
                                                     @endforeach
                                                     <tr>
