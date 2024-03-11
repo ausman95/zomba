@@ -26,7 +26,7 @@ class HomeAttendanceController extends Controller
         $attendances = HomeAttendance::where(['soft_delete'=>0])
             ->whereBetween('created_at',[$month->start_date,$month->end_date])
             ->orderBy('id','desc')->get();
-        if(request()->user()->designation=='church'){
+        if(request()->user()->designation=='church' || request()->user()->designation=='member') {
             $attendances = HomeAttendance::where(['church_id'=>$memberController->getHomeChurch()])
                 ->where(['soft_delete'=>0])
                 ->whereBetween('created_at',[$month->start_date,$month->end_date])
@@ -64,17 +64,17 @@ class HomeAttendanceController extends Controller
                 'success-notification'=>"Please Create a new month"
             ]);
         }
-        $attendances = HomeAttendance::where(['church_id'=>$memberController->getHomeChurch()])
-            ->where(['soft_delete'=>0])
-            ->whereBetween('created_at',[$month->start_date,$month->end_date])
-            ->orderBy('id','desc')
-            ->get();
-        if(request()->user()->designation=='administrator') {
-            $attendances = HomeAttendance::where(['soft_delete' => 0])
-                ->whereBetween('created_at', [$month->start_date, $month->end_date])
-                ->orderBy('id', 'desc')->get();
-        }
+        $attendances = HomeAttendance::where(['soft_delete' => 0])
+            ->whereBetween('created_at', [$month->start_date, $month->end_date])
+            ->orderBy('id', 'desc')->get();
 
+        if(request()->user()->designation=='church' || request()->user()->designation=='member') {
+            $attendances = HomeAttendance::where(['church_id' => $memberController->getHomeChurch()])
+                ->where(['soft_delete' => 0])
+                ->whereBetween('created_at', [$month->start_date, $month->end_date])
+                ->orderBy('id', 'desc')
+                ->get();
+        }
 
         return view('home-attendances.index')->with([
             'months' => Month::where(['soft_delete'=>0])->orderBy('id','desc')->get(),

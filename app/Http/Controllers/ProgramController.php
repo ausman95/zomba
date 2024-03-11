@@ -101,18 +101,17 @@ class ProgramController extends Controller
             ]);
         }
 
+        $programs = Program::where(['soft_delete'=>0])
+                            ->whereBetween('created_at',[$month->start_date,$month->end_date])
+                            ->orderBy('id','desc')->get();
+
+        if(request()->user()->designation=='church' || request()->user()->designation=='member'){
             $programs = Program::where(['church_id'=>$memberController->getHomeChurch()])
                 ->where(['soft_delete'=>0])
                 ->whereBetween('created_at',[$month->start_date,$month->end_date])
                 ->orderBy('id','desc')
                 ->get();
-
-            if(request()->user()->designation=='administrator')
-            {
-                $programs = Program::where(['soft_delete' => 0])
-                ->whereBetween('created_at', [$month->start_date, $month->end_date])
-                ->orderBy('id', 'desc')->get();
-            }
+        }
 
         activity('programs')
             ->log("Accessed programs listing")->causer(request()->user());
@@ -135,7 +134,8 @@ class ProgramController extends Controller
         $programs = Program::where(['soft_delete'=>0])
             ->whereBetween('created_at',[$month->start_date,$month->end_date])
             ->orderBy('id','desc')->get();
-        if(request()->user()->designation=='church'){
+
+        if(request()->user()->designation=='church' || request()->user()->designation=='member'){
             $programs = Program::where(['church_id'=>$memberController->getHomeChurch()])
                 ->where(['soft_delete'=>0])
                 ->whereBetween('created_at',[$month->start_date,$month->end_date])
