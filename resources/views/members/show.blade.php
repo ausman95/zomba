@@ -97,9 +97,11 @@
                                            class="btn btn-primary rounded-0" style="margin: 2px">
                                             <i class="fa fa-edit"></i>Update
                                         </a>
+                                        @if(request()->user()->designation=='administrator')
                                         <button class="btn btn-danger btn-md rounded-0" id="delete-btn" style="margin: 5px">
                                             <i class="fa fa-trash"></i>Delete
                                         </button>
+                                        @endif
                                         <form action="{{route('members.destroy',$member->id)}}" method="POST" id="delete-form">
                                             @csrf
                                             <input type="hidden" name="_method" value="DELETE">

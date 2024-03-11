@@ -39,6 +39,7 @@ Route::middleware(['preventBackHistory'])->group(function () {
         Route::get('assets/current', [\App\Http\Controllers\AssetController::class, 'currentAssets'])->name('current-assets');
         Route::get('assets/capital', [\App\Http\Controllers\AssetController::class, 'capital'])->name('capital');
         Route::resource('churches', \App\Http\Controllers\ChurchController::class);
+        Route::resource('home-attendances', \App\Http\Controllers\HomeAttendanceController::class);
         Route::resource('payments', \App\Http\Controllers\PaymentController::class);
         Route::resource('purchases', \App\Http\Controllers\PurchaseController::class);
         Route::resource('ministries', \App\Http\Controllers\MinistryController::class);
@@ -334,6 +335,9 @@ Route::middleware(['preventBackHistory'])->group(function () {
 
         Route::post('attendance/register', [AttendanceRegisterController::class, 'employeeRegisterByMonth'])->name('register.generate');
 
+        Route::post('home-attendance/report', [\App\Http\Controllers\HomeAttendanceController::class, 'generateAttendanceReport'])->name('home-attendance.generate');
+        Route::resource('programs', \App\Http\Controllers\ProgramController::class);
+        Route::post('program/report', [\App\Http\Controllers\ProgramController::class, 'generateAttendanceReport'])->name('program.generate');
 
         Route::resource('ministries', \App\Http\Controllers\MinistryController::class);
         route::get("notification/unread", [NotificationController::class, 'unreadNotifications'])->name('notifications.unread');

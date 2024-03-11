@@ -5,6 +5,22 @@
 
     <div class="d-flex align-items-baseline">
         <div class="mx-3" >
+            <a href="{{route('ministries.index')}}" title="Ministries">
+                <i class='fa fa-clock' style="font-size:1.8rem;padding-top: 1px;"></i>
+                <span class="badge bg-primary badge-pill">{{count(\App\Models\FinancialYear::where(['soft_delete'=>0])->orderBy('id','desc')->get())}}</span>
+            </a>
+            <a href="{{route('ministries.index')}}" title="Ministries">
+                <i class='fa fa-list-ol' style="font-size:1.8rem;padding-top: 1px;"></i>
+                <span class="badge bg-primary badge-pill">{{count(\App\Models\Service::where(['soft_delete'=>0])->orderBy('id','desc')->get())}}</span>
+            </a>
+            <a href="{{route('ministries.index')}}" title="Ministries">
+                <i class='fa fa-comments-dollar' style="font-size:1.8rem;padding-top: 1px;"></i>
+                <span class="badge bg-primary badge-pill">{{count(\App\Models\Ministry::where(['soft_delete'=>0])->orderBy('id','desc')->get())}}</span>
+            </a>
+            <a href="{{route('months.index')}}">
+                <i class='bx bx-cog' style="font-size:1.8rem;padding-top: 1px;"></i>
+                <span class="badge bg-primary badge-pill">{{count(\App\Models\Month::where(['soft_delete'=>0])->orderBy('id','desc')->get())}}</span>
+            </a>
             <a href="{{route('notifications.unread')}}">
                 <i class='bx bx-bell' style="font-size:1.8rem;padding-top: 1px;"></i>
                 <span class="badge bg-primary badge-pill">{{$notifications_count}}</span>
@@ -19,9 +35,8 @@
             <a href="{{route('settings')}}" >
                 <img src="{{asset('images/avatar.png')}}" alt="avatar image">
             </a>
-
         </div>
-       {{request()->user()->name}}
+      &nbsp; {{request()->user()->name}}
     </div>
 
 </header>
@@ -47,6 +62,7 @@
 {{--                    <span class="sidenav__name">Requisitions</span>--}}
 {{--                </a>--}}
 {{--                @endif--}}
+                @if(request()->user()->designation=='administrator')
                 <a href="{{route('human-resources.index')}}" class="sidenav__link {{$cpage === 'human-resources' ? 'link-active' : ''}}"
                    title="Human Resources">
                     <i class='bx bxs-file sidenav__icon'></i>
@@ -62,11 +78,11 @@
                     <i class='bx bxs-file-archive sidenav__icon'></i>
                     <span class="sidenav__name">Suppliers</span>
                 </a>
-                <a href="{{route('materials.index')}}"
-                   class="sidenav__link {{$cpage === 'materials' ? 'link-active' : ''}}" title="Materials">
-                    <i class='bx bx-abacus sidenav__icon'></i>
-                    <span class="sidenav__name">Materials</span>
-                </a>
+{{--                <a href="{{route('materials.index')}}"--}}
+{{--                   class="sidenav__link {{$cpage === 'materials' ? 'link-active' : ''}}" title="Materials">--}}
+{{--                    <i class='bx bx-abacus sidenav__icon'></i>--}}
+{{--                    <span class="sidenav__name">Materials</span>--}}
+{{--                </a>--}}
 {{--                <a href="{{route('prices.index')}}"--}}
 {{--                   class="sidenav__link {{$cpage === 'requisitions' ? 'link-active' : ''}}" title="Requisitions">--}}
 {{--                    <i class='fab fa-acquisitions-incorporated sidenav__icon'></i>--}}
@@ -82,11 +98,12 @@
                     <i class='bx bxs-car sidenav__icon'></i>
                     <span class="sidenav__name">Assets & Liabilities</span>
                 </a>
-                <a href="{{route('zones.index')}}"
-                   class="sidenav__link {{$cpage === 'zones' ? 'link-active' : ''}}" title="Zones">
-                    <i class='fa fa-list-ol sidenav__icon'></i>
-                    <span class="sidenav__name">Zones</span>
-                </a>
+                @endif
+{{--                <a href="{{route('zones.index')}}"--}}
+{{--                   class="sidenav__link {{$cpage === 'zones' ? 'link-active' : ''}}" title="Zones">--}}
+{{--                    <i class='fa fa-list-ol sidenav__icon'></i>--}}
+{{--                    <span class="sidenav__name">Zones</span>--}}
+{{--                </a>--}}
                 <a href="{{route('churches.index')}}"
                    class="sidenav__link {{$cpage === 'churches' ? 'link-active' : ''}}" title="Churches">
                     <i class='fab fa-acquisitions-incorporated sidenav__icon'></i>
@@ -97,30 +114,37 @@
                     <i class='fa fa-user-circle sidenav__icon'></i>
                     <span class="sidenav__name">Members</span>
                 </a>
+                @if(request()->user()->designation=='administrator')
                 <a href="{{route('attendances.index')}}" class="sidenav__link {{$cpage === 'attendances' ? 'link-active' : ''}}"
                    title="Attendances">
                     <i class='bx bx-bar-chart-alt-2 sidenav__icon'></i>
-                    <span class="sidenav__name">Attendances</span>
+                    <span class="sidenav__name">Church Attendances</span>
                 </a>
-{{--                <a href="{{route('announcements.index')}}" class="sidenav__link {{$cpage === 'announcements' ? 'link-active' : ''}}"--}}
-{{--                   title="Announcements">--}}
-{{--                    <i class='bx bx-list-ol sidenav__icon'></i>--}}
-{{--                    <span class="sidenav__name">Announcements</span>--}}
-{{--                </a>--}}
+                @endif
+                    <a href="{{route('home-attendances.index')}}" class="sidenav__link {{$cpage === 'home-attendances' ? 'link-active' : ''}}"
+                       title="Attendances">
+                        <i class='bx bx-bar-chart-alt-2 sidenav__icon'></i>
+                        <span class="sidenav__name">Home Attendances</span>
+                    </a>
+                <a href="{{route('announcements.index')}}" class="sidenav__link {{$cpage === 'announcements' ? 'link-active' : ''}}"
+                   title="Announcements">
+                    <i class='bx bx-list-ol sidenav__icon'></i>
+                    <span class="sidenav__name">Announcements</span>
+                </a>
                 @if(request()->user()->designation!='administrator')
                     <a href="{{route('members.show',request()->user()->member_id)}}"
-                       class="sidenav__link {{$cpage === 'members' ? 'link-active' : ''}}" title="Tithe">
+                       class="sidenav__link {{$cpage === 'tithe' ? 'link-active' : ''}}" title="Tithe">
                         <i class='bx bxs-file-archive sidenav__icon'></i>
-                        <span class="sidenav__name">Tithe</span>
+                        <span class="sidenav__name">My Tithe</span>
                     </a>
                 @endif
+                <a href="{{route('programs.index')}}" class="sidenav__link {{$cpage === 'programs' ? 'link-active' : ''}}"
+                   title="Programs">
+                    <i class='fa fa-cog sidenav__icon'></i>
+                    <span class="sidenav__name">Programs</span>
+                </a>
                 @if(request()->user()->designation=='administrator')
 
-                <a href="{{route('setting.index')}}" class="sidenav__link {{$cpage === 'settings' ? 'link-active' : ''}}"
-                   title="Settings">
-                    <i class='fa fa-cog sidenav__icon'></i>
-                    <span class="sidenav__name">Settings</span>
-                </a>
                 <a href="{{route('users.index')}}" class="sidenav__link {{$cpage === 'users' ? 'link-active' : ''}}"
                    title="Users">
                     <i class='bx bx-user sidenav__icon'></i>

@@ -7,61 +7,85 @@
 @section('content')
     <div class="container-fluid ps-1 pt-4">
         <h4>
-            <i class="fa fa-list-ol"></i>Zones
+            <i class="fa fa-speaker-deck"></i>Home Cell Programs
         </h4>
         <p>
-            Manage Zones
+            Manage Programs
         </p>
         <nav aria-label="breadcrumb">
             <ol class="breadcrumb bg-transparent">
                 <li class="breadcrumb-item"><a href="{{route('home')}}">Home</a></li>
-                <li class="breadcrumb-item"><a href="{{route('churches.index')}}">Home Cells</a></li>
-                <li class="breadcrumb-item active" aria-current="page">Zones</li>
+                <li class="breadcrumb-item active" aria-current="page">Programs</li>
             </ol>
         </nav>
         <div class="mb-5">
             <hr>
         </div>
         <div class="mt-3">
-            @if(request()->user()->designation=='administrator')
-                <a href="{{route('zones.create')}}" class="btn btn-primary btn-md rounded-0">
-                    <i class="fa fa-user-plus"></i>New Zone
-                </a>
+            @if(request()->user()->designation=='church')
+            <a href="{{route('programs.create')}}" class="btn btn-primary btn-md rounded-0">
+                <i class="fa fa-plus-circle"></i> New Program
+            </a>
             @endif
             <div class="mt-3">
                 <div class="row">
-                    <div class="col-sm-12 mb-2 col-md-12 col-lg-12">
+                    <div class="col-sm-12 col-md-2 mb-2">
+                        <form action="{{route('program.generate')}}" method="POST">
+                            @csrf
+                            <div class="form-group">
+                                <label>Month</label>
+                                <select name="month_id"
+                                        class="form-select select-relation @error('month_id') is-invalid @enderror" style="width: 100%">
+                                    @foreach($months as $month)
+                                        <option value="{{$month->id}}"
+                                            {{old('month')===$month->id ? 'selected' : ''}}>{{$month->name}}</option>
+                                    @endforeach
+                                </select>
+                                @error('month_id')
+                                <span class="invalid-feedback">
+                               {{$message}}
+                        </span>
+                                @enderror
+                            </div>
+                            <div class="form-group">
+                                <button class="btn btn-primary rounded-0" type="submit">
+                                    <i class="fa fa-print"></i>  Generate
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="col-sm-12 mb-2 col-md-10">
                         <div class="card " style="min-height: 30em;">
                             <div class="card-body px-1">
-                                @if($zones->count() === 0)
-                                    <i class="fa fa-info-circle"></i>There are no Zones!
+                                @if($programs->count() === 0)
+                                    <i class="fa fa-info-circle"></i>There are no programs!
                                 @else
                                     <div style="overflow-x:auto;">
-                                        <table class="table  table-bordered table-hover table-striped">
-                                            <caption style=" caption-side: top; text-align: center">Zones</caption>
+                                        <table class="table table-bordered table-hover table-striped">
+                                            <caption style=" caption-side: top; text-align: center">Programs</caption>
                                             <thead>
                                         <tr>
                                             <th>NO</th>
-                                            <th>NAME</th>
-                                            <th>LEADER</th>
-                                            <th>CREATED ON</th>
-                                            <th>CREATED BY</th>
-                                            <th>UPDATED BY</th>
+                                            <th>DATE</th>
+                                            <th>HOME CELL</th>
+                                            <th>VENUE</th>
+                                            <th>FACILITATOR</th>
+                                            <th>PREACHER</th>
                                             <th>ACTION</th>
                                         </tr>
                                         </thead>
                                         <tbody>
                                         <?php  $c= 1;?>
-                                        @foreach($zones as $zone)
+                                        @foreach($programs as $program)
                                             <tr>
                                                 <td>{{$c++}}</td>
-                                                <td>{{ucwords($zone->name) }}</td>
-                                                <td>{{@$zone->member->name}}</td>
-                                                <td>{{date('d F Y', strtotime($zone->created_at)) }}</td>
-                                                <td>{{\App\Models\Budget::userName($zone->created_by)}}</td>
-                                                <td>{{\App\Models\Budget::userName($zone->updated_by)}}</td>
+                                                <td>{{date('d F Y', strtotime($program->t_date))}}</td>
+                                                <td>{{ucwords($program->church->name) }}</td>
+                                                <td>{{ucwords($program->venue) }}</td>
+                                                <td>{{ucwords($program->member->name) }}</td>
+                                                <td>{{ucwords($program->members->name) }}</td>
                                                 <td class="pt-1">
-                                                    <a href="{{route('zones.show',$zone->id)}}"
+                                                    <a href="{{route('programs.show',$program->id)}}"
                                                        class="btn btn-primary btn-md rounded-0">
                                                        <i class="fa fa-list-ol"></i> Manage
                                                     </a>

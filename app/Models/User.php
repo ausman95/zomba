@@ -26,7 +26,6 @@ class User extends Authenticatable
         'password',
         'level',
         'home_id',
-        'church_id',
         'member_id',
         'last_login_at',
         'last_login_ip_address',

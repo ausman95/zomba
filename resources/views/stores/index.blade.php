@@ -26,6 +26,9 @@
             <a href="{{route('stock-flows.index')}}" class="btn btn-primary btn-md rounded-0">
                 <i class="fa fa-exchange-alt"></i>Material Flow
             </a>
+                <a href="{{route('materials.index')}}" class="btn btn-primary btn-md rounded-0">
+                    <i class="fa fa-cog"></i>Materials
+                </a>
             @endif
             <div class="mt-3">
                 <div class="row">

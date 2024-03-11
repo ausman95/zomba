@@ -5,7 +5,13 @@
             <i class="fa fa-th-large"></i>&nbsp;Dashboard
         </h4>
         <p>
-            Site Overview
+            @if(request()->user()->designation==='member')
+                Member Overview
+            @elseif(request()->user()->designation==='church')
+                {{\App\Models\Church::where(['id'=>$church])->first()->name}} -  Site Overview
+            @else
+                Administrator Overview
+            @endif
         </p>
         <hr>
         <div class="mt-2">

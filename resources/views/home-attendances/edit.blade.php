@@ -4,26 +4,16 @@
     <div class="container-fluid ps-1 pt-4">
 
         <h4>
-            <i class="fa fa-list-ul"></i>Attendance
+            <i class="fa fa-list-ol"></i> Member Home Cell Attendances
         </h4>
         <p>
-            Edit Attendance information
+            Attendances
         </p>
         <nav>
             <ol class="breadcrumb bg-transparent">
                 <li class="breadcrumb-item"><a href="{{route('home')}}">Home</a></li>
-                @if(request()->user()->designation!='clerk')
-                <li class="breadcrumb-item"><a href="{{route('human-resources.index')}}">Human Resources</a></li>
-                <li class="breadcrumb-item"><a href="{{route('departments.index')}}">Departments</a></li>
-                @endif
-                <li class="breadcrumb-item"><a
-                        href="{{route('departments.show',$attendance->labourer->department_id)}}">{{$attendance->labourer->department->name}}</a>
-                </li>
-                <li class="breadcrumb-item"><a
-                        href="{{route('attendance.view',$attendance->labourer->id)}}">Attendance</a>
-                </li>
-                <li class="breadcrumb-item"><a
-                        href="{{route('attendance.show',$attendance->labourer->id)}}">{{$attendance->labourer->name}}</a></li>
+                <li class="breadcrumb-item"><a href="{{route('home-attendances.index')}}">Attendances</a></li>
+                <li class="breadcrumb-item"><a href="{{route('home-attendances.index',$attendance->id)}}">{{$attendance->member->name}}</a></li>
                 <li class="breadcrumb-item active" aria-current="page">Edit Attendance</li>
             </ol>
         </nav>
@@ -31,32 +21,24 @@
             <hr>
         </div>
         <h3>
-            {{$attendance->labourer->name}}
+            {{$attendance->member->name}}
         </h3>
         <div class="row">
-            <form action="{{route('attendance.update',$attendance->id)}}" method="POST">
+            <form action="{{route('home-attendances.update',$attendance->id)}}" method="POST">
                 @csrf
+                <input type="hidden" name="_method" value="PATCH">
                 <div class="col-sm-12 col-md-4">
                     <div class="form-group">
+                        <input type="hidden"  name="church_id" value="{{$church_id}}" required>
                         <input type="hidden" name="id" value="{{$attendance->id}}">
-                        <label for="date">Date</label>
-                        <input type="date" name="date" class="form-control @error('date') is-invalid @enderror" value="{{$attendance->date}}" disabled>
-                        @error('date')
-                        <span class="invalid-feedback">
-                            {{$message}}
-                        </span>
-                        @enderror
-                    </div>
-                    <div class="form-group">
+                        <input type="hidden"  name="updated_by" value="{{request()->user()->id}}" required>
                         <label for="date">Status</label>
                         <select name="status" class="form-select select-relation">
                             <option value="{{$attendance->status}}">
                                 @if($attendance->status ==0)
                                     0-Absent
-                                @elseif($attendance->status ==1)
-                                    1-Present
                                 @else
-                                    ?-Excuse
+                                    1-Present
                                 @endif
                             </option>
                             <option value="0">0 -
@@ -64,7 +46,6 @@
                             </option>
                             <option value="1"> 1- Present
                             </option>
-                            <option value="?">?- Excuse</option>
                         </select>
                         @error('date')
                         <span class="invalid-feedback">

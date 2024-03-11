@@ -74,11 +74,11 @@ class PaymentController extends Controller
 
          if(Month::getActiveMonth()){
              $month =Month::getActiveMonth();
-    }else{
-        return redirect()->route('months.index')->with([
-            'success-notification'=>"Please Create a new month"
-        ]);
-    }
+            }else{
+                return redirect()->route('months.index')->with([
+                    'success-notification'=>"Please Create a new month"
+                ]);
+            }
 
         activity('FINANCES')
             ->log("Accessed Payments")->causer(request()->user());

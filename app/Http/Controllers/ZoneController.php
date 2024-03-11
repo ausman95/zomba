@@ -18,7 +18,7 @@ class ZoneController extends Controller
             ->log("Accessed zones listing")->causer(request()->user());
 
         return view('zones.index')->with([
-            'cpage' => "zones",
+            'cpage' => "churches",
             'zones'=> Zone::where(['soft_delete'=>0])->orderBy('id','desc')->get(),
         ]);
     }
@@ -39,7 +39,7 @@ class ZoneController extends Controller
     public function show(Zone $zone)
     {
         return view('zones.show')->with([
-            'cpage'=>"zones",
+            'cpage'=>"churches",
             'zone'=>$zone,
             'churches'=>$zone->churches
         ]);
@@ -47,13 +47,13 @@ class ZoneController extends Controller
     public function create()
     {
         return view('zones.create')->with([
-            'cpage'=>"zones",
+            'cpage'=>"churches",
         ]);
     }
     public function edit(Zone $zone)
     {
         return view('zones.edit')->with([
-            'cpage' => "zones",
+            'cpage' => "churches",
             'members'=>Member::all(),
             'zone' => $zone
         ]);

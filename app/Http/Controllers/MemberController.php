@@ -43,10 +43,13 @@ class MemberController extends Controller
     }
     public function memberMerge()
     {
-
+        $members = Member::where(['soft_delete'=>0])->orderBy('id','desc')->get();
+        if(request()->user()->designation=='church'){
+            $members = $this->getHomeChurchMembers();
+        }
         return view('members.merge')->with([
             'cpage'=>"members",
-            'members'=>Member::orderBy('name','ASC')->get(),
+            'members'=>$members,
         ]);
     }
     public function allocateMinistry( Member $member)
@@ -57,15 +60,34 @@ class MemberController extends Controller
             'ministries' => Ministry::where(['soft_delete'=>0])->orderBy('id','desc')->get(),
         ]);
     }
+    public function getHomeChurch()
+    {
+        return Member::where(['id'=>request()->user()->member_id])
+            ->where(['soft_delete'=>0])
+            ->orderBy('id','desc')
+            ->first()->church_id;
+    }
+    public function getHomeChurchMembers()
+    {
+       return Member::where(['church_id'=>$this->getHomeChurch()])
+            ->where(['soft_delete'=>0])
+            ->orderBy('id','desc')
+            ->get();
+    }
     public function index()
     {
+        $members = Member::where(['soft_delete'=>0])->orderBy('id','desc')->get();
+        if(request()->user()->designation=='church'){
+            $members = $this->getHomeChurchMembers();
+        }
+
         activity('Members')
             ->log("Accessed Members listing")->causer(request()->user());
         return view('members.index')->with([
             'cpage' => "members",
             'ministries'=>Ministry::where(['soft_delete'=>0])->orderBy('id','desc')->get(),
             'churches'=>Church::where(['soft_delete'=>0])->orderBy('id','desc')->get(),
-            'members'=> Member::where(['soft_delete'=>0])->orderBy('id','desc')->get(),
+            'members'=>$members,
         ]);
     }
     public function generateReport(Request $request)
@@ -107,8 +129,13 @@ class MemberController extends Controller
     }
     public function create()
     {
+        $home_church = 0;
+        if(request()->user()->designation=='church'){
+            $home_church = $this->getHomeChurch();
+        }
         return view('members.create')->with([
             'cpage' => "members",
+            'home_church'=>$home_church,
             'churches'=> Church::where(['soft_delete'=>0])->orderBy('id','desc')->get(),
             'ministries'=> Ministry::where(['soft_delete'=>0])->orderBy('id','desc')->get(),
         ]);
@@ -149,8 +176,12 @@ class MemberController extends Controller
     }
     public function show(Member $member)
     {
+        $cpage = 'tithe';
+        if(request()->user()->designation=='administrator'){
+            $cpage = "members";
+        }
         return view('members.show')->with([
-            'cpage'=>"members",
+            'cpage'=>$cpage,
             'member'=>$member,
             'allocations'=>$member->allocations,
             'transactions'=>$member->payments

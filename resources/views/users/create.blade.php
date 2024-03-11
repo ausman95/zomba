@@ -127,24 +127,6 @@
                                 @enderror
                             </div>
                         </div>
-                        <div class="churches  d-none">
-                            <div class="form-group">
-                                <label>Home Church</label>
-                                <select name="church_id"
-                                        class="form-select select-relation @error('church_id') is-invalid @enderror" style="width: 100%">
-                                    <option value="">-- Select ---</option>
-                                    @foreach($churches as $church)
-                                        <option value="{{$church->id}}"
-                                            {{old('church_id')===$church->id ? 'selected' : ''}}>{{$church->name}}</option>
-                                    @endforeach
-                                </select>
-                                @error('church_id')
-                                <span class="invalid-feedback">
-                                   {{$message}}
-                            </span>
-                                @enderror
-                            </div>
-                        </div>
                         <div class="form-group">
                             <label>Password</label>
                             <input type="text" name="password"
@@ -176,13 +158,8 @@
         $(document).ready(function () {
             $('.designation').on('change', function () {
                 let designation = $(this).val();
-                if(designation==='member'){
+                if(designation==='member' || designation==='church'){
                     $('.members').addClass('show').removeClass('d-none');
-                    $('.churches').addClass('d-none').removeClass('show');
-                }
-                else if(designation==='church'){
-                    $('.members').addClass('d-none').removeClass('show');
-                    $('.churches').addClass('show').removeClass('d-none');
                 }
                 else{
                     $('.churches').addClass('d-none').removeClass('show');

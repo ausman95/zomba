@@ -93,11 +93,13 @@ class UserController extends Controller
         }else{
             $department_id = $request->post('department_id');
         }
+
         if(empty($request->post('member_id'))){
             $member_id= 0;
         }else{
-           $member_id = $request->post('member_id');
+            $member_id = $request->post('member_id');
         }
+
         $data = [
             'password' => $password,
             'first_name' =>$request->post('first_name'),

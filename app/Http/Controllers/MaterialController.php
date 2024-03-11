@@ -36,7 +36,7 @@ class MaterialController extends Controller
         activity('MATERIALS')
             ->log("Accessed Materials")->causer(request()->user());
         return view('materials.index')->with([
-            'cpage' => "materials",
+            'cpage' => "stores",
             'materials'=>Material::where(['soft_delete'=>0])->orderBy('id','desc')->get(),
         ]);
     }
@@ -49,7 +49,7 @@ class MaterialController extends Controller
     public function create()
     {
         return view('materials.create')->with([
-            'cpage'=>"materials"
+            'cpage'=>"stores"
         ]);
     }
 
@@ -107,7 +107,7 @@ class MaterialController extends Controller
                 ->get();
         }
         return view('materials.show')->with([
-            'cpage'=>"materials",
+            'cpage'=>"stores",
             'material'=>$material,
             'flows' =>$stores
         ]);
@@ -122,7 +122,7 @@ class MaterialController extends Controller
     public function edit( Material $material)
     {
         return view('materials.edit')->with([
-            'cpage' => "materials",
+            'cpage' => "stores",
             'material' => $material
         ]);
     }

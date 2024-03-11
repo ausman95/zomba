@@ -240,7 +240,7 @@ class HomeController extends Controller
         return $stores;
     }
 
-    public function index()
+    public function index(MemberController $memberController)
     {
 //        if (request()->user()->level == 0) {
 //            $this->getContractDue();
@@ -268,6 +268,7 @@ class HomeController extends Controller
             'materials' => 0,
             'stocks' => 0,
             'banks' => 0,
+            'church'=>@$memberController->getHomeChurch(),
             'projects' => 0,
             'workers' => 0,
             'progress' => 0,

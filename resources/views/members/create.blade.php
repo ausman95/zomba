@@ -45,6 +45,9 @@
                 @csrf
                 <div class="form-group">
                     <label>Name</label>
+                    @if(request()->user()->designation=='church')
+                    <input type="hidden"  name="church_id" value="{{$home_church}}" required>
+                    @endif
                     <input type="hidden"  name="updated_by" value="{{request()->user()->id}}" required>
                     <input type="hidden"  name="created_by" value="{{request()->user()->id}}" required>
                     <input type="hidden" name="check" value="1">
@@ -87,6 +90,7 @@
                         </span>
                     @enderror
                 </div>
+                @if(request()->user()->designation=='administrator')
                 <div class="form-group">
                     <label>Home Cell</label>
                     <select name="church_id"
@@ -103,6 +107,7 @@
                         </span>
                     @enderror
                 </div>
+                @endif
                 <p>Ministries</p>
                 <hr>
                 @foreach($ministries as $ministry)
