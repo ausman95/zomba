@@ -5,27 +5,23 @@
 
     <div class="d-flex align-items-baseline">
         <div class="mx-3" >
-            <a href="{{route('ministries.index')}}" title="Ministries">
+            <a href="{{route('ministries.index')}}" title="Financial Year">
                 <i class='fa fa-clock' style="font-size:1.8rem;padding-top: 1px;"></i>
                 <span class="badge bg-primary badge-pill">{{count(\App\Models\FinancialYear::where(['soft_delete'=>0])->orderBy('id','desc')->get())}}</span>
             </a>
-            <a href="{{route('ministries.index')}}" title="Ministries">
-                <i class='fa fa-list-ol' style="font-size:1.8rem;padding-top: 1px;"></i>
+            <a href="{{route('ministries.index')}}" title="Services">
+                <i class='bx bx-bell' style="font-size:1.8rem;padding-top: 1px;"></i>
                 <span class="badge bg-primary badge-pill">{{count(\App\Models\Service::where(['soft_delete'=>0])->orderBy('id','desc')->get())}}</span>
             </a>
             <a href="{{route('ministries.index')}}" title="Ministries">
                 <i class='fa fa-comments-dollar' style="font-size:1.8rem;padding-top: 1px;"></i>
                 <span class="badge bg-primary badge-pill">{{count(\App\Models\Ministry::where(['soft_delete'=>0])->orderBy('id','desc')->get())}}</span>
             </a>
-            <a href="{{route('months.index')}}">
+            <a href="{{route('months.index')}}" title="Months">
                 <i class='bx bx-cog' style="font-size:1.8rem;padding-top: 1px;"></i>
                 <span class="badge bg-primary badge-pill">{{count(\App\Models\Month::where(['soft_delete'=>0])->orderBy('id','desc')->get())}}</span>
             </a>
-            <a href="{{route('notifications.unread')}}">
-                <i class='bx bx-bell' style="font-size:1.8rem;padding-top: 1px;"></i>
-                <span class="badge bg-primary badge-pill">{{$notifications_count}}</span>
-            </a>
-            <a href="{{route('messages.unread')}}">
+            <a href="{{route('messages.unread')}}"  title="Messages" >
                 <i class='bx bx-envelope' style="font-size:1.8rem;padding-top: 1px;"></i>
                 <span class="badge bg-primary badge-pill">
                    {{ \App\Models\Message::where(['status' => 1])->count('id') }}</span>
