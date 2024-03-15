@@ -133,9 +133,8 @@ class ReceiptController extends Controller
                 'password' => '@asakala1',
                 'text' => $message,
                 'numbers' => $number,
-                'from' => 'EASYMAOG'),
+                'from' => '25VicTemple'),
         ));
-
         $response = curl_exec($curl);
          curl_close($curl);
         return $response;
