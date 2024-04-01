@@ -445,11 +445,9 @@ class PaymentController extends Controller
                 ->join('members', 'members.id', '=', 'member_payments.member_id')
                 ->first();
             if($member->phone_number!=0) {
-                $message = 'MALAWI ASSEMBLIES OF GOD ' .
-                    PHP_EOL . PHP_EOL . 'Dear ' . $member->name . PHP_EOL . PHP_EOL . ' You have Paid ' .
-                    PHP_EOL . PHP_EOL . $request->post('account') .
-                    ' Amounting to : MK ' . number_format($request->post('amount'), 2) . PHP_EOL
-                    . PHP_EOL . ' AREA 25 VICTORY TEMPLE';
+                $message = 'Dear ' . $member->name . ' You have Paid ' . $request->post('account') .
+                    ' Amounting to : MK ' . number_format($request->post('amount'), 2) .
+                    PHP_EOL . ' AREA 25 VICTORY TEMPLE';
                 $receiptController->sendSms($member->phone_number, $message);
             }
         }
