@@ -26,8 +26,10 @@ class Incomes extends Model
     {
         $credits = DB::table('bank_transactions')
             ->join('accounts', 'accounts.id','=','bank_transactions.account_id')
+            ->join('categories', 'categories.id','=','accounts.category_id')
             ->select('accounts.*',DB::raw('SUM(bank_transactions.amount) as amount'))
             ->where(['accounts.type'=>2])
+            ->where('categories.status', '=', 2)
             ->where('accounts.id','!=',134)
             ->whereBetween('bank_transactions.t_date',[$start_date,$end_date])
             ->groupBy('accounts.id')
@@ -42,6 +44,7 @@ class Incomes extends Model
                 ->join('categories', 'categories.id', '=', 'accounts.category_id')
                 ->select('categories.*', DB::raw('SUM(bank_transactions.amount) as amount'))
                 ->where(['accounts.type' => 2])
+                ->where('categories.status', '=', 2)
                 ->where('accounts.id', '!=', 134)
                 ->where('accounts.soft_delete', '=', 0)
                 ->where('bank_transactions.type', '!=', 2)
