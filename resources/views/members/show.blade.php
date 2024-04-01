@@ -239,8 +239,8 @@
                                             <td>{{date('d F Y', strtotime($transaction->created_at)) }}</td>
                                             <td>{{ucwords($transaction->account->name) }}</td>
                                             <th>
-                                                @if($transaction->account->type == 1)
-                                                    ({{number_format($transaction->amount,2) }})
+                                                @if($transaction->amount< 0)
+                                                    ({{number_format($transaction->amount*-1,2) }})
                                                 @else
                                                     {{number_format($transaction->amount,2) }}
                                                 @endif
