@@ -245,7 +245,7 @@
                                                     {{number_format($transaction->amount,2) }}
                                                 @endif
                                             </th>
-                                            <td>{{ucwords($transaction->account->type == 2 ? "CR" : "DR") }}</td>
+                                            <td>{{ucwords($transaction->amount < 0 ? "CR" : "DR") }}</td>
                                             <th>{{ucwords($transaction->status == 1 ? "VERIFIED" : "UN~VERIFIED") }}</th>
                                             <td>{{\App\Models\Budget::userName($transaction->created_by)}}</td>
                                             <td>{{\App\Models\Budget::userName($transaction->updated_by)}}</td>
