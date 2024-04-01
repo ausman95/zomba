@@ -62,7 +62,7 @@
                                                             @if(!@$payment->bank->account_name)
                                                                 OPENING TRANSACTION
                                                             @else
-                                                            {{$payment->bank->bank_name.' - '.$payment->bank->account_name}}
+                                                            {{$payment->bank->account_number.' - '.$payment->bank->account_name}}
                                                             @endif
                                                         </td>
                                                         <td>
