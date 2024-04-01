@@ -78,6 +78,9 @@ Route::middleware(['preventBackHistory'])->group(function () {
         Route::get('receipt/member/generate/', [\App\Http\Controllers\DeliveryController::class, 'generateMemberReceiptById'])->name('member-receipt.generate');
         Route::post('payment/report', [\App\Http\Controllers\PaymentController::class, 'generateReceipt'])->name('receipt.generate');
         Route::resource('pledges', \App\Http\Controllers\PledgeController::class);
+        Route::get('bank/statements', [\App\Http\Controllers\BankController::class, 'statements'])->name('bank.statements');
+        Route::post('bank-statements/report', [\App\Http\Controllers\BankController::class, 'generateReport'])->name('bank-statement.produce');
+
 
         Route::post('pledge/report', [\App\Http\Controllers\PledgeController::class, 'generatePledge'])->name('pledge.generate');
 

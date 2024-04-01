@@ -48,7 +48,7 @@
                 <i class="fa fa-shopping-basket"></i> Pledges
             </a>
             <a href="{{route('analytics')}}" class="btn btn-primary btn-md rounded-0">
-                <i class="fa fa-cart-plus"></i> Reports
+                <i class="fa fa-cart-plus"></i> Statements
             </a>
             <div class="mt-3">
                 <div class="row">

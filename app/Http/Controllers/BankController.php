@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Announcement;
 use App\Models\Banks;
+use App\Models\BankTransaction;
 use App\Models\Incomes;
 use Illuminate\Http\Request;
 use App\Http\Requests\Banks\StoreRequest;
@@ -13,6 +14,29 @@ use Illuminate\Support\Facades\DB;
 
 class BankController extends Controller
 {
+    public function generateReport(Request $request)
+    {
+        $request->validate([
+            'bank_id' => "required|numeric",
+            'start_date' => "required|date",
+            'end_date' => "required|date",
+        ]);
+        activity('FINANCES')
+            ->log("Accessed Bank Statements")->causer(request()->user());
+        return view('banks.statements')->with([
+            'cpage' => "finances",
+            'transactions'=>BankTransaction::whereBetween('t_date',[$request->post('start_date'),
+                $request->post('end_date')])
+                ->where(['bank_id'=>$request->post('bank_id')])
+                ->orderBy('id','desc')->get(),
+            'payments'=>1,
+            'start_date'=>$request->post('start_date'),
+            'end_date'=>$request->post('end_date'),
+            'bank'=>Banks::where(['id'=>$request->post('bank_id')])->first(),
+            'banks'=>Banks::where(['soft_delete'=>0])->orderBy('id','desc')->get(),
+
+        ]);
+    }
     public function index()
     {
         activity('BANKS')
@@ -22,6 +46,17 @@ class BankController extends Controller
             'banks'=>Banks::where(['soft_delete'=>0])->orderBy('id','desc')->get(),
         ]);
     }
+    public function statements()
+    {
+        activity('BANKS')
+            ->log("Accessed Banks Statements")->causer(request()->user());
+        return view('banks.statements')->with([
+            'cpage' => "finances",
+            'banks'=>Banks::where(['soft_delete'=>0])->orderBy('id','desc')->get(),
+            'payments'=>0
+        ]);
+    }
+
     public function destroy(Request $request, Banks $banks)
     {
 
