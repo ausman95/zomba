@@ -51,30 +51,30 @@ class DeliveryController extends \FPDF
 
         $this->Ln();
         $this->Cell(20,8,'','','L');
-        $this->SetFont('Times','B',8);
+        $this->SetFont('Courier','B',8);
         $this->Cell(85,5,'MALAWI ASSEMBLIES OF GOD','','','C');
         $this->Ln(10);
 
-        $this->SetFont('Times','B',9);
+        $this->SetFont('Courier','B',9);
         $this->Cell(50,10,'','','L');
         $this->Cell(30,2,'Date: '.@date('D d, M Y'),'','R');
         $this->Ln(10);
 
-        $this->SetFont('Times','B',9);
+        $this->SetFont('Courier','B',9);
         $this->MultiCell(88,1,'Received from '.$this->receivedFrom,'','L');
         $this->Ln(5);
 
-        $this->SetFont('Times','B',9);
+        $this->SetFont('Courier','B',9);
         $this->MultiCell(88,5,'The Sum Of : '.$this->sumOf,'','L');
         $this->Ln(5);
 
-        $this->SetFont('Times','B',9);
+        $this->SetFont('Courier','B',9);
         $this->MultiCell(88,5,'Being Paid for '.$this->paidFor.' for the month of '.$this->monthOf,'','L');
         $this->Ln(5);
 
-        $this->SetFont('Times','B',9);
+        $this->SetFont('Courier','B',9);
         $this->Cell(22,7,'K '.number_format($this->kwachaFigure,2),'','L');
-        $this->SetFont('Times','B',9);
+        $this->SetFont('Courier','B',9);
         $this->Cell(1,5,'Thank You','','L');
         $this->Ln(5);
 
@@ -87,7 +87,7 @@ class DeliveryController extends \FPDF
     function footer_note(){
 
         $this->Ln(10);
-        $this->SetFont('Times', '', 8);
+        $this->SetFont('Courier', '', 8);
 
         $this->cell(0, 0, 'Designed By Marc Systems Africa (0882 230 137)', 0, 0, 'C','');
         $this->Ln(4);
