@@ -30,7 +30,7 @@
                 <i class="fa fa-building"></i> Banks
             </a>
             <a href="{{route('accounts.index')}}" class="btn btn-primary btn-md rounded-0">
-                <i class="fa fa-list-ol"></i> Charts of Accounts
+                <i class="fa fa-list-ol"></i> Accounts
             </a>
             <a href="{{route('purchases.index')}}" class="btn btn-primary btn-md rounded-0">
                 <i class="fa fa-file-archive"></i> Purchases
@@ -42,7 +42,10 @@
                 <i class="bx bx-dollar-circle"></i> Receipts
             </a>
             <a href="{{route('receipt.unverified')}}" class="btn btn-primary btn-md rounded-0">
-                <i class="fa fa-plus-circle"></i>Un~Verified Transactions
+                <i class="fa fa-plus-circle"></i>Un~Verified
+            </a>
+            <a href="{{route('receipt.all')}}" class="btn btn-primary btn-md rounded-0">
+                <i class="fa fa-list-ul"></i>All Transaction
             </a>
             <a href="{{route('pledges.index')}}" class="btn btn-primary btn-md rounded-0">
                 <i class="fa fa-shopping-basket"></i> Pledges

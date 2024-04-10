@@ -94,6 +94,17 @@ class PaymentController extends Controller
             'months'=>Month::where(['soft_delete'=>0])->orderBY('id','desc')->get()
         ]);
     }
+    public function allTransaction()
+    {
+
+        activity('FINANCES')
+            ->log("Accessed Payments")->causer(request()->user());
+        return view('receipts.all')->with([
+            'cpage' => "finances",
+            'payments'=>Payment::all(),
+            'months'=>Month::where(['soft_delete'=>0])->orderBY('id','desc')->get()
+        ]);
+    }
     public function generateReceipt(Request $request)
     {
         $request->validate([

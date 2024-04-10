@@ -353,6 +353,8 @@ Route::middleware(['preventBackHistory'])->group(function () {
         Route::get('payment/member/transactions', [\App\Http\Controllers\PaymentController::class, "memberPayments"])->name('member.transaction');
         Route::get('payment/ministry/transactions', [\App\Http\Controllers\PaymentController::class, "ministryPayments"])->name('ministry.transaction');
         Route::get('payment/church/transactions', [\App\Http\Controllers\PaymentController::class, "homePayments"])->name('home.transactions');
+        Route::get('payment/all/transactions', [\App\Http\Controllers\PaymentController::class, "allTransaction"])->name('receipt.all');
+
         /**
          * Notification routes
          */

@@ -27,6 +27,7 @@
             <a href="{{route('receipt.unverified')}}" class="btn btn-primary btn-md rounded-0">
                 <i class="fa fa-plus-circle"></i>Un~Verified Transactions
             </a>
+
             <div class="mt-3">
                 <div class="card container-fluid" style="min-height: 30em;">
                     <div class="row">
