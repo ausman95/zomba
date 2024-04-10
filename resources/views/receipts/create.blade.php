@@ -140,6 +140,17 @@
                             </span>
                             @enderror
                         </div>
+                        <div class="form-group">
+                            <label>Description</label>
+                            <textarea name="specification" rows="2"
+                                      class="form-control @error('specification')
+                                      is-invalid @enderror" placeholder="Description">{{old('specification')}}</textarea>
+                            @error('specification')
+                            <span class="invalid-feedback">
+                               {{$message}}
+                        </span>
+                            @enderror
+                        </div>
                     </div>
                     <div class="col-sm-12 col-md-8 col-lg-4">
                         @csrf

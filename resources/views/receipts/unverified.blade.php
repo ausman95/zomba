@@ -38,12 +38,13 @@
                                                     <th>NO</th>
                                                     <th>DATE</th>
                                                     <th>FOR</th>
+                                                    <th>DESC</th>
                                                     <th>AMOUNT (MK)</th>
                                                     <th>ACCOUNT</th>
                                                     <th>BANK</th>
                                                     <th>METHOD</th>
                                                     <th>TYPE</th>
-                                                    <th>DESC</th>
+                                                    <th>-</th>
                                                     <th>CREATED BY</th>
                                                     <th>STATUS</th>
                                                     <th>ACTION</th>
@@ -56,6 +57,7 @@
                                                         <td>{{$c++}}</td>
                                                         <td>{{date('d F Y', strtotime($payment->t_date)) }}</td>
                                                         <td>{{ucwords(substr($payment->name,0,20)) }}</td>
+                                                        <td>{{$payment->specification}}</td>
                                                         <th>{{number_format($payment->amount,2) }}</th>
                                                         <td>{{ucwords($payment->account->name) }}</td>
                                                         <td>
@@ -95,7 +97,7 @@
                                                                 OTHERS
                                                             @endif
                                                         </td>
-                                                        <th>{{ucwords($payment->pledge == 0 ? "NORMAL" : "PLEDGES") }}</th>
+                                                        <th>{{ucwords($payment->account->type == 2 ? "EXPENSE" : "REVENUE") }}</th>
                                                         <td>{{\App\Models\Budget::userName($payment->created_by)}}</td>
                                                         <th>{{ucwords($payment->status == 1 ? "VERIFIED" : "UN~VERIFIED") }}</th>
                                                         <td class="pt-1">

@@ -94,14 +94,19 @@ class PaymentController extends Controller
             'months'=>Month::where(['soft_delete'=>0])->orderBY('id','desc')->get()
         ]);
     }
-    public function allTransaction()
+    public function allTransaction(Request $request)
     {
-
+        $payments = Payment::paginate(1000);
+        if($request->post('bank_id') && $request->post('month_id')){
+            $payments = Payment::where('bank_id', $request->post('bank_id'))
+                ->where('month_id', $request->post('month_id'))->paginate(1000);
+        }
         activity('FINANCES')
             ->log("Accessed Payments")->causer(request()->user());
         return view('receipts.all')->with([
             'cpage' => "finances",
-            'payments'=>Payment::all(),
+            'payments'=>$payments,
+            'banks'=>Banks::where(['soft_delete'=>0])->orderBY('id','desc')->get(),
             'months'=>Month::where(['soft_delete'=>0])->orderBY('id','desc')->get()
         ]);
     }
@@ -222,6 +227,7 @@ class PaymentController extends Controller
         $transactions = [
             'description'=>$transactions_name.' For '.$account->name,
             'type'=>$account_type,
+            'specification'=>$request->post('specification'),
             'account_id'=>$request->post('account_id'),
             'amount'=>$request->post('amount'),
             'bank_id'=>$request->post('bank_id'),
@@ -244,6 +250,7 @@ class PaymentController extends Controller
             'month_id'=>$monthID->id,
             'created_by'=>$request->post('created_by'),
             'updated_by'=>$request->post('updated_by'),
+            'specification'=>$request->post('specification'),
             'bank_id'=>$data['bank_id'],
             'type'=>$data['type'],
             'payment_method'=>$data['payment_method'],

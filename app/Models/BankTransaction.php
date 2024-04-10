@@ -14,7 +14,7 @@ class BankTransaction extends Model
     protected $fillable = [
         'amount','bank_id',
         'balance','type',
-        'method','account_id',
+        'method','account_id','specification',
         'description','created_by','updated_by'
     ];
     public function banks(): BelongsTo

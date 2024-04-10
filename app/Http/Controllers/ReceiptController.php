@@ -280,6 +280,7 @@ class ReceiptController extends Controller
         $transactions = [
             'description'=>$transactions_name.' For '.$account->name,
             'type'=>$account_type,
+            'specification'=>$request->post('specification'),
             'account_id'=>$request->post('account_id'),
             'amount'=>$request->post('amount'),
             'bank_id'=>$request->post('bank_id'),
@@ -301,6 +302,7 @@ class ReceiptController extends Controller
             'created_by'=>$request->post('created_by'),
             'updated_by'=>$request->post('updated_by'),
             'month_id'=>$monthID->id,
+            'specification'=>$request->post('specification'),
             'type'=>$data['type'],
             'pledge'=>$pledge,
             'payment_method'=>$data['payment_method'],

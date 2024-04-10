@@ -13,7 +13,7 @@ class Payment extends Model
         'account_id', 'bank_id',
         'name','amount',
         'payment_method','reference',
-        'type','t_date','month_id',
+        'type','t_date','month_id','specification',
         'created_by','updated_by','pledge'
     ];
     public function account(): BelongsTo

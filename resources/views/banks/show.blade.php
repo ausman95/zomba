@@ -111,13 +111,12 @@
                                     <tr>
                                         <th>NO</th>
                                         <th>DATE</th>
-                                        <th>DESCRIPTION</th>
+                                        <th>FOR</th>
                                         <th>ACCOUNT</th>
+                                        <th>DESC</th>
                                         <th>AMOUNT (MK)</th>
                                         <th>BALANCE (MK)</th>
                                         <th>TYPE</th>
-                                        <th>CREATED BY</th>
-                                        <th>UPDATED BY</th>
                                     </tr>
                                     </thead>
                                     <tbody>
@@ -128,6 +127,7 @@
                                             <td>{{date('d F Y', strtotime($transaction->created_at)) }}</td>
                                             <td>{{ucwords($transaction->description) }}</td>
                                             <td>{{ucwords($transaction->account->name) }}</td>
+                                            <td>{{ucwords($transaction->specification) }}</td>
                                             <td>
                                                 @if($transaction->type==1)
                                                     @if($transaction->amount<0)
@@ -142,9 +142,7 @@
                                             <th>
                                                 {{number_format($transaction->balance)}}
                                             </th>
-                                            <td>{{ucwords($transaction->type==1 ? "CR" : "DR") }}</td>
-                                            <td>{{\App\Models\Budget::userName($transaction->created_by)}}</td>
-                                            <td>{{\App\Models\Budget::userName($transaction->updated_by)}}</td>
+                                            <td>{{ucwords($transaction->type==1 ? "REVENUE" : "EXPENSE") }}</td>
                                         </tr>
                                     @endforeach
                                     </tbody>
