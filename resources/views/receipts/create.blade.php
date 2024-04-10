@@ -144,7 +144,7 @@
                             <label>Description</label>
                             <textarea name="specification" rows="2"
                                       class="form-control @error('specification')
-                                      is-invalid @enderror" placeholder="Description">{{old('specification')}}</textarea>
+                                      is-invalid @enderror" placeholder="Optional">{{old('specification')}}</textarea>
                             @error('specification')
                             <span class="invalid-feedback">
                                {{$message}}

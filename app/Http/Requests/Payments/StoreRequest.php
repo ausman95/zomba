@@ -28,7 +28,6 @@ class StoreRequest extends FormRequest
             'bank_id'=>"required|numeric",
             'amount'=>"required|numeric",
             'type'=>"required|numeric",
-            'specification'=>'required|string',
             't_date'=>"required|date",
             'payment_method'=>"required|numeric",
         ];

@@ -224,6 +224,11 @@ class ReceiptController extends Controller
         $request->validate([
             'type' => "required",
         ]);
+        if($request->post('specification')){
+            $specification = 0;
+        }else{
+            $specification = $request->post('specification');
+        }
         if($request->post('t_date')>date('Y-m-d')){
             return back()->with(['error-notification'=>"Invalid Date Entered, You have Entered a Future Date"]);
         }
@@ -280,7 +285,7 @@ class ReceiptController extends Controller
         $transactions = [
             'description'=>$transactions_name.' For '.$account->name,
             'type'=>$account_type,
-            'specification'=>$request->post('specification'),
+            'specification'=>$specification,
             'account_id'=>$request->post('account_id'),
             'amount'=>$request->post('amount'),
             'bank_id'=>$request->post('bank_id'),
@@ -302,7 +307,7 @@ class ReceiptController extends Controller
             'created_by'=>$request->post('created_by'),
             'updated_by'=>$request->post('updated_by'),
             'month_id'=>$monthID->id,
-            'specification'=>$request->post('specification'),
+            'specification'=>$specification,
             'type'=>$data['type'],
             'pledge'=>$pledge,
             'payment_method'=>$data['payment_method'],
