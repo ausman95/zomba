@@ -49,30 +49,44 @@
                         </span>
                             @enderror
                         </div>
-                        <div class="form-group">
-                            <label>Start Date</label>
-                            <input type="date" name="start_date"
-                                   class="form-control @error('start_date') is-invalid @enderror"
-                                   value="{{old('start_date')}}"
-                                   placeholder="Start Date" >
-                            @error('start_date')
-                            <span class="invalid-feedback">
+                        <div class="row mb-3">
+                            <label for="inputEmail3" class="col-sm-4 col-form-label">FROM</label>
+                            <div class="col-sm-8">
+                                <select name="start_date"
+                                        class="form-select
+                                        select-relation @error('start_date') is-invalid @enderror" style="width: 100%">
+                                    @foreach($months as $month)
+                                        <option value="{{$month->id}}"
+                                            {{old('start_date')===$month->id ? 'selected' : ''}}>{{$month->name}}</option>
+                                    @endforeach
+                                </select>
+                                @error('start_date')
+                                <span class="invalid-feedback">
                                {{$message}}
                         </span>
-                            @enderror
+                                @enderror
+                            </div>
                         </div>
-                        <div class="form-group">
-                            <label>End Date</label>
-                            <input type="date" name="end_date"
-                                   class="form-control @error('end_date') is-invalid @enderror"
-                                   value="{{old('end_date')}}"
-                                   placeholder="End Date" >
-                            @error('end_date')
-                            <span class="invalid-feedback">
+                        <div class="row mb-3">
+                            <label for="inputEmail3" class="col-sm-4 col-form-label">TO</label>
+                            <div class="col-sm-8">
+                                <select name="end_date"
+                                        class="form-select select-relation
+                                         @error('end_date') is-invalid @enderror" style="width: 100%">
+                                    @foreach($months as $month)
+                                        <option value="{{$month->id}}"
+                                            {{old('end_date')===$month->id ? 'selected' : ''}}>{{$month->name}}</option>
+                                    @endforeach
+                                </select>
+                                @error('end_date')
+                                <span class="invalid-feedback">
                                {{$message}}
                         </span>
-                            @enderror
+                                @enderror
+                            </div>
                         </div>
+
+
                         <div class="form-group">
                             <button class="btn btn-primary rounded-0" type="submit">
                                 <i class="fa fa-print"></i>  Generate

@@ -7,6 +7,7 @@ use App\Models\Banks;
 use App\Models\Finance;
 use App\Models\Incomes;
 use App\Models\Material;
+use App\Models\Month;
 use App\Models\Supplier;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -33,26 +34,27 @@ class FinanceController extends Controller
     public function financialStatement()
     {
         return view('finances.reports')->with([
-            'cpage' => "finances"
+            'cpage' => "finances",
+            'months'=>Month::where(['soft_delete'=>0])->orderBy('id','desc')->get()
         ]);
     }
     public function generateFinancialStatement(Accounts $accounts, Request $request)
     {
         $request->validate([
             'statement' => "required|numeric",
-            'start_date'=>"required|date",
-            'end_date'=>"required|date",
+            'start_date'=>"required|numeric",
+            'end_date'=>"required|numeric",
         ]);
         $statement = $request->post('statement');
         if($request->post('end_date')< $request->post('start_date')){
             return back()->with(['error-notification'=>"Please Specify the date correctly!"]);
         }
-//        if($request->post('end_date')>date('Y-m-d')){
-//            return back()->with(['error-notification'=>"Invalid End Date Entered, You have Entered a Future Date"]);
-//        }
-        if($request->post('start_date')>date('Y-m-d')){
-            return back()->with(['error-notification'=>"Invalid Start Date Entered, You have Entered a Future Date"]);
-        }
+        $from_month   = Month::where(['id' =>$request->post('start_date')])->first();
+        $to_month = Month::where(['id' =>$request->post('end_date')])->first();
+
+        $start = $from_month->start_date;
+        $end = $to_month->end_date;
+
         activity('ANALYTICS')
             ->log("Accessed Financial Reports")->causer(request()->user());
 
@@ -60,16 +62,17 @@ class FinanceController extends Controller
         return view('finances.reports')->with([
             'cpage' => "finances",
             'statement' => $statement,
-            'start_date'=>$request->post('start_date'),
-            'end_date'=>$request->post('end_date'),
-            'all'=>Accounts::allCrAccounts($request->post('start_date'),$request->post('end_date')),
-            'catCredits' => Accounts::getAccountCatDebits($request->post('start_date'),$request->post('end_date')),
-            'catDebits' => Accounts::getAccountCateExpenses($request->post('start_date'),$request->post('end_date')),
-            'accounts' => Accounts::allAccounts($request->post('start_date'),$request->post('end_date')),
-            'credits' => Accounts::getAccountBalanceDebits($statement,$request->post('start_date'),$request->post('end_date')),
-            'debits' => Incomes::accountAll($request->post('start_date'),$request->post('end_date')),
-            'expenses' => Incomes::accountExpensesAll($statement,$request->post('start_date'),$request->post('end_date')),
-            'admins' => Accounts::getAccountBalanceAdmin($statement,$request->post('start_date'),$request->post('end_date')),
+            'start_date'=>$start,
+            'end_date'=>$end,
+            'months'=>Month::where(['soft_delete'=>0])->orderBy('id','desc')->get(),
+            'all'=>Accounts::allCrAccounts($start,$end),
+            'catCredits' => Accounts::getAccountCatDebits($start,$end),
+            'catDebits' => Accounts::getAccountCateExpenses($start,$end),
+            'accounts' => Accounts::allAccounts($start,$end),
+            'credits' => Accounts::getAccountBalanceDebits($statement,$start,$end),
+            'debits' => Incomes::accountAll($start,$end),
+            'expenses' => Incomes::accountExpensesAll($statement,$start,$end),
+            'admins' => Accounts::getAccountBalanceAdmin($statement,$start,$end),
         ]);
     }
 }

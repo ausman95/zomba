@@ -236,7 +236,7 @@
                                     @foreach($transactions as $transaction)
                                         <tr>
                                             <td>{{$c++}}</td>
-                                            <td>{{date('d F Y', strtotime($transaction->created_at)) }}</td>
+                                            <td>{{date('d F Y', strtotime($transaction->t_date)) }}</td>
                                             <td>{{ucwords($transaction->account->name) }}</td>
                                             <th>
                                                 @if($transaction->amount< 0)

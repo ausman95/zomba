@@ -16,7 +16,7 @@ class Accounts extends Model
     public function getAccountBalance($start_date,$end_date)
     {
         return $value = BankTransaction::where(['account_id'=>$this->id])
-            ->whereBetween('created_at',[$start_date,$end_date])
+            ->whereBetween('t_date',[$start_date,$end_date])
             ->groupBy('account_id')->sum("amount");
     }
 
@@ -30,7 +30,7 @@ class Accounts extends Model
                 ->where('categories.status', '=', 2)
                 ->where('accounts.soft_delete', '=', 0)
                 ->where('accounts.id', '!=', 134)
-                ->whereBetween('bank_transactions.created_at', [$start_date, $end_date])
+                ->whereBetween('bank_transactions.t_date', [$start_date, $end_date])
                 ->groupBy('categories.id')
                 ->get();
         }else {
@@ -40,7 +40,7 @@ class Accounts extends Model
                 ->where(['accounts.type' => 1])
                 ->where('accounts.soft_delete', '=', 0)
                 ->where('accounts.id', '!=', 134)
-                ->whereBetween('bank_transactions.created_at', [$start_date, $end_date])
+                ->whereBetween('bank_transactions.t_date', [$start_date, $end_date])
                 ->groupBy('accounts.id')
                 ->get();
         }
@@ -53,7 +53,7 @@ class Accounts extends Model
                 ->where(['accounts.category_id' => $categoryId])
                 ->where('accounts.soft_delete', '=', 0)
                 ->where('accounts.id', '!=', 134)
-                ->whereBetween('bank_transactions.created_at', [$start_date, $end_date])
+                ->whereBetween('bank_transactions.t_date', [$start_date, $end_date])
                 ->groupBy('accounts.id')
                 ->get();
     }
@@ -66,7 +66,7 @@ class Accounts extends Model
                 ->where(['accounts.type' => 1])
                 ->where('accounts.soft_delete', '=', 0)
                 ->where('accounts.id', '!=', 134)
-                ->whereBetween('bank_transactions.created_at', [$start_date, $end_date])
+                ->whereBetween('bank_transactions.t_date', [$start_date, $end_date])
                 ->groupBy('categories.id')
                 ->get();
     }
@@ -79,7 +79,7 @@ class Accounts extends Model
             ->where('categories.status', '=', 2)
             ->where('accounts.soft_delete', '=', 0)
             ->where('accounts.id', '!=', 134)
-            ->whereBetween('bank_transactions.created_at', [$start_date, $end_date])
+            ->whereBetween('bank_transactions.t_date', [$start_date, $end_date])
             ->groupBy('categories.id')
             ->get();
     }
@@ -91,7 +91,7 @@ class Accounts extends Model
             ->where('categories.status', '=', 2)
             ->where('accounts.id','!=',134)
             ->where(['accounts.soft_delete'=>0])
-            ->whereBetween('bank_transactions.created_at',[$start_date,$end_date])
+            ->whereBetween('bank_transactions.t_date',[$start_date,$end_date])
             ->groupBy('accounts.id')
             ->get();
     }
