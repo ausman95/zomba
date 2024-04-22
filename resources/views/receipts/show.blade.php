@@ -11,17 +11,21 @@
         </p>
         <nav>
             <ol class="breadcrumb bg-transparent">
-                <li class="breadcrumb-item"><a href="{{route('home')}}">Home</a></li>
-                <li class="breadcrumb-item"><a href="{{route('finances.index')}}">Finances</a></li>
-                @if($_GET['verified']==0)
-                <li class="breadcrumb-item"><a href="{{route('receipts.index')}}">Receipts</a></li>
+                <li class="breadcrumb-item"><a href="{{ route('home') }}">Home</a></li>
+                <li class="breadcrumb-item"><a href="{{ route('finances.index') }}">Finances</a></li>
+
+                @if(request()->has('verified') && request()->input('verified') == 0)
+                    <li class="breadcrumb-item"><a href="{{ route('receipts.index') }}">Receipts</a></li>
                 @endif
-            @if($_GET['verified']==1)
-                    <li class="breadcrumb-item"><a href="{{route('receipt.unverified')}}">Un~Verified Transactions</a></li>
+
+                @if(request()->has('verified') && request()->input('verified') == 1)
+                    <li class="breadcrumb-item"><a href="{{ route('receipt.unverified') }}">Un~Verified Transactions</a></li>
                 @endif
-                    <li class="breadcrumb-item active" aria-current="page">{{$transaction->id}}</li>
+
+                <li class="breadcrumb-item active" aria-current="page">{{ $transaction->id }}</li>
             </ol>
         </nav>
+
 
         <div class="mb-5">
             <hr>
@@ -37,6 +41,14 @@
                                     <tr>
                                         <td>Date</td>
                                         <td>{{date('d F Y', strtotime($transaction->t_date)) }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Ref</td>
+                                        <td>{{$transaction->reference}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Other</td>
+                                        <td>{{$transaction->specification}}</td>
                                     </tr>
                                     <tr>
                                         <td>Description</td>
@@ -90,10 +102,6 @@
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td>Reference</td>
-                                        <td>{{ucwords($transaction->reference) }}</td>
-                                    </tr>
-                                    <tr>
                                         <td>Status</td>
                                         <th>{{ucwords($transaction->status == 1 ? "VERIFIED" : "UN~VERIFIED") }}</th>
                                     </tr>
@@ -116,12 +124,12 @@
                                 </table>
                                 <div class="mt-3">
                                     <div>
+                                        <a href="{{route('payments.edit',$transaction->id).'?verified='.$_GET['verified']}}"
+                                           class="btn btn-warning rounded-0" style="margin: 2px">
+                                            <i class="fa fa-edit"></i>Update
+                                        </a>
                                         @if($transaction->status==0)
                                             @if(request()->user()->id !=$transaction->created_by)
-{{--                                            <a href="{{route('payments.edit',$transaction->id)}}"--}}
-{{--                                               class="btn btn-primary rounded-0" style="margin: 2px">--}}
-{{--                                                <i class="fa fa-edit"></i>Update--}}
-{{--                                            </a>--}}
                                         <button class="btn btn-success  rounded-0" id="delete-btn" style="margin: 5px">
                                             <i class="fa fa-check-circle"></i>Verify
                                         </button>

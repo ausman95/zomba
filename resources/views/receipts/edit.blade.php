@@ -5,16 +5,17 @@
     <div class="container-fluid ps-1 pt-4">
 
         <h4>
-            <i class="fa fa-car"></i>Service Providers
+            <i class="fa fa-car"></i>Payments
         </h4>
         <p>
-            Update Service Provider
+            Update Payment
         </p>
         <nav>
             <ol class="breadcrumb bg-transparent">
                 <li class="breadcrumb-item"><a href="{{route('home')}}">Home</a></li>
-                <li class="breadcrumb-item"><a href="{{route('services.index')}}">Services</a></li>
-                <li class="breadcrumb-item"><a href="{{route('services.show',$service->id)}}">{{$service->name}}</a></li>
+                <li class="breadcrumb-item"><a href="{{route('finances.index')}}">Finances</a></li>
+                <li class="breadcrumb-item"><a href="{{route('receipts.index')}}">Receipts</a></li>
+                <li class="breadcrumb-item"><a href="{{route('payments.show',$transaction->id).'?verified='.$_GET['verified']}}">{{$transaction->id}}</a></li>
                 <li class="breadcrumb-item active" aria-current="page">Update</li>
             </ol>
         </nav>
@@ -24,20 +25,44 @@
         <div class="mt-2">
             <div class="row">
                 <div class="col-sm-12 col-md-8 col-lg-4">
-                    <form action="{{route('services.update',$service->id)}}" method="POST" autocomplete="off">
+                    <form action="{{route('payments.update',$transaction->id)}}" method="POST" autocomplete="off">
                         @csrf
                         <input type="hidden" name="_method" value="PATCH">
+                        <input type="hidden" name="verified" value="{{$_GET['verified']}}">
                         <div class="form-group">
-                            <label>Name</label>
-                            <input type="text" name="name"
-                                   class="form-control @error('name') is-invalid @enderror"
-                                   value="{{old('name') ?? $service->name}}"
-                                   placeholder="Client's name"
+                            <label>Amount</label>
+                            <input type="number" name="amount"
+                                   class="form-control @error('amount') is-invalid @enderror"
+                                   value="{{old('amount') ?? $transaction->amount}}" readonly
                             >
-                            @error('name')
+                            @error('amount')
                             <span class="invalid-feedback">
                                {{$message}}
                             </span>
+                            @enderror
+                        </div>
+                        <div class="form-group">
+                            <label>Reference/ Cheque Number</label>
+                            <input type="text" name="reference"
+                                   class="form-control @error('reference') is-invalid @enderror"
+                                   value="{{old('reference') ?? $transaction->reference}}"
+                                   placeholder="Transaction Reference"
+                            >
+                            @error('reference')
+                            <span class="invalid-feedback">
+                               {{$message}}
+                            </span>
+                            @enderror
+                        </div>
+                        <div class="form-group">
+                            <label>Description</label>
+                            <textarea name="specification" rows="2"
+                                      class="form-control @error('specification')
+                                      is-invalid @enderror" placeholder="Optional">{{old('specification') ?? $transaction->specification }}</textarea>
+                            @error('specification')
+                            <span class="invalid-feedback">
+                               {{$message}}
+                        </span>
                             @enderror
                         </div>
                         <hr>

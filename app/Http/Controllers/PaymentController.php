@@ -417,9 +417,12 @@ class PaymentController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(Payment $payment)
     {
-        //
+        return view('receipts.edit')->with([
+            'cpage'=>"finances",
+            'transaction'=>$payment,
+        ]);
     }
 
     /**
@@ -429,10 +432,15 @@ class PaymentController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request,Payment $payment)
     {
-        //
+        $data = $request->post();
+        $payment->update($data);
+        return redirect()->route('payments.show',$payment->id.'?verified='.$data['verified'])->with([
+            'success-notification'=>"Successfully Updated"
+        ]);
     }
+
 
     /**
      * Remove the specified resource from storage.
