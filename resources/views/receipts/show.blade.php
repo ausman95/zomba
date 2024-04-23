@@ -18,6 +18,10 @@
                     <li class="breadcrumb-item"><a href="{{ route('receipts.index') }}">Receipts</a></li>
                 @endif
 
+                @if(request()->has('verified') && request()->input('verified') == 2)
+                    <li class="breadcrumb-item"><a href="{{ route('payments.index') }}">Payments</a></li>
+                @endif
+
                 @if(request()->has('verified') && request()->input('verified') == 1)
                     <li class="breadcrumb-item"><a href="{{ route('receipt.unverified') }}">Un~Verified Transactions</a></li>
                 @endif

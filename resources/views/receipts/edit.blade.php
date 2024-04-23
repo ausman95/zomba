@@ -14,7 +14,17 @@
             <ol class="breadcrumb bg-transparent">
                 <li class="breadcrumb-item"><a href="{{route('home')}}">Home</a></li>
                 <li class="breadcrumb-item"><a href="{{route('finances.index')}}">Finances</a></li>
-                <li class="breadcrumb-item"><a href="{{route('receipts.index')}}">Receipts</a></li>
+                @if(request()->has('verified') && request()->input('verified') == 0)
+                    <li class="breadcrumb-item"><a href="{{ route('receipts.index') }}">Receipts</a></li>
+                @endif
+
+                @if(request()->has('verified') && request()->input('verified') == 2)
+                    <li class="breadcrumb-item"><a href="{{ route('payments.index') }}">Payments</a></li>
+                @endif
+
+                @if(request()->has('verified') && request()->input('verified') == 1)
+                    <li class="breadcrumb-item"><a href="{{ route('receipt.unverified') }}">Un~Verified Transactions</a></li>
+                @endif
                 <li class="breadcrumb-item"><a href="{{route('payments.show',$transaction->id).'?verified='.$_GET['verified']}}">{{$transaction->id}}</a></li>
                 <li class="breadcrumb-item active" aria-current="page">Update</li>
             </ol>

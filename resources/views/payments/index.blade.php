@@ -91,7 +91,7 @@
                                                     <th>STATUS</th>
                                                     <th>CREATED BY</th>
                                                     <th>UPDATED BY</th>
-                                                    {{--                                            <th>ACTION</th>--}}
+                                                                                                <th>ACTION</th>
                                                 </tr>
                                                 </thead>
                                                 <tbody>
@@ -143,11 +143,12 @@
                                                         <th>{{ucwords($payment->status == 1 ? "VERIFIED" : "UN~VERIFIED") }}</th>
                                                         <td>{{\App\Models\Budget::userName($payment->created_by)}}</td>
                                                         <td>{{\App\Models\Budget::userName($payment->updated_by)}}</td>
-                                                        {{--                                                <td>--}}
-                                                        {{--                                                    <a href="{{route('delivery-note.generate')."?id={$flow->id}"}}" target="_blank" class="btn btn-primary rounded-0" style="margin: 2px">--}}
-                                                        {{--                                                        <i class="fa fa-vote-yea"></i> Generate--}}
-                                                        {{--                                                    </a>--}}
-                                                        {{--                                                </td>--}}
+                                                        <td class="pt-1">
+                                                            <a href="{{route('payments.show',$payment->id)."?verified=2"}}"
+                                                               class="btn btn-primary btn-md rounded-0">
+                                                                <i class="fa fa-list-ol"></i>   Details
+                                                            </a>
+                                                        </td>
                                                     </tr>
                                                 @endforeach
                                                 </tbody>
