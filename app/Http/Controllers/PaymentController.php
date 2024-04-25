@@ -117,23 +117,24 @@ class PaymentController extends Controller
         $request->validate([
             'month_id' => "required|numeric",
         ]);
-        $month =  Month::where(['id'=>$request->post('month_id')])
-            ->first();
 
-        activity('FINANCES')
-            ->log("Accessed Payments")->causer(request()->user());
+        $month = Month::where('id', $request->post('month_id'))->first();
+
+        activity('FINANCES')->log("Accessed Payments")->causer(request()->user());
+
         return view('payments.index')->with([
             'cpage' => "finances",
-            'payments'=>Payment::join('accounts', 'accounts.id','=','payments.account_id')
-                ->select(
-                    'payments.*',
-                )
-                ->whereBetween('t_date',[$month->start_date,$month->end_date])
-                ->where(['accounts.type'=>2])
-                ->orderBy('payments.id','desc')->get(),
-            'months'=>Month::orderBY('id','desc')->get()
+            'payments' => Payment::join('accounts', 'accounts.id','=','payments.account_id')
+                ->select('payments.*')
+                ->where('payments.t_date', '>=', $month->start_date)
+                ->where('payments.t_date', '<=', $month->end_date)
+                ->where('accounts.type', 2)
+                ->orderBy('payments.id', 'desc')
+                ->get(),
+            'months' => Month::orderBy('id', 'desc')->get()
         ]);
     }
+
     /**
      * Show the form for creating a new resource.
      *
