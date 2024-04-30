@@ -61,7 +61,7 @@
                                                 <td>{{ucwords($transfer->accountFrom->account_name) }}</td>
                                                 <td>{{ucwords($transfer->accountFrom->account_number) }}</td>
                                                 <th>{{number_format($transfer->amount,2) }}</th>
-                                                <td>{{ucwords($transfer->created_at) }}</td>
+                                                <td>{{date('d F Y', strtotime($transfer->t_date)) }}</td>
                                                 <td>{{ucwords($transfer->cheque_number) }}</td>
                                                 <td>{{ucwords($transfer->accountTo->account_name) }}</td>
                                                 <td>{{ucwords($transfer->accountTo->account_number) }}</td>
