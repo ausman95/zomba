@@ -21,22 +21,23 @@ class BankController extends Controller
             'start_date' => "required|date",
             'end_date' => "required|date",
         ]);
-        activity('FINANCES')
-            ->log("Accessed Bank Statements")->causer(request()->user());
+        activity('FINANCES')->log("Accessed Bank Statements")->causer(request()->user());
+
         return view('banks.statements')->with([
             'cpage' => "finances",
-            'transactions'=>BankTransaction::whereBetween('t_date',[$request->post('start_date'),
-                $request->post('end_date')])
-                ->where(['bank_id'=>$request->post('bank_id')])
-                ->orderBy('id','desc')->get(),
-            'payments'=>1,
-            'start_date'=>$request->post('start_date'),
-            'end_date'=>$request->post('end_date'),
-            'bank'=>Banks::where(['id'=>$request->post('bank_id')])->first(),
-            'banks'=>Banks::where(['soft_delete'=>0])->orderBy('id','desc')->get(),
-
+            'transactions' => BankTransaction::where('t_date', '>=', $request->post('start_date'))
+                ->where('t_date', '<=', $request->post('end_date'))
+                ->where(['bank_id' => $request->post('bank_id')])
+                ->orderBy('id', 'desc')
+                ->get(),
+            'payments' => 1,
+            'start_date' => $request->post('start_date'),
+            'end_date' => $request->post('end_date'),
+            'bank' => Banks::where('id', $request->post('bank_id'))->first(),
+            'banks' => Banks::where(['soft_delete' => 0])->orderBy('id', 'desc')->get(),
         ]);
     }
+
     public function index()
     {
         activity('BANKS')
