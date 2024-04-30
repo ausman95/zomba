@@ -61,11 +61,12 @@ class TransferController extends Controller
         if(!$balance){
             $balance = 0;
         }
-        if($request->post('amount')>$balance){
-            return back()->with(['error-notification'=>"The bank balance is less than the amount requested"]);
-        }else{
-            $new_balance = $balance-$request->post('amount');
-        }
+//        if($request->post('amount')>$balance){
+//            return back()->with(['error-notification'=>"The bank balance is less than the amount requested"]);
+//        }else{
+//            $new_balance = $balance-$request->post('amount');
+//        }
+        $new_balance = $balance-$request->post('amount');
         $transactions = [
             'description'=>'BANK TRANSFER',
             'type'=>2,
