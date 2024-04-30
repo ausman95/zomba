@@ -13,7 +13,7 @@ class BankTransaction extends Model
     use HasFactory;
     protected $fillable = [
         'amount','bank_id',
-        'balance','type',
+        'balance','type','t_date',
         'method','account_id','specification',
         'description','created_by','updated_by'
     ];

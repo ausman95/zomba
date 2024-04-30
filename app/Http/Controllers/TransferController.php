@@ -73,6 +73,7 @@ class TransferController extends Controller
             'amount'=>$request->post('amount'),
             'bank_id'=>$request->post('from_account_id'),
             'method'=>'Bank',
+            't_date'=>$request->post('t_date'),
             'account_id'=>134,
             'balance'=>$new_balance
         ];
@@ -89,6 +90,7 @@ class TransferController extends Controller
             'description'=>'BANK TRANSFER',
             'type'=>1,
             'account_id'=>134,
+            't_date'=>$request->post('t_date'),
             'amount'=>$request->post('amount'),
             'bank_id'=>$request->post('to_account_id'),
             'method'=>'Bank',

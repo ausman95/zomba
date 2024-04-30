@@ -285,6 +285,7 @@ class ReceiptController extends Controller
         $transactions = [
             'description'=>$transactions_name.' For '.$account->name,
             'type'=>$account_type,
+            't_date'=>$data['t_date'],
             'specification'=>$specification,
             'account_id'=>$request->post('account_id'),
             'amount'=>$request->post('amount'),

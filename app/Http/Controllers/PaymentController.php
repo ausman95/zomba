@@ -233,6 +233,7 @@ class PaymentController extends Controller
             'specification'=>$request->post('specification'),
             'account_id'=>$request->post('account_id'),
             'amount'=>$request->post('amount'),
+            't_date'=>$request->post('t_date'),
             'bank_id'=>$request->post('bank_id'),
             'method'=>$request->post('payment_method'),
             'balance'=>$new_balance

@@ -26,6 +26,7 @@ class StoreRequest extends FormRequest
         return [
             'to_account_id'=>"required|string",
             'from_account_id'=>"required|string",
+            't_date'=>"required|date",
             'amount'=>"required|numeric|min:1",
         ];
     }

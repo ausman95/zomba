@@ -87,6 +87,17 @@
                             @enderror
                         </div>
                         <div class="form-group">
+                            <label>Date</label>
+                            <input type="date" name="t_date"
+                                   class="form-control @error('t_date') is-invalid @enderror"
+                                   placeholder="Transaction Date" >
+                            @error('t_date')
+                            <span class="invalid-feedback">
+                               {{$message}}
+                        </span>
+                            @enderror
+                        </div>
+                        <div class="form-group">
                             <button class="btn btn-md btn-primary rounded-0">
                                 <i class="fa fa-paper-plane"></i>Save
                             </button>
