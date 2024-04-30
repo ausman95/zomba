@@ -89,12 +89,16 @@
                                             <td>{{$transfer->accountTo->service_centre}}</td>
                                         </tr>
                                         <tr>
+                                            <td>Date</td>
+                                            <td>{{date('d F Y', strtotime($transfer->t_date))}}</td>
+                                        </tr>
+                                        <tr>
                                             <td>Created On</td>
-                                            <td>{{$transfer->created_at}}</td>
+                                            <td>{{date('d F Y', strtotime($transfer->created_at))}}</td>
                                         </tr>
                                         <tr>
                                             <td>Update ON</td>
-                                            <td>{{$transfer->updated_at}}</td>
+                                            <td>{{date('d F Y', strtotime($transfer->updated_at))}}</td>
                                         </tr>
                                         <tr>
                                             <td>Update By</td>
@@ -105,6 +109,14 @@
                                             <td>{{@\App\Models\Budget::userName($transfer->created_by)}}</td>
                                         </tr>
                                     </table>
+                                    <div class="mt-3">
+                                        <div>
+                                            <a href="{{route('transfers.edit',$transfer->id)}}"
+                                               class="btn btn-btn btn-primary text-undecorated">
+                                                <i class="fa fa-edit"></i>Update
+                                            </a>
+                                        </div>
+                                    </div>
                                 </div>
                                 </div>
                             </div>

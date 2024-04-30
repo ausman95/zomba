@@ -126,9 +126,12 @@ class TransferController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(Transfer $transfer)
     {
-        //
+        return view('transfers.edit')->with([
+            'cpage'=>"finances",
+            'transfer'=>$transfer
+        ]);
     }
 
     /**
@@ -138,9 +141,16 @@ class TransferController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request,Transfer $transfer)
     {
-        //
+        $data = $request->post();
+        if(empty($request->post('t_date'))){
+            return back()->with(['error-notification'=>"Date is Empty"]);
+        }
+        $transfer->update($data);
+        return redirect()->route('transfers.show',$transfer->id)->with([
+            'success-notification'=>"Successfully Updated"
+        ]);
     }
 
     /**
