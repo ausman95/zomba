@@ -173,7 +173,11 @@
                                                             OTHERS
                                                     @endswitch
                                                 </td>
-                                                <td>{{ $payment->account->type == 2 ? "EXPENSE" : "REVENUE" }}</td>
+                                                <td>@if($payment->account->id == 134)
+                                                    {{ $payment->type == 2 ? "EXPENSE" : "REVENUE" }}
+                                                    @else
+                                                        {{ $payment->account->type == 2 ? "EXPENSE" : "REVENUE" }}
+                                                    @endif</td>
                                                 <td>{{ $payment->status == 1 ? "VERIFIED" : "UNVERIFIED" }}</td>
                                                 <td>{{ \App\Models\Budget::userName($payment->created_by) }}</td>
                                                 <td>{{ \App\Models\Budget::userName($payment->updated_by) }}</td>
