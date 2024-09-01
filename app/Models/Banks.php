@@ -28,13 +28,18 @@ class Banks extends Model
 
     public function getBalance()
     {
+        // Calculate the sum of amounts where type = 1
+        $revenue = BankTransaction::where('bank_id', $this->id)
+            ->where('type', 1)
+            ->sum('amount');
 
-        $bal = BankTransaction::where(['bank_id'=>$this->id])->latest()->first();
-        @$balance = $bal->balance;
-        if(!$balance){
-            $balance = 0;
-        }
-        return $balance;
+        // Calculate the sum of amounts where type = 2
+        $expenses = BankTransaction::where('bank_id', $this->id)
+            ->where('type', 2)
+            ->sum('amount');
 
+        // Return the difference between revenue and expenses
+        return $revenue - $expenses;
     }
+
 }

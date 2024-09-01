@@ -62,47 +62,46 @@
                                     <i class="fa fa-info-circle"></i>There are no Bank Accounts!
                                 @else
                                     <div style="overflow-x:auto;">
-                                    <table class="table table-bordered  table-hover table-striped" id="data-table">
-                                        <caption style=" caption-side: top; text-align: center">BANKS</caption>
-                                        <thead>
-                                        <tr>
-                                            <th>NO</th>
-                                            <th>ACCOUNT NAME</th>
-                                            <th>BALANCE (MK)</th>
-                                            <th>ACCOUNT NUMBER</th>
-                                            <th>SERVICE CENTRE</th>
-                                            <th>CREATED BY</th>
-                                            <th>UPDATED BY</th>
-                                            <th>ACTION</th>
-                                        </tr>
-                                        </thead>
-                                        <tbody>
-                                        <?php  $c= 1;?>
-                                        @foreach($banks as $bank)
+                                        <table class="table table-bordered table-hover table-striped" id="data-table">
+                                            <caption style="caption-side: top; text-align: center">BANKS</caption>
+                                            <thead>
                                             <tr>
-                                                <td>{{$c++}}</td>
-                                                <td>{{ucwords($bank->account_name) }}</td>
-                                                <th>
-                                                    @if($bank->getBalance()<0)
-                                                    ({{number_format($bank->getBalance()*(-1),2)}})
-                                                    @else
-                                                    {{number_format($bank->getBalance(),2)}}
-                                                    @endif
-                                                </th>
-                                                <td>{{ucwords($bank->account_number) }}</td>
-                                                <td>{{ucwords($bank->service_centre) }}</td>
-                                                <td>{{\App\Models\Budget::userName($bank->created_by)}}</td>
-                                                <td>{{\App\Models\Budget::userName($bank->updated_by)}}</td>
-                                                <td class="pt-1">
-                                                    <a href="{{route('banks.show',$bank->id)}}"
-                                                       class="btn btn-primary btn-md rounded-0">
-                                                       <i class="fa fa-list-ol"></i> Manage
-                                                    </a>
-                                                </td>
+                                                <th>NO</th>
+                                                <th>ACCOUNT NAME</th>
+                                                <th>BALANCE (MK)</th>
+                                                <th>ACCOUNT NUMBER</th>
+                                                <th>SERVICE CENTRE</th>
+                                                <th>CREATED BY</th>
+                                                <th>UPDATED BY</th>
+                                                <th>ACTION</th>
                                             </tr>
-                                        @endforeach
-                                        </tbody>
-                                    </table>
+                                            </thead>
+                                            <tbody>
+                                                <?php $c = 1; ?>
+                                            @foreach($banks as $bank)
+                                                <tr>
+                                                    <td>{{ $c++ }}</td>
+                                                    <td>{{ ucwords($bank->account_name) }}</td>
+                                                    <td>
+                                                        @if($bank->getBalance() < 0)
+                                                            ({{ number_format(abs($bank->getBalance()), 2) }})
+                                                        @else
+                                                            {{ number_format($bank->getBalance(), 2) }}
+                                                        @endif
+                                                    </td>
+                                                    <td>{{ ucwords($bank->account_number) }}</td>
+                                                    <td>{{ ucwords($bank->service_centre) }}</td>
+                                                    <td>{{ \App\Models\Budget::userName($bank->created_by) }}</td>
+                                                    <td>{{ \App\Models\Budget::userName($bank->updated_by) }}</td>
+                                                    <td class="pt-1">
+                                                        <a href="{{ route('banks.show', $bank->id) }}" class="btn btn-primary btn-md rounded-0">
+                                                            <i class="fa fa-list-ol"></i> Manage
+                                                        </a>
+                                                    </td>
+                                                </tr>
+                                            @endforeach
+                                            </tbody>
+                                        </table>
                                     </div>
                                         @endif
                             </div>
