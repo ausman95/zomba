@@ -82,7 +82,9 @@
                                             <th>REF</th>
                                             <th>FOR</th>
                                             <th>AMOUNT (MK)</th>
+                                            @if(@$status==1)
                                             <th>BALANCE (MK)</th>
+                                            @endif
                                             <th>ACCOUNT</th>
                                             <th>BANK</th>
                                             <th>METHOD</th>
@@ -101,19 +103,26 @@
                                             <tr>
                                                 <td>{{ ($loop->index + 1) + (($payments->currentPage() - 1) * $payments->perPage()) }}</td>
                                                 <td>{{ date('d F Y', strtotime($payment->t_date)) }}</td>
-                                                <td>{{ ucwords($payment->reference) }}</td>
-                                                <td>{{ ucwords(substr($payment->name, 0, 500)) }}</td>
+                                                <td>{{  $payment->account->id == 134 ? "N/A" :  $payment->reference }}</td>
+                                                <td>{{ $payment->account->id == 134 ? "SYSTEM TRANSFER" : ucwords(substr($payment->name, 0, 500)) }}</td>
                                                 <td>{{ number_format($payment->amount, 2) }}</td>
+                                                @if(@$status==1)
                                                 <td>
                                                     @php
-                                                        if ($payment->account->type == 1) {
+                                                        // Determine the account type: use a special condition for account ID 134, otherwise use the account type.
+                                                        $accountType = $payment->account->id == 134 ? $payment->type : $payment->account->type;
+
+                                                        // Adjust the balance based on the account type.
+                                                        if ($accountType == 1) {
                                                             $balance += $payment->amount; // Add to balance if account type is 1
                                                         } else {
                                                             $balance -= $payment->amount; // Subtract from balance if account type is 2
                                                         }
                                                     @endphp
+
                                                     {{ $balance < 0 ? '('.number_format(abs($balance), 2).')' : number_format($balance, 2) }}
                                                 </td>
+                                                @endif
                                                 <td>{{ ucwords($payment->account->name) }}</td>
                                                 <td>
                                                     @if(empty($payment->bank->account_name))
@@ -168,6 +177,7 @@
                                                 <td>{{ $payment->status == 1 ? "VERIFIED" : "UNVERIFIED" }}</td>
                                                 <td>{{ \App\Models\Budget::userName($payment->created_by) }}</td>
                                                 <td>{{ \App\Models\Budget::userName($payment->updated_by) }}</td>
+
                                             </tr>
                                         @endforeach
                                         </tbody>

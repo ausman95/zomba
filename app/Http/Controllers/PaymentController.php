@@ -9,7 +9,6 @@ use App\Models\BankTransaction;
 use App\Models\Church;
 use App\Models\ChurchPayment;
 use App\Models\Department;
-use App\Models\Incomes;
 use App\Models\Labourer;
 use App\Models\LabourerPayments;
 use App\Models\Member;
@@ -17,20 +16,80 @@ use App\Models\MemberPayment;
 use App\Models\Ministry;
 use App\Models\MinistryPayment;
 use App\Models\Month;
-use App\Models\order;
 use App\Models\Payment;
-use App\Models\Project;
 use App\Models\ProjectPayment;
-use App\Models\Requisition;
-use App\Models\RequisitionItem;
 use App\Models\Supplier;
 use App\Models\SupplierPayments;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-
+use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Collection;
 class PaymentController extends Controller
 {
+    public function allTransaction(Request $request)
+    {
+        $payments = collect(); // Initialize an empty collection for payments
+        $status= 0;
 
+        if ($request->has(['bank_id', 'month_id'])) {
+            $status = 1;
+            $month = Month::find($request->post('month_id'));
+
+            if ($month) {
+                // Fetch payments for the specified bank and month
+                $payments = Payment::where('bank_id', $request->post('bank_id'))
+                    ->whereBetween('t_date', [$month->start_date, $month->end_date])
+                    ->orderBy('t_date', 'ASC')
+                    ->get();
+
+                // Fetch additional transactions for account_id '134'
+                $payments_1 = BankTransaction::where('account_id', '134')
+                    ->where('bank_id', $request->post('bank_id'))
+                    ->whereBetween('t_date', [$month->start_date, $month->end_date])
+                    ->orderBy('t_date', 'ASC')
+                    ->get();
+
+                // Merge and sort collections
+                $mergedPayments = $payments->merge($payments_1)->sortBy('t_date');
+
+                // Manually paginate the merged collection
+                $currentPage = LengthAwarePaginator::resolveCurrentPage();
+                $perPage = 1000;
+                $currentResults = $mergedPayments->slice(($currentPage - 1) * $perPage, $perPage)->all();
+                $payments = new LengthAwarePaginator($currentResults, $mergedPayments->count(), $perPage, $currentPage, [
+                    'path' => LengthAwarePaginator::resolveCurrentPath(),
+                ]);
+            }
+        } else {
+            // Default pagination when no filters are applied
+            $payments = Payment::paginate(1000);
+
+            // Fetch additional transactions and merge
+            $payments_1 = BankTransaction::where('account_id', '134')->paginate(1000);
+            $mergedPayments = $payments->merge($payments_1)->sortBy('t_date');
+
+            // Convert to a paginated collection
+            $payments = new LengthAwarePaginator(
+                $mergedPayments->forPage(LengthAwarePaginator::resolveCurrentPage(), 1000)->values(),
+                $mergedPayments->count(),
+                1000,
+                LengthAwarePaginator::resolveCurrentPage(),
+                ['path' => LengthAwarePaginator::resolveCurrentPath()]
+            );
+        }
+
+        activity('FINANCES')
+            ->log("Accessed Payments")
+            ->causer(request()->user());
+
+        return view('receipts.all')->with([
+            'cpage' => "finances",
+            'payments' => $payments,
+            'status' => $status,
+            'banks' => Banks::where('soft_delete', 0)->orderBy('id', 'desc')->get(),
+            'months' => Month::where('soft_delete', 0)->orderBy('id', 'desc')->get(),
+        ]);
+    }
     /**
      * Display a listing of the resource.
      *
@@ -94,23 +153,7 @@ class PaymentController extends Controller
             'months'=>Month::where(['soft_delete'=>0])->orderBY('id','desc')->get()
         ]);
     }
-    public function allTransaction(Request $request)
-    {
-        $payments = Payment::paginate(1000);
-        if($request->post('bank_id') && $request->post('month_id')){
-            $month = Month::where(['id'=>$request->post('month_id')])->first();
-            $payments = Payment::where('bank_id', $request->post('bank_id'))
-                ->whereBetween('t_date',[$month->start_date,$month->end_date])->orderBy('t_date','ASC')->paginate(1000);
-        }
-        activity('FINANCES')
-            ->log("Accessed Payments")->causer(request()->user());
-        return view('receipts.all')->with([
-            'cpage' => "finances",
-            'payments'=>$payments,
-            'banks'=>Banks::where(['soft_delete'=>0])->orderBY('id','desc')->get(),
-            'months'=>Month::where(['soft_delete'=>0])->orderBY('id','desc')->get()
-        ]);
-    }
+
     public function generateReceipt(Request $request)
     {
         $request->validate([
