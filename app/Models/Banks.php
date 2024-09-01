@@ -18,8 +18,9 @@ class Banks extends Model
     }
     public function transactions()
     {
-        return  $this->hasMany(BankTransaction::class,'bank_id')->orderBy('t_date','ASC');
+        return $this->hasMany(BankTransaction::class, 'bank_id')->orderBy('t_date', 'ASC');
     }
+
     public function incomes()
     {
         return  $this->hasMany(Incomes::class,'bank_id');

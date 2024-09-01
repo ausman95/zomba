@@ -118,7 +118,7 @@
                                     </thead>
                                     <tbody>
                                     @php
-                                        $c = 1;
+                                        $c = ($transactions->currentPage() - 1) * $transactions->perPage() + 1;
                                         $balance = 0;
                                     @endphp
                                     @foreach($transactions as $transaction)
@@ -126,7 +126,7 @@
                                             <td>{{ $c++ }}</td>
                                             <td>{{ date('d F Y', strtotime($transaction->created_at)) }}</td>
                                             <td>{{ ucwords($transaction->description) }}</td>
-                                            <td>{{ ucwords($transaction->account->name) }}</td>
+                                            <td>{{ ucwords(@$transaction->account->name) }}</td>
                                             <td>
                                                 @if($transaction->type == 1)
                                                     {{ number_format($transaction->amount, 2) }}
@@ -149,6 +149,11 @@
                                     @endforeach
                                     </tbody>
                                 </table>
+
+                                <!-- Pagination Links -->
+                                <div class="pagination">
+                                    {{ $transactions->links() }}
+                                </div>
                             </div>
                         </div>
                     </div>

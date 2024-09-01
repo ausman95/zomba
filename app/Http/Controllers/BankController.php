@@ -113,14 +113,17 @@ class BankController extends Controller
     {
         activity('BANKS')
             ->log("Accessed Banks")->causer(request()->user());
-        $transactions = $bank->transactions;
-      //  dd($incomes);
+
+        // Paginate transactions
+        $transactions = $bank->transactions()->paginate(1000); // Adjust the number of items per page as needed
+
         return view('banks.show')->with([
-            'cpage'=>"finances",
-            'bank'=>$bank,
-            'transactions' =>$transactions
+            'cpage' => "finances",
+            'bank' => $bank,
+            'transactions' => $transactions
         ]);
     }
+
     public function edit( Banks $bank)
     {
         return view('banks.edit')->with([
