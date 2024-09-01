@@ -98,10 +98,9 @@ class PaymentController extends Controller
     {
         $payments = Payment::paginate(1000);
         if($request->post('bank_id') && $request->post('month_id')){
-
             $month = Month::where(['id'=>$request->post('month_id')])->first();
             $payments = Payment::where('bank_id', $request->post('bank_id'))
-                ->whereBetween('t_date',[$month->start_date,$month->end_date])->paginate(1000);
+                ->whereBetween('t_date',[$month->start_date,$month->end_date])->orderBy('t_date','ASC')->paginate(1000);
         }
         activity('FINANCES')
             ->log("Accessed Payments")->causer(request()->user());

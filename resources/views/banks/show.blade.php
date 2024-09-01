@@ -89,8 +89,6 @@
                                                     <input type="hidden" name="id" value="{{$bank->id}}">
                                                 </form>
                                             </div>
-
-
                                         </div>
                                     </div>
                                 </div>
@@ -106,43 +104,47 @@
                         <div class="card-body">
                             <div style="overflow-x:auto;">
                                 <table class="table table-bordered table1 table-hover table-striped" id="data-table">
-                                    <caption style=" caption-side: top; text-align: center">{{$bank->account_name}} Bank Statement</caption>
+                                    <caption style="caption-side: top; text-align: center">{{ $bank->account_name }} Bank Statement</caption>
                                     <thead>
                                     <tr>
                                         <th>NO</th>
                                         <th>DATE</th>
-                                        <th>FOR</th>
-                                        <th>ACCOUNT</th>
                                         <th>DESC</th>
+                                        <th>ACCOUNT</th>
                                         <th>AMOUNT (MK)</th>
                                         <th>BALANCE (MK)</th>
                                         <th>TYPE</th>
                                     </tr>
                                     </thead>
                                     <tbody>
-                                    <?php  $c= 1; $balance = 0 ?>
+                                    @php
+                                        $c = 1;
+                                        $balance = 0;
+                                    @endphp
                                     @foreach($transactions as $transaction)
                                         <tr>
-                                            <td>{{$c++}}</td>
-                                            <td>{{date('d F Y', strtotime($transaction->created_at)) }}</td>
-                                            <td>{{ucwords($transaction->description) }}</td>
-                                            <td>{{ucwords($transaction->account->name) }}</td>
-                                            <td>{{ucwords($transaction->specification) }}</td>
+                                            <td>{{ $c++ }}</td>
+                                            <td>{{ date('d F Y', strtotime($transaction->created_at)) }}</td>
+                                            <td>{{ ucwords($transaction->description) }}</td>
+                                            <td>{{ ucwords($transaction->account->name) }}</td>
                                             <td>
-                                                @if($transaction->type==1)
-                                                    @if($transaction->amount<0)
-                                                        ({{number_format($transaction->amount*-1)}})
-                                                    @else
-                                                        {{number_format($transaction->amount)}}
-                                                    @endif
-                                                @elseif($transaction->type==2)
-                                                    ({{number_format($transaction->amount)}})
+                                                @if($transaction->type == 1)
+                                                    {{ number_format($transaction->amount, 2) }}
+                                                @elseif($transaction->type == 2)
+                                                    ({{ number_format(abs($transaction->amount), 2) }})
                                                 @endif
                                             </td>
-                                            <th>
-                                                {{number_format($transaction->balance)}}
-                                            </th>
-                                            <td>{{ucwords($transaction->type==1 ? "REVENUE" : "EXPENSE") }}</td>
+                                            <td>
+                                                @php
+                                                    if ($transaction->type == 1) {
+                                                        $balance += $transaction->amount; // Add to balance for revenue
+                                                    } elseif ($transaction->type == 2) {
+                                                        $balance -= $transaction->amount; // Subtract from balance for expense
+                                                    }
+                                                @endphp
+                                                {{ $balance < 0 ? '('.number_format(abs($balance), 2).')' : number_format($balance, 2) }}
+                                            </td>
+                                            <td>{{ $transaction->type == 1 ? "REVENUE" : "EXPENSE" }}</td>
                                         </tr>
                                     @endforeach
                                     </tbody>

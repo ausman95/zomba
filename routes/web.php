@@ -39,6 +39,9 @@ Route::middleware(['preventBackHistory'])->group(function () {
         Route::get('assets/current', [\App\Http\Controllers\AssetController::class, 'currentAssets'])->name('current-assets');
         Route::get('assets/capital', [\App\Http\Controllers\AssetController::class, 'capital'])->name('capital');
         Route::resource('churches', \App\Http\Controllers\ChurchController::class);
+        Route::get('news/determine', [\App\Http\Controllers\NewController::class, 'determine'])->name('news.determine');
+
+        Route::resource('news', \App\Http\Controllers\NewController::class);
         Route::resource('home-attendances', \App\Http\Controllers\HomeAttendanceController::class);
         Route::resource('payments', \App\Http\Controllers\PaymentController::class);
         Route::resource('purchases', \App\Http\Controllers\PurchaseController::class);

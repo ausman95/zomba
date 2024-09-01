@@ -20,7 +20,7 @@
         </div>
         <div class="mt-2">
             <div class="row">
-                <div class="col-sm-4 mb-2">
+                <div class="col-sm-6 mb-2">
                     <div class="mt-5">
                         <h5>
                             <i class="fa fa-microscope"></i>Announcement Information
@@ -33,7 +33,7 @@
                                         <tbody>
                                         <tr>
                                             <td>From</td>
-                                            <td>{{$announcement->from}}</td>
+                                            <td>{{$announcement->ministry->name}}</td>
                                         </tr>
                                         <tr>
                                             <td>Title</td>
@@ -42,6 +42,20 @@
                                         <tr>
                                             <td>Body</td>
                                             <td>{{$announcement->body}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Start Date</td>
+                                            <td>{{date('d F Y', strtotime($announcement->start_date)) }}</td>
+                                        </tr>
+                                        <tr>
+                                            <td>End Date</td>
+                                            <td>{{date('d F Y', strtotime($announcement->end_date)) }}</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Image Post</td>
+                                            <td>
+                                                <img id="preview" src="../img/blog/{{$announcement->url}}" alt="" style="max-width: 100%; max-height: 200px;">
+                                            </td>
                                         </tr>
                                         <tr>
                                             <td>Created On</td>

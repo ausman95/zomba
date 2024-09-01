@@ -41,6 +41,18 @@
                             </span>
                             @enderror
                         </div>
+                        <div class="form-group">
+                            <label>Name</label>
+                            <input type="text" name="name"
+                                   class="form-control @error('name') is-invalid @enderror"
+                                   value="{{old('name') ?? $service->name}}"
+                                   placeholder="Service Name">
+                            @error('name')
+                            <span class="invalid-feedback">
+                               {{$message}}
+                            </span>
+                            @enderror
+                        </div>
                         <hr style="height: .3em;" class="border-theme">
                         <div class="form-group ">
                             <button class="btn btn-md btn-primary rounded-0">

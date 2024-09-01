@@ -22,26 +22,55 @@
         <div class="mt-2">
             <div class="row">
                 <div class="col-sm-12 col-md-8 col-lg-4">
-                    <form action="{{route('announcements.update',$announcement->id)}}" method="POST" autocomplete="off">
+                    <form action="{{route('announcements.update',$announcement->id)}}" enctype="multipart/form-data" method="POST" autocomplete="off">
                         @csrf
                         <input type="hidden" name="_method" value="PATCH">
                         <div class="form-group">
-                            <label>From</label>
-                            <input type="text" name="from"
-                                   class="form-control @error('from') is-invalid @enderror"
-                                   value="{{old('from') ?? $announcement->from}}"
-                                   placeholder="from">
-                            @error('from')
+                            <label> From </label>
+                            <select name="ministry_id" required
+                                    class="form-select select-relation @error('ministry_id') is-invalid @enderror" style="width: 100%">
+                                <option value="{{$announcement->ministry_id}}">{{$announcement->ministry->name}}</option>
+                                @foreach($ministries as $ministry)
+                                    <option value="{{$ministry->id}}"
+                                        {{old('ministry_id')===$ministry->id ? 'selected' : ''}}>
+                                        {{$ministry->name}}</option>
+                                @endforeach
+                            </select>
+                            @error('ministry_id')
                             <span class="invalid-feedback">
                                {{$message}}
-                            </span>
+                        </span>
+                            @enderror
+                        </div>
+                        <div class="form-group">
+                            <label>Start Date</label>
+                            <input type="date" name="start_date"
+                                   class="form-control @error('start_date') is-invalid @enderror"
+                                   value="{{old('start_date')?? $announcement->start_date}}" placeholder="start_date"
+                                   required>
+                            @error('start_date')
+                            <span class="invalid-feedback">
+                               {{$message}}
+                        </span>
+                            @enderror
+                        </div>
+                        <div class="form-group">
+                            <label>End Date</label>
+                            <input type="date" name="end_date"
+                                   class="form-control @error('end_date') is-invalid @enderror"
+                                   value="{{old('end_date')?? $announcement->end_date}}" placeholder="end_date"
+                                   required>
+                            @error('end_date')
+                            <span class="invalid-feedback">
+                               {{$message}}
+                        </span>
                             @enderror
                         </div>
                         <div class="form-group">
                             <label>Title</label>
                             <input type="text" name="title"
                                    class="form-control @error('title') is-invalid @enderror"
-                                   value="{{old('title')?? $announcement->from}}"
+                                   value="{{old('title')?? $announcement->title}}"
                                    required>
                             @error('title')
                             <span class="invalid-feedback">
@@ -60,6 +89,23 @@
                         </span>
                             @enderror
                         </div>
+                        <div class="row">
+                            <div class="col-sm-12 col-md-4  mb-2">
+                                <div class="form-group">
+                                    <label>Image Post</label>
+                                    <input type="file" name="image"
+                                           class="form-control" onchange="previewImage(event)">
+                                </div>
+                            </div>
+                            <div class="col-sm-12 col-md-8  mb-2">
+                                <label>Current Image Post</label>
+                                <img id="" src="../../img/blog/{{$announcement->url}}" alt="" style="max-width: 100%; max-height: 200px;">
+                            </div>
+                            <div class="col-sm-12 col-md-8  mb-2">
+                                <label>New Image Post</label>
+                                <img id="preview" src="" alt="" style="max-width: 100%; max-height: 200px;">
+                            </div>
+                        </div>
                         <hr>
                         <div class="form-group ">
                             <button class="btn btn-md btn-primary rounded-0">
@@ -72,3 +118,39 @@
         </div>
     </div>
 @stop
+@section('scripts')
+    <script>
+        function previewImage(event) {
+            var reader = new FileReader();
+            reader.onload = function () {
+                var output = document.getElementById('preview');
+                output.src = reader.result;
+                // Store the image name in a hidden input field
+                document.getElementById('image_name').value = event.target.files[0].name;
+            }
+            reader.readAsDataURL(event.target.files[0]);
+        }
+    </script>
+    <script>
+        $(document).ready(function () {
+            $('.type').on('change', function () {
+                let status = $(this).val();
+                if(status==='1'){
+                    $('.material').addClass('show').removeClass('d-none');
+                    $('.others').addClass('d-none').removeClass('show');
+                    $('.fuel').addClass('d-none').removeClass('show');
+                }
+                if(status==='2'){
+                    $('.material').addClass('d-none').removeClass('show');
+                    $('.others').addClass('show').removeClass('d-none');
+                    $('.fuel').addClass('d-none').removeClass('show');
+                }
+                if(status==='3'){
+                    $('.material').addClass('d-none').removeClass('show');
+                    $('.others').addClass('d-none').removeClass('show');
+                    $('.fuel').addClass('show').removeClass('d-none');
+                }
+            });
+        });
+    </script>
+@endsection

@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Requests\Announcement;
+namespace App\Http\Requests\Annoucements;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class StoreRequest extends FormRequest
+class UpdateRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -13,7 +13,7 @@ class StoreRequest extends FormRequest
      */
     public function authorize()
     {
-        return true;
+        return false;
     }
 
     /**
@@ -24,11 +24,7 @@ class StoreRequest extends FormRequest
     public function rules()
     {
         return [
-           'ministry_id'=>'required|numeric',
-            'start_date'=>'required|date',
-            'end_date'=>'required|date',
-            'title'=>'required|string',
-            'body'=>'required|string',
+            //
         ];
     }
 }

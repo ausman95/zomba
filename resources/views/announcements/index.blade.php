@@ -41,8 +41,11 @@
                                             <thead>
                                         <tr>
                                             <th>NO</th>
-                                            <th>FROM</th>
+                                            <th>MINISTRY</th>
+                                            <th>START DATE</th>
+                                            <th>END DATE</th>
                                             <th>TITLE</th>
+                                            <th>IMAGE</th>
                                             <th>ACTION</th>
                                         </tr>
                                         </thead>
@@ -51,9 +54,13 @@
                                         @foreach($announcements as $announcement)
                                             <tr>
                                                 <td>{{$c++}}</td>
-                                                <td>{{ucwords($announcement->from) }}</td>
+                                                <td>{{ucwords($announcement->ministry->name) }}</td>
+                                                <td>{{date('d F Y', strtotime($announcement->start_date)) }}</td>
+                                                <td>{{date('d F Y', strtotime($announcement->end_date)) }}</td>
                                                 <td>{{ucwords($announcement->title) }}</td>
-
+                                                <td>
+                                                    <img id="preview" src="img/blog/{{$announcement->url}}" alt="" style="max-width: 100%; max-height: 200px;">
+                                                </td>
                                                 <td class="pt-1">
                                                     <a href="{{route('announcements.show',$announcement->id)}}"
                                                        class="btn btn-primary btn-md rounded-0">

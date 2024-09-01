@@ -7,6 +7,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>VICTORY TEMPLE @yield('page')</title>
         <link rel="stylesheet" href="{{asset('vendors/select2/css/select2.css')}}">
+    <link rel="stylesheet" href="{{asset('vendor/sweetalert2-10.15.5/sweetalert2.min.css')}}">
+
     <link rel="icon" href="{{asset('images/logo.png')}}">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
@@ -17,7 +19,6 @@
     <link rel="stylesheet" href="{{asset('css/app.css')}}">
     <link href='https://unpkg.com/boxicons@2.0.7/css/boxicons.min.css' rel='stylesheet'>
 
-    <link rel="stylesheet" href="{{asset('vendor/sweetalert2-10.15.5/sweetalert2.min.css')}}">
     <link rel="stylesheet" href="{{asset('vendor/simple-datatable/simple-datatable.css')}}">
 
     <script src="//cdn.datatables.net/1.10.12/js/jquery.dataTables.min.js"></script>
