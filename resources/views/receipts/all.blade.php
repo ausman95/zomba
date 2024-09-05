@@ -103,7 +103,7 @@
                                                     <td>1</td>
                                                     <td>{{ date('d F Y', strtotime($month->end_date)) }} (Closing Balance)</td>
                                                     <td>N/A</td>
-                                                    <td>Opening Balance for {{ $month->name }}</td>
+                                                    <td>Closing Balance for {{ $month->name }}</td>
                                                     <td>{{ number_format($openingBalance, 2) }}</td>
                                                     <td>
                                                         {{ $openingBalance < 0 ? '('.number_format(abs($openingBalance), 2).')' : number_format($openingBalance, 2) }}
