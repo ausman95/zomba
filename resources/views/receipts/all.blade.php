@@ -69,127 +69,148 @@
                         <br>
                         <div class="card container-fluid" style="min-height: 30em;">
                             <div class="card-body px-1">
-                            @if($payments->isEmpty())
-                                <i class="fa fa-info-circle"></i> There are no Transactions!
-                            @else
-                                <div style="overflow-x:auto;">
-                                    <table class="table table-bordered table-hover table-striped">
-                                        <caption style="caption-side: top; text-align: center">ALL TRANSACTIONS</caption>
-                                        <thead>
-                                        <tr>
-                                            <th>NO</th>
-                                            <th>DATE</th>
-                                            <th>REF</th>
-                                            <th>FOR</th>
-                                            <th>AMOUNT (MK)</th>
-                                            @if(@$status==1)
-                                            <th>BALANCE (MK)</th>
-                                            @endif
-                                            <th>ACCOUNT</th>
-                                            <th>BANK</th>
-                                            <th>METHOD</th>
-                                            <th>TYPE</th>
-                                            <th>-</th>
-                                            <th>STATUS</th>
-                                            <th>CREATED BY</th>
-                                            <th>VERIFIED BY</th>
-                                        </tr>
-                                        </thead>
-                                        <tbody>
-                                        @php
-                                            $balance = 0; // Initialize balance outside the loop
-                                        @endphp
-                                        @foreach($payments as $payment)
+                                @if($payments->isEmpty())
+                                    <i class="fa fa-info-circle"></i> There are no Transactions!
+                                @else
+                                    <div style="overflow-x:auto;">
+                                        <table class="table table-bordered table-hover table-striped">
+                                            <caption style="caption-side: top; text-align: center">ALL TRANSACTIONS</caption>
+                                            <thead>
                                             <tr>
-                                                <td>{{ ($loop->index + 1) + (($payments->currentPage() - 1) * $payments->perPage()) }}</td>
-                                                <td>{{ date('d F Y', strtotime($payment->t_date)) }}</td>
-                                                <td>{{  $payment->account->id == 134 ? "N/A" :  $payment->reference }}</td>
-                                                <td>{{ $payment->account->id == 134 ? "SYSTEM TRANSFER" : ucwords(substr($payment->name, 0, 500)) }}</td>
-                                                <td>{{ number_format($payment->amount, 2) }}</td>
-                                                @if(@$status==1)
-                                                <td>
-                                                    @php
-                                                        // Determine the account type: use a special condition for account ID 134, otherwise use the account type.
-                                                        $accountType = $payment->account->id == 134 ? $payment->type : $payment->account->type;
-
-                                                        // Adjust the balance based on the account type.
-                                                        if ($accountType == 1) {
-                                                            $balance += $payment->amount; // Add to balance if account type is 1
-                                                        } else {
-                                                            $balance -= $payment->amount; // Subtract from balance if account type is 2
-                                                        }
-                                                    @endphp
-
-                                                    {{ $balance < 0 ? '('.number_format(abs($balance), 2).')' : number_format($balance, 2) }}
-                                                </td>
+                                                <th>NO</th>
+                                                <th>DATE</th>
+                                                <th>REF</th>
+                                                <th>FOR</th>
+                                                <th>AMOUNT (MK)</th>
+                                                @if(@$status == 1)
+                                                    <th>BALANCE (MK)</th>
                                                 @endif
-                                                <td>{{ ucwords($payment->account->name) }}</td>
-                                                <td>
-                                                    @if(empty($payment->bank->account_name))
-                                                        OPENING TRANSACTION
-                                                    @else
-                                                        {{ $payment->bank->bank_name . ' - ' . $payment->bank->account_name }}
-                                                    @endif
-                                                </td>
-                                                <td>
-                                                    @switch($payment->payment_method)
-                                                        @case(1)
-                                                            CASH
-                                                            @break
-                                                        @case(3)
-                                                            CHEQUE
-                                                            @break
-                                                        @case(4)
-                                                            ONLINE TRANSFER
-                                                            @break
-                                                        @default
-                                                            MOBILE MONEY TRANSFER
-                                                    @endswitch
-                                                </td>
-                                                <td>
-                                                    @switch($payment->type)
-                                                        @case(1)
-                                                            MAIN CHURCH
-                                                            @break
-                                                        @case(2)
-                                                            ADMIN
-                                                            @break
-                                                        @case(3)
-                                                            SUPPLIERS
-                                                            @break
-                                                        @case(4)
-                                                            EMPLOYEES
-                                                            @break
-                                                        @case(5)
-                                                            MEMBERS
-                                                            @break
-                                                        @case(6)
-                                                            HOME CHURCH
-                                                            @break
-                                                        @case(7)
-                                                            MINISTRIES
-                                                            @break
-                                                        @default
-                                                            OTHERS
-                                                    @endswitch
-                                                </td>
-                                                <td>@if($payment->account->id == 134)
-                                                    {{ $payment->type == 2 ? "EXPENSE" : "REVENUE" }}
-                                                    @else
-                                                        {{ $payment->account->type == 2 ? "EXPENSE" : "REVENUE" }}
-                                                    @endif</td>
-                                                <td>{{ $payment->status == 1 ? "VERIFIED" : "UNVERIFIED" }}</td>
-                                                <td>{{ \App\Models\Budget::userName($payment->created_by) }}</td>
-                                                <td>{{ \App\Models\Budget::userName($payment->updated_by) }}</td>
-
+                                                <th>ACCOUNT</th>
+                                                <th>BANK</th>
+                                                <th>METHOD</th>
+                                                <th>TYPE</th>
+                                                <th>-</th>
+                                                <th>STATUS</th>
+                                                <th>CREATED BY</th>
+                                                <th>VERIFIED BY</th>
                                             </tr>
-                                        @endforeach
-                                        </tbody>
-                                    </table>
-                                </div>
-                                {{ $payments->links() }}
-                            @endif
-                        </div>
+                                            </thead>
+                                            <tbody>
+
+                                            <!-- Opening Balance Row -->
+                                            @if(@$status == 1)
+                                                <tr>
+                                                    <td>1</td>
+                                                    <td>{{ date('d F Y', strtotime($month->start_date)) }} (Opening Balance)</td>
+                                                    <td>N/A</td>
+                                                    <td>Opening Balance for {{ $month->name }}</td>
+                                                    <td>{{ number_format($openingBalance, 2) }}</td>
+                                                    <td>
+                                                        {{ $openingBalance < 0 ? '('.number_format(abs($openingBalance), 2).')' : number_format($openingBalance, 2) }}
+                                                    </td>
+                                                    <td>N/A</td>
+                                                    <td>{{ $banks->firstWhere('id', $request->post('bank_id'))->account_name ?? 'N/A' }}</td>
+                                                    <td>N/A</td>
+                                                    <td>N/A</td>
+                                                    <td>N/A</td>
+                                                    <td>N/A</td>
+                                                    <td>N/A</td>
+                                                    <td>N/A</td>
+                                                </tr>
+                                                @php
+                                                    $balance = $openingBalance; // Set the opening balance for subsequent calculations
+                                                @endphp
+                                            @endif
+
+                                            <!-- Transactions Loop -->
+                                            @foreach($payments as $payment)
+                                                <tr>
+                                                    <td>{{ ($loop->index + 2) + (($payments->currentPage() - 1) * $payments->perPage()) }}</td>
+                                                    <td>{{ date('d F Y', strtotime($payment->t_date)) }}</td>
+                                                    <td>{{  $payment->account->id == 134 ? "N/A" :  $payment->reference }}</td>
+                                                    <td>{{ $payment->account->id == 134 ? "SYSTEM TRANSFER" : ucwords(substr($payment->name, 0, 500)) }}</td>
+                                                    <td>{{ number_format($payment->amount, 2) }}</td>
+                                                    @if(@$status==1)
+                                                        <td>
+                                                            @php
+                                                                $accountType = $payment->account->id == 134 ? $payment->type : $payment->account->type;
+                                                                if ($accountType == 1) {
+                                                                    $balance += $payment->amount;
+                                                                } else {
+                                                                    $balance -= $payment->amount;
+                                                                }
+                                                            @endphp
+
+                                                            {{ $balance < 0 ? '('.number_format(abs($balance), 2).')' : number_format($balance, 2) }}
+                                                        </td>
+                                                    @endif
+                                                    <td>{{ ucwords($payment->account->name) }}</td>
+                                                    <td>
+                                                        @if(empty($payment->bank->account_name))
+                                                            OPENING TRANSACTION
+                                                        @else
+                                                            {{ $payment->bank->bank_name . ' - ' . $payment->bank->account_name }}
+                                                        @endif
+                                                    </td>
+                                                    <td>
+                                                        @switch($payment->payment_method)
+                                                            @case(1)
+                                                                CASH
+                                                                @break
+                                                            @case(3)
+                                                                CHEQUE
+                                                                @break
+                                                            @case(4)
+                                                                ONLINE TRANSFER
+                                                                @break
+                                                            @default
+                                                                MOBILE MONEY TRANSFER
+                                                        @endswitch
+                                                    </td>
+                                                    <td>
+                                                        @switch($payment->type)
+                                                            @case(1)
+                                                                MAIN CHURCH
+                                                                @break
+                                                            @case(2)
+                                                                ADMIN
+                                                                @break
+                                                            @case(3)
+                                                                SUPPLIERS
+                                                                @break
+                                                            @case(4)
+                                                                EMPLOYEES
+                                                                @break
+                                                            @case(5)
+                                                                MEMBERS
+                                                                @break
+                                                            @case(6)
+                                                                HOME CHURCH
+                                                                @break
+                                                            @case(7)
+                                                                MINISTRIES
+                                                                @break
+                                                            @default
+                                                                OTHERS
+                                                        @endswitch
+                                                    </td>
+                                                    <td>@if($payment->account->id == 134)
+                                                            {{ $payment->type == 2 ? "EXPENSE" : "REVENUE" }}
+                                                        @else
+                                                            {{ $payment->account->type == 2 ? "EXPENSE" : "REVENUE" }}
+                                                        @endif</td>
+                                                    <td>{{ $payment->status == 1 ? "VERIFIED" : "UNVERIFIED" }}</td>
+                                                    <td>{{ \App\Models\Budget::userName($payment->created_by) }}</td>
+                                                    <td>{{ \App\Models\Budget::userName($payment->updated_by) }}</td>
+
+                                                </tr>
+                                            @endforeach
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    {{ $payments->links() }}
+                                @endif
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -214,18 +235,7 @@
                 if (result.isConfirmed) {
                     callback();
                 }
-            })
-        }
-
-        $(document).ready(function () {
-            $(".delete-btn").on('click', function () {
-                $url = $(this).attr('data-target-url');
-
-                $("#delete-form").attr('action', $url);
-                confirmationWindow("Confirm Deletion", "Are you sure you want to delete this position?", "Yes, Delete", function () {
-                    $("#delete-form").submit();
-                })
             });
-        })
+        }
     </script>
 @stop

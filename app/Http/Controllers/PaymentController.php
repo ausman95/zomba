@@ -29,20 +29,51 @@ class PaymentController extends Controller
     public function allTransaction(Request $request)
     {
         $payments = collect(); // Initialize an empty collection for payments
-        $status= 0;
+        $status = 0;
+        $openingBalance = 0; // Initialize opening balance
 
         if ($request->has(['bank_id', 'month_id'])) {
             $status = 1;
             $month = Month::find($request->post('month_id'));
 
             if ($month) {
-                // Fetch payments for the specified bank and month
+                // Fetch the previous month
+                $previousMonth = Month::where('id', '<', $month->id)->orderBy('id', 'desc')->first();
+
+                // If there's a previous month, calculate the opening balance
+                if ($previousMonth) {
+                    // Fetch transactions for the previous month
+                    $previousPayments = Payment::where('bank_id', $request->post('bank_id'))
+                        ->whereBetween('t_date', [$previousMonth->start_date, $previousMonth->end_date])
+                        ->get();
+
+                    // Fetch additional transactions for account_id '134' in the previous month
+                    $previousPayments_1 = BankTransaction::where('account_id', '134')
+                        ->where('bank_id', $request->post('bank_id'))
+                        ->whereBetween('t_date', [$previousMonth->start_date, $previousMonth->end_date])
+                        ->get();
+
+                    // Merge previous month payments
+                    $previousMergedPayments = $previousPayments->merge($previousPayments_1);
+
+                    // Calculate opening balance based on transaction type
+                    foreach ($previousMergedPayments as $payment) {
+                        $accountType = $payment->account->id == 134 ? $payment->type : $payment->account->type;
+                        if ($accountType == 1) {
+                            $openingBalance += $payment->amount; // Add to balance for type 1
+                        } else {
+                            $openingBalance -= $payment->amount; // Subtract from balance for type 2
+                        }
+                    }
+                }
+
+                // Fetch payments for the selected bank and month
                 $payments = Payment::where('bank_id', $request->post('bank_id'))
                     ->whereBetween('t_date', [$month->start_date, $month->end_date])
                     ->orderBy('t_date', 'ASC')
                     ->get();
 
-                // Fetch additional transactions for account_id '134'
+                // Fetch additional transactions for account_id '134' in the selected month
                 $payments_1 = BankTransaction::where('account_id', '134')
                     ->where('bank_id', $request->post('bank_id'))
                     ->whereBetween('t_date', [$month->start_date, $month->end_date])
@@ -86,10 +117,12 @@ class PaymentController extends Controller
             'cpage' => "finances",
             'payments' => $payments,
             'status' => $status,
+            'openingBalance' => $openingBalance, // Pass the opening balance to the view
             'banks' => Banks::where('soft_delete', 0)->orderBy('id', 'desc')->get(),
             'months' => Month::where('soft_delete', 0)->orderBy('id', 'desc')->get(),
         ]);
     }
+
     /**
      * Display a listing of the resource.
      *
