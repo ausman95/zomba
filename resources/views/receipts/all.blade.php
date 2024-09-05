@@ -109,7 +109,7 @@
                                                         {{ $openingBalance < 0 ? '('.number_format(abs($openingBalance), 2).')' : number_format($openingBalance, 2) }}
                                                     </td>
                                                     <td>N/A</td>
-                                                    <td>{{ $banks->firstWhere('id', $request->post('bank_id'))->account_name ?? 'N/A' }}</td>
+                                                    <td>N/A</td>
                                                     <td>N/A</td>
                                                     <td>N/A</td>
                                                     <td>N/A</td>
