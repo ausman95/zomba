@@ -146,11 +146,10 @@
                                                     @endif
                                                     <td>{{ ucwords($payment->account->name) }}</td>
                                                     <td>
-                                                        @if(empty($payment->bank->account_name))
-                                                            OPENING TRANSACTION
-                                                        @else
-                                                            {{ $payment->bank->bank_name . ' - ' . $payment->bank->account_name }}
-                                                        @endif
+                                                        @php
+                                                        $name = \App\Models\Banks::find($payment->bank_id);
+                                                         @endphp
+                                                        {{$name->account_name.' - '.$name->account_number }}
                                                     </td>
                                                     <td>
                                                         @switch($payment->payment_method)
