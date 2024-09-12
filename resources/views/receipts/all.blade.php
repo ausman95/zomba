@@ -1,9 +1,5 @@
 @extends('layouts.app')
 
-@section('stylesheets')
-    <link rel="stylesheet" href="{{ asset('vendor/simple-datatable/simple-datatable.css') }}">
-@stop
-
 @section('content')
     <div class="container-fluid ps-1 pt-4">
         <h4>
@@ -98,16 +94,14 @@
                                             <tbody>
 
                                             <!-- Opening Balance Row -->
-                                            @if(@$status == 1)
+                                            @if($openingBalance != 0)
                                                 <tr>
                                                     <td>1</td>
-                                                    <td>{{ date('d F Y', strtotime($month->end_date)) }} (Closing Balance)</td>
+                                                    <td>{{ date('d F Y', strtotime($currentMonth->start_date)) }} (Opening Balance)</td>
                                                     <td>N/A</td>
-                                                    <td>Closing Balance for {{ $month->name }}</td>
+                                                    <td>Opening Balance for {{ $currentMonth->name }}</td>
                                                     <td>{{ number_format($openingBalance, 2) }}</td>
-                                                    <td>
-                                                        {{ $openingBalance < 0 ? '('.number_format(abs($openingBalance), 2).')' : number_format($openingBalance, 2) }}
-                                                    </td>
+                                                    <td>{{ $openingBalance < 0 ? '('.number_format(abs($openingBalance), 2).')' : number_format($openingBalance, 2) }}</td>
                                                     <td>N/A</td>
                                                     <td>N/A</td>
                                                     <td>N/A</td>
@@ -118,9 +112,10 @@
                                                     <td>N/A</td>
                                                 </tr>
                                                 @php
-                                                    $balance = $openingBalance; // Set the opening balance for subsequent calculations
+                                                    $balance = $openingBalance; // Set the balance for subsequent calculations
                                                 @endphp
                                             @endif
+
 
                                             <!-- Transactions Loop -->
                                             @foreach($payments as $payment)
@@ -147,8 +142,8 @@
                                                     <td>{{ ucwords($payment->account->name) }}</td>
                                                     <td>
                                                         @php
-                                                        $name = \App\Models\Banks::find($payment->bank_id);
-                                                         @endphp
+                                                            $name = \App\Models\Banks::find($payment->bank_id);
+                                                        @endphp
                                                         {{$name->account_name.' - '.$name->account_number }}
                                                     </td>
                                                     <td>
@@ -181,33 +176,60 @@
                                                                 EMPLOYEES
                                                                 @break
                                                             @case(5)
-                                                                MEMBERS
+                                                                LABOURERS
                                                                 @break
                                                             @case(6)
-                                                                HOME CHURCH
+                                                                DONATION
                                                                 @break
                                                             @case(7)
-                                                                MINISTRIES
+                                                                LOANS
+                                                                @break
+                                                            @case(8)
+                                                                PROJECTS
+                                                                @break
+                                                            @case(9)
+                                                                OTHERS
                                                                 @break
                                                             @default
-                                                                OTHERS
+                                                                N/A
                                                         @endswitch
                                                     </td>
-                                                    <td>@if($payment->account->id == 134)
-                                                            {{ $payment->type == 2 ? "EXPENSE" : "REVENUE" }}
-                                                        @else
-                                                            {{ $payment->account->type == 2 ? "EXPENSE" : "REVENUE" }}
-                                                        @endif</td>
-                                                    <td>{{ $payment->status == 1 ? "VERIFIED" : "UNVERIFIED" }}</td>
-                                                    <td>{{ \App\Models\Budget::userName($payment->created_by) }}</td>
-                                                    <td>{{ \App\Models\Budget::userName($payment->updated_by) }}</td>
-
+                                                    <td>
+{{--                                                        <a href="#" onclick="deleteTransaction('{{ $payment->id }}', '{{ route('transactions.destroy', $payment->id) }}')" class="btn btn-sm btn-danger">Delete</a>--}}
+                                                    </td>
+                                                    <td>
+                                                        @switch($payment->status)
+                                                            @case(0)
+                                                                PENDING
+                                                                @break
+                                                            @case(1)
+                                                                APPROVED
+                                                                @break
+                                                            @case(2)
+                                                                CANCELLED
+                                                                @break
+                                                            @default
+                                                                UNKNOWN
+                                                        @endswitch
+                                                    </td>
+                                                    <td>
+                                                        @php
+                                                            $creator = \App\Models\User::find($payment->created_by);
+                                                        @endphp
+                                                        {{ $creator ? $creator->name : 'N/A' }}
+                                                    </td>
+                                                    <td>
+                                                        @php
+                                                            $verifier = \App\Models\User::find($payment->verified_by);
+                                                        @endphp
+                                                        {{ $verifier ? $verifier->name : 'N/A' }}
+                                                    </td>
                                                 </tr>
                                             @endforeach
                                             </tbody>
                                         </table>
                                     </div>
-                                    {{ $payments->links() }}
+                                    {{ $payments->appends(request()->query())->links() }}
                                 @endif
                             </div>
                         </div>
@@ -218,23 +240,3 @@
     </div>
 @stop
 
-@section('scripts')
-    <script src="{{ asset('vendor/simple-datatable/simple-datatable.js') }}"></script>
-    <script>
-        function confirmationWindow(title, message, primaryLabel, callback) {
-            Swal.fire({
-                title: title,
-                text: message,
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#3085d6',
-                cancelButtonColor: '#d33',
-                confirmButtonText: primaryLabel
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    callback();
-                }
-            });
-        }
-    </script>
-@stop

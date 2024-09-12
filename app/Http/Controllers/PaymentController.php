@@ -31,12 +31,15 @@ class PaymentController extends Controller
         $payments = collect(); // Initialize an empty collection for payments
         $status = 0;
         $openingBalance = 0; // Initialize opening balance
+        $currentMonth = null; // Initialize currentMonth variable
 
         if ($request->has(['bank_id', 'month_id'])) {
             $status = 1;
             $month = Month::find($request->post('month_id'));
 
             if ($month) {
+                $currentMonth = $month; // Set currentMonth
+
                 // Fetch the previous month
                 $previousMonth = Month::where('id', '<', $month->id)->orderBy('id', 'desc')->first();
 
@@ -118,10 +121,12 @@ class PaymentController extends Controller
             'payments' => $payments,
             'status' => $status,
             'openingBalance' => $openingBalance, // Pass the opening balance to the view
+            'currentMonth' => $currentMonth, // Pass currentMonth to the view
             'banks' => Banks::where('soft_delete', 0)->orderBy('id', 'desc')->get(),
             'months' => Month::where('soft_delete', 0)->orderBy('id', 'desc')->get(),
         ]);
     }
+
 
     /**
      * Display a listing of the resource.
