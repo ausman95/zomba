@@ -39,27 +39,26 @@ class PaymentController extends Controller
             if ($month) {
                 $currentMonth = $month;
 
-                // Fetch the previous month
-                $previousMonth = Month::where('id', '<', $month->id)->orderBy('id', 'desc')->first();
+                // Fetch all previous months' transactions (up to but excluding the current month)
+                $previousPayments = Payment::where('bank_id', $request->post('bank_id'))
+                    ->where('t_date', '<', $month->start_date) // All transactions before the start of the current month
+                    ->get();
 
-                if ($previousMonth) {
-                    $previousPayments = Payment::where('bank_id', $request->post('bank_id'))
-                        ->whereBetween('t_date', [$previousMonth->start_date, $previousMonth->end_date])
-                        ->get();
+                $previousPayments_1 = BankTransaction::where('account_id', '134')
+                    ->where('bank_id', $request->post('bank_id'))
+                    ->where('t_date', '<', $month->start_date) // All bank transactions before the start of the current month
+                    ->get();
 
-                    $previousPayments_1 = BankTransaction::where('account_id', '134')
-                        ->where('bank_id', $request->post('bank_id'))
-                        ->whereBetween('t_date', [$previousMonth->start_date, $previousMonth->end_date])
-                        ->get();
+                // Merge the payments and transactions for previous months
+                $previousMergedPayments = $previousPayments->merge($previousPayments_1);
 
-                    $previousMergedPayments = $previousPayments->merge($previousPayments_1);
-
-                    foreach ($previousMergedPayments as $payment) {
-                        $accountType = $payment->account->id == 134 ? $payment->type : $payment->account->type;
-                        $openingBalance += ($accountType == 1 ? $payment->amount : -$payment->amount);
-                    }
+                // Calculate the opening balance from all prior transactions
+                foreach ($previousMergedPayments as $payment) {
+                    $accountType = $payment->account->id == 134 ? $payment->type : $payment->account->type;
+                    $openingBalance += ($accountType == 1 ? $payment->amount : -$payment->amount);
                 }
 
+                // Fetch current month's transactions
                 $payments = Payment::where('bank_id', $request->post('bank_id'))
                     ->whereBetween('t_date', [$month->start_date, $month->end_date])
                     ->orderBy('t_date', 'ASC')
@@ -71,8 +70,10 @@ class PaymentController extends Controller
                     ->orderBy('t_date', 'ASC')
                     ->get();
 
+                // Merge the current month's payments and transactions
                 $mergedPayments = $payments->merge($payments_1)->sortBy('t_date');
 
+                // Paginate the merged transactions
                 $currentPage = LengthAwarePaginator::resolveCurrentPage();
                 $perPage = 1000;
                 $currentResults = $mergedPayments->slice(($currentPage - 1) * $perPage, $perPage)->all();
@@ -81,6 +82,7 @@ class PaymentController extends Controller
                 ]);
             }
         } else {
+            // Default to fetching all payments if no filter is applied
             $payments = Payment::paginate(1000);
             $payments_1 = BankTransaction::where('account_id', '134')->paginate(1000);
             $mergedPayments = $payments->merge($payments_1)->sortBy('t_date');
@@ -94,10 +96,12 @@ class PaymentController extends Controller
             );
         }
 
+        // Log the activity
         activity('FINANCES')
             ->log("Accessed Payments")
             ->causer(request()->user());
 
+        // Return the view with necessary data
         return view('receipts.all')->with([
             'cpage' => "finances",
             'payments' => $payments,
@@ -108,7 +112,6 @@ class PaymentController extends Controller
             'months' => Month::where('soft_delete', 0)->orderBy('id', 'desc')->get(),
         ]);
     }
-
 
 
     /**
