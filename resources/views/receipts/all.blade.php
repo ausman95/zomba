@@ -35,8 +35,8 @@
                                 </select>
                                 @error('bank_id')
                                 <span class="invalid-feedback">
-                               {{$message}}
-                        </span>
+                                    {{$message}}
+                                </span>
                                 @enderror
                             </div>
                             <div class="form-group">
@@ -45,7 +45,7 @@
                                         style="width: 100%">
                                     @foreach($months as $month)
                                         <option value="{{ $month->id }}"
-                                            {{ old('month') == $month->id ? 'selected' : '' }}>{{ $month->name }}</option>
+                                            {{ old('month_id') == $month->id ? 'selected' : '' }}>{{ $month->name }}</option>
                                     @endforeach
                                 </select>
                                 @error('month_id')
@@ -94,6 +94,9 @@
                                             <tbody>
 
                                             <!-- Opening Balance Row -->
+                                            @php
+                                                $balance = $openingBalance; // Initialize balance
+                                            @endphp
                                             @if($openingBalance != 0)
                                                 <tr>
                                                     <td>1</td>
@@ -111,18 +114,14 @@
                                                     <td>N/A</td>
                                                     <td>N/A</td>
                                                 </tr>
-                                                @php
-                                                    $balance = $openingBalance; // Set the balance for subsequent calculations
-                                                @endphp
                                             @endif
-
 
                                             <!-- Transactions Loop -->
                                             @foreach($payments as $payment)
                                                 <tr>
                                                     <td>{{ ($loop->index + 2) + (($payments->currentPage() - 1) * $payments->perPage()) }}</td>
                                                     <td>{{ date('d F Y', strtotime($payment->t_date)) }}</td>
-                                                    <td>{{  $payment->account->id == 134 ? "N/A" :  $payment->reference }}</td>
+                                                    <td>{{ $payment->account->id == 134 ? "N/A" :  $payment->reference }}</td>
                                                     <td>{{ $payment->account->id == 134 ? "SYSTEM TRANSFER" : ucwords(substr($payment->name, 0, 500)) }}</td>
                                                     <td>{{ number_format($payment->amount, 2) }}</td>
                                                     @if(@$status==1)
@@ -195,7 +194,7 @@
                                                         @endswitch
                                                     </td>
                                                     <td>
-{{--                                                        <a href="#" onclick="deleteTransaction('{{ $payment->id }}', '{{ route('transactions.destroy', $payment->id) }}')" class="btn btn-sm btn-danger">Delete</a>--}}
+                                                        {{--                                                        <a href="#" onclick="deleteTransaction('{{ $payment->id }}', '{{ route('transactions.destroy', $payment->id) }}')" class="btn btn-sm btn-danger">Delete</a>--}}
                                                     </td>
                                                     <td>
                                                         @switch($payment->status)
@@ -238,5 +237,4 @@
             </div>
         </div>
     </div>
-@stop
-
+@endsection

@@ -28,65 +28,51 @@ class PaymentController extends Controller
 {
     public function allTransaction(Request $request)
     {
-        $payments = collect(); // Initialize an empty collection for payments
         $status = 0;
-        $openingBalance = 0; // Initialize opening balance
-        $currentMonth = null; // Initialize currentMonth variable
+        $openingBalance = 0;
+        $currentMonth = null;
 
         if ($request->has(['bank_id', 'month_id'])) {
             $status = 1;
             $month = Month::find($request->post('month_id'));
 
             if ($month) {
-                $currentMonth = $month; // Set currentMonth
+                $currentMonth = $month;
 
                 // Fetch the previous month
                 $previousMonth = Month::where('id', '<', $month->id)->orderBy('id', 'desc')->first();
 
-                // If there's a previous month, calculate the opening balance
                 if ($previousMonth) {
-                    // Fetch transactions for the previous month
                     $previousPayments = Payment::where('bank_id', $request->post('bank_id'))
                         ->whereBetween('t_date', [$previousMonth->start_date, $previousMonth->end_date])
                         ->get();
 
-                    // Fetch additional transactions for account_id '134' in the previous month
                     $previousPayments_1 = BankTransaction::where('account_id', '134')
                         ->where('bank_id', $request->post('bank_id'))
                         ->whereBetween('t_date', [$previousMonth->start_date, $previousMonth->end_date])
                         ->get();
 
-                    // Merge previous month payments
                     $previousMergedPayments = $previousPayments->merge($previousPayments_1);
 
-                    // Calculate opening balance based on transaction type
                     foreach ($previousMergedPayments as $payment) {
                         $accountType = $payment->account->id == 134 ? $payment->type : $payment->account->type;
-                        if ($accountType == 1) {
-                            $openingBalance += $payment->amount; // Add to balance for type 1
-                        } else {
-                            $openingBalance -= $payment->amount; // Subtract from balance for type 2
-                        }
+                        $openingBalance += ($accountType == 1 ? $payment->amount : -$payment->amount);
                     }
                 }
 
-                // Fetch payments for the selected bank and month
                 $payments = Payment::where('bank_id', $request->post('bank_id'))
                     ->whereBetween('t_date', [$month->start_date, $month->end_date])
                     ->orderBy('t_date', 'ASC')
                     ->get();
 
-                // Fetch additional transactions for account_id '134' in the selected month
                 $payments_1 = BankTransaction::where('account_id', '134')
                     ->where('bank_id', $request->post('bank_id'))
                     ->whereBetween('t_date', [$month->start_date, $month->end_date])
                     ->orderBy('t_date', 'ASC')
                     ->get();
 
-                // Merge and sort collections
                 $mergedPayments = $payments->merge($payments_1)->sortBy('t_date');
 
-                // Manually paginate the merged collection
                 $currentPage = LengthAwarePaginator::resolveCurrentPage();
                 $perPage = 1000;
                 $currentResults = $mergedPayments->slice(($currentPage - 1) * $perPage, $perPage)->all();
@@ -95,14 +81,10 @@ class PaymentController extends Controller
                 ]);
             }
         } else {
-            // Default pagination when no filters are applied
             $payments = Payment::paginate(1000);
-
-            // Fetch additional transactions and merge
             $payments_1 = BankTransaction::where('account_id', '134')->paginate(1000);
             $mergedPayments = $payments->merge($payments_1)->sortBy('t_date');
 
-            // Convert to a paginated collection
             $payments = new LengthAwarePaginator(
                 $mergedPayments->forPage(LengthAwarePaginator::resolveCurrentPage(), 1000)->values(),
                 $mergedPayments->count(),
@@ -120,12 +102,13 @@ class PaymentController extends Controller
             'cpage' => "finances",
             'payments' => $payments,
             'status' => $status,
-            'openingBalance' => $openingBalance, // Pass the opening balance to the view
-            'currentMonth' => $currentMonth, // Pass currentMonth to the view
+            'openingBalance' => $openingBalance,
+            'currentMonth' => $currentMonth,
             'banks' => Banks::where('soft_delete', 0)->orderBy('id', 'desc')->get(),
             'months' => Month::where('soft_delete', 0)->orderBy('id', 'desc')->get(),
         ]);
     }
+
 
 
     /**
