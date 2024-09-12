@@ -175,7 +175,7 @@
                                                                 EMPLOYEES
                                                                 @break
                                                             @case(5)
-                                                                LABOURERS
+                                                                MEMBERS
                                                                 @break
                                                             @case(6)
                                                                 DONATION
@@ -194,9 +194,6 @@
                                                         @endswitch
                                                     </td>
                                                     <td>
-                                                        {{--                                                        <a href="#" onclick="deleteTransaction('{{ $payment->id }}', '{{ route('transactions.destroy', $payment->id) }}')" class="btn btn-sm btn-danger">Delete</a>--}}
-                                                    </td>
-                                                    <td>
                                                         @switch($payment->status)
                                                             @case(0)
                                                                 PENDING
@@ -211,6 +208,12 @@
                                                                 UNKNOWN
                                                         @endswitch
                                                     </td>
+                                                    <td>
+                                                        @if($payment->account->id == 134)
+                                                            {{ $payment->type == 2 ? "EXPENSE" : "REVENUE" }}
+                                                        @else
+                                                            {{ $payment->account->type == 2 ? "EXPENSE" : "REVENUE" }}
+                                                        @endif</td>
                                                     <td>
                                                         @php
                                                             $creator = \App\Models\User::find($payment->created_by);
