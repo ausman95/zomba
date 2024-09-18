@@ -116,11 +116,16 @@
                                             @if($openingBalance != 0)
                                                 <tr>
                                                     <td>1</td>
-                                                    <td>{{ date('d F Y', strtotime($currentMonth->start_date)) }} (Opening Balance)</td>
+                                                    @if($currentMonth && $currentMonth->start_date)
+                                                        <td>{{ date('d F Y', strtotime($currentMonth->start_date)) }} (Opening Balance)</td>
+                                                    @else
+                                                        <td>N/A</td>
+                                                    @endif
+
                                                     <td>N/A</td>
-                                                    <td>Opening Balance for {{ $currentMonth->name }}</td>
+                                                    <td>{{ $currentMonth ? 'Opening Balance for ' . $currentMonth->name : 'N/A' }}</td>
                                                     <td>{{ number_format($openingBalance, 2) }}</td>
-                                                    <td>{{ $openingBalance < 0 ? '('.number_format(abs($openingBalance), 2).')' : number_format($openingBalance, 2) }}</td>
+                                                    <td>{{ $openingBalance < 0 ? '(' . number_format(abs($openingBalance), 2) . ')' : number_format($openingBalance, 2) }}</td>
                                                     <td>N/A</td>
                                                     <td>N/A</td>
                                                     <td>N/A</td>
@@ -131,6 +136,7 @@
                                                     <td>N/A</td>
                                                 </tr>
                                             @endif
+
 
                                             <!-- Transactions Loop -->
                                             @foreach($payments as $payment)

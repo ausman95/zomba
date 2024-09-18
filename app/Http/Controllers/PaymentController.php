@@ -31,62 +31,61 @@ class PaymentController extends Controller
         $status = 0;
         $openingBalance = 0;
         $currentMonth = null;
-        $query = Payment::query(); // Start a query for the Payment model
-        $bankTransactionQuery = BankTransaction::where('account_id', '134'); // Start a query for BankTransaction model
+        $mergedPayments = collect(); // Initialize as empty collection to avoid undefined variable error
 
-        // Filter by bank if provided
-        if ($request->filled('bank_id')) {
-            $query->where('bank_id', $request->bank_id);
-            $bankTransactionQuery->where('bank_id', $request->bank_id);
+        if ($request->has(['bank_id', 'start_date', 'end_date'])) {
             $status = 1;
-        }
 
-        // Filter by month if provided
-        if ($request->filled('month_id')) {
-            $month = Month::find($request->month_id);
-            if ($month) {
-                $currentMonth = $month;
+            $startDate = $request->post('start_date');
+            $endDate = $request->post('end_date');
 
-                // Apply the month range for the filter
-                $query->whereBetween('t_date', [$month->start_date, $month->end_date]);
-                $bankTransactionQuery->whereBetween('t_date', [$month->start_date, $month->end_date]);
-            }
-        }
-
-        // Filter by custom date range if provided
-        if ($request->filled('start_date') && $request->filled('end_date')) {
-            $query->whereBetween('t_date', [$request->start_date, $request->end_date]);
-            $bankTransactionQuery->whereBetween('t_date', [$request->start_date, $request->end_date]);
-            $status = 1;
-        }
-
-        // Get previous month's opening balance if bank and month are selected
-        if ($request->filled('bank_id') && $request->filled('month_id')) {
-            $previousPayments = Payment::where('bank_id', $request->bank_id)
-                ->where('t_date', '<', $month->start_date)
+            // Fetch all previous transactions up to the start of the selected period
+            $previousPayments = Payment::where('bank_id', $request->post('bank_id'))
+                ->where('t_date', '<', $startDate) // All transactions before the selected start date
                 ->get();
 
-            $previousPayments_1 = BankTransaction::where('bank_id', $request->bank_id)
-                ->where('t_date', '<', $month->start_date)
+            $previousPayments_1 = BankTransaction::where('account_id', '134')
+                ->where('bank_id', $request->post('bank_id'))
+                ->where('t_date', '<', $startDate) // All bank transactions before the start date
                 ->get();
 
+            // Merge previous payments and transactions
             $previousMergedPayments = $previousPayments->merge($previousPayments_1);
 
+            // Calculate the opening balance from prior transactions
             foreach ($previousMergedPayments as $payment) {
                 $accountType = $payment->account->id == 134 ? $payment->type : $payment->account->type;
                 $openingBalance += ($accountType == 1 ? $payment->amount : -$payment->amount);
             }
+
+            // Fetch current period's transactions
+            $payments = Payment::where('bank_id', $request->post('bank_id'))
+                ->whereBetween('t_date', [$startDate, $endDate])
+                ->orderBy('t_date', 'ASC')
+                ->get();
+
+            $payments_1 = BankTransaction::where('account_id', '134')
+                ->where('bank_id', $request->post('bank_id'))
+                ->whereBetween('t_date', [$startDate, $endDate])
+                ->orderBy('t_date', 'ASC')
+                ->get();
+
+            // Merge the payments and transactions for the current period
+            $mergedPayments = $payments->merge($payments_1)->sortBy('t_date');
+        } else {
+            // Default to fetching all payments if no filter is applied
+            $payments = Payment::paginate(1000);
+            $payments_1 = BankTransaction::where('account_id', '134')->paginate(1000);
+
+            // Merge the payments and transactions
+            $mergedPayments = $payments->merge($payments_1)->sortBy('t_date');
         }
 
-        // Fetch current transactions based on the query built with filters
-        $payments = $query->orderBy('t_date', 'ASC')->get();
-        $payments_1 = $bankTransactionQuery->orderBy('t_date', 'ASC')->get();
-
-        // Merge and paginate the results
-        $mergedPayments = $payments->merge($payments_1)->sortBy('t_date');
+        // Paginate the merged transactions
         $currentPage = LengthAwarePaginator::resolveCurrentPage();
         $perPage = 1000;
         $currentResults = $mergedPayments->slice(($currentPage - 1) * $perPage, $perPage)->all();
+
         $payments = new LengthAwarePaginator($currentResults, $mergedPayments->count(), $perPage, $currentPage, [
             'path' => LengthAwarePaginator::resolveCurrentPath(),
         ]);
@@ -96,16 +95,15 @@ class PaymentController extends Controller
             ->log("Accessed Payments")
             ->causer(request()->user());
 
-        // Return the view with the necessary data
+        // Return the view with necessary data
         return view('receipts.all')->with([
             'cpage' => "finances",
             'payments' => $payments,
             'status' => $status,
             'openingBalance' => $openingBalance,
+            'currentMonth' => $currentMonth,
             'banks' => Banks::where('soft_delete', 0)->orderBy('id', 'desc')->get(),
             'months' => Month::where('soft_delete', 0)->orderBy('id', 'desc')->get(),
-            'currentMonth' => $currentMonth
-
         ]);
     }
 
