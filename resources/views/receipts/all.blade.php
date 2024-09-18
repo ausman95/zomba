@@ -112,7 +112,6 @@
                                                 <th>METHOD</th>
                                                 <th>TYPE</th>
                                                 <th>-</th>
-                                                <th>STATUS</th>
                                                 <th>CREATED BY</th>
                                                 <th>VERIFIED BY</th>
                                             </tr>
@@ -221,22 +220,23 @@
                                                         @endswitch
                                                     </td>
                                                     <td>
-                                                        @switch($payment->status)
-                                                            @case(1)
-                                                                Paid
-                                                                @break
-                                                            @case(2)
-                                                                Pending
-                                                                @break
-                                                            @case(3)
-                                                                Reversed
-                                                                @break
-                                                            @default
-                                                                Unknown
-                                                        @endswitch
+                                                        @if($payment->account->id == 134)
+                                                            {{ $payment->type == 2 ? "EXPENSE" : "REVENUE" }}
+                                                        @else
+                                                            {{ $payment->account->type == 2 ? "EXPENSE" : "REVENUE" }}
+                                                        @endif</td>
+                                                    <td>
+                                                        @php
+                                                            $creator = \App\Models\User::find($payment->created_by);
+                                                        @endphp
+                                                        {{ $creator ? $creator->name : 'N/A' }}
                                                     </td>
-                                                    <td>{{ ucwords($payment->creator->name ?? 'N/A') }}</td>
-                                                    <td>{{ ucwords($payment->verifier->name ?? 'N/A') }}</td>
+                                                    <td>
+                                                        @php
+                                                            $verifier = \App\Models\User::find($payment->verified_by);
+                                                        @endphp
+                                                        {{ $verifier ? $verifier->name : 'N/A' }}
+                                                    </td>
                                                 </tr>
                                             @endforeach
                                             </tbody>
