@@ -26,7 +26,7 @@
                             <div class="form-group">
                                 <label for="Bank">Banks</label>
                                 <select name="bank_id" class="form-select select-relation @error('bank_id') is-invalid @enderror" style="width: 100%">
-                                    <option value="">Select Bank</option> <!-- Make this optional -->
+                                    <option value="">Select Bank</option>
                                     @foreach($banks as $bank)
                                         <option value="{{ $bank->id }}" {{ old('bank_id') == $bank->id ? 'selected' : '' }}>
                                             {{ $bank->account_name.' - '.$bank->account_number }}
@@ -41,7 +41,7 @@
                             <div class="form-group">
                                 <label for="Month">Months</label>
                                 <select name="month_id" class="form-select select-relation @error('month_id') is-invalid @enderror" style="width: 100%">
-                                    <option value="">Select Month</option> <!-- Make this optional -->
+                                    <option value="">Select Month</option>
                                     @foreach($months as $month)
                                         <option value="{{ $month->id }}" {{ old('month_id') == $month->id ? 'selected' : '' }}>
                                             {{ $month->name }}
@@ -72,7 +72,7 @@
 
                             <div class="form-group">
                                 <button class="btn btn-primary rounded-0" type="submit">
-                                    View &rarr;
+                                    Apply Filters &rarr;
                                 </button>
                             </div>
                         </form>
@@ -81,8 +81,12 @@
                         <br>
                         <div class="card container-fluid" style="min-height: 30em;">
                             <div class="card-body px-1">
-                                @if($payments->isEmpty())
-                                    <i class="fa fa-info-circle"></i> There are no Transactions!
+                                @if(!request()->has('bank_id') && !request()->has('month_id') && !request()->has('start_date') && !request()->has('end_date'))
+                                    <!-- Display message if no filters applied -->
+                                    <i class="fa fa-info-circle"></i> Please apply filters and click 'Apply Filters' to view the data.
+                                @elseif($payments->isEmpty())
+                                    <!-- Display message if no transactions available -->
+                                    <i class="fa fa-info-circle"></i> There are no Transactions for the applied filters!
                                 @else
                                     <div style="overflow-x:auto;">
                                         <table class="table table-bordered table-hover table-striped">
@@ -108,7 +112,6 @@
                                             </tr>
                                             </thead>
                                             <tbody>
-
                                             <!-- Opening Balance Row -->
                                             @php
                                                 $balance = $openingBalance; // Initialize balance
@@ -136,7 +139,6 @@
                                                     <td>N/A</td>
                                                 </tr>
                                             @endif
-
 
                                             <!-- Transactions Loop -->
                                             @foreach($payments as $payment)
@@ -208,52 +210,35 @@
                                                             @case(8)
                                                                 PROJECTS
                                                                 @break
-                                                            @case(9)
-                                                                OTHERS
-                                                                @break
                                                             @default
-                                                                N/A
+                                                                OTHER
                                                         @endswitch
                                                     </td>
                                                     <td>
                                                         @switch($payment->status)
-                                                            @case(0)
-                                                                PENDING
-                                                                @break
                                                             @case(1)
-                                                                APPROVED
+                                                                Paid
                                                                 @break
                                                             @case(2)
-                                                                CANCELLED
+                                                                Pending
+                                                                @break
+                                                            @case(3)
+                                                                Reversed
                                                                 @break
                                                             @default
-                                                                UNKNOWN
+                                                                Unknown
                                                         @endswitch
                                                     </td>
-                                                    <td>
-                                                        @if($payment->account->id == 134)
-                                                            {{ $payment->type == 2 ? "EXPENSE" : "REVENUE" }}
-                                                        @else
-                                                            {{ $payment->account->type == 2 ? "EXPENSE" : "REVENUE" }}
-                                                        @endif</td>
-                                                    <td>
-                                                        @php
-                                                            $creator = \App\Models\User::find($payment->created_by);
-                                                        @endphp
-                                                        {{ $creator ? $creator->name : 'N/A' }}
-                                                    </td>
-                                                    <td>
-                                                        @php
-                                                            $verifier = \App\Models\User::find($payment->verified_by);
-                                                        @endphp
-                                                        {{ $verifier ? $verifier->name : 'N/A' }}
-                                                    </td>
+                                                    <td>{{ ucwords($payment->creator->name ?? 'N/A') }}</td>
+                                                    <td>{{ ucwords($payment->verifier->name ?? 'N/A') }}</td>
                                                 </tr>
                                             @endforeach
                                             </tbody>
                                         </table>
                                     </div>
-                                    {{ $payments->appends(request()->query())->links() }}
+                                    <div class="float-end">
+                                        {{ $payments->appends(request()->query())->links() }}
+                                    </div>
                                 @endif
                             </div>
                         </div>
