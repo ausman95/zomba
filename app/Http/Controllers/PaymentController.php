@@ -116,6 +116,8 @@ class PaymentController extends Controller
             'status' => $status,
             'openingBalance' => $openingBalance,
             'currentMonth' => $currentMonth,
+            'banks' => Banks::where('soft_delete', 0)->orderBy('id', 'desc')->get(),
+            'months' => Month::where('soft_delete', 0)->orderBy('id', 'desc')->get(),
         ]);
     }
 
