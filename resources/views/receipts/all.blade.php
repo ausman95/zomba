@@ -83,7 +83,13 @@
                             <div class="card-body px-1">
                                 @if(!request()->has('bank_id') && !request()->has('month_id') && !request()->has('start_date') && !request()->has('end_date'))
                                     <!-- Display message if no filters applied -->
-                                    <i class="fa fa-info-circle"></i> Please apply filters and click 'Apply Filters' to view the data.
+                                    <div class="text-center">
+                                        <div class="alert alert-danger">
+                                            <i class="fa fa-info-circle">
+                                            </i> Please apply filters and click 'Apply Filters' to view the data.
+                                        </div>
+                                    </div>
+
                                 @elseif($payments->isEmpty())
                                     <!-- Display message if no transactions available -->
                                     <i class="fa fa-info-circle"></i> There are no Transactions for the applied filters!
