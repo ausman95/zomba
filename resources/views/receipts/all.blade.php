@@ -38,20 +38,20 @@
                                 @enderror
                             </div>
 
-                            <div class="form-group">
-                                <label for="Month">Months</label>
-                                <select name="month_id" class="form-select select-relation @error('month_id') is-invalid @enderror" style="width: 100%">
-                                    <option value="">Select Month</option>
-                                    @foreach($months as $month)
-                                        <option value="{{ $month->id }}" {{ old('month_id') == $month->id ? 'selected' : '' }}>
-                                            {{ $month->name }}
-                                        </option>
-                                    @endforeach
-                                </select>
-                                @error('month_id')
-                                <span class="invalid-feedback">{{ $message }}</span>
-                                @enderror
-                            </div>
+{{--                            <div class="form-group">--}}
+{{--                                <label for="Month">Months</label>--}}
+{{--                                <select name="month_id" class="form-select select-relation @error('month_id') is-invalid @enderror" style="width: 100%">--}}
+{{--                                    <option value="">Select Month</option>--}}
+{{--                                    @foreach($months as $month)--}}
+{{--                                        <option value="{{ $month->id }}" {{ old('month_id') == $month->id ? 'selected' : '' }}>--}}
+{{--                                            {{ $month->name }}--}}
+{{--                                        </option>--}}
+{{--                                    @endforeach--}}
+{{--                                </select>--}}
+{{--                                @error('month_id')--}}
+{{--                                <span class="invalid-feedback">{{ $message }}</span>--}}
+{{--                                @enderror--}}
+{{--                            </div>--}}
 
                             <!-- New filters for Start Date and End Date -->
                             <div class="form-group">
