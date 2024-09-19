@@ -309,7 +309,7 @@ class ReceiptController extends Controller
             'updated_by'=>$request->post('updated_by'),
             'month_id'=>$monthID->id,
             'specification'=>$specification,
-            'type'=>$data['type'],
+            'type'=>$account_type,
             'pledge'=>$pledge,
             'payment_method'=>$data['payment_method'],
             'reference'=>$reference,
