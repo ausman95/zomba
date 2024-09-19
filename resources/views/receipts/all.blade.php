@@ -38,20 +38,20 @@
                                 @enderror
                             </div>
 
-{{--                            <div class="form-group">--}}
-{{--                                <label for="Month">Months</label>--}}
-{{--                                <select name="month_id" class="form-select select-relation @error('month_id') is-invalid @enderror" style="width: 100%">--}}
-{{--                                    <option value="">Select Month</option>--}}
-{{--                                    @foreach($months as $month)--}}
-{{--                                        <option value="{{ $month->id }}" {{ old('month_id') == $month->id ? 'selected' : '' }}>--}}
-{{--                                            {{ $month->name }}--}}
-{{--                                        </option>--}}
-{{--                                    @endforeach--}}
-{{--                                </select>--}}
-{{--                                @error('month_id')--}}
-{{--                                <span class="invalid-feedback">{{ $message }}</span>--}}
-{{--                                @enderror--}}
-{{--                            </div>--}}
+                            <div class="form-group">
+                                <label for="Month">Months</label>
+                                <select name="month_id" class="form-select select-relation @error('month_id') is-invalid @enderror" style="width: 100%">
+                                    <option value="">Select Month</option>
+                                    @foreach($months as $month)
+                                        <option value="{{ $month->id }}" {{ old('month_id') == $month->id ? 'selected' : '' }}>
+                                            {{ $month->name }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                                @error('month_id')
+                                <span class="invalid-feedback">{{ $message }}</span>
+                                @enderror
+                            </div>
 
                             <!-- New filters for Start Date and End Date -->
                             <div class="form-group">
@@ -102,11 +102,8 @@
                                                 <th>NO</th>
                                                 <th>DATE</th>
                                                 <th>REF</th>
-                                                <th>FOR</th>
                                                 <th>AMOUNT (MK)</th>
-                                                @if(@$status == 1)
                                                     <th>BALANCE (MK)</th>
-                                                @endif
                                                 <th>ACCOUNT</th>
                                                 <th>BANK</th>
                                                 <th>METHOD</th>
@@ -124,16 +121,10 @@
                                             @if($openingBalance != 0)
                                                 <tr>
                                                     <td>1</td>
-                                                    @if($currentMonth && $currentMonth->start_date)
-                                                        <td>{{ date('d F Y', strtotime($currentMonth->start_date)) }} (Opening Balance)</td>
-                                                    @else
-                                                        <td>OPENING BALANCE</td>
-                                                    @endif
-
-                                                    <td>N/A</td>
-                                                    <td>{{ $currentMonth ? 'Opening Balance for ' . $currentMonth->name : 'OPENING BALANCE' }}</td>
+                                                    <td>{{ date('d F Y', strtotime($start_date)) }} (Opening Balance)</td>
+                                                    <td>OPENING BALANCE</td>
                                                     <td>{{ number_format($openingBalance, 2) }}</td>
-                                                    <td>{{ $openingBalance < 0 ? '(' . number_format(abs($openingBalance), 2) . ')' : number_format($openingBalance, 2) }}</td>
+                                                        <th>{{ $openingBalance < 0 ? '(' . number_format(abs($openingBalance), 2) . ')' : number_format($openingBalance, 2) }}</th>
                                                     <td>N/A</td>
                                                     <td>N/A</td>
                                                     <td>N/A</td>
@@ -149,14 +140,23 @@
                                                 <tr>
                                                     <td>{{ ($loop->index + 2) + (($payments->currentPage() - 1) * $payments->perPage()) }}</td>
                                                     <td>{{ date('d F Y', strtotime($payment->t_date)) }}</td>
-                                                    <td>{{ $payment->account->id == 134 ? "N/A" :  $payment->reference }}</td>
-                                                    <td>{{ $payment->account->id == 134 ? "SYSTEM TRANSFER" : ucwords(substr($payment->name, 0, 500)) }}</td>
-                                                    <td>{{ number_format($payment->amount, 2) }}</td>
-                                                    @if(@$status==1)
-                                                        <td>
+                                                    <td>
+                                                        @if($payment->amount < 0)
+                                                            Transaction Reverse: {{ $payment->description }}
+                                                        @else
+                                                            {{ $payment->description }}
+                                                        @endif
+                                                    </td>
+                                                    <td>
+                                                        @if($payment->type == 2 || $payment->amount < 0)
+                                                            ({{ number_format(abs($payment->amount), 2) }})
+                                                        @else
+                                                            {{ number_format($payment->amount, 2) }}
+                                                        @endif
+                                                    </td>
+                                                        <th>
                                                             @php
-                                                                $accountType = $payment->account->id == 134 ? $payment->type : $payment->account->type;
-                                                                if ($accountType == 1) {
+                                                                if ($payment->type == 1) {
                                                                     $balance += $payment->amount;
                                                                 } else {
                                                                     $balance -= $payment->amount;
@@ -164,14 +164,13 @@
                                                             @endphp
 
                                                             {{ $balance < 0 ? '('.number_format(abs($balance), 2).')' : number_format($balance, 2) }}
-                                                        </td>
-                                                    @endif
+                                                        </th>
                                                     <td>{{ ucwords($payment->account->name) }}</td>
                                                     <td>
                                                         @php
-                                                            $name = \App\Models\Banks::find($payment->bank_id);
+                                                            $bank = \App\Models\Banks::find($payment->bank_id);
                                                         @endphp
-                                                        {{$name->account_name.' - '.$name->account_number }}
+                                                        {{ $bank->account_name . ' - ' . $bank->account_number }}
                                                     </td>
                                                     <td>
                                                         @switch($payment->payment_method)
@@ -219,11 +218,8 @@
                                                         @endswitch
                                                     </td>
                                                     <td>
-                                                        @if($payment->account->id == 134)
-                                                            {{ $payment->type == 2 ? "EXPENSE" : "REVENUE" }}
-                                                        @else
-                                                            {{ $payment->account->type == 2 ? "EXPENSE" : "REVENUE" }}
-                                                        @endif</td>
+                                                        {{ $payment->type == 2 ? "EXPENSE" : "REVENUE" }}
+                                                    </td>
                                                     <td>
                                                         @php
                                                             $creator = \App\Models\User::find($payment->created_by);
