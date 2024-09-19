@@ -127,11 +127,11 @@
                                                     @if($currentMonth && $currentMonth->start_date)
                                                         <td>{{ date('d F Y', strtotime($currentMonth->start_date)) }} (Opening Balance)</td>
                                                     @else
-                                                        <td>N/A</td>
+                                                        <td>OPENING BALANCE</td>
                                                     @endif
 
                                                     <td>N/A</td>
-                                                    <td>{{ $currentMonth ? 'Opening Balance for ' . $currentMonth->name : 'N/A' }}</td>
+                                                    <td>{{ $currentMonth ? 'Opening Balance for ' . $currentMonth->name : 'OPENING BALANCE' }}</td>
                                                     <td>{{ number_format($openingBalance, 2) }}</td>
                                                     <td>{{ $openingBalance < 0 ? '(' . number_format(abs($openingBalance), 2) . ')' : number_format($openingBalance, 2) }}</td>
                                                     <td>N/A</td>
