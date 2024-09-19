@@ -107,6 +107,7 @@
                                                 <th>ACCOUNT</th>
                                                 <th>BANK</th>
                                                 <th>METHOD</th>
+                                                <th>CHEQUE #</th>
                                                 <th>TYPE</th>
                                                 <th>-</th>
                                                 <th>CREATED BY</th>
@@ -122,9 +123,10 @@
                                                 <tr>
                                                     <td>1</td>
                                                     <td>{{ date('d F Y', strtotime($start_date)) }} (Opening Balance)</td>
-                                                    <td>OPENING BALANCE</td>
+                                                    <td>N/A</td>
                                                     <td>{{ number_format($openingBalance, 2) }}</td>
-                                                        <th>{{ $openingBalance < 0 ? '(' . number_format(abs($openingBalance), 2) . ')' : number_format($openingBalance, 2) }}</th>
+                                                        <td>{{ $openingBalance < 0 ? '(' . number_format(abs($openingBalance), 2) . ')' : number_format($openingBalance, 2) }}</td>
+                                                    <td>N/A</td>
                                                     <td>N/A</td>
                                                     <td>N/A</td>
                                                     <td>N/A</td>
@@ -142,9 +144,9 @@
                                                     <td>{{ date('d F Y', strtotime($payment->t_date)) }}</td>
                                                     <td>
                                                         @if($payment->amount < 0)
-                                                            Transaction Reverse: {{ $payment->description }}
+                                                            Transaction Reverse: {{ $payment->name }}
                                                         @else
-                                                            {{ $payment->description }}
+                                                            {{ $payment->name }}
                                                         @endif
                                                     </td>
                                                     <td>
@@ -154,7 +156,7 @@
                                                             {{ number_format($payment->amount, 2) }}
                                                         @endif
                                                     </td>
-                                                        <th>
+                                                        <td>
                                                             @php
                                                                 if ($payment->type == 1) {
                                                                     $balance += $payment->amount;
@@ -164,7 +166,7 @@
                                                             @endphp
 
                                                             {{ $balance < 0 ? '('.number_format(abs($balance), 2).')' : number_format($balance, 2) }}
-                                                        </th>
+                                                        </td>
                                                     <td>{{ ucwords($payment->account->name) }}</td>
                                                     <td>
                                                         @php
@@ -186,6 +188,9 @@
                                                             @default
                                                                 MOBILE MONEY TRANSFER
                                                         @endswitch
+                                                    </td>
+                                                    <td>
+                                                        {{ $payment->reference }}
                                                     </td>
                                                     <td>
                                                         @switch($payment->type)

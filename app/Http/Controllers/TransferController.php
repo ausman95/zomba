@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Accounts;
 use App\Models\Banks;
 use App\Models\BankTransaction;
+use App\Models\Payment;
 use App\Models\Transfer;
 use Illuminate\Http\Request;
 use App\Http\Requests\Transfers\StoreRequest;
@@ -51,60 +52,97 @@ class TransferController extends Controller
     {
         $data = $request->post();
 
-        if($data['from_account_id']===$data['to_account_id']){
-            return back()->with(['error-notification'=>"You are trying to transfer Money to the  same account"]);
+        // Prevent transfer to the same account
+        if ($data['from_account_id'] === $data['to_account_id']) {
+            return back()->with(['error-notification' => "You are trying to transfer money to the same account."]);
         }
 
+        // Handle 'from' account balance deduction
+        $fromAccountBalance = BankTransaction::where('bank_id', $data['from_account_id'])->latest()->value('balance') ?? 0;
+        $newFromBalance = $fromAccountBalance - $data['amount'];
 
-        $bal = BankTransaction::where(['bank_id'=>$request->post('from_account_id')])->latest()->first();
-        @$balance = $bal->balance;
-        if(!$balance){
-            $balance = 0;
-        }
-//        if($request->post('amount')>$balance){
-//            return back()->with(['error-notification'=>"The bank balance is less than the amount requested"]);
-//        }else{
-//            $new_balance = $balance-$request->post('amount');
-//        }
-        $new_balance = $balance-$request->post('amount');
-        $transactions = [
-            'description'=>'BANK TRANSFER',
-            'type'=>2,
-            'amount'=>$request->post('amount'),
-            'bank_id'=>$request->post('from_account_id'),
-            'method'=>'Bank',
-            't_date'=>$request->post('t_date'),
-            'account_id'=>134,
-            'balance'=>$new_balance
+        $fromTransaction = [
+            'description' => 'BANK TRANSFER',
+            'type' => 2, // Deduction
+            'amount' => $data['amount'],
+            'bank_id' => $data['from_account_id'],
+            'method' => 'Bank',
+            't_date' => $data['t_date'],
+            'account_id' => 134,
+            'balance' => $newFromBalance
         ];
+
+        // Create transfer and deduct from 'from' account
         Transfer::create($data);
-        BankTransaction::create($transactions);
-        ///////////////////
-        $bal = BankTransaction::where(['bank_id'=>$request->post('to_account_id')])->latest()->first();
-        @$balance = $bal->balance;
-        if(!$balance){
-            $balance = 0;
-        }
-        $new_balance = $balance+$request->post('amount');
-        $transaction = [
-            'description'=>'BANK TRANSFER',
-            'type'=>1,
-            'account_id'=>134,
-            't_date'=>$request->post('t_date'),
-            'amount'=>$request->post('amount'),
-            'bank_id'=>$request->post('to_account_id'),
-            'method'=>'Bank',
-            'balance'=>$new_balance
-        ];
-        ///////
+        BankTransaction::create($fromTransaction);
 
-        BankTransaction::create($transaction);
+        // Record payment for 'from' account
+        $fromPayment = [
+            'account_id' => 134, // Adjust as needed
+            'bank_id' => $data['from_account_id'],
+            'name' => 'BANK TRANSFER OUT',
+            'amount' => $data['amount'],
+            'payment_method' => 'Bank',
+            'reference' => 'BANK TRANSFER',
+            'type' => 2, // Deduction
+            't_date' => $data['t_date'],
+            'month_id' => $data['month_id'] ?? null,
+            'created_by' => $request->user()->id,
+            'updated_by' => $request->user()->id,
+            'status' => 1, // Assuming active transaction
+            'pledge' => 0, // Default value for pledge, adjust as needed
+            'specification' => 'Transfer from account ' . $data['from_account_id']
+        ];
+        Payment::create($fromPayment);
+
+        // Handle 'to' account balance addition
+        $toAccountBalance = BankTransaction::where('bank_id', $data['to_account_id'])->latest()->value('balance') ?? 0;
+        $newToBalance = $toAccountBalance + $data['amount'];
+
+        $toTransaction = [
+            'description' => 'BANK TRANSFER',
+            'type' => 1, // Addition
+            'amount' => $data['amount'],
+            'bank_id' => $data['to_account_id'],
+            'method' => 'Bank',
+            't_date' => $data['t_date'],
+            'account_id' => 134,
+            'balance' => $newToBalance
+        ];
+
+        // Create the transaction for the 'to' account
+        BankTransaction::create($toTransaction);
+
+        // Record payment for 'to' account
+        $toPayment = [
+            'account_id' => 134, // Adjust as needed
+            'bank_id' => $data['to_account_id'],
+            'name' => 'BANK TRANSFER IN',
+            'amount' => $data['amount'],
+            'payment_method' => 'Bank',
+            'reference' => 'BANK TRANSFER',
+            'type' => 1, // Addition
+            't_date' => $data['t_date'],
+            'month_id' => $data['month_id'] ?? null,
+            'created_by' => $request->user()->id,
+            'updated_by' => $request->user()->id,
+            'status' => 1, // Assuming active transaction
+            'pledge' => 0, // Default value for pledge, adjust as needed
+            'specification' => 'Transfer to account ' . $data['to_account_id']
+        ];
+        Payment::create($toPayment);
+
+        // Log the bank transfer activity
         activity('FINANCES')
-            ->log("Created a Bank Transfer")->causer(request()->user());
+            ->log("Created a Bank Transfer")
+            ->causer($request->user());
+
+        // Redirect with success message
         return redirect()->route('transfers.index')->with([
-            'success-notification'=>"Bank Transfer successfully Created"
+            'success-notification' => "Bank Transfer successfully created."
         ]);
     }
+
 
     /**
      * Display the specified resource.
