@@ -43,7 +43,7 @@ class PaymentController extends Controller
 
 
             // Fetch all previous bank transactions up to the start of the selected period
-            $previousTransactions = BankTransaction::where('bank_id', $bankId)
+            $previousTransactions = Payment::where('bank_id', $bankId)
                 ->where('t_date', '<', $startDate)
                 ->get();
 
@@ -57,7 +57,7 @@ class PaymentController extends Controller
             }
 
             // Fetch current period's bank transactions
-            $transactions = BankTransaction::where('bank_id', $bankId)
+            $transactions = Payment::where('bank_id', $bankId)
                 ->whereBetween('t_date', [$startDate, $endDate])
                 ->orderBy('t_date', 'ASC')
                 ->get();
@@ -75,7 +75,7 @@ class PaymentController extends Controller
                 $currentMonth = $month->name;
 
                 // Fetch all previous bank transactions up to the start of the selected period
-                $previousTransactions = BankTransaction::where('bank_id', $bankId)
+                $previousTransactions = Payment::where('bank_id', $bankId)
                     ->where('t_date', '<', $startDate)
                     ->get();
 
@@ -89,7 +89,7 @@ class PaymentController extends Controller
                 }
 
                 // Fetch current period's bank transactions
-                $transactions = BankTransaction::where('bank_id', $bankId)
+                $transactions = Payment::where('bank_id', $bankId)
                     ->whereBetween('t_date', [$startDate, $endDate])
                     ->orderBy('t_date', 'ASC')
                     ->get();
@@ -104,7 +104,7 @@ class PaymentController extends Controller
             $endDate = $request->post('end_date');
 
             // Fetch all previous transactions up to the selected period (for all banks)
-            $previousTransactions = BankTransaction::where('t_date', '<', $startDate)
+            $previousTransactions = Payment::where('t_date', '<', $startDate)
                 ->get();
 
             // Calculate the opening balance from prior transactions
@@ -117,7 +117,7 @@ class PaymentController extends Controller
             }
 
             // Fetch current period's transactions
-            $transactions = BankTransaction::whereBetween('t_date', [$startDate, $endDate])
+            $transactions = Payment::whereBetween('t_date', [$startDate, $endDate])
                 ->orderBy('t_date', 'ASC')
                 ->get();
         }
