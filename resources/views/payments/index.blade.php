@@ -102,14 +102,7 @@
                                                         <td>{{date('d F Y', strtotime($payment->t_date)) }}</td>
                                                         <td>{{ucwords(substr($payment->name,0,20)) }}</td>
                                                         <td>{{ucwords($payment->specification) }}</td>
-                                                        <th>
-                                                            @if($payment->amount > 1)
-                                                                ({{ number_format($payment->amount, 2) }})
-                                                            @else
-                                                                {{ number_format(abs($payment->amount), 2) }}
-                                                            @endif
-                                                        </th>
-
+                                                        <th>{{number_format(abs($payment->amount),2) }}</th>
                                                         <td>{{ucwords($payment->account->name) }}</td>
                                                         <td>
                                                             @if(!@$payment->bank->account_name)
