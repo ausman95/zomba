@@ -153,7 +153,7 @@
                                                         @if($payment->type == 2 && $payment->amount >0)
                                                             ({{ number_format(abs($payment->amount), 2) }})
                                                         @elseif($payment->type == 1 || $payment->amount < 0)
-                                                            {{ number_format($payment->amount, 2) }}
+                                                            {{ number_format(abs($payment->amount), 2) }}
                                                         @endif
                                                     </td>
                                                         <td>
