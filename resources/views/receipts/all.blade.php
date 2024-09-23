@@ -150,9 +150,9 @@
                                                         @endif
                                                     </td>
                                                     <td>
-                                                        @if($payment->type == 2 || $payment->amount < 0)
+                                                        @if($payment->type == 2 && $payment->amount >0)
                                                             ({{ number_format(abs($payment->amount), 2) }})
-                                                        @else
+                                                        @elseif($payment->type == 1 || $payment->amount < 0)
                                                             {{ number_format($payment->amount, 2) }}
                                                         @endif
                                                     </td>
