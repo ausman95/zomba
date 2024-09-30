@@ -25,40 +25,23 @@
                         @csrf
                         <div class="form-group">
                             <label> From </label>
-                            <select name="ministry_id" required
-                                    class="form-select select-relation @error('ministry_id') is-invalid @enderror" style="width: 100%">
-                                <option value="">-- Select ---</option>
-                                @foreach($ministries as $ministry)
-                                        <option value="{{$ministry->id}}"
-                                            {{old('ministry_id')===$ministry->id ? 'selected' : ''}}>
-                                            {{$ministry->name}}</option>
-                                @endforeach
-                            </select>
-                            @error('ministry_id')
+                            <input type="text" name="from"
+                                   class="form-control @error('from') is-invalid @enderror"
+                                   value="{{old('from')}}" placeholder="From"
+                                   required>
+                            @error('from')
                             <span class="invalid-feedback">
                                {{$message}}
                         </span>
                             @enderror
                         </div>
                         <div class="form-group">
-                            <label>Start Date</label>
-                            <input type="date" name="start_date"
-                                   class="form-control @error('start_date') is-invalid @enderror"
-                                   value="{{old('start_date')}}" placeholder="from"
+                            <label>When it will happen</label>
+                            <input type="date" name="date"
+                                   class="form-control @error('date') is-invalid @enderror"
+                                   value="{{old('date')}}" placeholder="from"
                                    required>
-                            @error('start_date')
-                            <span class="invalid-feedback">
-                               {{$message}}
-                        </span>
-                            @enderror
-                        </div>
-                        <div class="form-group">
-                            <label>End Date</label>
-                            <input type="date" name="end_date"
-                                   class="form-control @error('end_date') is-invalid @enderror"
-                                   value="{{old('end_date')}}" placeholder="from"
-                                   required>
-                            @error('end_date')
+                            @error('date')
                             <span class="invalid-feedback">
                                {{$message}}
                         </span>

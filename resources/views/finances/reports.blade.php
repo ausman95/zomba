@@ -42,6 +42,7 @@
                                 <option value="1">Trial Balance </option>
                                 <option value="2">Detailed Income Statement </option>
                                 <option value="3">Summarized Income Statement </option>
+                                <option value="4">Balance Sheet </option>
                             </select>
                             @error('statement')
                             <span class="invalid-feedback">
@@ -112,7 +113,194 @@
                                 <div class="card " style="min-height: 30em;">
                                     <div class="card-body px-1">
                                         <div style="overflow-x:auto;">
-                                            @if($statement==1)
+                                            @if($statement==4)
+                                                <div class="card-body px-1">
+
+                                                    <h3>Balance Sheet Statement</h3>
+
+                                                    <!-- Fixed Assets Table -->
+                                                    <h4>Fixed Assets</h4>
+                                                    <table class="table table-bordered table-hover">
+                                                        <thead>
+                                                        <tr>
+                                                            <th>NO</th>
+                                                            <th>NAME</th>
+                                                            <th>COST (MK)</th>
+                                                            <th>DEPRECIATION (MK)</th>
+                                                            <th>NET VALUE (MK)</th>
+                                                        </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                        @php $c = 1; $depreciationSum = 0; @endphp
+                                                        @foreach($fixedAssets as $asset)
+                                                            @php
+                                                                $expectedLife = $asset->life; // Expected life in years
+                                                                $cost = $asset->cost; // Initial cost of the asset
+                                                                $depreciation = ($expectedLife > 0) ? $cost / $expectedLife : 0; // Straight-line depreciation
+                                                                $netValue = $cost - $depreciation; // Net value after depreciation
+                                                            @endphp
+                                                            <tr>
+                                                                <td>{{ $c++ }}</td>
+                                                                <td>{{ ucwords($asset->name) }}</td>
+                                                                <td>{{ number_format($cost, 2) }}</td>
+                                                                <td>{{ number_format($depreciation, 2) }}</td>
+                                                                <td>{{ number_format($netValue, 2) }}</td>
+                                                                @php $depreciationSum += $depreciation; @endphp
+                                                            </tr>
+                                                        @endforeach
+                                                        <tr>
+                                                            <td colspan="2"><strong>Total Fixed Assets</strong></td>
+                                                            <td><strong>{{ number_format($totalFixedAssets, 2) }}</strong></td>
+                                                            <td><strong>{{ number_format($depreciationSum, 2) }}</strong></td>
+                                                            <td><strong>{{ number_format($totalFixedAssets - $depreciationSum, 2) }}</strong></td>
+                                                        </tr>
+                                                        </tbody>
+                                                    </table>
+
+                                                    <!-- Current Assets Table -->
+                                                    <h4>Current Assets</h4>
+                                                    <table class="table table-bordered table-hover">
+                                                        <thead>
+                                                        <tr>
+                                                            <th>NO</th>
+                                                            <th></th>
+                                                            <th></th>
+                                                            <th>NAME</th>
+                                                            <th>AMOUNT (MK)</th>
+                                                        </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                        @php $c = 1; $totalCurrentAssets = 0; @endphp
+
+                                                        @if($currentAssets->net_amount > 0)
+                                                            <tr>
+                                                                <td>{{ $c++ }}</td>
+                                                                <td colspan="2"></td>
+                                                                <td>Bank Balance</td>
+                                                                <td><strong>{{ number_format($currentAssets->net_amount, 2) }}</strong></td>
+                                                                @php $totalCurrentAssets += $currentAssets->net_amount; @endphp
+                                                            </tr>
+                                                        @endif
+
+                                                        @foreach($currentPayments as $payment)
+                                                            @if($payment->total_amount > 0)
+                                                                <tr>
+                                                                    <td>{{ $c++ }}</td>
+                                                                    <td colspan="2"></td>
+                                                                    <td>{{ ucwords($payment->name) }}</td>
+                                                                    <td>{{ number_format($payment->total_amount, 2) }}</td>
+                                                                    @php $totalCurrentAssets += $payment->total_amount; @endphp
+                                                                </tr>
+                                                            @endif
+                                                        @endforeach
+
+                                                        @if($suppliers->net_amount > 0)
+                                                            <tr>
+                                                                <td>{{ $c++ }}</td>
+                                                                <td colspan="2"></td>
+                                                                <td>Suppliers</td>
+                                                                <td>{{ number_format($suppliers->net_amount, 2) }}</td>
+                                                                @php $totalCurrentAssets += $suppliers->net_amount; @endphp
+                                                            </tr>
+                                                        @endif
+
+                                                        <tr>
+                                                            <td colspan="3"></td>
+                                                            <td><strong>Total Current Assets</strong></td>
+                                                            <td><strong>{{ number_format($totalCurrentAssets, 2) }}</strong></td>
+                                                        </tr>
+
+                                                        @php
+                                                            $totalAssets = $totalFixedAssets + $totalCurrentAssets;
+                                                        @endphp
+                                                        <tr>
+                                                            <td colspan="3"></td>
+                                                            <td><strong>Total Assets</strong></td>
+                                                            <td><strong>{{ number_format($totalAssets, 2) }}</strong></td>
+                                                        </tr>
+                                                        </tbody>
+                                                    </table>
+
+                                                    <!-- Capital Table -->
+                                                    <h4>Capital</h4>
+                                                    <table class="table table-bordered table-hover">
+                                                        <tbody>
+                                                        @php $c = 1; @endphp
+                                                        <tr>
+                                                            <td>{{ $c++ }}</td>
+                                                            <td colspan="2"></td>
+
+                                                            <td>Profit of the Period</td>
+                                                            <td><strong>{{ number_format($profit, 2) }}</strong></td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>{{ $c++ }}</td>
+                                                            <td colspan="2"></td>
+
+                                                            <td>Revaluation Earnings</td>
+                                                            <td><strong>{{ number_format($totalFixedAssets - $totalLatestRevaluations, 2) }}</strong></td>
+                                                        </tr>
+
+                                                        <tr>
+                                                            <td></td>
+                                                            <td colspan="2"></td>
+
+                                                            <td>Total Capital</td>
+                                                            <td><strong>{{ number_format($totalFixedAssets - $totalLatestRevaluations + $profit, 2) }}</strong></td>
+                                                        </tr>
+                                                        </tbody>
+                                                    </table>
+
+                                                    <!-- Liabilities Table -->
+                                                    <h4>Liabilities</h4>
+                                                    <table class="table table-bordered table-hover">
+                                                        <thead>
+                                                        <tr>
+                                                            <th>NO</th>
+                                                            <th>NAME</th>
+                                                            <th>AMOUNT (MK)</th>
+                                                            <th></th>
+                                                        </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                        @php $c = 1; $totalLiabilities = 0; @endphp
+
+                                                        @if($suppliers->net_amount < 0)
+                                                            <tr>
+                                                                <td>{{ $c++ }}</td>
+                                                                <td>Suppliers</td>
+                                                                <td>{{ number_format(abs($suppliers->net_amount), 2) }}</td>
+                                                                <td></td>
+                                                                @php $totalLiabilities += $suppliers->net_amount; @endphp
+                                                            </tr>
+                                                        @endif
+
+                                                        @if($currentAssets->net_amount < 0)
+                                                            <tr>
+                                                                <td>{{ $c++ }}</td>
+                                                                <td>Current Assets</td>
+                                                                <td>{{ number_format(abs($currentAssets->net_amount), 2) }}</td>
+                                                                @php $totalLiabilities += $currentAssets->net_amount; @endphp
+                                                            </tr>
+                                                        @endif
+
+                                                        <tr>
+                                                            <td></td>
+                                                            <td></td>
+                                                            <td><strong>Total Liabilities</strong></td>
+
+                                                            <td><strong>{{ number_format(abs($totalLiabilities), 2) }}</strong></td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td></td>
+                                                            <td></td>
+                                                            <td><strong>Total Equity</strong></td>
+                                                            <td><strong>{{ number_format($totalAssets - abs($totalLiabilities), 2) }}</strong></td>
+                                                        </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            @elseif($statement==1)
                                                 <table class="table table-bordered table-hover table-striped" id="data-table">
 
                                                     <caption style="caption-side:top">   Trial Balance Statement from {{date('d F Y', strtotime($start_date))}} To {{date('d F Y', strtotime($end_date))}}

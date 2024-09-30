@@ -122,7 +122,10 @@ class PurchaseController extends Controller
         }else{
             $supplier_balance = $balance;
         }
-
+        $transaction_type =  1;
+        if($request->post('payment_type')==2) {
+            $transaction_type =  2;
+        }
         $tuple = [
             'expenses_id'=>1111,
             'supplier_id'=>$request->post('supplier_id'),
@@ -131,7 +134,7 @@ class PurchaseController extends Controller
             'created_by'=>$request->post('created_by'),
             'updated_by'=>$request->post('updated_by'),
             'method'=>$request->post('payment_type'),
-            'transaction_type'=>1,
+            'transaction_type'=>$transaction_type,
         ];
         // we need to create a record for Project payment
         $bala = ProjectPayment::where(['project_id'=>$request->post('project_id')])->orderBy('id','desc')->first();

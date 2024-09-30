@@ -24,9 +24,8 @@ class StoreRequest extends FormRequest
     public function rules()
     {
         return [
-           'ministry_id'=>'required|numeric',
-            'start_date'=>'required|date',
-            'end_date'=>'required|date',
+           'from'=>'required|string',
+            'date'=>'required|date',
             'title'=>'required|string',
             'body'=>'required|string',
         ];

@@ -1,9 +1,4 @@
 @extends('layouts.app')
-
-@section('stylesheets')
-    <link rel="stylesheet" href="{{asset('vendor/simple-datatable/simple-datatable.css')}}">
-@stop
-
 @section('content')
     <div class="container-fluid ps-1 pt-4">
         <h4>
@@ -387,37 +382,5 @@
             </div>
         </div>
     </div>
-@stop
-@section('scripts')
-    <script src="{{asset('vendor/simple-datatable/simple-datatable.js')}}"></script>
-    <script>
-        function confirmationWindow(title, message, primaryLabel, callback) {
-            Swal.fire({
-                title: title,
-                text: message,
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#3085d6',
-                cancelButtonColor: '#d33',
-                confirmButtonText: primaryLabel
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    callback();
-                }
-            })
-        }
-
-
-        $(document).ready(function () {
-            $(".delete-btn").on('click', function () {
-                $url = $(this).attr('data-target-url');
-
-                $("#delete-form").attr('action', $url);
-                confirmationWindow("Confirm Deletion", "Are you sure you want to delete this position?", "Yes,Delete", function () {
-                    $("#delete-form").submit();
-                })
-            });
-        })
-    </script>
 @stop
 

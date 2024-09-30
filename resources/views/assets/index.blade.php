@@ -60,8 +60,6 @@
                                             <th>@ COST (MK)</th>
                                             <th>ACQ. DATE</th>
                                             <th>EST. LIFE</th>
-                                            <th>LOCATION</th>
-                                            <th>CONDITION</th>
                                             <th>DEPCTN %</th>
                                             <th>DEPCTN (MK)</th>
                                             <th>NETBOOK (MK)</th>
@@ -75,13 +73,11 @@
                                                 <td>{{$c++}}</td>
                                                 <td>{{ucwords($asset->name) }}</td>
                                                 <td>{{ucwords($asset->serial_number) }}</td>
-                                                <td>{{ucwords($asset->category->name) }}</td>
+                                                <td>{{ucwords(@$asset->category->name) }}</td>
                                                 <td>{{number_format($asset->quantity) }}</td>
                                                 <td>{{number_format($asset->cost*$asset->quantity) }}</td>
                                                 <td>{{date('d F Y', strtotime($asset->t_date)) }}</td>
                                                 <td>{{ucwords($asset->life) }}</td>
-                                                <td>{{ucwords($asset->location) }}</td>
-                                                <td>{{ucwords($asset->condition) }}</td>
                                                 <td>{{number_format($asset->depreciation) }}</td>
                                                 @if($asset->depreciation)
                                                 <td>{{number_format(($asset->quantity*$asset->cost) - ($asset->getDays($asset->t_date,$asset->life,$asset->cost,$asset->depreciation,$asset->quantity)),2) }}</td>

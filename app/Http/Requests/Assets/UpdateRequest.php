@@ -26,8 +26,10 @@ class UpdateRequest extends FormRequest
         return [
             'name'=>"required|string",
             'cost'=>"required|numeric|min:1",
-            'condition'=>"required|string",
-            'location'=>"required|string",
+            'category_id'=>"required|numeric|min:1",
+            'life'=>"required|numeric|min:1",
+            't_date'=>"required|string",
+            'serial_number'=>"required|string",
             'quantity'=>"required|numeric|min:1",
             'depreciation'=>"required|numeric|min:1",
         ];

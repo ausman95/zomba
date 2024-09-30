@@ -41,7 +41,8 @@
                                             <thead>
                                         <tr>
                                             <th>NO</th>
-                                            <th>MINISTRY</th>
+                                            <th>FROM</th>
+                                            <th>TITLE</th>
                                             <th>START DATE</th>
                                             <th>END DATE</th>
                                             <th>TITLE</th>
@@ -54,7 +55,8 @@
                                         @foreach($announcements as $announcement)
                                             <tr>
                                                 <td>{{$c++}}</td>
-                                                <td>{{ucwords($announcement->ministry->name) }}</td>
+                                                <td>{{ucwords($announcement->from) }}</td>
+                                                <td>{{ucwords($announcement->title) }}</td>
                                                 <td>{{date('d F Y', strtotime($announcement->start_date)) }}</td>
                                                 <td>{{date('d F Y', strtotime($announcement->end_date)) }}</td>
                                                 <td>{{ucwords($announcement->title) }}</td>

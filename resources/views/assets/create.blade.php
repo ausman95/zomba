@@ -21,144 +21,230 @@
         </div>
         <div class="mt-2">
             <div class="row">
-                <div class="col-sm-12 col-md-8 col-lg-4">
-                    <form action="{{route('assets.store')}}" method="POST" autocomplete="off">
+                <div class="col-sm-12 col-md-8 col-lg-8">
+                    <form action="{{ route('assets.store') }}" method="POST" autocomplete="off">
                         @csrf
-                        <div class="form-group">
-                            <label>Name</label>
-                            <input type="hidden" name="created_by" value="{{request()->user()->id}}">
-                            <input type="hidden" name="updated_by" value="{{request()->user()->id}}">
-                            <input type="text" name="name" required
-                                   class="form-control @error('name') is-invalid @enderror"
-                                   value="{{old('name')}}"
-                                   placeholder="Asset name" >
-                            @error('name')
-                            <span class="invalid-feedback">
-                               {{$message}}
-                        </span>
-                            @enderror
-                        </div>
-                        <div class="form-group">
-                            <label>Quantity</label>
-                            <input type="number" name="quantity" required
-                                   class="form-control @error('quantity') is-invalid @enderror"
-                                   value="{{old('quantity')}}"
-                                   placeholder="Quantity" >
-                            @error('quantity')
-                            <span class="invalid-feedback">
-                               {{$message}}
-                        </span>
-                            @enderror
-                        </div>
-                        <div class="form-group">
-                            <label>Opening Balance</label>
-                            <input type="number" name="cost" required
-                                   class="form-control @error('cost') is-invalid @enderror"
-                                   value="{{old('cost')}}"
-                                   placeholder="Opening Balance">
-                            @error('cost')
-                            <span class="invalid-feedback">
-                               {{$message}}
-                        </span>
-                            @enderror
-                        </div>
-                        <div class="form-group">
-                            <label> Category </label>
-                            <select name="category_id" required
-                                    class="form-select select-relation @error('category_id') is-invalid @enderror" style="width: 100%">
-                                <option value="">-- Select ---</option>
-                                @foreach($categories as $category)
-                                    @if($category->status==1)
-                                    <option value="{{$category->id}}"
-                                        {{old('category_id')===$category->id ? 'selected' : ''}}>{{$category->name}}</option>
-                                    @endif
-                                @endforeach
-                            </select>
-                            @error('category_id')
-                            <span class="invalid-feedback">
-                               {{$message}}
-                        </span>
-                            @enderror
-                        </div>
-                        <div class="form-group">
-                            <label>Serial / Reg Number</label>
-                            <input type="text" name="serial_number" required
-                                   class="form-control @error('cost') is-invalid @enderror"
-                                   value="{{old('serial_number')}}"
-                                   placeholder="Serial Number" >
-                            @error('serial_number')
-                            <span class="invalid-feedback">
-                               {{$message}}
-                        </span>
-                            @enderror
-                        </div>
-                        <div class="form-group">
-                            <label>Depreciation %</label>
-                            <input type="number" name="depreciation" required
-                                   class="form-control @error('life') is-invalid @enderror"
-                                   value="{{old('depreciation')}}"
-                                   placeholder="Depreciation %" >
-                            @error('depreciation')
-                            <span class="invalid-feedback">
-                               {{$message}}
-                        </span>
-                            @enderror
-                        </div>
-                        <div class="form-group">
-                            <label> Condition </label>
-                            <select name="condition" required
-                                    class="form-select select-relation @error('condition') is-invalid @enderror" style="width: 100%">
-                                <option value="Good">Good</option>
-                                <option value="Bad">Bad</option>
-                            </select>
-                            @error('condition')
-                            <span class="invalid-feedback">
-                               {{$message}}
-                        </span>
-                            @enderror
-                        </div>
-                        <div class="form-group">
-                            <label>Location</label>
-                            <input type="text" name="location" required
-                                   class="form-control @error('life') is-invalid @enderror"
-                                   value="{{old('location')}}"
-                                   placeholder="Location of the Asset" >
-                            @error('location')
-                            <span class="invalid-feedback">
-                               {{$message}}
-                        </span>
-                            @enderror
-                        </div>
-                        <div class="form-group">
-                            <label>Expected Life</label>
-                            <input type="number" name="life" required
-                                   class="form-control @error('life') is-invalid @enderror"
-                                   value="{{old('life')}}"
-                                   placeholder="Expected Life">
-                            @error('life')
-                            <span class="invalid-feedback">
-                               {{$message}}
-                        </span>
-                            @enderror
-                        </div>
-                        <div class="form-group">
-                            <label>Date of Acquisition</label>
-                            <input type="date" name="t_date" required
-                                   class="form-control @error('t_date') is-invalid @enderror"
-                                   value="{{old('t_date')}}"
-                                   placeholder="Date of Acquisition">
-                            @error('t_date')
-                            <span class="invalid-feedback">
-                               {{$message}}
-                        </span>
-                            @enderror
-                        </div>
-                        <div class="form-group">
-                            <button class="btn btn-md btn-primary rounded-0">
-                                <i class="fa fa-paper-plane"></i>Save
-                            </button>
+                        <input type="hidden" name="created_by" value="{{ request()->user()->id }}">
+                        <input type="hidden" name="updated_by" value="{{ request()->user()->id }}">
 
-                        </div>
+                            <h4 class="mb-3">Asset Information</h4>
+
+                            <div class="row">
+                                <!-- Purchase Type -->
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="purchase_type">Purchase Type <span class="text-danger">*</span></label>
+                                        <select name="purchase_type" id="purchase_type" required class="form-select @error('purchase_type') is-invalid @enderror" onchange="togglePaymentMethod()">
+                                            <option value="">-- Select Purchase Type --</option>
+                                            <option value="new" {{ old('purchase_type') == 'new' ? 'selected' : '' }}>Newly Bought</option>
+                                            <option value="previous" {{ old('purchase_type') == 'previous' ? 'selected' : '' }}>Previously Bought</option>
+                                        </select>
+                                        @error('purchase_type')
+                                        <span class="invalid-feedback">{{ $message }}</span>
+                                        @enderror
+                                    </div>
+                                </div>
+
+                                <!-- Asset Name -->
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="name">Asset Name <span class="text-danger">*</span></label>
+                                        <input type="text" name="name" required class="form-control @error('name') is-invalid @enderror" value="{{ old('name') }}" placeholder="Enter asset name">
+                                        @error('name')
+                                        <span class="invalid-feedback">{{ $message }}</span>
+                                        @enderror
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <!-- Serial / Reg Number -->
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label>Serial / Reg Number <span class="text-danger">*</span></label>
+                                        <input type="text" name="serial_number" required
+                                               class="form-control @error('serial_number') is-invalid @enderror"
+                                               value="{{ old('serial_number') }}"
+                                               placeholder="Serial Number">
+                                        @error('serial_number')
+                                        <span class="invalid-feedback">{{ $message }}</span>
+                                        @enderror
+                                    </div>
+                                </div>
+
+                                <!-- Category -->
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="category_id">Category <span class="text-danger">*</span></label>
+                                        <select name="category_id" required class="form-select select-relation @error('category_id') is-invalid @enderror" style="width: 100%">
+                                            <option value="">-- Select Category --</option>
+                                            @foreach($categories as $category)
+                                                @if($category->status == 1)
+                                                    <option value="{{ $category->id }}" {{ old('category_id') === $category->id ? 'selected' : '' }}>{{ $category->name }}</option>
+                                                @endif
+                                            @endforeach
+                                        </select>
+                                        @error('category_id')
+                                        <span class="invalid-feedback">{{ $message }}</span>
+                                        @enderror
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <!-- Quantity -->
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="quantity">Quantity <span class="text-danger">*</span></label>
+                                        <input type="number" name="quantity" required class="form-control @error('quantity') is-invalid @enderror" value="{{ old('quantity') }}" placeholder="Enter quantity">
+                                        @error('quantity')
+                                        <span class="invalid-feedback">{{ $message }}</span>
+                                        @enderror
+                                    </div>
+                                </div>
+
+                                <!-- Date Bought -->
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="t_date">Date Bought <span class="text-danger">*</span></label>
+                                        <input type="date" name="t_date" required class="form-control @error('t_date') is-invalid @enderror" value="{{ old('t_date') }}">
+                                        @error('t_date')
+                                        <span class="invalid-feedback">{{ $message }}</span>
+                                        @enderror
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <!-- Cost Amount -->
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="cost">Cost Amount <span class="text-danger">*</span></label>
+                                        <input type="number" name="cost" required class="form-control @error('cost') is-invalid @enderror" value="{{ old('cost') }}" placeholder="Enter cost amount">
+                                        @error('cost')
+                                        <span class="invalid-feedback">{{ $message }}</span>
+                                        @enderror
+                                    </div>
+                                </div>
+
+                                <!-- Payment Method Section -->
+                                <div class="col-md-6" id="payment_method_section" style="display: none;">
+                                    <div class="form-group">
+                                        <label for="payment_method">Payment Method <span class="text-danger">*</span></label>
+                                        <select name="payment_method" id="payment_method" required class="form-select @error('payment_method') is-invalid @enderror" onchange="toggleFields()">
+                                            <option value="">-- Select Payment Method --</option>
+                                            <option value="cash" {{ old('payment_method') == 'cash' ? 'selected' : '' }}>Cash</option>
+                                            <option value="credit" {{ old('payment_method') == 'credit' ? 'selected' : '' }}>Credit</option>
+                                        </select>
+                                        @error('payment_method')
+                                        <span class="invalid-feedback">{{ $message }}</span>
+                                        @enderror
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <!-- Bank Field -->
+                                <div class="col-md-6" id="banks_field" style="display: none;">
+                                    <div class="form-group">
+                                        <label for="bank_id">Bank <span class="text-danger">*</span></label>
+                                        <select name="bank_id" id="bank_id" class="form-select select-relation @error('bank_id') is-invalid @enderror" style="width: 100%">
+                                            <option value="">-- Select Bank --</option>
+                                            @foreach($banks as $bank)
+                                                <option value="{{ $bank->id }}" {{ old('bank_id') == $bank->id ? 'selected' : '' }}>
+                                                    {{ $bank->bank_name . ' ' . $bank->account_name }}
+                                                </option>
+                                            @endforeach
+                                        </select>
+                                        @error('bank_id')
+                                        <span class="invalid-feedback">{{ $message }}</span>
+                                        @enderror
+                                    </div>
+                                </div>
+
+                                <!-- Suppliers Field -->
+                                <div class="col-md-6" id="suppliers_field" style="display: none;">
+                                    <div class="form-group">
+                                        <label for="supplier_id">Supplier <span class="text-danger">*</span></label>
+                                        <select name="supplier_id" id="supplier_id" class="form-select @error('supplier_id') is-invalid @enderror">
+                                            <option value="">-- Select Supplier --</option>
+                                            @foreach($suppliers as $supplier)
+                                                <option value="{{ $supplier->id }}" {{ old('supplier_id') == $supplier->id ? 'selected' : '' }}>
+                                                    {{ $supplier->name }}
+                                                </option>
+                                            @endforeach
+                                        </select>
+                                        @error('supplier_id')
+                                        <span class="invalid-feedback">{{ $message }}</span>
+                                        @enderror
+                                    </div>
+                                </div>
+
+                                <!-- Cheque Number Field -->
+                                <div class="col-md-6" id="cheque_number_field" style="display: none;">
+                                    <div class="form-group">
+                                        <label for="cheque_number">Cheque Number</label>
+                                        <input type="text" name="cheque_number" id="cheque_number" class="form-control @error('cheque_number') is-invalid @enderror" value="{{ old('cheque_number') }}" placeholder="Enter cheque number">
+                                        @error('cheque_number')
+                                        <span class="invalid-feedback">{{ $message }}</span>
+                                        @enderror
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <!-- Depreciation -->
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="depreciation">Depreciation % <span class="text-danger">*</span></label>
+                                        <input type="number" name="depreciation" required class="form-control @error('depreciation') is-invalid @enderror" value="{{ old('depreciation') }}" placeholder="Enter depreciation percentage">
+                                        @error('depreciation')
+                                        <span class="invalid-feedback">{{ $message }}</span>
+                                        @enderror
+                                    </div>
+                                </div>
+
+                                <!-- Condition -->
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="condition">Condition <span class="text-danger">*</span></label>
+                                        <select name="condition" required class="form-select @error('condition') is-invalid @enderror">
+                                            <option value="">-- Select Condition --</option>
+                                            <option value="new" {{ old('condition') == 'new' ? 'selected' : '' }}>New</option>
+                                            <option value="used" {{ old('condition') == 'used' ? 'selected' : '' }}>Used</option>
+                                            <option value="damaged" {{ old('condition') == 'damaged' ? 'selected' : '' }}>Damaged</option>
+                                        </select>
+                                        @error('condition')
+                                        <span class="invalid-feedback">{{ $message }}</span>
+                                        @enderror
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <!-- Location -->
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="location">Location <span class="text-danger">*</span></label>
+                                        <input type="text" name="location" required class="form-control @error('location') is-invalid @enderror" value="{{ old('location') }}" placeholder="Enter location">
+                                        @error('location')
+                                        <span class="invalid-feedback">{{ $message }}</span>
+                                        @enderror
+                                    </div>
+                                </div>
+
+                                <!-- Remarks -->
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="remarks">Life Span</label>
+                                        <input type="text" name="life" required class="form-control @error('life') is-invalid @enderror" value="{{ old('life') }}" placeholder="Asset Life span">
+                                        @error('life')
+                                        <span class="invalid-feedback">{{ $message }}</span>
+                                        @enderror
+                                    </div>
+                                </div>
+                            </div>
+                            <button type="submit" class="btn btn-primary mt-3">Save Asset</button>
                     </form>
                 </div>
             </div>
@@ -167,45 +253,28 @@
 @stop
 @section('scripts')
     <script>
-        $(document).ready(function () {
-            // $('.btn-success').click(function () {
-            //     let check = $('.form-control').val();
-            //     if(check){
-            //         $(this).removeClass("fa fa-save").html('<span class="fa fa-spin fa-spinner"></span> Please Wait').attr('disabled',true);
-            //     }
-            // });
-            $('.type').on('change', function () {
-                let status = $(this).val();
-                if(status==='1'){
-                    $('.suppliers').addClass('d-none').removeClass('show');
-                    $('.members').addClass('d-none').removeClass('show');
-                    $('.projects').addClass('show').removeClass('d-none');
-                }
-                if(status==='2'){
-                    $('.suppliers').addClass('d-none').removeClass('show');
-                    $('.members').addClass('d-none').removeClass('show');
-                    $('.projects').addClass('d-none').removeClass('show');
-                }
-                if(status==='3'){
-                    $('.suppliers').addClass('show').removeClass('d-none');
-                    $('.members').addClass('d-none').removeClass('show');
-                    $('.projects').addClass('show').removeClass('d-none');
-                }
-                if(status==='4'){
-                    $('.suppliers').addClass('d-none').removeClass('show');
-                    $('.members').addClass('show').removeClass('d-none');
-                    $('.projects').addClass('show').removeClass('d-none');
-                }
-            });
-            $('.t_type').on('change', function () {
-                let check = $(this).val();
-                if(check==='1'){
-                    $('.supplier').addClass('d-none').removeClass('show');
-                }
-                if(check==='2'){
-                    $('.supplier').addClass('show').removeClass('d-none');
-                }
-            });
-        });
+        function togglePaymentMethod() {
+            const purchaseType = document.getElementById("purchase_type").value;
+            const paymentMethodSection = document.getElementById("payment_method_section");
+
+            if (purchaseType === "new") {
+                paymentMethodSection.style.display = "block";
+            } else {
+                paymentMethodSection.style.display = "none";
+                document.getElementById("payment_method").value = ""; // Reset payment method
+                toggleFields(); // Reset related fields
+            }
+        }
+
+        function toggleFields() {
+            const paymentMethod = document.getElementById("payment_method").value;
+            const banksField = document.getElementById("banks_field");
+            const suppliersField = document.getElementById("suppliers_field");
+            const chequeNumberField = document.getElementById("cheque_number_field");
+
+            banksField.style.display = paymentMethod === "cash" ? "block" : "none";
+            suppliersField.style.display = paymentMethod === "credit" ? "block" : "none";
+            chequeNumberField.style.display = paymentMethod === "cash" ? "block" : "none";
+        }
     </script>
 @endsection

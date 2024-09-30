@@ -33,7 +33,7 @@
                                 @else
                                     <div style="overflow-x:auto;">
                                         <table class="table table-bordered  table-hover table-striped" id="data-table">
-                                            <caption style=" caption-side: top; text-align: center">BANKS</caption>
+                                            <caption style=" caption-side: top; text-align: center">CURRENT LIABILITIES</caption>
                                             <thead>
                                             <tr>
                                                 <th>NO</th>

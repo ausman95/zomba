@@ -40,7 +40,7 @@
                                         </tr>
                                         <tr>
                                             <td>Category</td>
-                                            <td>{{$asset->category->name}}</td>
+                                            <td>{{@$asset->category->name}}</td>
                                         </tr>
                                        <tr>
                                            <td>Quantity</td>
@@ -65,6 +65,10 @@
                                         <tr>
                                             <td>Condition</td>
                                             <td>{{ucwords($asset->condition) }}</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Date</td>
+                                            <td>{{date($asset->t_date) }}</td>
                                         </tr>
                                         <tr>
                                             <td>Depreciation %</td>

@@ -30,9 +30,9 @@
                 <a href="{{route('church.reports')}}" class="btn btn-primary rounded-0" >
                     <i class="fa fa-list-ol"></i>  Accounts Reports
                 </a>
-                <a href="{{route('bank.statements')}}" class="btn btn-primary rounded-0" >
-                    <i class="fa fa-list-ol"></i>  Bank Statements
-                </a>
+{{--                <a href="{{route('bank.statements')}}" class="btn btn-primary rounded-0" >--}}
+{{--                    <i class="fa fa-list-ol"></i>  Bank Statements--}}
+{{--                </a>--}}
             </div>
             <div class="mt-3">
                 <div class="row">

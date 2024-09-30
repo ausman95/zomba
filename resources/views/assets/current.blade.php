@@ -22,18 +22,28 @@
         <div class="mb-5">
             <hr>
         </div>
-
             <div class="mt-3">
                 <div class="row">
                     <div class="col-sm-12 mb-2 col-md-12 col-lg-8">
                         <div class="card " style="min-height: 30em;">
                             <div class="card-body px-1">
-                                @if($banks->count() === 0)
-                                    <i class="fa fa-info-circle"></i>There are no Bank Accounts!
+                                @php
+                                    $payments = \App\Models\Payment::join('accounts', 'payments.account_id', '=', 'accounts.id')
+                                        ->join('categories', 'accounts.category_id', '=', 'categories.id')
+                                        ->select('accounts.*', \Illuminate\Support\Facades\DB::raw('SUM(payments.amount) as total_amount'))
+                                        ->where('categories.status', 1)
+                                        ->where('accounts.id','!=', 134)
+                                         ->where('accounts.id','!=', 2)
+                                        ->groupBy('accounts.id')
+                                        ->get();
+                                @endphp
+
+                                @if($banks->isEmpty() && $suppliers->isEmpty() && $payments->isEmpty())
+                                    <i class="fa fa-info-circle"></i>There are no Bank Accounts, Suppliers, or Payments!
                                 @else
                                     <div style="overflow-x:auto;">
-                                        <table class="table table-bordered  table-hover table-striped" id="data-table">
-                                            <caption style=" caption-side: top; text-align: center">BANKS</caption>
+                                        <table class="table table-bordered table-hover table-striped" id="data-table">
+                                            <caption style="caption-side: top; text-align: center">CURRENT ASSETS</caption>
                                             <thead>
                                             <tr>
                                                 <th>NO</th>
@@ -42,27 +52,40 @@
                                             </tr>
                                             </thead>
                                             <tbody>
-                                                <?php  $c= 1;?>
+                                            @php $c = 1; @endphp
+
+                                            {{-- Display Bank Accounts --}}
                                             @foreach($banks as $bank)
-                                                @if($bank->getBalance()>0)
-                                                <tr>
-                                                    <td>{{$c++}}</td>
-                                                    <td>{{ucwords($bank->account_name) }}</td>
-                                                    <th>
-                                                         {{number_format($bank->getBalance(),2)}}
-                                                    </th>
-                                                </tr>
+                                                @if($bank->getBalance() > 0)
+                                                    <tr>
+                                                        <td>{{ $c++ }}</td>
+                                                        <td>{{ ucwords($bank->account_name) }}</td>
+                                                        <td>{{ number_format($bank->getBalance(), 2) }}</td>
+                                                    </tr>
                                                 @endif
                                             @endforeach
-                                                @foreach($suppliers as $supplier)
-                                                    @if($supplier->getBalance($supplier->id)>0)
-                                                        <tr>
-                                                        <td>{{$c++}}</td>
-                                                        <td>{{$supplier->name}}</td>
-                                                        <th>{{number_format($supplier->getBalance($supplier->id),2)}}</th>
+
+                                            {{-- Display Suppliers --}}
+                                            @foreach($suppliers as $supplier)
+                                                @if($supplier->getBalance($supplier->id) > 0)
+                                                    <tr>
+                                                        <td>{{ $c++ }}</td>
+                                                        <td>{{ $supplier->name }}</td>
+                                                        <td>{{ number_format($supplier->getBalance($supplier->id), 2) }}</td>
                                                     </tr>
-                                                    @endif
-                                                @endforeach
+                                                @endif
+                                            @endforeach
+
+                                            {{-- Display Payments --}}
+                                            @foreach($payments as $payment)
+                                                @if($payment->total_amount > 0)
+                                                    <tr>
+                                                        <td>{{ $c++ }}</td>
+                                                        <td>{{ ucwords($payment->name) }}</td>
+                                                        <td>{{ number_format($payment->total_amount, 2) }}</td>
+                                                    </tr>
+                                                @endif
+                                            @endforeach
                                             </tbody>
                                         </table>
                                     </div>
@@ -75,36 +98,3 @@
     </div>
 
 @stop
-@section('scripts')
-    <script src="{{asset('vendor/simple-datatable/simple-datatable.js')}}"></script>
-    <script>
-        function confirmationWindow(title, message, primaryLabel, callback) {
-            Swal.fire({
-                title: title,
-                text: message,
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#3085d6',
-                cancelButtonColor: '#d33',
-                confirmButtonText: primaryLabel
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    callback();
-                }
-            })
-        }
-
-
-        $(document).ready(function () {
-            $(".delete-btn").on('click', function () {
-                $url = $(this).attr('data-target-url');
-
-                $("#delete-form").attr('action', $url);
-                confirmationWindow("Confirm Deletion", "Are you sure you want to delete this position?", "Yes,Delete", function () {
-                    $("#delete-form").submit();
-                })
-            });
-        })
-    </script>
-@stop
-

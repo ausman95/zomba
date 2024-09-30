@@ -10,6 +10,9 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class Assets extends Model
 {
     use HasFactory;
+    protected $casts = [
+        't_date' => 'date', // Cast t_date to a Carbon date
+    ];
     protected $fillable = [
         'depreciation','location',
         'condition','name',

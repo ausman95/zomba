@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AccountController;
 use App\Http\Controllers\AssetController;
 use App\Http\Controllers\AttendanceRegisterController;
 use App\Http\Controllers\ClientController;
@@ -106,6 +107,10 @@ Route::middleware(['preventBackHistory'])->group(function () {
         Route::get('reports/financial-statements/', [\App\Http\Controllers\FinanceController::class, 'financialStatement'])->name('financial.statements');
         Route::post('reports/financial/generate', [\App\Http\Controllers\FinanceController::class, 'generateFinancialStatement'])->name('financial.generate');
         Route::post('reports/financial-statements/', [\App\Http\Controllers\FinanceController::class, 'financialStatement'])->name('financial.statements');
+
+// Define the route for changing the account
+        Route::get('/account/change/{id}', [AccountController::class, 'change'])->name('account.change');
+        Route::patch('/accounts/modify/{id}', [AccountController::class, 'modify'])->name('account.modify');
 
         Route::get('requisitions/project/{project}', [RequisitionController::class, 'projectRequisitions'])->name('requisitions.projects.index');
         Route::post('requisitions/list/enlist', [RequisitionController::class, 'addItemToList'])->name('requisitions.enlist');

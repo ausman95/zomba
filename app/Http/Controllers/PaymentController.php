@@ -419,7 +419,7 @@ class PaymentController extends Controller
                 'updated_by'=>$request->post('updated_by'),
                 'method'=>$request->post('payment_method'),
                 'balance'=>$supplier_balance,
-                'transaction_type'=>2,
+                'transaction_type'=>1,
             ];
             SupplierPayments::create($suppliers);
         }

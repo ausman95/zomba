@@ -10,7 +10,7 @@ class Announcement extends Model
 {
     use HasFactory;
     protected $fillable = [
-        'ministry_id', 'title','body','end_date','start_date','created_by','updated_by','url'
+        'from', 'title','body','date','start_date','created_by','updated_by','url'
     ];
     public function ministry(): BelongsTo
     {

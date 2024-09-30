@@ -56,9 +56,8 @@ class AnnouncementController extends Controller
             return back()->with(['error-notification'=>"Invalid Character on Full Announcement"]);
         }
         $check_data = [
-            'ministry_id'=>$data['ministry_id'],
-            'start_date'=>$data['start_date'],
-            'end_date'=>$data['end_date'],
+            'from'=>$data['from'],
+            'date'=>$data['date'],
             'title'=>$data['title'],
             'body'=>$data['body']
         ];
@@ -71,9 +70,8 @@ class AnnouncementController extends Controller
 
         // Create a new news item
         $newAnnoucement = [
-            'ministry_id'=>$data['ministry_id'],
-            'start_date'=>$data['start_date'],
-            'end_date'=>$data['end_date'],
+            'from'=>$data['from'],
+            'date'=>$data['date'],
             'title'=>$data['title'],
             'body'=>$data['body'],
             'created_by'=>request()->user()->id,
@@ -97,7 +95,7 @@ class AnnouncementController extends Controller
 
             if (move_uploaded_file($file_tmp, $file_path)) {
                 // Resize the uploaded image
-                $newController->resizeImage($file_path, 263, 177);
+                $newController->resizeImage($file_path, 858, 460);
                 // Update the record in the database with the new image name
                 $newAnnoucementEntry->update(['url' => $newFileName]);
             } else {
@@ -109,7 +107,7 @@ class AnnouncementController extends Controller
         }
 
         // Log activity
-        activity('Announcement')->log("Created a news")->causer(request()->user());
+        activity('Announcement')->log("Created an Announcement")->causer(request()->user());
 
 
         return redirect()->route('announcements.index')->with([

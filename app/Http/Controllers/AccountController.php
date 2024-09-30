@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Models\Accounts;
 use App\Models\Announcement;
+use App\Models\Banks;
 use App\Models\Categories;
+use App\Models\Payment;
 use Illuminate\Http\Request;
 use App\Http\Requests\Accounts\StoreRequest;
 use App\Http\Requests\Accounts\UpdateRequest;
@@ -13,6 +15,47 @@ use Illuminate\Support\Facades\DB;
 
 class AccountController extends Controller
 {
+
+    public function modify(Request $request, $id)
+    {
+        // Fetch the transaction
+        $transaction = Payment::findOrFail($id);
+
+        // Validate the request data
+        $validatedData = $request->validate([
+            'name' => 'required|string|max:255',
+            'amount' => 'required|numeric|min:0', // Ensure the amount is not negative
+            'account_id' => 'required|exists:accounts,id', // Validate account ID exists in the accounts table
+            'bank_id' => 'required|exists:banks,id', // Validate bank ID exists in the banks table
+            'reference' => 'nullable|string|max:255', // Reference is optional
+            't_date' => 'required|date', // Ensure it's a valid date
+            'updated_by' => 'required|exists:users,id', // Ensure the user ID exists in the users table
+        ]);
+
+        // Update the transaction with validated data
+        $transaction->update($validatedData);
+
+        // Optionally, you can log the update action or any other related tasks
+
+        // Redirect back with a success message
+        return redirect()->route('accounts.show', $request->post('account_id'))
+            ->with('success-notification', 'Transaction updated successfully!');
+    }
+
+    public function change($id)
+    {
+        // Fetch the transaction using the ID, or fail if not found
+        $transaction = Payment::findOrFail($id);
+
+        // Fetch all accounts and banks
+        $accounts = Accounts::all();
+        $banks = Banks::all();
+        $cpage = 'finances';
+
+        // Pass the transaction data, accounts, and banks to the view for editing
+        return view('accounts.change', compact('cpage','transaction', 'accounts', 'banks'));
+    }
+
     public function destroy(Request $request, Accounts $accounts)
     {
 
