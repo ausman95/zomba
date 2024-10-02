@@ -54,8 +54,9 @@ class VideoController extends Controller
 
         // If video ID is found, create the embed URL
         if ($videoId) {
-            $embedUrl = '//www.youtube.com/embed/' . $videoId;
 
+            $embedUrl = '//www.youtube.com/embed/'. $videoId;
+           // die($embedUrl);
             // Create the video record
             Video::create([
                 'title' => $request->title,

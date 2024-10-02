@@ -204,12 +204,9 @@ class PaymentController extends Controller
             ->log("Accessed Payments")->causer(request()->user());
         return view('payments.index')->with([
             'cpage' => "finances",
-            'payments'=>Payment::join('accounts', 'accounts.id','=','payments.account_id')
-                ->select(
-                    'payments.*',
-                )
-                ->whereBetween('t_date',[$month->start_date,$month->end_date])
-                ->where(['accounts.type'=>2])
+            'payments'=>Payment::whereBetween('t_date',[$month->start_date,$month->end_date])
+                ->where(['type'=>2])
+                ->where('account_id','!=',134)
                 ->orderBy('payments.id','desc')->get(),
             'months'=>Month::where(['soft_delete'=>0])->orderBY('id','desc')->get()
         ]);
