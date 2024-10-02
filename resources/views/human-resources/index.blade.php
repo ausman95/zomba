@@ -34,6 +34,9 @@
             <a href="{{route('contracts.index')}}" class="btn btn-primary btn-md rounded-0">
                 <i class="fa fa-file-archive"></i>Contracts
             </a>
+            <a href="{{route('informations.index')}}" class="btn btn-primary btn-md rounded-0">
+                <i class="fa fa-list-ul"></i>Information
+            </a>
 {{--            <a href="{{route('attendance.index')}}" class="btn btn-primary btn-md rounded-0">--}}
 {{--                <i class="fa fa-file-archive"></i>Payroll--}}
 {{--            </a>--}}

@@ -29,6 +29,9 @@
                 <a href="{{route('member.merge')}}" class="btn btn-primary btn-md rounded-0">
                     <i class="fa fa-list-ol"></i>Merge Members
                 </a>
+                <a href="{{route('testimonials.index')}}" class="btn btn-primary btn-md rounded-0">
+                    <i class="fa fa-comment"></i> Testimonials
+                </a>
             @endif
             <div class="card container-fluid" style="min-height: 30em;">
                 <div class="row">

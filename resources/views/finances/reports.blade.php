@@ -145,14 +145,13 @@
                                                                 <td>{{ number_format($cost, 2) }}</td>
                                                                 <td>{{ number_format($depreciation, 2) }}</td>
                                                                 <td>{{ number_format($netValue, 2) }}</td>
-                                                                @php $depreciationSum += $depreciation; @endphp
                                                             </tr>
                                                         @endforeach
                                                         <tr>
                                                             <td colspan="2"><strong>Total Fixed Assets</strong></td>
                                                             <td><strong>{{ number_format($totalFixedAssets, 2) }}</strong></td>
-                                                            <td><strong>{{ number_format($depreciationSum, 2) }}</strong></td>
-                                                            <td><strong>{{ number_format($totalFixedAssets - $depreciationSum, 2) }}</strong></td>
+                                                            <td><strong>{{ number_format($totalDepreciation, 2) }}</strong></td>
+                                                            <td><strong>{{ number_format($totalFixedAssets - $totalDepreciation, 2) }}</strong></td>
                                                         </tr>
                                                         </tbody>
                                                     </table>

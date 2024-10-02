@@ -63,9 +63,10 @@ class FinanceController extends Controller
             'end_date' => $startAndEndDates['end'],
             'profit' => $this->calculateProfit(),
             'totalLatestRevaluations' => $this->calculateTotalLatestRevaluations(),
-            'totalFixedAssets' => $this->calculateTotalFixedAssets(),
+            'totalFixedAssets' => $this->getTotalFixedAssets(),
             'currentAssets' => $this->fetchCurrentAssets(),
             'suppliers' => $this->fetchSuppliers(),
+            'totalDepreciation' => $this->getTotalDepreciation(),
             'currentPayments' => $this->fetchCurrentPayments(),
             'liabilities' => $this->fetchLiabilities(),
             'all' => Accounts::allCrAccounts($start, $end),
@@ -119,19 +120,33 @@ class FinanceController extends Controller
     private function calculateTotalLatestRevaluations()
     {
         $assets = \App\Models\Assets::all();
+        $currentDate = new DateTime(); // Get the current date
 
-        return $assets->map(function ($asset) {
-            $cost = $asset->cost; // Get the initial cost of the asset
-            $quantity = $asset->quantity; // Get the initial Quantity of the asset
-            $cost = $cost*$quantity;
-            $depreciation = $asset->depreciation; // Get the depreciation value per year
+        return $assets->map(function ($asset) use ($currentDate) {
+            $quantity = $asset->quantity; // Get the quantity of the asset
+            $cost = $asset->cost * $quantity; // Calculate total cost
+            $depreciationPercentage = $asset->depreciation; // Get the depreciation percentage
             $expectedLife = $asset->life; // Expected life in years
+            $createdAt = new DateTime($asset->created_at); // Date when the asset was created
 
-            // Calculate total depreciation based on the expected life
-            $totalDepreciation = ($expectedLife > 0) ? ($depreciation * (now()->year - $asset->t_date->year)) : 0;
+            // Calculate the number of days the asset has been in use
+            $daysInUse = $currentDate->diff($createdAt)->days;
 
-            // Calculate net book value
-            return $cost - $totalDepreciation; // Return the calculated net book value
+            // Convert expected life to days (assuming 365 days per year)
+            $expectedLifeInDays = $expectedLife * 365;
+
+            // Ensure that the days in use do not exceed the expected life in days
+            if ($daysInUse > $expectedLifeInDays) {
+                $daysInUse = $expectedLifeInDays; // Asset is fully depreciated
+            }
+
+            // Calculate total depreciation for the time the asset has been in use using the percentage
+            // Calculate the total depreciation amount based on the percentage and the number of days in use
+            $totalDepreciationAmount = ($cost * ($depreciationPercentage / 100)) * ($daysInUse / $expectedLifeInDays);
+
+            // Calculate the net book value after depreciation
+            $netValue = $cost - $totalDepreciationAmount;
+            return $netValue; // Return the calculated net book value
         })->sum(); // Sum all net book values
     }
 
@@ -146,16 +161,16 @@ class FinanceController extends Controller
             })
             ->groupBy('categories.id')
             ->select('categories.id as category_id', 'categories.name', 'asset_revaluations.created_at',
-                'assets.life', 'assets.quantity',
+                'assets.life', 'assets.quantity', 'assets.depreciation',
                 \Illuminate\Support\Facades\DB::raw('SUM(asset_revaluations.amount) as cost'))
             ->get();
     }
 
-    private function calculateTotalFixedAssets()
+    private function calculateTotalFixedAsset()
     {
         $fixedAssets = $this->fetchFixedAssets();
-
-        $totalFixedAssets = 0;
+        $totalFixedAssets = 0; // Initialize total fixed assets
+        $totalDepreciation = 0; // Initialize total depreciation
         $currentDate = new DateTime(); // Get the current date
 
         foreach ($fixedAssets as $asset) {
@@ -163,32 +178,44 @@ class FinanceController extends Controller
             $cost = $asset->cost; // Initial cost of the asset
             $createdAt = new DateTime($asset->created_at); // Date when the asset was created or purchased
 
-            // Calculate the difference between the current date and the creation date in days
-            $daysInUse = $currentDate->diff($createdAt)->days; // Number of days the asset has been in use
+            // Calculate the number of days the asset has been in use
+            $daysInUse = $currentDate->diff($createdAt)->days;
+            $depreciationPercentage = $asset->depreciation; // Depreciation percentage of the asset
 
             // Convert expected life to days (assuming 365 days per year)
             $expectedLifeInDays = $expectedLife * 365;
 
-            // Ensure that the days in use do not exceed the expected life in days
+            // Limit days in use to the expected life in days
             if ($daysInUse > $expectedLifeInDays) {
                 $daysInUse = $expectedLifeInDays; // Asset is fully depreciated
             }
 
-            // Calculate daily depreciation
-            $dailyDepreciation = ($expectedLife > 0) ? $cost / $expectedLifeInDays : 0;
-
             // Calculate total depreciation for the time the asset has been in use
-            $cumulativeDepreciation = $dailyDepreciation * $daysInUse;
+            $totalDepreciationAmount = ($cost * ($depreciationPercentage / 100)) * ($daysInUse / $expectedLifeInDays);
 
             // Calculate the net book value after depreciation
-            $netValue = $cost - $cumulativeDepreciation;
+            $netValue = $cost - $totalDepreciationAmount;
 
-            // Add the net value of this asset to the total fixed assets
+            // Accumulate the net value and total depreciation
             $totalFixedAssets += $netValue;
+            $totalDepreciation += $totalDepreciationAmount;
         }
 
-        return $totalFixedAssets;
+        return [$totalFixedAssets, $totalDepreciation]; // Return both totals
     }
+
+    private function getTotalDepreciation()
+    {
+        list($totalFixedAssets, $totalDepreciation) = $this->calculateTotalFixedAsset();
+        return $totalDepreciation; // Return total depreciation
+    }
+
+    private function getTotalFixedAssets()
+    {
+        list($totalFixedAssets, $totalDepreciation) = $this->calculateTotalFixedAsset();
+        return $totalFixedAssets; // Return total fixed assets
+    }
+
 
     private function fetchCurrentAssets()
     {

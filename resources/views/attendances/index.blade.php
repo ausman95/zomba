@@ -29,6 +29,9 @@
             <a href="{{route('member-attendance.reports')}}" class="btn btn-primary btn-md rounded-0">
                 <i class="fa fa-file-archive"></i>Report
             </a>
+                <a href="{{ route('videos.index') }}" class="btn btn-primary btn-md rounded-0">
+                    <i class="fa fa-video"></i> Videos
+                </a>
             @endif
             <div class="mt-3">
                 <div class="row">

@@ -41,6 +41,8 @@ Route::middleware(['preventBackHistory'])->group(function () {
         Route::get('assets/capital', [\App\Http\Controllers\AssetController::class, 'capital'])->name('capital');
         Route::resource('churches', \App\Http\Controllers\ChurchController::class);
         Route::get('news/determine', [\App\Http\Controllers\NewController::class, 'determine'])->name('news.determine');
+        Route::resource('informations', \App\Http\Controllers\InformationController::class);
+        Route::get('info/next', [\App\Http\Controllers\InformationController::class, 'determineNext'])->name('informations.next');
 
         Route::resource('news', \App\Http\Controllers\NewController::class);
         Route::resource('home-attendances', \App\Http\Controllers\HomeAttendanceController::class);
@@ -70,6 +72,8 @@ Route::middleware(['preventBackHistory'])->group(function () {
         Route::get('church/report/generate', [\App\Http\Controllers\ReceiptController::class, 'churchReportGenerate'])->name('church-report.generate');
         Route::resource('zones', \App\Http\Controllers\ZoneController::class);
         Route::get('receipt/unverified', [\App\Http\Controllers\ReceiptController::class, 'unverified'])->name('receipt.unverified');
+        Route::resource('testimonials', \App\Http\Controllers\TestimonialController::class);
+        Route::resource('videos', \App\Http\Controllers\VideoController::class);
 
         Route::resource('leave-settings', \App\Http\Controllers\LeaveSettingController::class);
         Route::resource('requisitions', RequisitionController::class)->except(['store', 'show', 'destroy']);
@@ -111,6 +115,7 @@ Route::middleware(['preventBackHistory'])->group(function () {
 // Define the route for changing the account
         Route::get('/account/change/{id}', [AccountController::class, 'change'])->name('account.change');
         Route::patch('/accounts/modify/{id}', [AccountController::class, 'modify'])->name('account.modify');
+        Route::post('information/list/enlist', [\App\Http\Controllers\InformationController::class, 'addItemToList'])->name('informations.enlist');
 
         Route::get('requisitions/project/{project}', [RequisitionController::class, 'projectRequisitions'])->name('requisitions.projects.index');
         Route::post('requisitions/list/enlist', [RequisitionController::class, 'addItemToList'])->name('requisitions.enlist');
@@ -125,6 +130,7 @@ Route::middleware(['preventBackHistory'])->group(function () {
         Route::get('requisitions/pending', [RequisitionController::class, 'pending'])->name('request.pending');
         Route::post('members/report', [\App\Http\Controllers\MemberController::class, 'generateReport'])->name('member.reports');
         Route::get('Attendance/report', [\App\Http\Controllers\AttendanceController::class, 'generateReport'])->name('member-attendance.reports');
+        Route::post('information/save', [\App\Http\Controllers\InformationController::class, 'store'])->name('informations.save');
 
         Route::get('reports/out-tray', [\App\Http\Controllers\ReportController::class, 'archive'])->name('reports.archive');
 
