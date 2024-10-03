@@ -57,24 +57,7 @@ class TransferController extends Controller
             return back()->with(['error-notification' => "You are trying to transfer money to the same account."]);
         }
 
-        // Handle 'from' account balance deduction
-        $fromAccountBalance = BankTransaction::where('bank_id', $data['from_account_id'])->latest()->value('balance') ?? 0;
-        $newFromBalance = $fromAccountBalance - $data['amount'];
-
-        $fromTransaction = [
-            'description' => 'BANK TRANSFER',
-            'type' => 2, // Deduction
-            'amount' => $data['amount'],
-            'bank_id' => $data['from_account_id'],
-            'method' => 'Bank',
-            't_date' => $data['t_date'],
-            'account_id' => 134,
-            'balance' => $newFromBalance
-        ];
-
-        // Create transfer and deduct from 'from' account
-        Transfer::create($data);
-        BankTransaction::create($fromTransaction);
+           Transfer::create($data);
 
         // Record payment for 'from' account
         $fromPayment = [
@@ -94,24 +77,6 @@ class TransferController extends Controller
             'specification' => 'Transfer from account ' . $data['from_account_id']
         ];
         Payment::create($fromPayment);
-
-        // Handle 'to' account balance addition
-        $toAccountBalance = BankTransaction::where('bank_id', $data['to_account_id'])->latest()->value('balance') ?? 0;
-        $newToBalance = $toAccountBalance + $data['amount'];
-
-        $toTransaction = [
-            'description' => 'BANK TRANSFER',
-            'type' => 1, // Addition
-            'amount' => $data['amount'],
-            'bank_id' => $data['to_account_id'],
-            'method' => 'Bank',
-            't_date' => $data['t_date'],
-            'account_id' => 134,
-            'balance' => $newToBalance
-        ];
-
-        // Create the transaction for the 'to' account
-        BankTransaction::create($toTransaction);
 
         // Record payment for 'to' account
         $toPayment = [
