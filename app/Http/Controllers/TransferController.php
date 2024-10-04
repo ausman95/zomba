@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Accounts;
 use App\Models\Banks;
 use App\Models\BankTransaction;
+use App\Models\Month;
 use App\Models\Payment;
 use App\Models\Transfer;
 use Illuminate\Http\Request;
@@ -56,7 +57,7 @@ class TransferController extends Controller
         if ($data['from_account_id'] === $data['to_account_id']) {
             return back()->with(['error-notification' => "You are trying to transfer money to the same account."]);
         }
-
+        $monthID  = Month::getActiveMonth();
            Transfer::create($data);
 
         // Record payment for 'from' account
@@ -69,7 +70,7 @@ class TransferController extends Controller
             'reference' => 'BANK TRANSFER',
             'type' => 2, // Deduction
             't_date' => $data['t_date'],
-            'month_id' => $data['month_id'] ?? null,
+            'month_id' => $monthID->id,
             'created_by' => $request->user()->id,
             'updated_by' => $request->user()->id,
             'status' => 1, // Assuming active transaction
@@ -88,7 +89,7 @@ class TransferController extends Controller
             'reference' => 'BANK TRANSFER',
             'type' => 1, // Addition
             't_date' => $data['t_date'],
-            'month_id' => $data['month_id'] ?? null,
+            'month_id' => $monthID->id,
             'created_by' => $request->user()->id,
             'updated_by' => $request->user()->id,
             'status' => 1, // Assuming active transaction
