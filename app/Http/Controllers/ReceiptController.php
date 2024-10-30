@@ -2,39 +2,41 @@
 
 namespace App\Http\Controllers;
 
+Require '../vendor/autoload.php';
+use AfricasTalking\SDK\AfricasTalking;
+
 use App\Http\Requests\Payments\StoreRequest;
 use App\Models\Accounts;
 use App\Models\Banks;
 use App\Models\BankTransaction;
 use App\Models\Church;
 use App\Models\ChurchPayment;
-use App\Models\Cohort;
 use App\Models\Department;
-use App\Models\District;
-use App\Models\Division;
-use App\Models\Fee;
 use App\Models\Labourer;
-use App\Models\LabourerPayments;
 use App\Models\Member;
 use App\Models\MemberPayment;
 use App\Models\Ministry;
 use App\Models\MinistryPayment;
 use App\Models\Month;
-use App\Models\Pastor;
 use App\Models\Payment;
 use App\Models\Pledge;
 use App\Models\ProjectPayment;
 use App\Models\Receipt;
-use App\Models\Section;
-use App\Models\Students;
-use App\Models\StudentTransaction;
 use App\Models\Supplier;
-use App\Models\SupplierPayments;
-use App\Models\Term;
 use Illuminate\Http\Request;
 
 class ReceiptController extends Controller
 {
+    var $connObj,
+        $userName = 'victemple', // username here e.g easymaog //
+        $senderId = 'victemple', // sender ID here //
+        $apiKey   = 'atsk_04590465f52d622a50e6b5c6562c8755f50bbd92ed1cdb8c04325d3292e477e89ce8079f'; //api key here //
+
+    function __construct()
+    {
+        $service       = new AfricasTalking($this->userName,$this->apiKey);
+        $this->connObj = $service->sms();
+    }
     public function generateReceipt(Request $request)
     {
         $request->validate([
@@ -114,33 +116,29 @@ class ReceiptController extends Controller
             'accounts'=>Accounts::where(['type'=>1])->orderBy('id','ASC')->get()
         ]);
     }
-    public function sendSms($number, $message)
+    function sendSms($to, $message)
     {
-        //dd($message);
-        $curl = curl_init();
+        // Check if $to starts with '0' and is 10 digits long
+        if (strlen($to) == 10 && substr($to, 0, 1) === '0') {
+            $to = '+265' . substr($to, 1); // Remove the leading '0' and add '+265'
+        }
 
-        curl_setopt_array($curl, array(
-            CURLOPT_URL => 'https://telcomw.com/api-v2/send',
-            CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_ENCODING => '',
-            CURLOPT_MAXREDIRS => 10,
-            CURLOPT_TIMEOUT => 0   ,
-            CURLOPT_FOLLOWLOCATION => true,
-            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-            CURLOPT_CUSTOMREQUEST => 'POST',
-            CURLOPT_POSTFIELDS => array(
-                'api_key' => 'eHTIUfunQ4UgDMQKtblY',
-                'password' => '@asakala1',
-                'text' => $message,
-                'numbers' => $number,
-                'from' => '25VicTemple'),
-        ));
-        $response = curl_exec($curl);
-         curl_close($curl);
-        return $response;
-        //die();
+        // Check if $to starts with '265' without a leading '+'
+        elseif (substr($to, 0, 3) === '265' && substr($to, 0, 1) !== '+') {
+            $to = '+' . $to; // Add leading '+'
+        }
 
+        try {
+            return $this->connObj->send([
+                'to' => [$to],
+                'message' => $message,
+                'from' => $this->senderId
+            ]);
+        } catch (Exception $e) {
+            return $e;
+        }
     }
+
     public function index(Receipt $receipt)
     {
 //        $month = Month::getActiveMonth();
