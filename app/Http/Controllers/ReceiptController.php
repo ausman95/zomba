@@ -28,8 +28,8 @@ use Illuminate\Http\Request;
 class ReceiptController extends Controller
 {
     var $connObj,
-        $userName = '25victemple', // username here e.g easymaog //
-        $senderId = 'victemple', // sender ID here //
+        $userName = 'victemple', // username here e.g easymaog //
+        $senderId = '25victemple', // sender ID here //
         $apiKey   = 'atsk_04590465f52d622a50e6b5c6562c8755f50bbd92ed1cdb8c04325d3292e477e89ce8079f'; //api key here //
 
     function __construct()
