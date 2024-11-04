@@ -552,32 +552,14 @@ class PaymentController extends Controller
      */
     public function destroy(Request $request,ReceiptController $receiptController)
     {
-        echo $request->post('type');
-        die($request->post('type'));
         $data=array('status'=>1,'updated_by'=> request()->user()->id) ;
         DB::table('payments')
             ->where(['id' => $request->post('id')])
             ->update($data);
-        echo $request->post('type');
-        die($request->post('type'));
-        if($request->post('type')==6) {
-            die('church');
-            DB::table('church_payments')
-                ->where(['payment_id' => $request->post('id')])
-                ->update($data);
-        }
-        if($request->post('type')==6) {
-            die('ministry');
-            DB::table('ministry_payments')
-                ->where(['payment_id' => $request->post('id')])
-                ->update($data);
-        }
-        if($request->post('type')==5){
-            die('member');
+        if($request->post('type')==1){
             DB::table('member_payments')
                 ->where(['payment_id' => $request->post('id')])
                 ->update($data);
-
             $member = MemberPayment::where(['member_payments.payment_id'=> $request->post('id')])
                 ->join('members', 'members.id', '=', 'member_payments.member_id')
                 ->first();
@@ -586,8 +568,6 @@ class PaymentController extends Controller
                     ' Amounting to : MK ' . number_format($request->post('amount'), 2) .
                     PHP_EOL . ' AREA 25 VICTORY TEMPLE';
                 $receiptController->sendSms($member->phone_number, $message);
-            }else{
-                die('we are dead');
             }
         }
         return redirect()->route('receipt.unverified')->with([

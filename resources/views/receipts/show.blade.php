@@ -142,26 +142,26 @@
                                             @csrf
                                             <input type="hidden" name="_method" value="DELETE">
                                             <input type="hidden" name="id" value="{{$transaction->id}}">
-                                            <input type="hidden" name="type" value="{{$transaction->type}}">
+                                            <input type="text" name="type" value="{{$transaction->account_id}}">
                                             <input type="hidden" name="amount" value="{{$transaction->amount}}">
                                             <input type="hidden" name="account" value="{{$transaction->account->name}}">
                                         </form>
                                         @endif
-                                        @if($transaction->type==5)
+                                        @if($transaction->account_id==1)
                                             <a href="{{route('member-receipt.generate')."?id=".$transaction->id}}"
                                                class="btn btn-primary rounded-0" style="margin: 2px" target="_blank">
                                                 <i class="fa fa-print"></i>Receipt
                                             </a>
-                                        @elseif($transaction->type==6)
-                                            <a href="{{route('church-receipt.generate')."?id=".$transaction->id}}"
-                                               class="btn btn-primary rounded-0" style="margin: 2px" target="_blank">
-                                                <i class="fa fa-print"></i>Receipt
-                                            </a>
-                                        @elseif($transaction->type==7)
-                                            <a href="{{route('ministry-receipt.generate')."?id=".$transaction->id}}"
-                                               class="btn btn-primary rounded-0" style="margin: 2px" target="_blank">
-                                                <i class="fa fa-print"></i>Receipt
-                                            </a>
+{{--                                        @elseif($transaction->type==6)--}}
+{{--                                            <a href="{{route('church-receipt.generate')."?id=".$transaction->id}}"--}}
+{{--                                               class="btn btn-primary rounded-0" style="margin: 2px" target="_blank">--}}
+{{--                                                <i class="fa fa-print"></i>Receipt--}}
+{{--                                            </a>--}}
+{{--                                        @elseif($transaction->type==7)--}}
+{{--                                            <a href="{{route('ministry-receipt.generate')."?id=".$transaction->id}}"--}}
+{{--                                               class="btn btn-primary rounded-0" style="margin: 2px" target="_blank">--}}
+{{--                                                <i class="fa fa-print"></i>Receipt--}}
+{{--                                            </a>--}}
                                         @endif
 
                                     </div>
