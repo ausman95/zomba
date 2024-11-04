@@ -580,6 +580,8 @@ class PaymentController extends Controller
                     ' Amounting to : MK ' . number_format($request->post('amount'), 2) .
                     PHP_EOL . ' AREA 25 VICTORY TEMPLE';
                 $receiptController->sendSms($member->phone_number, $message);
+            }else{
+                die('we are dead');
             }
         }
         return redirect()->route('receipt.unverified')->with([
