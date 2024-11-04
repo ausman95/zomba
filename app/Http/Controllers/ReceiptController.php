@@ -141,7 +141,6 @@ class ReceiptController extends Controller
 
     public function index(Receipt $receipt)
     {
-        $this->sendSms('0882230137', 'we are good');
 //        $month = Month::getActiveMonth();
 //        dd($month->id);
         if(Month::getActiveMonth()){

@@ -575,6 +575,7 @@ class PaymentController extends Controller
                 ->join('members', 'members.id', '=', 'member_payments.member_id')
                 ->first();
             if($member->phone_number!=0) {
+                die(' we are here');
                 $message = 'Dear ' . $member->name . ' You have Paid ' . $request->post('account') .
                     ' Amounting to : MK ' . number_format($request->post('amount'), 2) .
                     PHP_EOL . ' AREA 25 VICTORY TEMPLE';
