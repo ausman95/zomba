@@ -142,7 +142,7 @@
                                             @csrf
                                             <input type="hidden" name="_method" value="DELETE">
                                             <input type="hidden" name="id" value="{{$transaction->id}}">
-                                            <input type="text" name="type" value="{{$transaction->account_id}}">
+                                            <input type="hidden" name="type" value="{{$transaction->account_id}}">
                                             <input type="hidden" name="amount" value="{{$transaction->amount}}">
                                             <input type="hidden" name="account" value="{{$transaction->account->name}}">
                                         </form>
