@@ -556,6 +556,8 @@ class PaymentController extends Controller
         DB::table('payments')
             ->where(['id' => $request->post('id')])
             ->update($data);
+        echo $request->post('type');
+        die($request->post('type'));
         if($request->post('type')==6) {
             die('church');
             DB::table('church_payments')
