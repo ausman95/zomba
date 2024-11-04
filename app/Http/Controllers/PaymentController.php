@@ -550,42 +550,44 @@ class PaymentController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-//    public function destroy(Request $request,ReceiptController $receiptController)
-//    {
-//        $data=array('status'=>1,'updated_by'=> request()->user()->id) ;
-//        DB::table('payments')
-//            ->where(['id' => $request->post('id')])
-//            ->update($data);
-//        if($request->post('type')==6) {
-//            DB::table('church_payments')
-//                ->where(['payment_id' => $request->post('id')])
-//                ->update($data);
-//        }
-//        if($request->post('type')==6) {
-//            DB::table('ministry_payments')
-//                ->where(['payment_id' => $request->post('id')])
-//                ->update($data);
-//        }
-//        if($request->post('type')==5){
-//            die('we have arrived');
-//            DB::table('member_payments')
-//                ->where(['payment_id' => $request->post('id')])
-//                ->update($data);
-//
-//            $member = MemberPayment::where(['member_payments.payment_id'=> $request->post('id')])
-//                ->join('members', 'members.id', '=', 'member_payments.member_id')
-//                ->first();
-//            if($member->phone_number!=0) {
-//                $message = 'Dear ' . $member->name . ' You have Paid ' . $request->post('account') .
-//                    ' Amounting to : MK ' . number_format($request->post('amount'), 2) .
-//                    PHP_EOL . ' AREA 25 VICTORY TEMPLE';
-//                $receiptController->sendSms($member->phone_number, $message);
-//            }else{
-//                die('we are dead');
-//            }
-//        }
-//        return redirect()->route('receipt.unverified')->with([
-//            'success-notification'=>"Successfully"
-//        ]);
-//    }
+    public function destroy(Request $request,ReceiptController $receiptController)
+    {
+        $data=array('status'=>1,'updated_by'=> request()->user()->id) ;
+        DB::table('payments')
+            ->where(['id' => $request->post('id')])
+            ->update($data);
+        if($request->post('type')==6) {
+            die('church');
+            DB::table('church_payments')
+                ->where(['payment_id' => $request->post('id')])
+                ->update($data);
+        }
+        if($request->post('type')==6) {
+            die('ministry');
+            DB::table('ministry_payments')
+                ->where(['payment_id' => $request->post('id')])
+                ->update($data);
+        }
+        if($request->post('type')==5){
+            die('member');
+            DB::table('member_payments')
+                ->where(['payment_id' => $request->post('id')])
+                ->update($data);
+
+            $member = MemberPayment::where(['member_payments.payment_id'=> $request->post('id')])
+                ->join('members', 'members.id', '=', 'member_payments.member_id')
+                ->first();
+            if($member->phone_number!=0) {
+                $message = 'Dear ' . $member->name . ' You have Paid ' . $request->post('account') .
+                    ' Amounting to : MK ' . number_format($request->post('amount'), 2) .
+                    PHP_EOL . ' AREA 25 VICTORY TEMPLE';
+                $receiptController->sendSms($member->phone_number, $message);
+            }else{
+                die('we are dead');
+            }
+        }
+        return redirect()->route('receipt.unverified')->with([
+            'success-notification'=>"Successfully"
+        ]);
+    }
 }
