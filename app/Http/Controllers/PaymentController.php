@@ -567,6 +567,7 @@ class PaymentController extends Controller
                 ->update($data);
         }
         if($request->post('type')==5){
+            die('we have arrived');
             DB::table('member_payments')
                 ->where(['payment_id' => $request->post('id')])
                 ->update($data);
@@ -575,7 +576,6 @@ class PaymentController extends Controller
                 ->join('members', 'members.id', '=', 'member_payments.member_id')
                 ->first();
             if($member->phone_number!=0) {
-                die(' we are here');
                 $message = 'Dear ' . $member->name . ' You have Paid ' . $request->post('account') .
                     ' Amounting to : MK ' . number_format($request->post('amount'), 2) .
                     PHP_EOL . ' AREA 25 VICTORY TEMPLE';
