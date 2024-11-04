@@ -552,6 +552,8 @@ class PaymentController extends Controller
      */
     public function destroy(Request $request,ReceiptController $receiptController)
     {
+        echo $request->post('type');
+        die($request->post('type'));
         $data=array('status'=>1,'updated_by'=> request()->user()->id) ;
         DB::table('payments')
             ->where(['id' => $request->post('id')])
