@@ -64,7 +64,7 @@ class MonthController extends Controller
         if ($data['start_date'] >= $data['end_date']) {
             return back()->with(['error-notification' => "Check the Dates Properly and try again"]);
         }
-        
+
         // If no conflict, create the new month record
         Month::create($data);
 

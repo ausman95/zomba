@@ -150,7 +150,7 @@ class ReceiptController extends Controller
                 'success-notification'=>"Invalid Month, Call Your System Administrator"
             ]);
         }
-
+            dd($month->id);
 
         activity('Receipts')
             ->log("Accessed Receipts")->causer(request()->user());
