@@ -64,23 +64,7 @@ class MonthController extends Controller
         if ($data['start_date'] >= $data['end_date']) {
             return back()->with(['error-notification' => "Check the Dates Properly and try again"]);
         }
-
-        // Define the conditions for checking existing records
-        $dateConditions = [
-            'start_date' => $data['start_date'],
-            'end_date' => $data['end_date'],
-        ];
-
-        // Check if a record already exists with the same date range
-        $existingRecord = Month::where(function ($query) use ($data) {
-            $query->where('start_date', $data['start_date'])
-                ->orWhere('end_date', $data['end_date']);
-        })->exists();
-
-        if ($existingRecord) {
-            return back()->with(['error-notification' => "Check the Dates Properly and try again"]);
-        }
-
+        
         // If no conflict, create the new month record
         Month::create($data);
 
