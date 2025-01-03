@@ -150,7 +150,7 @@ class ReceiptController extends Controller
                 'success-notification'=>"Invalid Month, Call Your System Administrator"
             ]);
         }
-            dd($month->id);
+           $month_id = $month->id;
 
         activity('Receipts')
             ->log("Accessed Receipts")->causer(request()->user());
@@ -163,7 +163,7 @@ class ReceiptController extends Controller
             'description'=>0,
             'type'=>'0',
             'account_name'=>"SCHOOL FEES",
-            'term_name'=>Month::where(['soft_delete'=>0])->where(['id'=>$month->id])->first()->name,
+            'term_name'=>Month::where(['soft_delete'=>0])->where(['id'=>$month_id])->first()->name,
             'payments'=> Payment::join('accounts', 'accounts.id','=','payments.account_id')
                 ->select(
                     'payments.*',
