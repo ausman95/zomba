@@ -43,61 +43,56 @@ class MonthController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store (Request $request)
+    public function store(Request $request)
     {
-        if(is_numeric($request->post('name'))){
-            return back()->with(['error-notification'=>"Invalid Character Entered on Name"]);
+        // Validate the name field to ensure it's not numeric
+        if (is_numeric($request->post('name'))) {
+            return back()->with(['error-notification' => "Invalid Character Entered on Name"]);
         }
 
+        // Gather the data from the request
         $data = $request->post();
-        $this->validate($request, ['end_date' => "required|date"]);
-        $this->validate($request, ['start_date' => "required|date"]);
-        $this->validate($request, ['name' => "required|string|unique:months,name"]);
 
-        $check_data = [
-            'end_date'=>$data['end_date'],
-            //'start_date'=>$data['start_date'],
-        ];
-        $check = [
-            'end_date'=>$data['start_date'],
-          //  'start_date'=>$data['end_date'],
-        ];
-        $cdata = [
-           // 'end_date'=>$data['end_date'],
-            'start_date'=>$data['start_date'],
-        ];
-        $check_d = [
-            //'end_date'=>$data['start_date'],
-            'start_date'=>$data['end_date'],
-        ];
-        if($data['start_date'] >= $data['end_date']){
-            // labourer is already part of this project
-            return back()->with(['error-notification'=>"Check the Dates Properly and try again"]);
-        }
-        if(Month::where($check_d)->first()){
-            // labourer is already part of this project
-            return back()->with(['error-notification'=>"Check the Dates Properly and try again"]);
-        }
-        if(Month::where($cdata)->first()){
-            // labourer is already part of this project
-            return back()->with(['error-notification'=>"Check the Dates Properly and try again"]);
-        }
-        if(Month::where($check)->first()){
-            // labourer is already part of this project
-            return back()->with(['error-notification'=>"Check the Dates Properly and try again"]);
-        }
-        if(Month::where($check_data)->first()){
-            // labourer is already part of this project
-            return back()->with(['error-notification'=>"Check the Dates Properly and try again"]);
+        // Validate required fields and their formats
+        $this->validate($request, [
+            'name' => 'required|string|unique:months,name',
+            'start_date' => 'required|date',
+            'end_date' => 'required|date',
+        ]);
+
+        // Check if the start date is greater than or equal to the end date
+        if ($data['start_date'] >= $data['end_date']) {
+            return back()->with(['error-notification' => "Check the Dates Properly and try again"]);
         }
 
+        // Define the conditions for checking existing records
+        $dateConditions = [
+            'start_date' => $data['start_date'],
+            'end_date' => $data['end_date'],
+        ];
+
+        // Check if a record already exists with the same date range
+        $existingRecord = Month::where(function ($query) use ($data) {
+            $query->where('start_date', $data['start_date'])
+                ->orWhere('end_date', $data['end_date']);
+        })->exists();
+
+        if ($existingRecord) {
+            return back()->with(['error-notification' => "Check the Dates Properly and try again"]);
+        }
+
+        // If no conflict, create the new month record
         Month::create($data);
-        activity('Months')
-            ->log("Created a month")->causer(request()->user());
+
+        // Log the creation activity
+        activity('Months')->log("Created a month")->causer(request()->user());
+
+        // Redirect to the index with a success message
         return redirect()->route('months.index')->with([
-            'success-notification'=>"Month successfully Created"
+            'success-notification' => "Month successfully Created"
         ]);
     }
+
 
     /**
      * Display the specified resource.
