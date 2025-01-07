@@ -103,11 +103,11 @@ class PurchaseController extends Controller
         $bal = BankTransaction::where(['bank_id'=>$request->post('bank_id')])
             ->orderBy('id','desc')->first();
         @$balance = $bal->balance;
-        if($request->post('payment_type')!=2){
-            if($amount>$balance){
-                return back()->with(['error-notification'=>"The bank balance is less than the amount requested"]);
-            }
-        }
+//        if($request->post('payment_type')!=2){
+//            if($amount>$balance){
+//                return back()->with(['error-notification'=>"The bank balance is less than the amount requested"]);
+//            }
+//        }
         $new_balance = $balance-$amount;
 
         //validation

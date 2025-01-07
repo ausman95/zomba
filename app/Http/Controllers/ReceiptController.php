@@ -273,11 +273,7 @@ class ReceiptController extends Controller
             $balance = 0;
         }
         if($account_type=='2'){
-            if($request->post('amount')>$balance){
-                return back()->with(['error-notification'=>"The bank balance is less than the amount requested"]);
-            }else{
-                $new_balance = $balance-$request->post('amount');
-            }
+            $new_balance = $balance-$request->post('amount');
         }else{
             $new_balance = $balance+$request->post('amount');
         }
