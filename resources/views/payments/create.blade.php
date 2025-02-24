@@ -31,13 +31,14 @@
                                     required
                                     class="form-select select-relation type @error('type') required is-invalid @enderror" style="width: 100%">{{old('type')}} >
                                 <option value="">-- Select ---</option>
+                                <option value="2">Admin</option>
+                                <option value="4">Employees</option>
+                                <option value="3">Creditors</option>
                                 <option value="5">Members</option>
                                 <option value="6">Home Churches</option>
                                 <option value="7">Ministries</option>
                                 <option value="1">Department</option>
-                                <option value="2">Admin</option>
-                                <option value="3">Creditors</option>
-                                <option value="4">Employees</option>
+
                                 <option value="8">Others</option>
                             </select>
                             @error('type')
