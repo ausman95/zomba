@@ -23,35 +23,43 @@
             <hr>
         </div>
         <div class="mt-3">
-            <a href="{{route('budgets.index')}}" class="btn btn-primary btn-md rounded-0">
-                <i class="fa fa-file-archive"></i> Budgets
+            <a href="{{ route('budgets.index') }}" class="btn btn-primary btn-md rounded-0">
+                <i class="fas fa-file-archive"></i> Budgets
             </a>
-            <a href="{{route('banks.index')}}" class="btn btn-primary btn-md rounded-0">
-                <i class="fa fa-building"></i> Banks
+            <a href="{{ route('banks.index') }}" class="btn btn-primary btn-md rounded-0">
+                <i class="fas fa-university"></i> Banks  </a>
+            <a href="{{ route('accounts.index') }}" class="btn btn-primary btn-md rounded-0">
+                <i class="fas fa-wallet"></i> Accounts
             </a>
-            <a href="{{route('accounts.index')}}" class="btn btn-primary btn-md rounded-0">
-                <i class="fa fa-list-ol"></i> Accounts
+            <a href="{{ route('debtors.index') }}" class="btn btn-primary btn-md rounded-0">
+                <i class="fas fa-users"></i> Debtors
             </a>
-            <a href="{{route('purchases.index')}}" class="btn btn-primary btn-md rounded-0">
-                <i class="fa fa-file-archive"></i> Purchases
+            <a href="{{ route('creditors.index') }}" class="btn btn-primary btn-md rounded-0">
+                <i class="fas fa-user-friends"></i> Creditors
             </a>
-            <a href="{{route('payments.index')}}" class="btn btn-primary btn-md rounded-0">
-                <i class="fa fa-money-bill-wave"></i> Payments
+{{--            <a href="{{ route('purchases.index') }}" class="btn btn-primary btn-md rounded-0">--}}
+{{--                <i class="fas fa-shopping-cart"></i> Purchases--}}
+{{--            </a>--}}
+            <a href="{{ route('invoices.index') }}" class="btn btn-primary btn-md rounded-0">
+                <i class="fas fa-shopping-cart"></i> Invoices
             </a>
-            <a href="{{route('receipts.index')}}" class="btn btn-primary btn-md rounded-0">
-                <i class="bx bx-dollar-circle"></i> Receipts
+            <a href="{{ route('pledges.index') }}" class="btn btn-primary btn-md rounded-0">
+                <i class="fas fa-hand-holding-usd"></i> Pledges
             </a>
-            <a href="{{route('receipt.unverified')}}" class="btn btn-primary btn-md rounded-0">
-                <i class="fa fa-plus-circle"></i>Un~Verified
+            <a href="{{ route('payments.index') }}" class="btn btn-primary btn-md rounded-0">
+                <i class="fas fa-money-bill-wave"></i> Payments
             </a>
-            <a href="{{route('receipt.all')}}" class="btn btn-primary btn-md rounded-0">
-                <i class="fa fa-list-ul"></i>All Transaction
+            <a href="{{ route('receipts.index') }}" class="btn btn-primary btn-md rounded-0">
+                <i class="fas fa-receipt"></i> Receipts
             </a>
-            <a href="{{route('pledges.index')}}" class="btn btn-primary btn-md rounded-0">
-                <i class="fa fa-shopping-basket"></i> Pledges
+            <a href="{{ route('receipt.unverified') }}" class="btn btn-primary btn-md rounded-0">
+                <i class="fas fa-exclamation-triangle"></i> Unverified
             </a>
-            <a href="{{route('analytics')}}" class="btn btn-primary btn-md rounded-0">
-                <i class="fa fa-cart-plus"></i> Statements
+            <a href="{{ route('receipt.all') }}" class="btn btn-primary btn-md rounded-0">
+                <i class="fas fa-list-alt"></i> All
+            </a>
+            <a href="{{ route('analytics') }}" class="btn btn-primary btn-md rounded-0">
+                <i class="fas fa-chart-line"></i> Reports
             </a>
             <div class="mt-3">
                 <div class="row">

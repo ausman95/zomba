@@ -36,7 +36,7 @@
                                 <option value="7">Ministries</option>
                                 <option value="1">Department</option>
                                 <option value="2">Admin</option>
-                                <option value="3">Suppliers</option>
+                                <option value="3">Creditors</option>
                                 <option value="4">Employees</option>
                                 <option value="8">Others</option>
                             </select>
@@ -100,18 +100,18 @@
                                 @enderror
                             </div>
                         </div>
-                        <div class="suppliers d-none">
+                        <div class="creditors d-none">
                             <div class="form-group">
-                                <label>Suppliers</label>
-                                <select name="supplier_id"
-                                        class="form-select select-relation @error('supplier_id') is-invalid @enderror" style="width: 100%">
+                                <label>Creditors</label>
+                                <select name="creditor_id"
+                                        class="form-select select-relation @error('creditor_id') is-invalid @enderror" style="width: 100%">
                                     <option value="">-- Select ---</option>
-                                    @foreach($suppliers as $supplier)
-                                        <option value="{{$supplier->id}}"
-                                            {{old('supplier_id')===$supplier->id ? 'selected' : ''}}>{{$supplier->name}}</option>
+                                    @foreach($creditors as $creditor)
+                                        <option value="{{$creditor->id}}"
+                                            {{old('creditor_id')===$creditor->id ? 'selected' : ''}}>{{$creditor->name}}</option>
                                     @endforeach
                                 </select>
-                                @error('supplier_id')
+                                @error('creditor_id')
                                 <span class="invalid-feedback">
                                    {{$message}}
                             </span>
@@ -217,17 +217,7 @@
                             </span>
                             @enderror
                         </div>
-                        <div class="form-group">
-                            <label>Description</label>
-                            <textarea name="specification" rows="2"
-                                      class="form-control @error('specification')
-                                      is-invalid @enderror" placeholder="Description">{{old('specification')}}</textarea>
-                            @error('specification')
-                            <span class="invalid-feedback">
-                               {{$message}}
-                        </span>
-                            @enderror
-                        </div>
+
                     </div>
                     <div class="col-sm-12 col-md-8 col-lg-4">
                         @csrf
@@ -266,6 +256,17 @@
                         </span>
                             @enderror
                         </div>
+                        <div class="form-group">
+                            <label>Description</label>
+                            <textarea name="specification" rows="2"
+                                      class="form-control @error('specification')
+                                      is-invalid @enderror" placeholder="Description">{{old('specification')}}</textarea>
+                            @error('specification')
+                            <span class="invalid-feedback">
+                               {{$message}}
+                        </span>
+                            @enderror
+                        </div>
                     </div>
                 </div>
                 <div class="form-group">
@@ -290,7 +291,7 @@
         $('.type').on('change', function () {
             let status = $(this).val();
             if(status==='1'){
-                $('.suppliers').addClass('d-none').removeClass('show');
+                $('.creditors').addClass('d-none').removeClass('show');
                 $('.members').addClass('d-none').removeClass('show');
                 $('.projects').addClass('show').removeClass('d-none');
 
@@ -299,7 +300,7 @@
                 $('.employees').addClass('d-none').removeClass('show');
             }
             if(status==='2'){
-                $('.suppliers').addClass('d-none').removeClass('show');
+                $('.creditors').addClass('d-none').removeClass('show');
                 $('.members').addClass('d-none').removeClass('show');
                 $('.projects').addClass('d-none').removeClass('show');
                 $('.churches').addClass('d-none').removeClass('show');
@@ -307,7 +308,7 @@
                 $('.employees').addClass('d-none').removeClass('show');
             }
             if(status==='3'){
-                $('.suppliers').addClass('show').removeClass('d-none');
+                $('.creditors').addClass('show').removeClass('d-none');
                 $('.members').addClass('d-none').removeClass('show');
                 $('.projects').addClass('d-none').removeClass('show');
                 $('.churches').addClass('d-none').removeClass('show');
@@ -315,7 +316,7 @@
                 $('.employees').addClass('d-none').removeClass('show');
             }
             if(status==='4'){
-                $('.suppliers').addClass('d-none').removeClass('show');
+                $('.creditors').addClass('d-none').removeClass('show');
                 $('.members').addClass('show').removeClass('d-none');
                 $('.projects').addClass('d-none').removeClass('show');
                 $('.churches').addClass('d-none').removeClass('show');
@@ -323,7 +324,7 @@
                 $('.employees').addClass('d-none').removeClass('show');
             }
             if(status==='5'){
-                $('.suppliers').addClass('d-none').removeClass('show');
+                $('.creditors').addClass('d-none').removeClass('show');
                 $('.members').addClass('d-none').removeClass('show');
                 $('.projects').addClass('d-none').removeClass('show');
                 $('.churches').addClass('d-none').removeClass('show');
@@ -331,7 +332,7 @@
                 $('.employees').addClass('show').removeClass('d-none');
             }
             if(status==='6'){
-                $('.suppliers').addClass('d-none').removeClass('show');
+                $('.creditors').addClass('d-none').removeClass('show');
                 $('.members').addClass('d-none').removeClass('show');
                 $('.projects').addClass('d-none').removeClass('show');
                 $('.churches').addClass('show').removeClass('d-none');
@@ -339,7 +340,7 @@
                 $('.employees').addClass('d-none').removeClass('show');
             }
             if(status==='7'){
-                $('.suppliers').addClass('d-none').removeClass('show');
+                $('.creditors').addClass('d-none').removeClass('show');
                 $('.members').addClass('d-none').removeClass('show');
                 $('.projects').addClass('d-none').removeClass('show');
                 $('.churches').addClass('d-none').removeClass('show');

@@ -11,6 +11,8 @@ use App\Models\Banks;
 use App\Models\BankTransaction;
 use App\Models\Church;
 use App\Models\ChurchPayment;
+use App\Models\Debtor;
+use App\Models\DebtorStatement;
 use App\Models\Department;
 use App\Models\Labourer;
 use App\Models\Member;
@@ -213,6 +215,7 @@ class ReceiptController extends Controller
             'churches'=>Church::where(['soft_delete'=>0])->orderBy('id','desc')->get(),
             'ministries'=>Ministry::where(['soft_delete'=>0])->orderBy('id','desc')->get(),
             'projects'=>$projects,
+            'debtors'=>Debtor::orderBy('id','desc')->get(),
             'labourers'=>$labourer,
             'accounts'=>$accounts
         ]);
@@ -249,6 +252,11 @@ class ReceiptController extends Controller
             case '5':{
                 $request->validate(['member_id' => "required"]);
                 $transactions_name = Member::where(['id'=>$request->post('member_id')])->first()->name;
+                break;
+            }
+            case '2':{
+                $request->validate(['debtor_id' => "required"]);
+                $transactions_name = Debtor::where(['id'=>$request->post('debtor_id')])->first()->name;
                 break;
             }
             case '6':{
@@ -291,9 +299,6 @@ class ReceiptController extends Controller
 
         $data = $request->post();
         $pledge = 0;
-        if($request->post('pledge')==2) {
-            $pledge = 1;
-        }
         $raw_data = [
             'account_id'=>$data['account_id'],
             'amount'=>$data['amount'],
@@ -318,24 +323,8 @@ class ReceiptController extends Controller
         $payments = Payment::create($raw_data);
 
         $payment = $payments->id;
-        $bala = ProjectPayment::where(['project_id'=>$request->post('project_id')])->orderBy('id','desc')->first();
-        @$balances = $bala->balance;
-        if(!$balances){
-            $balances = 0;
-        }
+
         if($request->type==5){
-            if($request->post('pledge')==2) {
-                $pledges_data = [
-                    'member_id' => $request->post('member_id'),
-                    'account_id' => $request->post('account_id'),
-                    'amount' => $request->post('amount'),
-                    'date' => $request->post('t_date'),
-                    'type' => 2,
-                    'created_by' => $request->post('created_by'),
-                    'updated_by' => $request->post('updated_by'),
-                ];
-                Pledge::create($pledges_data);
-            }
             $bala = MemberPayment::where(['member_id'=>$request->post('member_id')])->orderBy('id','desc')->first();
             @$balances = $bala->balance;
             if(!$balances){
@@ -382,6 +371,32 @@ class ReceiptController extends Controller
             $order = new DeliveryController();
             if($request->post('amount')>0) {
                 $order->generateHomeReceipt($last_id->id, $monthID->name);
+            }
+        }
+        if($request->type==2){
+            $bala = DebtorStatement::where(['debtor_id'=>$request->
+            post('debtor_id')])->orderBy('id','desc')->first();
+            @$balances = $bala->balance;
+            if(!$balances){
+                $balances = 0;
+            }
+            $debtors= [
+                'name'=>$transactions_name.' For '.$account->name,
+                'debtor_id'=>$request->post('debtor_id'),
+                'amount'=>$request->post('amount'),
+                'account_id'=>$request->post('account_id'),
+                'created_by'=>$request->post('created_by'),
+                'updated_by'=>$request->post('updated_by'),
+                'balance'=>$balances-$request->post('amount'),
+                'type'=>'Payment',
+                'debtor_invoice_id'=>'222222',
+                'description'=>'Payment',
+                'transaction_type'=>2,
+            ];
+            $last_id = DebtorStatement::create($debtors);
+            $order = new DeliveryController();
+            if($request->post('amount')>0) {
+                $order->generateDebtorReceipt($last_id->id, $monthID->name);
             }
         }
         if($request->type==7){

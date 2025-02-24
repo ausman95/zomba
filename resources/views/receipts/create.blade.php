@@ -30,6 +30,7 @@
                             <select name="type" required class="form-select select-relation type @error('type') required is-invalid @enderror" style="width: 100%">{{old('type')}} >
                                 <option value="">-- Select ---</option>
                                 <option value="5">Members</option>
+                                <option value="2">Debtors</option>
                                 <option value="1">Church</option>
                                 <option value="6">Home Churches</option>
                                 <option value="7">Ministries</option>
@@ -40,7 +41,25 @@
                             </span>
                             @enderror
                         </div>
-                        <div class="employees d-none">
+                        <div class="debtors d-none">
+                            <div class="form-group">
+                                <label>Debtors</label>
+                                <select name="debtor_id"
+                                        class="form-select select-relation @error('debtor_id') is-invalid @enderror" style="width: 100%">
+                                    <option value="">-- Select ---</option>
+                                    @foreach($debtors as $debtor)
+                                        <option value="{{$debtor->id}}"
+                                            {{old('debtor_id')===$debtor->id ? 'selected' : ''}}>{{$debtor->name}}</option>
+                                    @endforeach
+                                </select>
+                                @error('debtor_id')
+                                <span class="invalid-feedback">
+                                   {{$message}}
+                            </span>
+                                @enderror
+                            </div>
+                        </div>
+                        <div class="members d-none">
                             <div class="form-group">
                                 <label>Members</label>
                                 <select name="member_id"
@@ -194,7 +213,6 @@
                             <label>Type</label>
                             <select name="pledge" required class="form-select select-relation @error('pledge') required is-invalid @enderror" style="width: 100%">{{old('pledge')}} >
                                 <option value="1">Normal</option>
-                                <option value="2">Pledges</option>
                             </select>
                             @error('pledge')
                             <span class="invalid-feedback">
@@ -225,62 +243,27 @@
         $(document).ready(function () {
             $('.type').on('change', function () {
                 let status = $(this).val();
-                if(status==='1'){
-                    $('.suppliers').addClass('d-none').removeClass('show');
-                    $('.members').addClass('d-none').removeClass('show');
-                    $('.projects').addClass('show').removeClass('d-none');
+                $('.debtors, .suppliers, .members, .projects, .churches, .ministries, .employees').addClass('d-none').removeClass('show');
 
-                    $('.churches').addClass('d-none').removeClass('show');
-                    $('.ministries').addClass('d-none').removeClass('show');
-                    $('.employees').addClass('d-none').removeClass('show');
-                }
-                if(status==='2'){
-                    $('.suppliers').addClass('d-none').removeClass('show');
-                    $('.members').addClass('d-none').removeClass('show');
-                    $('.projects').addClass('d-none').removeClass('show');
-                    $('.churches').addClass('d-none').removeClass('show');
-                    $('.ministries').addClass('d-none').removeClass('show');
-                    $('.employees').addClass('d-none').removeClass('show');
-                }
-                if(status==='3'){
-                    $('.suppliers').addClass('show').removeClass('d-none');
-                    $('.members').addClass('d-none').removeClass('show');
-                    $('.projects').addClass('d-none').removeClass('show');
-                    $('.churches').addClass('d-none').removeClass('show');
-                    $('.ministries').addClass('d-none').removeClass('show');
-                    $('.employees').addClass('d-none').removeClass('show');
-                }
-                if(status==='4'){
-                    $('.suppliers').addClass('d-none').removeClass('show');
-                    $('.members').addClass('show').removeClass('d-none');
-                    $('.projects').addClass('d-none').removeClass('show');
-                    $('.churches').addClass('d-none').removeClass('show');
-                    $('.ministries').addClass('d-none').removeClass('show');
-                    $('.employees').addClass('d-none').removeClass('show');
-                }
-                if(status==='5'){
-                    $('.suppliers').addClass('d-none').removeClass('show');
-                    $('.members').addClass('d-none').removeClass('show');
-                    $('.projects').addClass('d-none').removeClass('show');
-                    $('.churches').addClass('d-none').removeClass('show');
-                    $('.ministries').addClass('d-none').removeClass('show');
-                    $('.employees').addClass('show').removeClass('d-none');
-                }
-                if(status==='6'){
-                    $('.suppliers').addClass('d-none').removeClass('show');
-                    $('.members').addClass('d-none').removeClass('show');
-                    $('.projects').addClass('d-none').removeClass('show');
-                    $('.churches').addClass('show').removeClass('d-none');
-                    $('.ministries').addClass('d-none').removeClass('show');
-                    $('.employees').addClass('d-none').removeClass('show');
-                }
-                if(status==='7'){
-                    $('.suppliers').addClass('d-none').removeClass('show');
-                    $('.members').addClass('d-none').removeClass('show');
-                    $('.projects').addClass('d-none').removeClass('show');
-                    $('.churches').addClass('d-none').removeClass('show');
-                    $('.ministries').addClass('show').removeClass('d-none');
-                    $('.employees').addClass('d-none').removeClass('show');
+                switch (status) {
+                    case '1':
+                        // Church Selected
+                        break; // No specific related field is showed
+                    case '2':
+                        $('.debtors').removeClass('d-none').addClass('show');
+                        break;
+                    case '5':
+                        $('.members').removeClass('d-none').addClass('show');
+                        break;
+                    case '6':
+                        $('.churches').removeClass('d-none').addClass('show');
+                        break;
+                    case '7':
+                        $('.ministries').removeClass('d-none').addClass('show');
+                        break;
+                    default:
+                        // Handle other cases if needed
+                        break;
                 }
             });
         });

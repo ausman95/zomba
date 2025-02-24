@@ -4,8 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Models\Accounts;
 use App\Models\Banks;
+use App\Models\CreditorStatement;
+use App\Models\DebtorStatement;
 use App\Models\Finance;
 use App\Models\Incomes;
+use App\Models\LabourerPayments;
 use App\Models\Material;
 use App\Models\Month;
 use App\Models\Supplier;
@@ -54,6 +57,51 @@ class FinanceController extends Controller
         // Fetch financial data
         $start = $startAndEndDates['start'];
         $end = $startAndEndDates['end'];
+
+        // Fetch debtor balances (latest transactions)
+        $debtorBalances = DebtorStatement::select('debtor_id', DB::raw('MAX(id) as max_id'))
+            ->where('balance', '>', 0)
+            ->groupBy('debtor_id')
+            ->get()
+            ->map(function ($item) {
+                $lastTransaction = DebtorStatement::where('id', $item->max_id)->with('debtor')->first();
+                if ($lastTransaction) {
+                    return (object) [
+                        'debtor_id' => $lastTransaction->debtor_id,
+                        'total_balance' => $lastTransaction->balance,
+                        'name' => $lastTransaction->debtor->name,
+                    ];
+                }
+                return null;
+            })
+            ->filter()
+            ->values();
+
+        // Fetch creditor balances (latest transactions)
+        $creditorBalances = CreditorStatement::select('creditor_id', DB::raw('MAX(id) as max_id'))
+            ->where('balance', '>', 0)
+            ->groupBy('creditor_id')
+            ->get()
+            ->map(function ($item) {
+                $lastTransaction = CreditorStatement::where('id', $item->max_id)->with('creditor')->first();
+                if ($lastTransaction) {
+                    return (object) [
+                        'creditor_id' => $lastTransaction->creditor_id,
+                        'total_balance' => $lastTransaction->balance,
+                        'name' => $lastTransaction->creditor->name,
+                    ];
+                }
+                return null;
+            })
+            ->filter()
+            ->values();
+
+        // Fetch labourer payment balances
+        $labourerPaymentsBalance = LabourerPayments::sum('balance');
+
+        // Fetch banks
+        $banks = Banks::all();
+
         // Pass the calculated values to the view
         return view('finances.reports')->with([
             'cpage' => "finances",
@@ -69,6 +117,7 @@ class FinanceController extends Controller
             'totalDepreciation' => $this->getTotalDepreciation(),
             'currentPayments' => $this->fetchCurrentPayments(),
             'liabilities' => $this->fetchLiabilities(),
+            'banks' => $banks,
             'all' => Accounts::allCrAccounts($start, $end),
             'catCredits' => Accounts::getAccountCatDebits($start, $end),
             'catDebits' => Accounts::getAccountCateExpenses($start, $end),
@@ -77,9 +126,12 @@ class FinanceController extends Controller
             'debits' => Incomes::accountAll($start, $end),
             'expenses' => Incomes::accountExpensesAll($statement, $start, $end),
             'admins' => Accounts::getAccountBalanceAdmin($statement, $start, $end),
-            'months' => Month::where(['soft_delete' => 0])->orderBy('id', 'desc')->get()]);
+            'months' => Month::where(['soft_delete' => 0])->orderBy('id', 'desc')->get(),
+            'debtorBalances' => $debtorBalances,
+            'creditorBalances' => $creditorBalances,
+            'labourerPaymentsBalance' => $labourerPaymentsBalance,
+        ]);
     }
-
     private function validateRequest(Request $request)
     {
         $request->validate([

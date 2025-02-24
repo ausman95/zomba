@@ -8,6 +8,8 @@ use App\Models\Banks;
 use App\Models\BankTransaction;
 use App\Models\Church;
 use App\Models\ChurchPayment;
+use App\Models\Creditor;
+use App\Models\CreditorStatement;
 use App\Models\Department;
 use App\Models\Labourer;
 use App\Models\LabourerPayments;
@@ -242,14 +244,14 @@ class PaymentController extends Controller
      */
     public function create()
     {
-        $suppliers = Supplier::where(['soft_delete'=>0])->orderBy('id','desc')->get();
+        $creditors = Creditor::orderBy('id','desc')->get();
         $banks = Banks::where(['soft_delete'=>0])->orderBy('id','desc')->get();
         $labourer = Labourer::where(['soft_delete'=>0])->orderBy('id','desc')->get();
         $projects = Department::where(['soft_delete'=>0])->orderBy('id','desc')->get();
         $accounts = Accounts::where(['soft_delete'=>0])->orderBy('id','desc')->get();
         return view('payments.create')->with([
             'cpage'=>"finances",
-            'suppliers'=>$suppliers,
+            'creditors'=>$creditors,
             'banks'=>$banks,
             'members'=>Member::where(['soft_delete'=>0])->orderBy('id','desc')->get(),
             'churches'=>Church::where(['soft_delete'=>0])->orderBy('id','desc')->get(),
@@ -282,8 +284,8 @@ class PaymentController extends Controller
                 break;
             }
             case '3':{
-                $request->validate(['supplier_id' => "required"]);
-                $transactions_name = Supplier::where(['id'=>$request->post('supplier_id')])->first()->name;
+                $request->validate(['creditor_id' => "required"]);
+                $transactions_name = Creditor::where(['id'=>$request->post('creditor_id')])->first()->name;
                 break;
             }
             case '4':{
@@ -335,7 +337,7 @@ class PaymentController extends Controller
             'balance'=>$new_balance
         ];
         // Supplier Balance
-        $bal = SupplierPayments::where(['supplier_id'=>$request->post('supplier_id')])->orderBy('id','desc')->first();
+        $bal = CreditorStatement::where(['creditor_id'=>$request->post('creditor_id')])->orderBy('id','desc')->first();
         @$balance = $bal->balance;
         if(!$balance){
             $balance = 0;
@@ -374,47 +376,51 @@ class PaymentController extends Controller
         }else{
             $new_balances = $balances-$request->post('amount');
         }
-        if($request->type==4){
-            $bala = LabourerPayments::where(['labourer_id'=>$request->post('labourer_id')])->orderBy('id','desc')->first();
-            @$balances = $bala->balance;
-            if(!$balances){
-                $balances = 0;
+        if ($request->type == 4) {
+
+            $description = $request->post('description');
+            $labourerId = $request->post('labourer_id');
+            $amount = $request->post('amount');
+
+            // Create Labourer Payment Record
+            $labourerPaymentData = [
+                'expense_name' => $transactions_name . ' For ' . $account->name,
+                'labourer_id' => $labourerId,
+                'amount' => $amount,
+                'account_id' => $request->post('account_id'),
+                'description' => $description,
+                'created_by' => $request->post('created_by'),
+                'updated_by' => $request->post('updated_by'),
+                'project_id' => $labour_project_id,
+                'balance' => 0, // Default balance to 0
+                'method' => $request->post('payment_method'),
+                'type' => 2,
+            ];
+
+            if ($description == 2) { // Advance Payment
+                $labourerPaymentData['balance'] = $amount; // Set balance to the amount for advance payments
             }
-            $labourers = [
-                'expense_name'=>$transactions_name.' For '.$account->name,
-                'labourer_id'=>$request->post('labourer_id'),
-                'amount'=>$request->post('amount'),
-                'account_id'=>$request->post('account_id'),
-                'description'=>$request->post('description'),
-                'created_by'=>$request->post('created_by'),
-                'updated_by'=>$request->post('updated_by'),
-                'project_id'=>$labour_project_id,
-                'balance'=>$balances-$request->post('amount'),
-                'method'=>$request->post('payment_method'),
-                'type'=>2,
-            ];
-            $project_payment = [
-                'project_id'=>$labour_project_id,
-                'amount'=>$request->post('amount'),
-                'balance'=>$new_balances,
-                'payment_name'=>$transactions_name.' For '.$account->name,
-                'payment_type'=>'2'
-            ];
-            ProjectPayment::create($project_payment);
-            LabourerPayments::create($labourers);
+            else { // Normal Payment
+                $lastAdvancePayment = LabourerPayments::where(['labourer_id' => $labourerId, 'description' => 2])->orderBy('id', 'desc')->first();
+                if ($lastAdvancePayment) {
+                    $lastAdvancePayment->update(['balance' => 0]); // Set previous advance balance to 0
+                }
+            }
+
+            LabourerPayments::create($labourerPaymentData);
         }
         if($request->type==3){
-            $suppliers = [
-                'expenses_id'=>'1111111',
-                'supplier_id'=>$request->post('supplier_id'),
-                'amount'=>$request->post('amount'),
-                'created_by'=>$request->post('created_by'),
-                'updated_by'=>$request->post('updated_by'),
-                'method'=>$request->post('payment_method'),
-                'balance'=>$supplier_balance,
-                'transaction_type'=>1,
-            ];
-            SupplierPayments::create($suppliers);
+            $statement = new CreditorStatement();
+            $statement->creditor_id = $request->post('creditor_id');
+            $statement->account_id = $request->input('account_id');
+            $statement->creditor_invoice_id= '111111111';
+            $statement->amount = $request->post('amount');
+            $statement->type = 'Payment';
+            $statement->balance = $supplier_balance;
+            $statement->description = 'Creditor Payment';
+            $statement->created_by = $request->input('created_by');
+            $statement->updated_by = $request->input('updated_by');
+            $statement->save();
         }
         if($request->type==1){
             $project_payment = [

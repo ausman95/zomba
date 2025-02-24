@@ -13,7 +13,7 @@ class LabourerPayments extends Model
         'account_id','amount',
         'labourer_id','expense_name',
         'method','project_id',
-        'balance','type',
+        'balance','type','status',
         'description','created_by','updated_by'
     ];
     public function labourer(): BelongsTo

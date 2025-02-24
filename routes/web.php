@@ -3,10 +3,8 @@
 use App\Http\Controllers\AccountController;
 use App\Http\Controllers\AssetController;
 use App\Http\Controllers\AttendanceRegisterController;
-use App\Http\Controllers\ClientController;
 use App\Http\Controllers\FinanceController;
 use App\Http\Controllers\HomeController;
-use App\Http\Controllers\HumanResourceController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\RequisitionController;
@@ -43,6 +41,9 @@ Route::middleware(['preventBackHistory'])->group(function () {
         Route::get('news/determine', [\App\Http\Controllers\NewController::class, 'determine'])->name('news.determine');
         Route::resource('informations', \App\Http\Controllers\InformationController::class);
         Route::get('info/next', [\App\Http\Controllers\InformationController::class, 'determineNext'])->name('informations.next');
+        Route::resource('creditors', \App\Http\Controllers\CreditorController::class);
+        Route::resource('debtors', \App\Http\Controllers\DebtorController::class);
+        Route::resource('invoices', \App\Http\Controllers\InvoiceController::class);
 
         Route::resource('news', \App\Http\Controllers\NewController::class);
         Route::resource('home-attendances', \App\Http\Controllers\HomeAttendanceController::class);
