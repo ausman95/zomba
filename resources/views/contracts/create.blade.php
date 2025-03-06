@@ -2,13 +2,13 @@
 
 @section('content')
     <div class="container-fluid ps-1 pt-4">
-        <h4><i class="fa fa-file-contract"></i> Labourer Contracts</h4>
-        <p>Create Labourer Contracts</p>
+        <h4><i class="fa fa-file-contract"></i> Staffs Contracts</h4>
+        <p>Create Staffs Contracts</p>
         <nav aria-label="breadcrumb">
             <ol class="breadcrumb bg-transparent">
                 <li class="breadcrumb-item"><a href="{{ route('home') }}">Home</a></li>
                 <li class="breadcrumb-item"><a href="{{ route('human-resources.index') }}">Human Resources</a></li>
-                <li class="breadcrumb-item"><a href="{{ route('contracts.index') }}">Labourer Contracts</a></li>
+                <li class="breadcrumb-item"><a href="{{ route('contracts.index') }}">Staffs Contracts</a></li>
                 <li class="breadcrumb-item active" aria-current="page">Create Contract</li>
             </ol>
         </nav>
@@ -20,9 +20,9 @@
                 <div class="card-body">
                     <div class="row-cols-3">
                         <div class="form-group">
-                            <label for="labourer_id" class="form-label">Labourer</label>
+                            <label for="labourer_id" class="form-label">Staff</label>
                             <select name="labourer_id" class="select-relation form-select @error('labourer_id') is-invalid @enderror" required>
-                                <option value="">-- Select Labourer --</option>
+                                <option value="">-- Select Staffs --</option>
                                 @foreach($labourers as $labourer)
                                     <option value="{{ $labourer->id }}">{{ $labourer->name }}</option>
                                 @endforeach
@@ -32,7 +32,7 @@
                             @enderror
                         </div>
                     </div>
-                    <h5 class="card-title mt-4">Labourer Benefits</h5>
+                    <h5 class="card-title mt-4">Staff Benefits</h5>
                     <div id="benefits-container">
                         <div class="benefit-row">
                             <div class="row">

@@ -6,13 +6,13 @@
 
 @section('content')
     <div class="container-fluid ps-1 pt-4">
-        <h4><i class="fa fa-file-contract"></i> Labourer Contracts</h4>
-        <p>Manage Labourer Contracts</p>
+        <h4><i class="fa fa-file-contract"></i> Staffs Contracts</h4>
+        <p>Manage Staffs Contracts</p>
         <nav aria-label="breadcrumb">
             <ol class="breadcrumb bg-transparent">
                 <li class="breadcrumb-item"><a href="{{ route('home') }}">Home</a></li>
                 <li class="breadcrumb-item"><a href="{{ route('human-resources.index') }}">Human Resources</a></li>
-                <li class="breadcrumb-item active" aria-current="page">Labourer Contracts</li>
+                <li class="breadcrumb-item active" aria-current="page">Staffs Contracts</li>
             </ol>
         </nav>
         <div class="mb-5">
@@ -20,7 +20,7 @@
         </div>
         <div class="mt-3">
             <a href="{{ route('contracts.create') }}" class="btn btn-primary btn-md rounded-0">
-                <i class="fa fa-plus-circle"></i> New Labourer Contract
+                <i class="fa fa-plus-circle"></i> New STAFF Contract
             </a>
             <div class="mt-3">
                 <div class="row">
@@ -28,15 +28,15 @@
                         <div class="card" style="min-height: 30em;">
                             <div class="card-body px-1">
                                 @if ($contracts->count() === 0)
-                                    <i class="fa fa-info-circle"></i> There are no Labourer Contracts!
+                                    <i class="fa fa-info-circle"></i> There are no STAFF Contracts!
                                 @else
                                     <div style="overflow-x: auto;">
                                         <table class="table table-bordered table-hover table-striped" id="data-table">
-                                            <caption style="caption-side: top; text-align: center">LABOURER CONTRACTS</caption>
+                                            <caption style="caption-side: top; text-align: center">STAFF CONTRACTS</caption>
                                             <thead>
                                             <tr>
                                                 <th>NO</th>
-                                                <th>LABOURER NAME</th>
+                                                <th>STAFF NAME</th>
                                                 <th>ACTIONS</th>
                                             </tr>
                                             </thead>
