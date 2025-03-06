@@ -13,4 +13,10 @@ class LoanController extends Controller
         $cpage = 'human-resources';
         return view('loans.index', compact('cpage',  'loans'));
     }
+    public function show(Loan $loan)
+    {
+        $cpage = 'human-resources'; // Add this line
+
+        return view('loans.show', compact('loan', 'cpage')); // Pass $cpage to the view
+    }
 }
