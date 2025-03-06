@@ -33,7 +33,7 @@ class PayrollController extends Controller
     }
     public function index(Request $request)
     {
-        $months = Month::all();
+        $months = Month::orderBy('id','desc')->get();
         $payrolls = []; // Initialize as empty array
 
         if ($request->has('month') && $request->month != '') {
