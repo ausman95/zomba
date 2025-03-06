@@ -69,11 +69,6 @@
                     <i class='bx bxs-file-archive sidenav__icon'></i>
                     <span class="sidenav__name">Finances</span>
                 </a>
-                <a href="{{route('suppliers.index')}}"
-                   class="sidenav__link {{$cpage === 'suppliers' ? 'link-active' : ''}}" title="Suppliers">
-                    <i class='bx bxs-file-archive sidenav__icon'></i>
-                    <span class="sidenav__name">Suppliers</span>
-                </a>
 {{--                <a href="{{route('materials.index')}}"--}}
 {{--                   class="sidenav__link {{$cpage === 'materials' ? 'link-active' : ''}}" title="Materials">--}}
 {{--                    <i class='bx bx-abacus sidenav__icon'></i>--}}
@@ -92,7 +87,7 @@
                 <a href="{{route('assets.index')}}"
                    class="sidenav__link {{$cpage === 'assets' ? 'link-active' : ''}}" title="Assets">
                     <i class='bx bxs-car sidenav__icon'></i>
-                    <span class="sidenav__name">Assets & Liabilities</span>
+                    <span class="sidenav__name">Assets</span>
                 </a>
                 @endif
 {{--                <a href="{{route('zones.index')}}"--}}

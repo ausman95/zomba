@@ -6,6 +6,7 @@ use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Facades\DB;
 
 class Labourer extends Model
@@ -14,6 +15,14 @@ class Labourer extends Model
     protected $fillable = [
        'department_id','name','type', 'phone_number', 'gender','labour_id'
     ];
+    public function contracts(): HasMany
+    {
+        return $this->hasMany(LabourerContract::class);
+    }
+    public function loans(): HasMany
+    {
+        return $this->hasMany(Loan::class);
+    }
     public function getDays()
     {
         $days = LeaveSetting::orderBy('id','desc')->first();

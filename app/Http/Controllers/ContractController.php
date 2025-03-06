@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\Contracts\StoreRequest;
 use App\Http\Requests\Contracts\UpdateRequest;
+use App\Models\Accounts;
 use App\Models\Announcement;
 use App\Models\Contract;
 use App\Models\ContractType;
@@ -13,37 +14,8 @@ use Illuminate\Support\Facades\DB;
 
 class ContractController extends Controller
 {
-    public function destroy(Request $request, Contract $contract)
-    {
 
-        $data = $request->post();
-        DB::table('contracts')
-            ->where(['id' => $request->post('id')])
-            ->update(['soft_delete' => '1']);
-        $contract->update($data);
 
-        return redirect()->route('contracts.index')->with([
-            'success-notification'=>"Successfully Deleted"
-        ]);
-    }
-
-    public function index()
-    {
-        activity('CONTRACTS')
-            ->log("Accessed Contracts")->causer(request()->user());
-        return view('contracts.index')->with([
-            'cpage' => "human-resources",
-            'contracts' => Contract::where(['soft_delete'=>0])->orderBy('id','desc')->get(),
-        ]);
-    }
-    public function create()
-    {
-        return view('contracts.create')->with([
-            'cpage'=>"human-resources",
-            'labourers'=>Labourer::where(['soft_delete'=>0])->orderBy('id','desc')->get(),
-            'contract_types'=>ContractType::where(['soft_delete'=>0])->orderBy('id','desc')->get(),
-        ]);
-    }
     public function store(StoreRequest $request)
     {
         $data = $request->post();

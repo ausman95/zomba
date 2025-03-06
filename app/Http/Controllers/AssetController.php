@@ -4,10 +4,13 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\Assets\StoreRequest;
 use App\Http\Requests\Assets\UpdateRequest;
+use App\Models\Accounts;
 use App\Models\AssetRevaluation;
 use App\Models\Assets;
 use App\Models\Banks;
 use App\Models\Categories;
+use App\Models\Creditor;
+use App\Models\CreditorStatement;
 use App\Models\Labourer;
 use App\Models\Material;
 use App\Models\Month;
@@ -76,7 +79,8 @@ class AssetController extends Controller
         return view('assets.create')->with([
             'cpage'=>"assets",
             'banks'=>Banks::all(),
-            'suppliers'=>Supplier::all(),
+            'accounts'=>Accounts::where(['type'=>2])->get(),
+            'creditors'=>Creditor::all(),
             'categories'=>$category
         ]);
     }
@@ -105,8 +109,8 @@ class AssetController extends Controller
         // Handle payment methods
         if ($data['payment_method'] === 'cash' && !empty($data['bank_id'])) {
             $this->handleBankTransaction($data, $request);
-        } elseif ($data['payment_method'] === 'credit' && !empty($data['supplier_id'])) {
-            $this->handleSupplierPayment($data, $request);
+        } elseif ($data['payment_method'] === 'credit' && !empty($data['creditor_id'])) {
+            $this->handleCreditorStatement($data, $request);
         }
 
         // Redirect after successful asset creation
@@ -179,34 +183,42 @@ class AssetController extends Controller
     /**
      * Handle supplier payment for credit payments
      */
-    private function handleSupplierPayment($data, $request)
+    private function handleCreditorStatement($data, $request)
     {
-        $balance = SupplierPayments::where(['supplier_id' => $data['supplier_id']])
+        $balance = CreditorStatement::where(['creditor_id' => $data['creditor_id']])
             ->orderBy('id', 'desc')
             ->first()
             ->balance ?? 0;
 
-        $supplier_balance = $balance - $data['cost'];
-        $transaction_type =  2;
-        if($data['payment_method']==='cash') {
-            $transaction_type =  1;
+        $creditor_balance = $balance + ($data['cost']*$data['quantity']);
+        $transaction_type = 2; // Default to credit (invoice)
+
+        if ($data['payment_method'] === 'cash') {
+            $transaction_type = 1; // Cash payment
+            $creditor_balance = $balance; // Adjust balance for cash payment
         }
 
         $supplierPaymentData = [
-            'expenses_id'      => '1111111',  // Example fixed expense ID, customize as needed
-            'supplier_id'      => $data['supplier_id'],
-            'amount'           => $data['cost'],
-            'created_by'       => $data['created_by'],
-            'updated_by'       => $data['updated_by'],
-            'method'           => $data['payment_method'],
-            'balance'          => $supplier_balance,
-            'transaction_type' => $transaction_type,  // Assuming transaction type 2 for credit
+            'creditor_id' => $data['creditor_id'],
+            'account_id' => $data['account_id'], // You might need to determine the account ID
+            'amount' => ($data['cost']*$data['quantity']),
+            'type' => 'invoice', // or 'payment' if it's a cash payment
+            'description' => 'Invoice for asset purchase', // More descriptive
+            'balance' => $creditor_balance,
+            'created_by' => $data['created_by'],
+            'updated_by' => $data['updated_by'],
+            'transaction_type' => $transaction_type,
+            'creditor_invoice_id' => null, // You might need to determine the invoice ID
         ];
 
-        // Create supplier payment record
-        SupplierPayments::create($supplierPaymentData);
-    }
+        if($data['payment_method'] === 'cash') {
+            $supplierPaymentData['type'] = 'payment';
+            $supplierPaymentData['description'] = 'Asset purchase cash payment';
+        }
 
+        // Create creditor statement record
+        CreditorStatement::create($supplierPaymentData);
+    }
     public function show(Assets $asset)
     {
         return view('assets.show')->with([

@@ -32,12 +32,12 @@
 {{--            <a href="{{route('services.index')}}" class="btn btn-primary btn-md rounded-0">--}}
 {{--                <i class="fa fa-list-ol"></i>Service Providers--}}
 {{--            </a>--}}
-            <a href="{{route('current-assets')}}" class="btn btn-primary btn-md rounded-0">
-                <i class="fa fa-money-bill-alt"></i>Current Assets
-            </a>
-            <a href="{{route('liabilities')}}" class="btn btn-primary btn-md rounded-0">
-                <i class="fa fa-folder-open"></i>Liabilities
-            </a>
+{{--            <a href="{{route('current-assets')}}" class="btn btn-primary btn-md rounded-0">--}}
+{{--                <i class="fa fa-money-bill-alt"></i>Current Assets--}}
+{{--            </a>--}}
+{{--            <a href="{{route('liabilities')}}" class="btn btn-primary btn-md rounded-0">--}}
+{{--                <i class="fa fa-folder-open"></i>Liabilities--}}
+{{--            </a>--}}
             @endif
             <div class="mt-3">
                 <div class="row">

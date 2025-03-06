@@ -14,7 +14,42 @@
 *, :after, :before {
     box-sizing: border-box
 }
+.big-checkbox-label {
+    display: flex;
+    align-items: center;
+    font-size: 1.2rem; /* Adjust font size as needed */
+    cursor: pointer;
+}
 
+.big-checkbox-input {
+    appearance: none; /* Remove default browser styling */
+    width: 24px; /* Adjust size as needed */
+    height: 24px; /* Adjust size as needed */
+    border: 2px solid #007bff; /* Adjust border color */
+    border-radius: 4px; /* Optional: Add rounded corners */
+    margin-right: 10px; /* Space between checkbox and text */
+    position: relative;
+    cursor: pointer;
+}
+
+.big-checkbox-input:checked {
+    background-color: #007bff; /* Background color when checked */
+    border-color: #007bff; /* Border color when checked */
+}
+
+.big-checkbox-input:checked::before {
+    content: '\2713'; /* Unicode checkmark character */
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: white; /* Checkmark color */
+    font-size: 1.2rem; /* Adjust checkmark size */
+}
+
+.big-checkbox-text {
+    user-select: none; /* Prevent text selection */
+}
 body {
     position: relative;
     margin: var(--header-height) 0 0 0;

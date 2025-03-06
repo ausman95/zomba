@@ -22,7 +22,7 @@
             <form action="{{route('payments.store')}}" method="POST" autocomplete="off">
                 <div class="row">
                     <div class="col-sm-12 col-md-8 col-lg-4">
-                            @csrf
+                        @csrf
                         <div class="form-group">
                             <label>Payee</label>
                             <input type="hidden"  name="updated_by" value="{{request()->user()->id}}" required>
@@ -34,6 +34,7 @@
                                 <option value="2">Admin</option>
                                 <option value="4">Employees</option>
                                 <option value="3">Creditors</option>
+                                <option value="8">Assets</option>
                                 <option value="5">Members</option>
                                 <option value="6">Home Churches</option>
                                 <option value="7">Ministries</option>
@@ -47,6 +48,7 @@
                             </span>
                             @enderror
                         </div>
+
                         <div class="employees d-none">
                             <div class="form-group">
                                 <label>Members</label>
@@ -140,9 +142,7 @@
                                 <label>Payment Type</label>
                                 <select name="description" class="form-select select-relation description @error('description') required is-invalid @enderror" style="width: 100%">{{old('description')}} >
                                     <option value="1">Normal</option>
-                                    <option value="2">Advance</option>
-                                    <option value="3">Allowances</option>
-                                    <option value="4">Other</option>
+                                    <option value="2">Loan</option>
                                 </select>
                                 @error('description')
                                 <span class="invalid-feedback">
@@ -169,23 +169,22 @@
                                 @enderror
                             </div>
                         </div>
-                            <div class="form-group">
-                                <label>Account</label>
-                                <select name="account_id" required
-                                        class="form-select select-relation @error('account_id') is-invalid @enderror" style="width: 100%">
-                                    <option value="">-- Select ---</option>
-                                    @foreach($accounts as $account)
-                                        <option value="{{$account->id}}"
-                                            {{old('account_id')===$account->id ? 'selected' : ''}}>{{$account->name}}</option>
-                                    @endforeach
-                                </select>
-                                @error('account_id')
-                                <span class="invalid-feedback">
+                        <div class="form-group">
+                            <label>Account</label>
+                            <select name="account_id" required
+                                    class="form-select select-relation @error('account_id') is-invalid @enderror" style="width: 100%">
+                                <option value="">-- Select ---</option>
+                                @foreach($accounts as $account)
+                                    <option value="{{$account->id}}"
+                                        {{old('account_id')===$account->id ? 'selected' : ''}}>{{$account->name}}</option>
+                                @endforeach
+                            </select>
+                            @error('account_id')
+                            <span class="invalid-feedback">
                                    {{$message}}
                             </span>
-                                @enderror
-                            </div>
-
+                            @enderror
+                        </div>
                         <div class="form-group ">
                             <label>Bank Account</label>
                             <select name="bank_id" required
@@ -218,8 +217,22 @@
                             </span>
                             @enderror
                         </div>
-
+                        <div class="loans  d-none">
+                            <div class="form-group">
+                                <label>Loan Duration in Months</label>
+                                <input type="number" name="loan_duration_months"
+                                       class="form-control @error('loan_duration_months') is-invalid @enderror"
+                                       placeholder="Duration">
+                                @error('loan_duration_months')
+                                <span class="invalid-feedback">
+                                   {{$message}}
+                            </span>
+                                @enderror
+                            </div>
+                        </div>
                     </div>
+
+
                     <div class="col-sm-12 col-md-8 col-lg-4">
                         @csrf
                         <div class="form-group">
@@ -271,7 +284,7 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <button class="btn btn-md btn-primary rounded-0">
+                    <button class="btn btn-block btn-primary rounded-0">
                         <i class="fa fa-paper-plane"></i>Save
                     </button>
                 </div>
@@ -280,76 +293,84 @@
     </div>
 @stop
 @section('scripts')
-{{--    @if(@$_GET['id']=='success')--}}
-{{--            <script>--}}
-{{--                $(document).ready(function () {--}}
-{{--                    window.open('../libs/receipt.pdf', "_blank", "scrollbars=yes,width=700,height=600,top=30");--}}
-{{--                });--}}
-{{--            </script>--}}
-{{--    @endif--}}
+    {{--    @if(@$_GET['id']=='success')--}}
+    {{--            <script>--}}
+    {{--                $(document).ready(function () {--}}
+    {{--                    window.open('../libs/receipt.pdf', "_blank", "scrollbars=yes,width=700,height=600,top=30");--}}
+    {{--                });--}}
+    {{--            </script>--}}
+    {{--    @endif--}}
     <script>
-    $(document).ready(function () {
-        $('.type').on('change', function () {
-            let status = $(this).val();
-            if(status==='1'){
-                $('.creditors').addClass('d-none').removeClass('show');
-                $('.members').addClass('d-none').removeClass('show');
-                $('.projects').addClass('show').removeClass('d-none');
+        $(document).ready(function () {
+            $('.description').on('change', function () {
+                let loan_type = $(this).val();
+                if(loan_type==='2'){
+                    $('.loans').addClass('show').removeClass('d-none');
+                } else{
+                    $('.loans').addClass('d-none').removeClass('show');
+                }
+            });
+            $('.type').on('change', function () {
+                let status = $(this).val();
+                if(status==='1'){
+                    $('.creditors').addClass('d-none').removeClass('show');
+                    $('.members').addClass('d-none').removeClass('show');
+                    $('.projects').addClass('show').removeClass('d-none');
 
-                $('.churches').addClass('d-none').removeClass('show');
-                $('.ministries').addClass('d-none').removeClass('show');
-                $('.employees').addClass('d-none').removeClass('show');
-            }
-            if(status==='2'){
-                $('.creditors').addClass('d-none').removeClass('show');
-                $('.members').addClass('d-none').removeClass('show');
-                $('.projects').addClass('d-none').removeClass('show');
-                $('.churches').addClass('d-none').removeClass('show');
-                $('.ministries').addClass('d-none').removeClass('show');
-                $('.employees').addClass('d-none').removeClass('show');
-            }
-            if(status==='3'){
-                $('.creditors').addClass('show').removeClass('d-none');
-                $('.members').addClass('d-none').removeClass('show');
-                $('.projects').addClass('d-none').removeClass('show');
-                $('.churches').addClass('d-none').removeClass('show');
-                $('.ministries').addClass('d-none').removeClass('show');
-                $('.employees').addClass('d-none').removeClass('show');
-            }
-            if(status==='4'){
-                $('.creditors').addClass('d-none').removeClass('show');
-                $('.members').addClass('show').removeClass('d-none');
-                $('.projects').addClass('d-none').removeClass('show');
-                $('.churches').addClass('d-none').removeClass('show');
-                $('.ministries').addClass('d-none').removeClass('show');
-                $('.employees').addClass('d-none').removeClass('show');
-            }
-            if(status==='5'){
-                $('.creditors').addClass('d-none').removeClass('show');
-                $('.members').addClass('d-none').removeClass('show');
-                $('.projects').addClass('d-none').removeClass('show');
-                $('.churches').addClass('d-none').removeClass('show');
-                $('.ministries').addClass('d-none').removeClass('show');
-                $('.employees').addClass('show').removeClass('d-none');
-            }
-            if(status==='6'){
-                $('.creditors').addClass('d-none').removeClass('show');
-                $('.members').addClass('d-none').removeClass('show');
-                $('.projects').addClass('d-none').removeClass('show');
-                $('.churches').addClass('show').removeClass('d-none');
-                $('.ministries').addClass('d-none').removeClass('show');
-                $('.employees').addClass('d-none').removeClass('show');
-            }
-            if(status==='7'){
-                $('.creditors').addClass('d-none').removeClass('show');
-                $('.members').addClass('d-none').removeClass('show');
-                $('.projects').addClass('d-none').removeClass('show');
-                $('.churches').addClass('d-none').removeClass('show');
-                $('.ministries').addClass('show').removeClass('d-none');
-                $('.employees').addClass('d-none').removeClass('show');
-            }
+                    $('.churches').addClass('d-none').removeClass('show');
+                    $('.ministries').addClass('d-none').removeClass('show');
+                    $('.employees').addClass('d-none').removeClass('show');
+                }
+                if(status==='2'){
+                    $('.creditors').addClass('d-none').removeClass('show');
+                    $('.members').addClass('d-none').removeClass('show');
+                    $('.projects').addClass('d-none').removeClass('show');
+                    $('.churches').addClass('d-none').removeClass('show');
+                    $('.ministries').addClass('d-none').removeClass('show');
+                    $('.employees').addClass('d-none').removeClass('show');
+                }
+                if(status==='3'){
+                    $('.creditors').addClass('show').removeClass('d-none');
+                    $('.members').addClass('d-none').removeClass('show');
+                    $('.projects').addClass('d-none').removeClass('show');
+                    $('.churches').addClass('d-none').removeClass('show');
+                    $('.ministries').addClass('d-none').removeClass('show');
+                    $('.employees').addClass('d-none').removeClass('show');
+                }
+                if(status==='4'){
+                    $('.creditors').addClass('d-none').removeClass('show');
+                    $('.members').addClass('show').removeClass('d-none');
+                    $('.projects').addClass('d-none').removeClass('show');
+                    $('.churches').addClass('d-none').removeClass('show');
+                    $('.ministries').addClass('d-none').removeClass('show');
+                    $('.employees').addClass('d-none').removeClass('show');
+                }
+                if(status==='5'){
+                    $('.creditors').addClass('d-none').removeClass('show');
+                    $('.members').addClass('d-none').removeClass('show');
+                    $('.projects').addClass('d-none').removeClass('show');
+                    $('.churches').addClass('d-none').removeClass('show');
+                    $('.ministries').addClass('d-none').removeClass('show');
+                    $('.employees').addClass('show').removeClass('d-none');
+                }
+                if(status==='6'){
+                    $('.creditors').addClass('d-none').removeClass('show');
+                    $('.members').addClass('d-none').removeClass('show');
+                    $('.projects').addClass('d-none').removeClass('show');
+                    $('.churches').addClass('show').removeClass('d-none');
+                    $('.ministries').addClass('d-none').removeClass('show');
+                    $('.employees').addClass('d-none').removeClass('show');
+                }
+                if(status==='7'){
+                    $('.creditors').addClass('d-none').removeClass('show');
+                    $('.members').addClass('d-none').removeClass('show');
+                    $('.projects').addClass('d-none').removeClass('show');
+                    $('.churches').addClass('d-none').removeClass('show');
+                    $('.ministries').addClass('show').removeClass('d-none');
+                    $('.employees').addClass('d-none').removeClass('show');
+                }
+            });
         });
-    });
     </script>
 @endsection
 

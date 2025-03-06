@@ -44,6 +44,7 @@ Route::middleware(['preventBackHistory'])->group(function () {
         Route::resource('creditors', \App\Http\Controllers\CreditorController::class);
         Route::resource('debtors', \App\Http\Controllers\DebtorController::class);
         Route::resource('invoices', \App\Http\Controllers\InvoiceController::class);
+        Route::resource('payrolls', \App\Http\Controllers\PayrollController::class);
 
         Route::resource('news', \App\Http\Controllers\NewController::class);
         Route::resource('home-attendances', \App\Http\Controllers\HomeAttendanceController::class);
@@ -64,7 +65,7 @@ Route::middleware(['preventBackHistory'])->group(function () {
         Route::get('employees/index', [\App\Http\Controllers\LabourerController::class, 'employeeIndex'])->name('labourers.employees');
         Route::resource('labours', \App\Http\Controllers\LabourController::class);
         Route::resource('departments', \App\Http\Controllers\DepartmentController::class);
-        Route::resource('contracts', \App\Http\Controllers\ContractController::class);
+        Route::resource('contracts', \App\Http\Controllers\LabourerContractController ::class);
         Route::resource('leaves', \App\Http\Controllers\LeaveController::class);
         Route::resource('attendances', \App\Http\Controllers\AttendanceController::class);
         Route::resource('receipts', \App\Http\Controllers\ReceiptController::class);
@@ -176,8 +177,11 @@ Route::middleware(['preventBackHistory'])->group(function () {
         /**
          * Human-Resource Routes
          */
+        // routes/web.php
+
+
+        Route::resource('labourer-contract-benefits', \App\Http\Controllers\LabourerContractBenefitController::class);
         Route::resource('human-resources', \App\Http\Controllers\HumanResourceController::class);
-        Route::resource('contracts', \App\Http\Controllers\ContractController::class);
         Route::resource('contract-types', \App\Http\Controllers\ContractTypeController::class);
 
         /**

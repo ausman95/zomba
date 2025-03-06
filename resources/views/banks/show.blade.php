@@ -125,11 +125,11 @@
                                         <tr>
                                             <td>{{ $c++ }}</td>
                                             <td>{{ date('d F Y', strtotime($transaction->created_at)) }}</td>
-                                            <td>{{ ucwords($transaction->description) }}</td>
+                                            <td>{{ ucwords($transaction->name) }}</td>
                                             <td>{{ ucwords(@$transaction->account->name) }}</td>
                                             <td>
                                                 @if($transaction->type == 1)
-                                                    {{ number_format($transaction->amount, 2) }}
+                                                    {{ number_format(abs($transaction->amount), 2) }}
                                                 @elseif($transaction->type == 2)
                                                     ({{ number_format(abs($transaction->amount), 2) }})
                                                 @endif

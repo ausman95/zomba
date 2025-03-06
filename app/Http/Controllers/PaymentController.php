@@ -13,6 +13,7 @@ use App\Models\CreditorStatement;
 use App\Models\Department;
 use App\Models\Labourer;
 use App\Models\LabourerPayments;
+use App\Models\Loan;
 use App\Models\Member;
 use App\Models\MemberPayment;
 use App\Models\Ministry;
@@ -376,38 +377,48 @@ class PaymentController extends Controller
         }else{
             $new_balances = $balances-$request->post('amount');
         }
-        if ($request->type == 4) {
+        if ($request->type == 4) { // Employees
 
             $description = $request->post('description');
             $labourerId = $request->post('labourer_id');
             $amount = $request->post('amount');
+            $accountId = $request->post('account_id');
+            $createdBy = $request->post('created_by');
+            $updatedBy = $request->post('updated_by');
+            $paymentMethod = $request->post('payment_method');
+            $transactionDate = $request->post('t_date'); // Assuming 't_date' is the date field
+            $loanDurationMonths = $request->post('loan_duration_months');
 
-            // Create Labourer Payment Record
             $labourerPaymentData = [
                 'expense_name' => $transactions_name . ' For ' . $account->name,
                 'labourer_id' => $labourerId,
                 'amount' => $amount,
-                'account_id' => $request->post('account_id'),
+                'account_id' => $accountId,
                 'description' => $description,
-                'created_by' => $request->post('created_by'),
-                'updated_by' => $request->post('updated_by'),
+                'created_by' => $createdBy,
+                'updated_by' => $updatedBy,
                 'project_id' => $labour_project_id,
-                'balance' => 0, // Default balance to 0
-                'method' => $request->post('payment_method'),
+                'method' => $paymentMethod,
                 'type' => 2,
+                'date' => $transactionDate, // Add the date to the payment
             ];
-
-            if ($description == 2) { // Advance Payment
-                $labourerPaymentData['balance'] = $amount; // Set balance to the amount for advance payments
-            }
-            else { // Normal Payment
-                $lastAdvancePayment = LabourerPayments::where(['labourer_id' => $labourerId, 'description' => 2])->orderBy('id', 'desc')->first();
-                if ($lastAdvancePayment) {
-                    $lastAdvancePayment->update(['balance' => 0]); // Set previous advance balance to 0
-                }
-            }
-
             LabourerPayments::create($labourerPaymentData);
+            if ($description == 2) { // Loan Creation
+                $latestLoan = Loan::where(['labourer_id' => $labourerId])->orderBy('id', 'desc')->first();
+                $previousBalance = $latestLoan ? $latestLoan->remaining_balance : 0;
+                $loanData = [
+                    'labourer_id' => $labourerId,
+                    'loan_amount' => $amount,
+                    'account_id' => $accountId,
+                    'loan_start_date' => $transactionDate,
+                    'loan_duration_months' => $loanDurationMonths,
+                    'monthly_repayment' => $amount/$loanDurationMonths,
+                    'created_by' => $createdBy,
+                    'updated_by' => $updatedBy,
+                    'remaining_balance' => $previousBalance + $amount,
+                ];
+                Loan::create($loanData);
+            }
         }
         if($request->type==3){
             $statement = new CreditorStatement();

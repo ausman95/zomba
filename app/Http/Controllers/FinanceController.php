@@ -9,6 +9,7 @@ use App\Models\DebtorStatement;
 use App\Models\Finance;
 use App\Models\Incomes;
 use App\Models\LabourerPayments;
+use App\Models\Loan;
 use App\Models\Material;
 use App\Models\Month;
 use App\Models\Supplier;
@@ -97,7 +98,7 @@ class FinanceController extends Controller
             ->values();
 
         // Fetch labourer payment balances
-        $labourerPaymentsBalance = LabourerPayments::sum('balance');
+        $labourerPaymentsBalance = Loan::sum('remaining_balance');
 
         // Fetch banks
         $banks = Banks::all();
