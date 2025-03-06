@@ -12,7 +12,9 @@
             <ol class="breadcrumb bg-transparent">
                 <li class="breadcrumb-item"><a href="{{ route('home') }}">Home</a></li>
                 <li class="breadcrumb-item"><a href="{{ route('human-resources.index') }}">Human Resources</a></li>
-                <li class="breadcrumb-item active" aria-current="page">Staff Contracts</li>
+                <li class="breadcrumb-item"><a href="{{ route('contracts.index') }}">Staff Contracts</a></li>
+
+                <li class="breadcrumb-item active" aria-current="page">Staff Contract Details</li>
             </ol>
         </nav>
         <div class="mb-5">
