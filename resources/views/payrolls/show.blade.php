@@ -46,6 +46,7 @@
         <nav aria-label="breadcrumb">
             <ol class="breadcrumb bg-transparent">
                 <li class="breadcrumb-item"><a href="{{ route('home') }}">Home</a></li>
+                <li class="breadcrumb-item"><a href="{{ route('human-resources.index') }}">Human Resources</a></li>
                 <li class="breadcrumb-item"><a href="{{ route('payrolls.index') }}">Payrolls</a></li>
                 <li class="breadcrumb-item active" aria-current="page">Payroll Details</li>
             </ol>
@@ -99,7 +100,7 @@
                     <div class="card-body">
                         <h5 class="card-title">General Details</h5>
                         <p class="card-text"><strong>Employee:</strong> {{ $payroll->labourer->name }}</p>
-                        <p class="card-text"><strong>Job Position:</strong> {{ $payroll->labourer->position->name }}</p>
+                        <p class="card-text"><strong>Job Position:</strong> {{ $payroll->labourer->labour->name }}</p>
                         <p class="card-text"><strong>Month:</strong> {{ $payroll->month->name }}</p>
                         <p class="card-text"><strong>Total Amount (MK):</strong> {{ number_format($payroll->total_amount, 2) }}</p>
                         <p class="card-text"><strong>Status:</strong> {{ $payroll->status }}</p>
