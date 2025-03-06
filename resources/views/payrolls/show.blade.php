@@ -99,6 +99,7 @@
                     <div class="card-body">
                         <h5 class="card-title">General Details</h5>
                         <p class="card-text"><strong>Employee:</strong> {{ $payroll->labourer->name }}</p>
+                        <p class="card-text"><strong>Job Position:</strong> {{ $payroll->labourer->position->name }}</p>
                         <p class="card-text"><strong>Month:</strong> {{ $payroll->month->name }}</p>
                         <p class="card-text"><strong>Total Amount (MK):</strong> {{ number_format($payroll->total_amount, 2) }}</p>
                         <p class="card-text"><strong>Status:</strong> {{ $payroll->status }}</p>
