@@ -129,18 +129,18 @@
                         <span class="sidenav__name">My Tithe</span>
                     </a>
                 @endif
-                <a href="{{route('programs.index')}}" class="sidenav__link {{$cpage === 'programs' ? 'link-active' : ''}}"
-                   title="Programs">
-                    <i class='fa fa-cog sidenav__icon'></i>
-                    <span class="sidenav__name">Programs</span>
-                </a>
+{{--                <a href="{{route('programs.index')}}" class="sidenav__link {{$cpage === 'programs' ? 'link-active' : ''}}"--}}
+{{--                   title="Programs">--}}
+{{--                    <i class='fa fa-cog sidenav__icon'></i>--}}
+{{--                    <span class="sidenav__name">Programs</span>--}}
+{{--                </a>--}}
 
                 @if(request()->user()->designation=='administrator')
-                    <a href="{{route('news.index')}}"
-                       class="sidenav__link {{$cpage === 'news' ? 'link-active' : ''}}" title="News">
-                        <i class='bx bxs-news sidenav__icon'></i>
-                        <span class="sidenav__name">News</span>
-                    </a>
+{{--                    <a href="{{route('news.index')}}"--}}
+{{--                       class="sidenav__link {{$cpage === 'news' ? 'link-active' : ''}}" title="News">--}}
+{{--                        <i class='bx bxs-news sidenav__icon'></i>--}}
+{{--                        <span class="sidenav__name">News</span>--}}
+{{--                    </a>--}}
                 <a href="{{route('users.index')}}" class="sidenav__link {{$cpage === 'users' ? 'link-active' : ''}}"
                    title="Users">
                     <i class='bx bx-user sidenav__icon'></i>
