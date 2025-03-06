@@ -43,9 +43,9 @@
             <a href="{{ route('invoices.index') }}" class="btn btn-primary btn-md rounded-0">
                 <i class="fas fa-shopping-cart"></i> Invoices
             </a>
-            <a href="{{ route('pledges.index') }}" class="btn btn-primary btn-md rounded-0">
-                <i class="fas fa-hand-holding-usd"></i> Pledges
-            </a>
+{{--            <a href="{{ route('pledges.index') }}" class="btn btn-primary btn-md rounded-0">--}}
+{{--                <i class="fas fa-hand-holding-usd"></i> Pledges--}}
+{{--            </a>--}}
             <a href="{{ route('payments.index') }}" class="btn btn-primary btn-md rounded-0">
                 <i class="fas fa-money-bill-wave"></i> Payments
             </a>
