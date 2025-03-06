@@ -1,3 +1,4 @@
+
 @extends('layouts.app')
 
 @section('stylesheets')
@@ -20,7 +21,7 @@
             <hr>
         </div>
         <div class="mt-3">
-            @if($loan->loan_status=='active')
+            @if($loan->loan_status=='Active')
                 <button type="button" class="btn btn-primary btn-md rounded-0" data-bs-toggle="modal" data-bs-target="#editRepaymentModal">
                     <i class="fa fa-edit"></i> Edit Monthly Repayment
                 </button>
@@ -58,28 +59,20 @@
                                 <dl class="row">
                                     <dt class="col-sm-4">Staff Name:</dt>
                                     <dd class="col-sm-8">{{ @$loan->labourer->name }}</dd>
-
                                     <dt class="col-sm-4">Loan Amount:</dt>
                                     <dd class="col-sm-8">{{ number_format($loan->loan_amount, 2) }}</dd>
-
                                     <dt class="col-sm-4">Start Date:</dt>
                                     <dd class="col-sm-8">{{ date('d F Y', strtotime($loan->loan_start_date)) }}</dd>
-
                                     <dt class="col-sm-4">Duration (Months):</dt>
                                     <dd class="col-sm-8">{{ $loan->loan_duration_months }}</dd>
-
                                     <dt class="col-sm-4">Monthly Repayment:</dt>
                                     <dd class="col-sm-8">{{ number_format($loan->monthly_repayment, 2) }}</dd>
-
                                     <dt class="col-sm-4">Remaining Balance:</dt>
                                     <dd class="col-sm-8">{{ number_format($loan->remaining_balance, 2) }}</dd>
-
                                     <dt class="col-sm-4">Loan Status:</dt>
                                     <dd class="col-sm-8">{{ $loan->loan_status }}</dd>
-
                                     <dt class="col-sm-4">Account:</dt>
                                     <dd class="col-sm-8">{{ @$loan->account->name }}</dd>
-
                                     <dt class="col-sm-4">Created By:</dt>
                                     <dd class="col-sm-8">
                                         @if ($loan->created_by)
@@ -88,10 +81,8 @@
                                             N/A
                                         @endif
                                     </dd>
-
                                     <dt class="col-sm-4">Created At:</dt>
                                     <dd class="col-sm-8">{{ date('d F Y H:i:s', strtotime($loan->created_at)) }}</dd>
-
                                     <dt class="col-sm-4">Updated By:</dt>
                                     <dd class="col-sm-8">
                                         @if ($loan->updated_by)
@@ -100,7 +91,6 @@
                                             N/A
                                         @endif
                                     </dd>
-
                                     <dt class="col-sm-4">Updated At:</dt>
                                     <dd class="col-sm-8">{{ date('d F Y H:i:s', strtotime($loan->updated_at)) }}</dd>
                                 </dl>
@@ -110,9 +100,68 @@
                 </div>
             </div>
         </div>
+        <div class="mt-4">
+            <h5>Loan History</h5>
+            <div style="overflow-x: auto;">
+                <table class="table table-bordered table-hover table-striped">
+                    <thead>
+                    <tr>
+                        <th>No</th>
+                        <th>Loan Amount</th>
+                        <th>Start Date</th>
+                        <th>Duration (Months)</th>
+                        <th>Monthly Repayment</th>
+                        <th>Remaining Balance</th>
+                        <th>Loan Status</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    @php $c = 1; @endphp
+                    @foreach ($employeeLoans as $employeeLoan)
+                        <tr>
+                            <td>{{ $c++ }}</td>
+                            <td>{{ number_format($employeeLoan->loan_amount, 2) }}</td>
+                            <td>{{ date('d F Y', strtotime($employeeLoan->loan_start_date)) }}</td>
+                            <td>{{ $employeeLoan->loan_duration_months }}</td>
+                            <td>{{ number_format($employeeLoan->monthly_repayment, 2) }}</td>
+                            <td>{{ number_format($employeeLoan->remaining_balance, 2) }}</td>
+                            <td>{{ $employeeLoan->loan_status }}</td>
+                        </tr>
+                    @endforeach
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="mt-4">
+            <h5>Repayment History</h5>
+            <div style="overflow-x: auto;">
+                <table class="table table-bordered table-hover table-striped">
+                    <thead>
+                    <tr>
+                        <th>No</th>
+                        <th>Date</th>
+                        <th>Amount</th>
+                        <th>Description</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    @php $c = 1; @endphp
+                    @foreach ($repayments as $repayment)
+                        <tr>
+                            <td>{{ $c++ }}</td>
+                            <td>{{ date('d F Y', strtotime($repayment->date)) }}</td>
+                            <td>{{ number_format(abs($repayment->amount), 2) }}</td>
+                            <td>LOAN REPAYMENT ON PAYROLL</td>
+                        </tr>
+                    @endforeach
+                    </tbody>
+                </table>
+            </div>
+        </div>
     </div>
 @stop
 
 @section('scripts')
     <script src="{{ asset('vendor/simple-datatable/simple-datatable.js') }}"></script>
 @stop
+

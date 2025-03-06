@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\LabourerPayments;
 use App\Models\Loan;
 use Illuminate\Http\Request;
 
@@ -28,8 +29,16 @@ class LoanController extends Controller
     }
     public function show(Loan $loan)
     {
-        $cpage = 'human-resources'; // Add this line
+        $cpage = 'human-resources';
 
-        return view('loans.show', compact('loan', 'cpage')); // Pass $cpage to the view
+        // Get all loans for the same employee
+        $employeeLoans = Loan::where('labourer_id', $loan->labourer_id)->get();
+
+        // Get all loan repayments for the same employee
+        $repayments = LabourerPayments::where('labourer_id', $loan->labourer_id)
+            ->where('type', 'loan_repayment')
+            ->get();
+
+        return view('loans.show', compact('loan', 'cpage', 'employeeLoans', 'repayments'));
     }
 }
