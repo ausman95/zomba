@@ -39,6 +39,7 @@
                                                 <th>DATE</th>
                                                 <th>LABOURER NAME</th>
                                                 <th>MONTH</th>
+                                                <th>BENEFITS</th>
                                                 <th>TOTAL AMOUNT</th>
                                                 <th>CREATED BY</th>
                                                 <th>STATUS</th>
@@ -53,6 +54,7 @@
                                                     <td>{{date('d F Y', strtotime($payroll->payroll_date)) }}</td>
                                                     <td>{{ @$payroll->labourer->name }}</td>
                                                     <td>{{ @$payroll->month->name }}</td>
+                                                    <td>{{ @count($payroll->payrollItems) }}</td>
                                                     <td>{{ number_format($payroll->total_amount, 2) }}</td>
                                                     <td>{{ $payroll->creator->name }}</td>
                                                     <td>{{ @$payroll->status }}</td>
