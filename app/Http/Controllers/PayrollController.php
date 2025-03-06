@@ -40,7 +40,7 @@ class PayrollController extends Controller
 
     public function create()
     {
-        $months = Month::orderBy('name', 'ASC')->get(); // Assuming you have a Month model
+        $months = Month::orderBy('id', 'DESC')->get(); // Assuming you have a Month model
         $labourers = Labourer::all();
         $cpage = 'human-resources';
         return view('payrolls.create', compact('cpage', 'months', 'labourers'));
