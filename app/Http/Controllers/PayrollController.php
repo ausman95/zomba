@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\GeneratePayroll;
 use App\Models\Banks;
 use App\Models\Labourer;
 use App\Models\LabourerPayments;
@@ -30,15 +31,28 @@ class PayrollController extends Controller
 
         return redirect()->route('payrolls.index')->with('success-notification', 'Payroll deleted successfully.');
     }
-
-    public function index()
+    public function index(Request $request)
     {
-        $payrolls = Payroll::all(); // Adjust pagination as needed
-        //$payrolls = Payroll::with(['labourer', 'month'])->paginate(10); // Adjust pagination as needed
+        $months = Month::all();
+        $payrolls = []; // Initialize as empty array
+
+        if ($request->has('month') && $request->month != '') {
+            $payrolls = Payroll::where('month_id', $request->month)->get();
+        }
 
         $cpage = 'human-resources';
-        return view('payrolls.index', compact('cpage', 'payrolls'));
+
+        return view('payrolls.index', compact('cpage', 'payrolls', 'months'));
     }
+
+//    public function index()
+//    {
+//        $payrolls = Payroll::all(); // Adjust pagination as needed
+//        //$payrolls = Payroll::with(['labourer', 'month'])->paginate(10); // Adjust pagination as needed
+//
+//        $cpage = 'human-resources';
+//        return view('payrolls.index', compact('cpage', 'payrolls'));
+//    }
 
     public function create()
     {
