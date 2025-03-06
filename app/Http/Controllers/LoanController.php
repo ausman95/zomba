@@ -7,6 +7,19 @@ use Illuminate\Http\Request;
 
 class LoanController extends Controller
 {
+    public function updateRepayment(Request $request, Loan $loan)
+    {
+        $request->validate([
+            'monthly_repayment' => 'required|numeric|min:0',
+        ]);
+
+        $loan->update([
+            'monthly_repayment' => $request->monthly_repayment,
+            'updated_by' => auth()->id(),
+        ]);
+
+        return redirect()->back()->with('success', 'Monthly repayment updated successfully.');
+    }
     public function index()
     {
         $loans= Loan::orderBy('id','desc')->get();

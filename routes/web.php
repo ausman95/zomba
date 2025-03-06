@@ -5,6 +5,7 @@ use App\Http\Controllers\AssetController;
 use App\Http\Controllers\AttendanceRegisterController;
 use App\Http\Controllers\FinanceController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\LoanController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\RequisitionController;
@@ -46,7 +47,7 @@ Route::middleware(['preventBackHistory'])->group(function () {
         Route::resource('invoices', \App\Http\Controllers\InvoiceController::class);
         Route::resource('payrolls', \App\Http\Controllers\PayrollController::class);
         Route::resource('loans', \App\Http\Controllers\LoanController::class);
-
+        Route::put('/loans/{loan}/repayment', [LoanController::class, 'updateRepayment'])->name('loans.updateRepayment');
         Route::resource('news', \App\Http\Controllers\NewController::class);
         Route::resource('home-attendances', \App\Http\Controllers\HomeAttendanceController::class);
         Route::resource('payments', \App\Http\Controllers\PaymentController::class);
