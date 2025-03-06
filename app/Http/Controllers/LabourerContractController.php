@@ -77,7 +77,7 @@ class LabourerContractController extends Controller
 
         return view('contracts.create')->with([
             'cpage'=>"human-resources",
-            'accounts'=>Accounts::all(),
+            'accounts' => Accounts::orderBy('name', 'ASC')->get(),
             'labourers'=>Labourer::where(['soft_delete'=>0])->orderBy('id','desc')->get(),
         ]);
     }
