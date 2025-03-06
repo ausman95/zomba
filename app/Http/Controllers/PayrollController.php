@@ -211,7 +211,7 @@ class PayrollController extends Controller
         $payroll->update([
             'status' => 'Approved',
             'reference' => $request->reference,
-            'updated_by'=> auth()->id(),
+            'updated_by' => auth()->id(),
             'bank_id' => $request->bank_id,
         ]);
 
@@ -237,11 +237,34 @@ class PayrollController extends Controller
                 auth()->id(),
                 $payroll->payroll_date
             );
+
             $description = $item->account->name . ' ' . $labourer->name;
-            if($item->amount<0){
+
+            if ($item->amount < 0) {
                 $type = 1;
                 $description = 'Loan Monthly Repayment';
+
+                // Handle Loan Repayment
+                $loan = \App\Models\Loan::where('labourer_id', $labourer->id)
+                    ->where('loan_status', 'active') // Assuming 'Active' status for ongoing loans
+                    ->first();
+
+                if ($loan) {
+                    $repaymentAmount = abs($item->amount); // Convert negative to positive for repayment
+
+                    // Update Remaining Balance
+                    $loan->remaining_balance -= $repaymentAmount;
+
+                    // Update Loan Status if Fully Repaid
+                    if ($loan->remaining_balance <= 0) {
+                        $loan->loan_status = 'Completed';
+                        $loan->remaining_balance = 0; // Ensure it's not negative
+                    }
+
+                    $loan->save();
+                }
             }
+
             // Create Payment record for each payroll item
             $this->createPaymentRecord(
                 $item->account_id,

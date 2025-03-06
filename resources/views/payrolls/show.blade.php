@@ -135,7 +135,7 @@
                         </div>
                         <div class="col-md-4 text-end">
                             <p>_________________________<br>
-                                Labourer Signature</p>
+                                Employee Signature</p>
                         </div>
                     </div>
                 </div>
