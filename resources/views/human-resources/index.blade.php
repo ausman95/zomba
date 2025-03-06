@@ -40,6 +40,9 @@
             <a href="{{route('payrolls.index')}}" class="btn btn-primary btn-md rounded-0">
                 <i class="fa fa-file-archive"></i>Payroll
             </a>
+            <a href="{{ route('loans.index') }}" class="btn btn-primary btn-md rounded-0">
+                <i class="fa fa-money-bill-alt"></i> Loans
+            </a>
 {{--            <a href="{{route('register.index')}}" class="btn btn-primary btn-md rounded-0">--}}
 {{--                <i class="fa fa-file-alt"></i>Register--}}
 {{--            </a>--}}

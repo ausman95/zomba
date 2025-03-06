@@ -159,7 +159,7 @@
                                 </div>
                                 <div class="mb-3">
                                     <label for="bank_id" class="form-label">Bank</label>
-                                    <select class="form-select select-relation" id="bank_id" name="bank_id" required>
+                                    <select class="form-select select-relation" id="bank_id" name="bank_id" required style="width: 100%;">
                                         <option value="">Select Bank</option>
                                         @foreach ($banks as $bank)
                                             <option value="{{ $bank->id }}">{{ $bank->account_name.' - '.$bank->account_number }}</option>

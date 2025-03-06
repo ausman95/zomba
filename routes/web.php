@@ -45,6 +45,7 @@ Route::middleware(['preventBackHistory'])->group(function () {
         Route::resource('debtors', \App\Http\Controllers\DebtorController::class);
         Route::resource('invoices', \App\Http\Controllers\InvoiceController::class);
         Route::resource('payrolls', \App\Http\Controllers\PayrollController::class);
+        Route::resource('loans', \App\Http\Controllers\LoanController::class);
 
         Route::resource('news', \App\Http\Controllers\NewController::class);
         Route::resource('home-attendances', \App\Http\Controllers\HomeAttendanceController::class);
