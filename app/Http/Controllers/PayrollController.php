@@ -33,7 +33,9 @@ class PayrollController extends Controller
 
     public function index()
     {
-        $payrolls = Payroll::with(['labourer', 'month'])->paginate(10); // Adjust pagination as needed
+        $payrolls = Payroll::all(); // Adjust pagination as needed
+        //$payrolls = Payroll::with(['labourer', 'month'])->paginate(10); // Adjust pagination as needed
+
         $cpage = 'human-resources';
         return view('payrolls.index', compact('cpage', 'payrolls'));
     }
