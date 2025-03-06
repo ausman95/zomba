@@ -17,26 +17,25 @@
         </div>
 
         <div class="mt-3">
-            <a href="{{ route('debtors.create') }}" class="btn btn-primary btn-md rounded-0">
-                <i class="fas fa-plus-circle"></i> New Debtor
-            </a>
+{{--            <a href="{{ route('debtors.create') }}" class="btn btn-primary btn-md rounded-0">--}}
+{{--                <i class="fas fa-plus-circle"></i> New Debtor--}}
+{{--            </a>--}}
 
             <div class="card container-fluid" style="min-height: 30em;">
                 <div class="card" style="min-height: 30em;">
                     <div class="card-body px-1">
-                        @if ($debtors->count() === 0)
-                            <i class="fas fa-info-circle"></i> There are no Debtors!
+                        @if (empty($memberData))
+                            <i class="fas fa-info-circle"></i> There are no Members!
                         @else
                             <div style="overflow-x: auto;">
                                 <table class="table table-bordered table-hover table-striped" id="data-table">
-                                    <caption style="caption-side: top; text-align: center">Debtors</caption>
+                                    <caption style="caption-side: top; text-align: center">Members</caption>
                                     <thead>
                                     <tr>
                                         <th>NO</th>
                                         <th>NAME</th>
                                         <th>PHONE</th>
-                                        <th>EMAIL</th>
-                                        <th>ADDRESS</th>
+                                        <th>HOME</th>
                                         <th>BALANCE</th>
                                         <th>CREATED ON</th>
                                         <th>CREATED BY</th>
@@ -46,21 +45,18 @@
                                     </thead>
                                     <tbody>
                                         <?php $c = 1; ?>
-                                    @foreach ($debtors as $debtor)
+                                    @foreach ($memberData as $data)
                                         <tr>
                                             <td>{{ $c++ }}</td>
-                                            <td>{{ $debtor->name }}</td>
-                                            <td>{{ $debtor->phone_number }}</td>
-                                            <td>{{ $debtor->email }}</td>
-                                            <td>{{ $debtor->address ?? '-' }}</td>
-                                            <td>
-                                                {{ number_format($debtor->latestStatement?->balance ?? 0, 2) }}
-                                            </td>
-                                            <td>{{ date('d F Y', strtotime($debtor->created_at)) }}</td>
-                                            <td>{{ \App\Models\User::find($debtor->created_by)?->name ?? '-' }}</td>
-                                            <td>{{ \App\Models\User::find($debtor->updated_by)?->name ?? '-' }}</td>
+                                            <td>{{ $data['member']->name }}</td>
+                                            <td>{{ $data['member']->phone_number }}</td>
+                                            <td>{{ \App\Models\Church::find($data['member']->church_id)->name }}</td>
+                                            <td>{{ number_format($data['balance'], 2) }}</td>
+                                            <td>{{ date('d F Y', strtotime($data['member']->created_at)) }}</td>
+                                            <td>{{ \App\Models\User::find($data['member']->created_by)?->name ?? '-' }}</td>
+                                            <td>{{ \App\Models\User::find($data['member']->updated_by)?->name ?? '-' }}</td>
                                             <td class="pt-1">
-                                                <a href="{{ route('debtors.show', $debtor) }}"
+                                                <a href="{{ route('members.show', $data['member']) }}"
                                                    class="btn btn-primary btn-md rounded-0">
                                                     <i class="fas fa-list-ol"></i> Manage
                                                 </a>

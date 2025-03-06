@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Debtor;
+use App\Models\MemberPayment;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 
@@ -10,10 +11,39 @@ class DebtorController extends Controller
 {
     public function index()
     {
-        $cpage = 'finances';
-        $debtors = Debtor::with('latestStatement')->get();
+        // Fetch members with calculated balances
+        $members = MemberPayment::where('transaction_type', 0)
+            ->distinct('member_id')
+            ->pluck('member_id');
 
-        return view('debtors.index', compact('cpage','debtors'));
+        $memberData = [];
+        foreach ($members as $memberId) {
+            $member = \App\Models\Member::find($memberId);
+
+            if ($member) {
+                $totalIn = MemberPayment::where('member_id', $memberId)
+                    ->where('transaction_type', 0)
+                    ->sum('amount');
+
+                $totalOut = MemberPayment::where('member_id', $memberId)
+                    ->where('transaction_type', 2)
+                    ->sum('amount');
+
+                $balance = $totalIn - $totalOut;
+
+                $memberData[] = [
+                    'member' => $member,
+                    'balance' => $balance,
+                ];
+            }
+        }
+
+        // Fetch debtors for the second part of the view
+        $cpage = 'finances';
+        $debtors = \App\Models\Debtor::with('latestStatement')->get(); // Use the full namespace
+
+        // Return the view with both member data and debtor data
+        return view('debtors.index', compact('memberData', 'cpage', 'debtors'));
     }
 
     public function create()
