@@ -100,7 +100,7 @@
                         <h5 class="card-title">General Details</h5>
                         <p class="card-text"><strong>Employee:</strong> {{ $payroll->labourer->name }}</p>
                         <p class="card-text"><strong>Month:</strong> {{ $payroll->month->name }}</p>
-                        <p class="card-text"><strong>Total Amount:</strong> {{ number_format($payroll->total_amount, 2) }}</p>
+                        <p class="card-text"><strong>Total Amount (MK):</strong> {{ number_format($payroll->total_amount, 2) }}</p>
                         <p class="card-text"><strong>Status:</strong> {{ $payroll->status }}</p>
                         <p class="card-text"><strong>Payroll Date:</strong> {{date('d F Y', strtotime($payroll->payroll_date)) }}</p>
                     </div>
@@ -112,7 +112,7 @@
                         @php $c = 1; @endphp
                         @forelse ($payroll->payrollItems as $item)
                             <li class="list-group-item">
-                                {{ $c++ . ' - ' . ($item->account->name ?? $item->description) }} - <strong>{{ number_format(abs($item->amount), 2) }}</strong> ({{ $item->type }})
+                                {{ $c++ . ' - ' . ($item->account->name ?? $item->description) }} - <strong>(MK) {{ number_format(abs($item->amount), 2) }}</strong> ({{ $item->type }})
                                 @if($item->amount < 0)
                                     <span class="text-danger"> (Deduction)</span>
                                 @endif
