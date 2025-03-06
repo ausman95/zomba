@@ -163,47 +163,46 @@
                 </h5>
                 <div class="card shadow-sm">
                     <div class="card-body">
-                        @if($member->pledges->count() === 0)
-                            <i class="fa fa-info-circle"></i>There are no Pledges!
-                        @else
                             <div style="overflow-x:auto;">
-                                <table class="table  table2 table-bordered table-hover table-striped">
-                                    <caption style=" caption-side: top; text-align: center">Pledges</caption>
+                                <table class="table table2 table-bordered table-striped" id="incomes-table">
+                                    <caption style=" caption-side: top; text-align: center">MEMBER PLEDGES</caption>
                                     <thead>
                                     <tr>
                                         <th>NO</th>
                                         <th>DATE</th>
-                                        <th>ACCOUNT</th>
-                                        <th>AMOUNT (MK)</th>
-                                        <th>ACTION</th>
+                                        <th>TRANSACTION NAME</th>
+                                        <th>AMOUNT (MK)</th>{{--                                        <th>PAYMENT TYPE</th>--}}
+
+                                                                                <th>STATUS</th>
+                                        <th>CREATED BY</th>
+                                        <th>UPDATED BY</th>
                                     </tr>
                                     </thead>
                                     <tbody>
-                                        <?php  $c= 1;?>
-                                    @foreach($member->pledges as $pledge)
-                                        <tr>
-                                            <td>{{$c++}}</td>
-                                            <td>{{date('d F Y', strtotime($pledge->date)) }}</td>
-                                            <td>{{ucwords($pledge->account->name) }}</td>
-                                            <th>
-                                                @if($pledge->type == 1)
-                                                    ({{number_format($pledge->amount,2) }})
-                                                @else
-                                                    {{number_format($pledge->amount,2) }}
-                                                @endif
-                                            </th>
-                                            <td class="pt-1">
-                                                <a href="{{route('pledges.show',$pledge->id)}}"
-                                                   class="btn btn-primary btn-md rounded-0">
-                                                    <i class="fa fa-list-ol"></i> Manage
-                                                </a>
-                                            </td>
-                                        </tr>
+                                        <?php  $c = 1; $balance = 0;?>
+                                    @foreach($transactions as $transaction)
+                                        @if($transaction->transaction_type==0)
+                                            <tr>
+                                                <td>{{$c++}}</td>
+                                                <td>{{date('d F Y', strtotime($transaction->t_date)) }}</td>
+                                                <td>{{ucwords($transaction->account->name) }}</td>
+                                                <th>
+                                                    @if($transaction->amount< 0)
+                                                        ({{number_format($transaction->amount*-1,2) }})
+                                                    @else
+                                                        {{number_format($transaction->amount,2) }}
+                                                    @endif
+                                                </th>
+{{--                                                <td>{{ucwords($transaction->amount < 0 ? "CR" : "DR") }}</td>--}}
+                                                <th>{{ucwords($transaction->status == 1 ? "VERIFIED" : "UN~VERIFIED") }}</th>
+                                                <td>{{\App\Models\Budget::userName($transaction->created_by)}}</td>
+                                                <td>{{\App\Models\Budget::userName($transaction->updated_by)}}</td>
+                                            </tr>
+                                        @endif
                                     @endforeach
                                     </tbody>
                                 </table>
                             </div>
-                        @endif
                     </div>
                 </div>
             </div>
@@ -225,7 +224,7 @@
                                         <th>DATE</th>
                                         <th>TRANSACTION NAME</th>
                                         <th>AMOUNT (MK)</th>
-                                        <th>PAYMENT TYPE</th>
+{{--                                        <th>PAYMENT TYPE</th>--}}
                                         <th>STATUS</th>
                                         <th>CREATED BY</th>
                                         <th>UPDATED BY</th>
@@ -234,6 +233,7 @@
                                     <tbody>
                                         <?php  $c = 1; $balance = 0;?>
                                     @foreach($transactions as $transaction)
+                                        @if($transaction->transaction_type==2)
                                         <tr>
                                             <td>{{$c++}}</td>
                                             <td>{{date('d F Y', strtotime($transaction->t_date)) }}</td>
@@ -245,11 +245,12 @@
                                                     {{number_format($transaction->amount,2) }}
                                                 @endif
                                             </th>
-                                            <td>{{ucwords($transaction->amount < 0 ? "CR" : "DR") }}</td>
+{{--                                            <td>{{ucwords($transaction->amount < 0 ? "CR" : "DR") }}</td>--}}
                                             <th>{{ucwords($transaction->status == 1 ? "VERIFIED" : "UN~VERIFIED") }}</th>
                                             <td>{{\App\Models\Budget::userName($transaction->created_by)}}</td>
                                             <td>{{\App\Models\Budget::userName($transaction->updated_by)}}</td>
                                         </tr>
+                                        @endif
                                     @endforeach
                                     </tbody>
                                 </table>

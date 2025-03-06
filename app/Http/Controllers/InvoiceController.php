@@ -8,9 +8,12 @@ use App\Models\CreditorStatement;
 use App\Models\Debtor;
 use App\Models\DebtorStatement;
 use App\Models\Invoice;
+use App\Models\Member;
+use App\Models\MemberPayment;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Str;
 
 class InvoiceController extends Controller
 {
@@ -23,7 +26,7 @@ class InvoiceController extends Controller
     public function create()
     {
         $creditors = Creditor::all(); // Fetch all creditors
-        $debtors = Debtor::all();     // Fetch all debtors
+        $debtors = Member::orderBy('name','ASC')->get();     // Fetch all debtors
 
         // Combine creditors and debtors into a single collection
         $cpage = 'finances';
@@ -36,9 +39,13 @@ class InvoiceController extends Controller
     public function store(Request $request)
     {
         $partyType = $request->input('party');
+        $invoice_number = $this->generateUniqueInvoiceNumber();
+
+        if ($request->input('invoice_number')) {
+            $invoice_number = $request->input('invoice_number');
+        }
 
         $rules = [
-            'invoice_number' => 'required',
             'invoice_date' => 'required|date',
             'amount' => 'required|numeric',
             'account_id' => 'required|exists:accounts,id',
@@ -55,65 +62,84 @@ class InvoiceController extends Controller
             $request->validate($rules);
 
             $party = Creditor::find($request->input('creditor_id'));
-            $statementModel = new CreditorStatement();
+            // No statementModel needed here for creditors.
         } elseif ($partyType === 'debtor') {
-            $rules['debtor_id'] = 'required|exists:debtors,id';
+            $rules['member_id'] = 'required|exists:members,id';
             $request->validate($rules);
 
-            $party = Debtor::find($request->input('debtor_id'));
-            $statementModel = new DebtorStatement();
+            $party = Member::find($request->input('member_id'));
         } else {
             return back()->with('error-notification', 'Invalid party type.');
         }
 
-        $request->validate([
-            'invoice_number' => 'unique:invoices,invoice_number', // Unique rule for the INVOICES table
-        ]);
-
         DB::beginTransaction();
 
         try {
-            // Create Invoice Record (in the 'invoices' table)
             $invoice = new Invoice();
-            $invoice->invoice_number = $request->input('invoice_number');
+            $invoice->invoice_number = $invoice_number;
             $invoice->invoice_date = $request->input('invoice_date');
             $invoice->amount = $request->input('amount');
             $invoice->description = $request->input('description');
             $invoice->account_id = $request->input('account_id');
-            $invoice->party = $partyType; // Store the party type
-            $invoice->creditor_id = ($partyType === 'creditor') ? $party->id : null; // Conditional creditor_id
-            $invoice->debtor_id = ($partyType === 'debtor') ? $party->id : null;   // Conditional debtor_id
+            $invoice->party = $partyType;
+            $invoice->creditor_id = ($partyType === 'creditor') ? $party->id : null;
+            $invoice->member_id = ($partyType === 'debtor') ? $party->id : null;
             $invoice->created_by = $request->input('created_by');
             $invoice->updated_by = $request->input('updated_by');
             $invoice->save();
 
-            $statement = $statementModel;
-            $statement->{$partyType . '_id'} = $party->id;
-            $statement->account_id = $request->input('account_id');
-            $statement->{$partyType . '_invoice_id'} = $invoice->id; // Use the new $invoice->id
-            $statement->amount = $invoice->amount;
-            $statement->type = 'invoice';
-            $statement->description = 'Invoice #' . $invoice->invoice_number;
-            $statement->created_by = $request->input('created_by');
-            $statement->updated_by = $request->input('updated_by');
+            if ($partyType === 'debtor') {
+                // Create a record in member_payments
+                $payment = new MemberPayment();
+                $payment->member_id = $party->id;
+                $payment->account_id = $request->input('account_id');
+                $payment->amount = $invoice->amount;
+                $payment->transaction_type = 'invoice'; // Or another appropriate type
+                $payment->name = 'Invoice #' . $invoice->invoice_number;
+                $payment->t_date = $invoice->invoice_date;
+                $payment->created_by = $request->input('created_by');
+                $payment->updated_by = $request->input('updated_by');
 
-            $previousStatement = $statementModel::where($partyType . '_id', $party->id)
-                ->orderBy('id', 'desc')
-                ->first();
+                // Calculate the balance
+                $previousPayment = MemberPayment::where('member_id', $party->id)
+                    ->where('account_id', $request->input('account_id')) // Add account_id filter
+                    ->orderBy('id', 'desc')
+                    ->first();
 
-            $previousBalance = $previousStatement ? $previousStatement->balance : 0;
-            $statement->balance = $previousBalance + $invoice->amount;
-            $statement->save();
+                $previousBalance = $previousPayment ? $previousPayment->balance : 0;
+                $payment->balance = $previousBalance + $invoice->amount;
+                $payment->save();
+            }
 
             DB::commit();
 
             return redirect()->route('invoices.index')->with('success-notification', 'Invoice created!');
-
         } catch (\Exception $e) {
             DB::rollBack();
             Log::error($e);
             return back()->with('error-notification', $e->getMessage() . ' Error creating invoice. Please try again.');
         }
+    }
+
+    private function generateUniqueInvoiceNumber()
+    {
+        $prefix = 'INV';
+        return $prefix . '-' . Str::uuid(); // Use UUIDs
+        //Or the below solution if UUIDs are not desirable.
+        /*
+        $prefix = 'INV';
+        $randomNumber = mt_rand(100000, 999999);
+        $timestamp = time();
+        $invoiceNumber = $prefix . '-' . $randomNumber . '-' . $timestamp;
+
+        $existingInvoice = Invoice::where('invoice_number', $invoiceNumber)->first();
+
+        if ($existingInvoice) {
+            return $this->generateUniqueInvoiceNumber();
+        }
+
+        return $invoiceNumber;
+        */
     }
 
     public function show(Invoice $invoice)

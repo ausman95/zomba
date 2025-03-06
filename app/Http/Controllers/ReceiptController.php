@@ -215,7 +215,7 @@ class ReceiptController extends Controller
             'churches'=>Church::where(['soft_delete'=>0])->orderBy('id','desc')->get(),
             'ministries'=>Ministry::where(['soft_delete'=>0])->orderBy('id','desc')->get(),
             'projects'=>$projects,
-            'debtors'=>Debtor::orderBy('id','desc')->get(),
+            'debtors'=>Member::orderBy('id','desc')->get(),
             'labourers'=>$labourer,
             'accounts'=>$accounts
         ]);
@@ -373,32 +373,39 @@ class ReceiptController extends Controller
                 $order->generateHomeReceipt($last_id->id, $monthID->name);
             }
         }
-        if($request->type==2){
-            $bala = DebtorStatement::where(['debtor_id'=>$request->
-            post('debtor_id')])->orderBy('id','desc')->first();
-            @$balances = $bala->balance;
-            if(!$balances){
-                $balances = 0;
-            }
-            $debtors= [
-                'name'=>$transactions_name.' For '.$account->name,
-                'debtor_id'=>$request->post('debtor_id'),
-                'amount'=>$request->post('amount'),
-                'account_id'=>$request->post('account_id'),
-                'created_by'=>$request->post('created_by'),
-                'updated_by'=>$request->post('updated_by'),
-                'balance'=>$balances-$request->post('amount'),
-                'type'=>'Payment',
-                'debtor_invoice_id'=>'222222',
-                'description'=>'Payment',
-                'transaction_type'=>2,
-            ];
-            $last_id = DebtorStatement::create($debtors);
-            $order = new DeliveryController();
-            if($request->post('amount')>0) {
-                $order->generateDebtorReceipt($last_id->id, $monthID->name);
-            }
-        }
+//        if ($request->type == 2) {
+//            $bala = MemberPayment::where([
+//                'member_id' => $request->post('debtor_id'),
+//                'account_id' => $request->post('account_id'),
+//            ])->orderBy('id', 'desc')->first();
+//
+//            @$balances = $bala->balance;
+//            if (!$balances) {
+//                $balances = 0;
+//            }
+//
+//            $members = [
+//                'name' => $transactions_name . ' For ' . $account->name,
+//                'member_id' => $request->post('debtor_id'),
+//                'amount' => $request->post('amount'),
+//                'account_id' => $request->post('account_id'),
+//                'created_by' => $request->post('created_by'),
+//                'updated_by' => $request->post('updated_by'),
+//                'balance' => $balances - $request->post('amount'),
+//                'transaction_type' => 'Payment',
+//                'payment_id' =>$payment, // Replace with actual payment ID logic
+//                't_date' => $request->post('t_date'),
+//                'month_id' => $monthID->id, // Assuming $monthID is available and has an id property
+//                'status' => 'Completed', // Or any appropriate status
+//                'pledge' => 0, // Or any appropriate pledge value, if applicable
+//            ];
+//
+//            $last_id = MemberPayment::create($members);
+//            $order = new DeliveryController();
+//            if ($request->post('amount') > 0) {
+//                $order->generateDebtorReceipt($last_id->id, $monthID->name);
+//            }
+//        }
         if($request->type==7){
             $bala = MinistryPayment::where(['ministry_id'=>$request->post('ministry_id')])->orderBy('id','desc')->first();
             @$balances = $bala->balance;

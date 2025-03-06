@@ -41,45 +41,47 @@
                                 <option value="debtor" {{ old('party_type') == 'debtor' ? 'selected' : '' }}>Debtor</option>
                             </select>
                         </div>
-
-                        <div class="mb-3 creditor-select d-none">
-                            <label for="creditor_id" class="form-label">Creditor</label>
-                            <select name="creditor_id" id="creditor_id" class="select-relation form-control @error('creditor_id') is-invalid @enderror" style="width: 100%">
-                                <option value="">Select Creditor</option>
-                                @foreach ($creditors as $creditor)
-                                    <option value="{{ $creditor->id }}" {{ old('creditor_id') == $creditor->id ? 'selected' : '' }}>
-                                        {{ $creditor->name }}
-                                    </option>
-                                @endforeach
-                            </select>
-                            @error('creditor_id')
-                            <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
+                        <div class="creditor-select d-none">
+                            <div class="mb-3">
+                                <label for="creditor_id" class="form-label">Creditor</label>
+                                <select name="creditor_id" id="creditor_id" class="select-relation form-control @error('creditor_id') is-invalid @enderror" style="width: 100%">
+                                    <option value="">Select Creditor</option>
+                                    @foreach ($creditors as $creditor)
+                                        <option value="{{ $creditor->id }}" {{ old('creditor_id') == $creditor->id ? 'selected' : '' }}>
+                                            {{ $creditor->name }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                                @error('creditor_id')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
+                            <div class="mb-3">
+                                <label for="invoice_number" class="form-label">Invoice Number</label>
+                                <input type="text" name="invoice_number" id="invoice_number" class="form-control @error('invoice_number') is-invalid @enderror" value="{{ old('invoice_number') }}" placeholder="Invoice Number">
+                                @error('invoice_number')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
                         </div>
-
                         <div class="mb-3 debtor-select d-none">
-                            <label for="debtor_id" class="form-label">Debtor</label>
-                            <select name="debtor_id" id="debtor_id" class="select-relation form-control @error('debtor_id') is-invalid @enderror" style="width: 100%">
+                            <label for="member_id" class="form-label">Debtor</label>
+                            <select name="member_id" id="member_id" class="select-relation form-control @error('member_id') is-invalid @enderror" style="width: 100%">
                                 <option value="">Select Debtor</option>
                                 @foreach ($debtors as $debtor)
-                                    <option value="{{ $debtor->id }}" {{ old('debtor_id') == $debtor->id ? 'selected' : '' }}>
+                                    <option value="{{ $debtor->id }}" {{ old('member_id') == $debtor->id ? 'selected' : '' }}>
                                         {{ $debtor->name }}
                                     </option>
                                 @endforeach
                             </select>
-                            @error('debtor_id')
+                            @error('member_id')
                             <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
+
                         </div>
 
 
-                        <div class="mb-3">
-                            <label for="invoice_number" class="form-label">Invoice Number</label>
-                            <input type="text" name="invoice_number" id="invoice_number" class="form-control @error('invoice_number') is-invalid @enderror" value="{{ old('invoice_number') }}" required placeholder="Invoice Number">
-                            @error('invoice_number')
-                            <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
-                        </div>
+
 
                         <div class="mb-3">
                             <label for="invoice_date" class="form-label">Invoice Date</label>
@@ -134,19 +136,19 @@
 
 @stop
 @section('scripts')
-<script>
-    $(document).ready(function () {
-        $('#party_type').on('change', function () {
-            let type = $(this).val();
-            if(type==='creditor'){
-                $('.debtor-select').addClass('d-none').removeClass('show');
-                $('.creditor-select').addClass('show').removeClass('d-none');
-            }
-            if(type==='debtor'){
-                $('.debtor-select').addClass('show').removeClass('d-none');
-                $('.creditor-select').addClass('d-none').removeClass('show');
-            }
+    <script>
+        $(document).ready(function () {
+            $('#party_type').on('change', function () {
+                let type = $(this).val();
+                if(type==='creditor'){
+                    $('.debtor-select').addClass('d-none').removeClass('show');
+                    $('.creditor-select').addClass('show').removeClass('d-none');
+                }
+                if(type==='debtor'){
+                    $('.debtor-select').addClass('show').removeClass('d-none');
+                    $('.creditor-select').addClass('d-none').removeClass('show');
+                }
+            });
         });
-    });
-</script>
+    </script>
 @endsection

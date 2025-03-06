@@ -76,7 +76,7 @@ class MemberController extends Controller
     }
     public function index()
     {
-        $members = Member::where(['soft_delete'=>0])->orderBy('id','desc')->get();
+        $members = Member::where(['soft_delete'=>0])->orderBy('name','ASC')->get();
         if(request()->user()->designation=='church'){
             $members = $this->getHomeChurchMembers();
         }

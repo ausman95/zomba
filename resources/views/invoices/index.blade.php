@@ -54,7 +54,7 @@
                                             <td>{{ $invoice->description ?? '-' }}</td>
                                             <td>{{ $invoice->party ?? '-' }}</td>
                                             <td>@if($invoice->party==='debtor')
-                                                {{ $invoice->debtor->name}}
+                                                {{ $invoice->member->name}}
                                                 @else
                                                     {{ $invoice->creditor->name}}
                                                 @endif

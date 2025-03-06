@@ -17,8 +17,8 @@ class Invoice extends Model
     /**
      * Get the debtor that owns the invoice.
      */
-    public function debtor()
+    public function member()
     {
-        return $this->belongsTo(Debtor::class);
+        return $this->belongsTo(Member::class);
     }
 }
