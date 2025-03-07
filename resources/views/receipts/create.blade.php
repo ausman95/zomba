@@ -213,6 +213,8 @@
                             <label>Type</label>
                             <select name="pledge" required class="form-select select-relation @error('pledge') required is-invalid @enderror" style="width: 100%">{{old('pledge')}} >
                                 <option value="1">Normal</option>
+                                <option value="2">Pledge</option>
+
                             </select>
                             @error('pledge')
                             <span class="invalid-feedback">

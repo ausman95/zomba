@@ -10,7 +10,7 @@
                 <li class="breadcrumb-item"><a href="{{ route('home') }}">Home</a></li>
                 <li class="breadcrumb-item"><a href="{{ route('finances.index') }}">Finances</a></li>
                 <li class="breadcrumb-item"><a href="{{ route('debtors.index') }}">Debtors</a></li>
-                <li class="breadcrumb-item active" aria-current="page">{{ $debtor->name }}</li>
+                <li class="breadcrumb-item active" aria-current="page">{{$member->name }}</li>
             </ol>
         </nav>
 
@@ -19,95 +19,100 @@
         </div>
 
         <div class="row">
-            <div class="col-md-4">  {{-- Debtor Information --}}
+            <div class="col-sm-12">
                 <h5>
-                    <i class="fas fa-info-circle"></i> Debtor Information
+                    <i class="fa fa-microscope"></i>Member Pledges
                 </h5>
                 <div class="card shadow-sm">
                     <div class="card-body">
-                        <table class="table table-bordered table-hover table-striped">
-                            <tbody>
-                            <tr>
-                                <th>Name</th>
-                                <td>{{ $debtor->name }}</td>
-                            </tr>
-                            <tr>
-                                <th>Phone Number</th>
-                                <td>{{ $debtor->phone_number }}</td>
-                            </tr>
-                            <tr>
-                                <th>Email</th>
-                                <td>{{ $debtor->email }}</td>
-                            </tr>
-                            <tr>
-                                <th>Address</th>
-                                <td>{{ $debtor->address ?? '-' }}</td>
-                            </tr>
-                            <tr>
-                                <th>Created On</th>
-                                <td>{{ $debtor->created_at->format('d F Y') }}</td>
-                            </tr>
-                            <tr>
-                                <th>Created By</th>
-                                <td>{{ \App\Models\User::find($debtor->created_by)?->name ?? '-' }}</td>
-                            </tr>
-                            <tr>
-                                <th>Updated By</th>
-                                <td>{{ \App\Models\User::find($debtor->updated_by)?->name ?? '-' }}</td>
-                            </tr>
-                            </tbody>
-                        </table>
+                        <div style="overflow-x:auto;">
+                            <table class="table table-bordered table-striped" >
+                                <caption style=" caption-side: top; text-align: center">MEMBER PLEDGES</caption>
+                                <thead>
+                                <tr>
+                                    <th>NO</th>
+                                    <th>DATE</th>
+                                    <th>TRANSACTION NAME</th>
+                                    <th>AMOUNT (MK)</th>{{--                                        <th>PAYMENT TYPE</th>--}}
 
-                        <div class="mt-3">
-                            <a href="{{ route('debtors.edit', $debtor) }}" class="btn btn-primary rounded-0">
-                                <i class="fas fa-edit"></i> Update
-                            </a>
-                            @if(request()->user()->designation == 'administrator')
-                                <button class="btn btn-danger rounded-0" id="delete-btn">
-                                    <i class="fas fa-trash"></i> Delete
-                                </button>
-                                <form action="{{ route('debtors.destroy', $debtor) }}" method="POST" id="delete-form" class="d-inline">
-                                    @csrf
-                                    @method('DELETE')
-                                </form>
-                            @endif
+                                    <th>STATUS</th>
+                                    <th>CREATED BY</th>
+                                    <th>UPDATED BY</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <?php  $c = 1; $balance = 0;?>
+                                @foreach($transactions as $transaction)
+                                    @if($transaction->transaction_type==0)
+                                        <tr>
+                                            <td>{{$c++}}</td>
+                                            <td>{{date('d F Y', strtotime($transaction->t_date)) }}</td>
+                                            <td>{{ucwords($transaction->account->name) }}</td>
+                                            <th>
+                                                @if($transaction->amount< 0)
+                                                    ({{number_format($transaction->amount*-1,2) }})
+                                                @else
+                                                    {{number_format($transaction->amount,2) }}
+                                                @endif
+                                            </th>
+                                            {{--                                                <td>{{ucwords($transaction->amount < 0 ? "CR" : "DR") }}</td>--}}
+                                            <th>{{ucwords($transaction->status == 1 ? "VERIFIED" : "UN~VERIFIED") }}</th>
+                                            <td>{{\App\Models\Budget::userName($transaction->created_by)}}</td>
+                                            <td>{{\App\Models\Budget::userName($transaction->updated_by)}}</td>
+                                        </tr>
+                                    @endif
+                                @endforeach
+                                </tbody>
+                            </table>
                         </div>
                     </div>
                 </div>
-            </div>  {{-- End Debtor Information --}}
-
-            <div class="col-md-8">  {{-- Debtor Statements --}}
+            </div>
+            <div class="col-sm-12">
                 <h5>
-                    <i class="fas fa-file-alt"></i> Debtor Statements
+                    <i class="fa fa-microscope"></i>Member Pledges Payments
                 </h5>
                 <div class="card shadow-sm">
                     <div class="card-body">
-                        @if ($debtor->statements->isEmpty())
-                            <p>No statements found for this debtor.</p>
+                        @if($transactions->count() === 0)
+                            <i class="fa fa-info-circle"></i>There are no Transactions!
                         @else
-                            <div class="table-responsive">
-                                <table class="table table-bordered table-hover table-striped">
+                            <div style="overflow-x:auto;">
+                                <table class="table table-bordered table-striped">
+                                    <caption style=" caption-side: top; text-align: center">MEMBER TRANSACTIONS</caption>
                                     <thead>
                                     <tr>
-                                        <th>No</th>
-                                        <th>Date</th>
-                                        <th>Description</th>
-                                        <th>Type</th>
-                                        <th>Amount</th>
-                                        <th>Balance</th>
+                                        <th>NO</th>
+                                        <th>DATE</th>
+                                        <th>TRANSACTION NAME</th>
+                                        <th>AMOUNT (MK)</th>
+                                        {{--                                        <th>PAYMENT TYPE</th>--}}
+                                        <th>STATUS</th>
+                                        <th>CREATED BY</th>
+                                        <th>UPDATED BY</th>
                                     </tr>
                                     </thead>
                                     <tbody>
-                                    @php $c = 1; @endphp
-                                    @foreach ($debtor->statements as $statement)
-                                        <tr>
-                                            <td>{{$c++}}</td>
-                                            <td>{{ $statement->created_at->format('d F Y') }}</td>
-                                            <td>{{ $statement->description }}</td>
-                                            <td>{{ $statement->type }}</td>
-                                            <td>{{ number_format($statement->amount, 2) }}</td>
-                                            <td>{{ number_format($statement->balance, 2) }}</td>
-                                        </tr>
+                                        <?php  $c = 1; $balance = 0;?>
+                                    @foreach($transactions as $transaction)
+                                        @if($transaction->transaction_type==2 && $transaction->pledge==2)
+                                            <tr>
+                                                <td>{{$c++}}</td>
+                                                <td>{{date('d F Y', strtotime($transaction->t_date)) }}</td>
+                                                <td>{{ucwords($transaction->account->name) }}</td>
+                                                <th>
+                                                    @if($transaction->amount< 0)
+                                                        ({{number_format($transaction->amount*-1,2) }})
+                                                    @else
+                                                        {{number_format($transaction->amount,2) }}
+                                                    @endif
+                                                </th>
+                                                {{--                                            <td>{{ucwords($transaction->amount < 0 ? "CR" : "DR") }}</td>--}}
+                                                <th>{{ucwords($transaction->status == 1 ? "VERIFIED" : "UN~VERIFIED") }}</th>
+                                                <td>{{\App\Models\Budget::userName($transaction->created_by)}}</td>
+                                                <td>{{\App\Models\Budget::userName($transaction->updated_by)}}</td>
+                                            </tr>
+                                        @endif
                                     @endforeach
                                     </tbody>
                                 </table>
@@ -115,30 +120,8 @@
                         @endif
                     </div>
                 </div>
-            </div>  {{-- End Debtor Statements --}}
+            </div>
         </div>  {{-- End Row --}}
 
     </div>
-@stop
-
-@section('scripts')
-    <script>
-        $(document).ready(function () {
-            $("#delete-btn").on('click', function () {
-                Swal.fire({
-                    title: 'Confirm Deletion',
-                    text: 'Are you sure you want to delete this debtor?',
-                    icon: 'warning',
-                    showCancelButton: true,
-                    confirmButtonColor: '#3085d6',
-                    cancelButtonColor: '#d33',
-                    confirmButtonText: 'Yes, Delete'
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        $("#delete-form").submit();
-                    }
-                })
-            });
-        });
-    </script>
 @stop

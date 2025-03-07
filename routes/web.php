@@ -47,7 +47,7 @@ Route::middleware(['preventBackHistory'])->group(function () {
         Route::resource('invoices', \App\Http\Controllers\InvoiceController::class);
         Route::resource('payrolls', \App\Http\Controllers\PayrollController::class);
         Route::resource('loans', \App\Http\Controllers\LoanController::class);
-        Route::put('/loans/{loan}/repayment', [LoanController::class, 'updateRepayment'])->name('loans.updateRepayment');
+        Route::get('/debtor/view', [\App\Http\Controllers\DebtorController::class, 'viewMember'])->name('debtor.view');        Route::put('/loans/{loan}/repayment', [LoanController::class, 'updateRepayment'])->name('loans.updateRepayment');
         Route::resource('news', \App\Http\Controllers\NewController::class);
         Route::resource('home-attendances', \App\Http\Controllers\HomeAttendanceController::class);
         Route::resource('payments', \App\Http\Controllers\PaymentController::class);

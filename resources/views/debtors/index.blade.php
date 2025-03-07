@@ -56,7 +56,7 @@
                                             <td>{{ \App\Models\User::find($data['member']->created_by)?->name ?? '-' }}</td>
                                             <td>{{ \App\Models\User::find($data['member']->updated_by)?->name ?? '-' }}</td>
                                             <td class="pt-1">
-                                                <a href="{{ route('members.show', $data['member']) }}"
+                                                <a href="{{ route('debtor.view', ['id' => $data['member']->id]) }}"
                                                    class="btn btn-primary btn-md rounded-0">
                                                     <i class="fas fa-list-ol"></i> Manage
                                                 </a>

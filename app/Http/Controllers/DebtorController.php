@@ -3,12 +3,35 @@
 namespace App\Http\Controllers;
 
 use App\Models\Debtor;
+use App\Models\Member;
 use App\Models\MemberPayment;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 
 class DebtorController extends Controller
 {
+    public function viewMember()
+    {
+        $memberId = $_GET['id'];
+
+        if (!$memberId) {
+            return redirect()->route('debtor.index')->with('error-notification', 'Member ID is missing.');
+        }
+
+        $member = Member::find($memberId);
+
+        if (!$member) {
+            return redirect()->route('debtor.index')->with('error-notification', 'Member not found.');
+        }
+
+        $transactions = MemberPayment::where('member_id', $member->id)
+            ->with('account')
+            ->get();
+
+        $cpage = 'finances';
+        return view('debtors.show', compact('cpage', 'member', 'transactions'));
+    }
+
     public function index()
     {
         // Fetch members with calculated balances
@@ -27,6 +50,7 @@ class DebtorController extends Controller
 
                 $totalOut = MemberPayment::where('member_id', $memberId)
                     ->where('transaction_type', 2)
+                    ->where('pledge', 2)
                     ->sum('amount');
 
                 $balance = $totalIn - $totalOut;

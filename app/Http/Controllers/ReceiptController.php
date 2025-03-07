@@ -298,7 +298,7 @@ class ReceiptController extends Controller
         ];
 
         $data = $request->post();
-        $pledge = 0;
+        $pledge = $data['pledge'];
         $raw_data = [
             'account_id'=>$data['account_id'],
             'amount'=>$data['amount'],
@@ -310,7 +310,7 @@ class ReceiptController extends Controller
             'month_id'=>$monthID->id,
             'specification'=>$specification,
             'type'=>$account_type,
-            'pledge'=>$pledge,
+            'pledge'=>$data['pledge'],
             'payment_method'=>$data['payment_method'],
             'reference'=>$reference,
         ];
