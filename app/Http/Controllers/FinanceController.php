@@ -11,10 +11,12 @@ use App\Models\Incomes;
 use App\Models\LabourerPayments;
 use App\Models\Loan;
 use App\Models\Material;
+use App\Models\MemberPayment;
 use App\Models\Month;
 use App\Models\Supplier;
 use DateTime;
 use Illuminate\Http\Request;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 
 class FinanceController extends Controller
@@ -45,57 +47,30 @@ class FinanceController extends Controller
     }
     public function generateFinancialStatement(Accounts $accounts, Request $request)
     {
+        // Validate the request
         $this->validateRequest($request);
 
+        // Check for date validity
         if ($request->post('end_date') < $request->post('start_date')) {
             return back()->with(['error-notification' => "Please specify the date correctly!"]);
         }
 
+        // Retrieve start and end dates
         $startAndEndDates = $this->getStartAndEndDates($request);
-        $this->logActivity();
-        $statement = $request->post('statement');
-
-        // Fetch financial data
         $start = $startAndEndDates['start'];
         $end = $startAndEndDates['end'];
 
-        // Fetch debtor balances (latest transactions)
-        $debtorBalances = DebtorStatement::select('debtor_id', DB::raw('MAX(id) as max_id'))
-            ->where('balance', '>', 0)
-            ->groupBy('debtor_id')
-            ->get()
-            ->map(function ($item) {
-                $lastTransaction = DebtorStatement::where('id', $item->max_id)->with('debtor')->first();
-                if ($lastTransaction) {
-                    return (object) [
-                        'debtor_id' => $lastTransaction->debtor_id,
-                        'total_balance' => $lastTransaction->balance,
-                        'name' => $lastTransaction->debtor->name,
-                    ];
-                }
-                return null;
-            })
-            ->filter()
-            ->values();
+        // Log activity
+        $this->logActivity();
 
-        // Fetch creditor balances (latest transactions)
-        $creditorBalances = CreditorStatement::select('creditor_id', DB::raw('MAX(id) as max_id'))
-            ->where('balance', '>', 0)
-            ->groupBy('creditor_id')
-            ->get()
-            ->map(function ($item) {
-                $lastTransaction = CreditorStatement::where('id', $item->max_id)->with('creditor')->first();
-                if ($lastTransaction) {
-                    return (object) [
-                        'creditor_id' => $lastTransaction->creditor_id,
-                        'total_balance' => $lastTransaction->balance,
-                        'name' => $lastTransaction->creditor->name,
-                    ];
-                }
-                return null;
-            })
-            ->filter()
-            ->values();
+        // Get the requested statement type
+        $statement = $request->post('statement');
+
+        // Calculate total debtor balance
+        $totalDebtorBalance = $this->calculateTotalDebtorBalance();
+
+        // Calculate total creditor balance
+        $totalCreditorBalance = $this->calculateTotalCreditorBalance();
 
         // Fetch labourer payment balances
         $labourerPaymentsBalance = Loan::sum('remaining_balance');
@@ -103,13 +78,13 @@ class FinanceController extends Controller
         // Fetch banks
         $banks = Banks::all();
 
-        // Pass the calculated values to the view
-        return view('finances.reports')->with([
+        // Prepare data for the view
+        $viewData = [
             'cpage' => "finances",
             'statement' => $statement,
             'fixedAssets' => $this->fetchFixedAssets(),
-            'start_date' => $startAndEndDates['start'],
-            'end_date' => $startAndEndDates['end'],
+            'start_date' => $start,
+            'end_date' => $end,
             'profit' => $this->calculateProfit(),
             'totalLatestRevaluations' => $this->calculateTotalLatestRevaluations(),
             'totalFixedAssets' => $this->getTotalFixedAssets(),
@@ -128,11 +103,55 @@ class FinanceController extends Controller
             'expenses' => Incomes::accountExpensesAll($statement, $start, $end),
             'admins' => Accounts::getAccountBalanceAdmin($statement, $start, $end),
             'months' => Month::where(['soft_delete' => 0])->orderBy('id', 'desc')->get(),
-            'debtorBalances' => $debtorBalances,
-            'creditorBalances' => $creditorBalances,
+            'totalDebtorBalance' => $totalDebtorBalance,
+            'totalCreditorBalance' => $totalCreditorBalance,
             'labourerPaymentsBalance' => $labourerPaymentsBalance,
-        ]);
+        ];
+
+        // Return the view with the data
+        return view('finances.reports', $viewData);
     }
+
+    /**
+     * Calculate the total debtor balance.
+     *
+     * @return float
+     */
+    private function calculateTotalDebtorBalance(): float
+    {
+        return MemberPayment::where('transaction_type', 0)
+            ->where('pledge', 0)
+            ->sum('amount');
+    }
+
+    /**
+     * Calculate the total creditor balance.
+     *
+     * @return float
+     */
+    private function calculateTotalCreditorBalance(): float
+    {
+        $memberCreditors = MemberPayment::where('transaction_type', 2)
+                ->where('pledge', 2)
+                ->sum('amount') * -1; // Make it a positive number for display
+
+        $externalCreditors = CreditorStatement::where('balance', '>', 0)
+            ->sum('balance');
+
+        return $memberCreditors + $externalCreditors;
+    }
+
+    /**
+     * Get member balances (debtors/creditors).
+     *
+     * @return \Illuminate\Support\Collection
+     */
+
+    /**
+     * Get external creditor balances (latest transactions).
+     *
+     * @return \Illuminate\Support\Collection
+     */
     private function validateRequest(Request $request)
     {
         $request->validate([

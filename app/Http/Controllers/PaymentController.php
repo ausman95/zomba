@@ -355,7 +355,7 @@ class PaymentController extends Controller
             'updated_by'=>$request->post('updated_by'),
             'specification'=>$request->post('specification'),
             'bank_id'=>$data['bank_id'],
-            'type'=>$data['type'],
+            'type'=>2,
             'payment_method'=>$data['payment_method'],
             'reference'=>$reference,
         ];

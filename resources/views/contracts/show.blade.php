@@ -38,7 +38,7 @@
                                     <input type="hidden"  name="updated_by" value="{{request()->user()->id}}" required>
                                     <input type="hidden"  name="created_by" value="{{request()->user()->id}}" required>
                                     <label for="account_id" class="form-label">Account</label>
-                                    <select class="form-select" id="account_id" name="account_id">
+                                    <select class="form-select seletc-relation" id="account_id" name="account_id" >
                                         @foreach(\App\Models\Accounts::where(['type'=>2])->get() as $account)
                                             <option value="{{ $account->id }}">{{ $account->name }}</option>
                                         @endforeach

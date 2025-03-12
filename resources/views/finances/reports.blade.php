@@ -115,7 +115,6 @@
                                         <div style="overflow-x:auto;">
                                             @if($statement==4)
                                                 <div class="card-body px-4">
-
                                                     <h3 class="mb-4">Balance Sheet Statement</h3>
 
                                                     <div class="mb-4">
@@ -174,39 +173,22 @@
                                                                 @php $c = 1; $totalCurrentAssets = 0; @endphp
 
                                                                 @foreach($banks as $bank)
-                                                                    @if($bank->getBalance() >= 0) {{-- Only process banks with positive or zero balances --}}
-                                                                    <tr>
-                                                                        <td>{{ $c++ }}</td>
-                                                                        <td colspan="3">Bank: {{ ucwords($bank->account_name) }}</td>
-                                                                        <td>
-                                                                            {{ number_format($bank->getBalance(), 2) }}
-                                                                        </td>
-                                                                        @php $totalCurrentAssets += $bank->getBalance(); @endphp
-                                                                    </tr>
+                                                                    @if($bank->getBalance() >= 0)
+                                                                        <tr>
+                                                                            <td>{{ $c++ }}</td>
+                                                                            <td colspan="3">Bank: {{ ucwords($bank->account_name) }}</td>
+                                                                            <td>{{ number_format($bank->getBalance(), 2) }}</td>
+                                                                            @php $totalCurrentAssets += $bank->getBalance(); @endphp
+                                                                        </tr>
                                                                     @endif
                                                                 @endforeach
 
-{{--                                                                @foreach($currentPayments as $payment)--}}
-{{--                                                                    @if($payment->total_amount > 0)--}}
-{{--                                                                        <tr>--}}
-{{--                                                                            <td>{{ $c++ }}</td>--}}
-{{--                                                                            <td colspan="3">{{ ucwords($payment->name) }}</td>--}}
-{{--                                                                            <td>{{ number_format($payment->total_amount, 2) }}</td>--}}
-{{--                                                                            @php $totalCurrentAssets += $payment->total_amount; @endphp--}}
-{{--                                                                        </tr>--}}
-{{--                                                                    @endif--}}
-{{--                                                                @endforeach--}}
-
-                                                                @if($debtorBalances->isNotEmpty())
-                                                                    @foreach($debtorBalances as $debtor)
-                                                                        <tr>
-                                                                            <td>{{ $c++ }}</td>
-                                                                            <td colspan="3">Debtor: {{ $debtor->name }}</td>
-                                                                            <td>{{ number_format($debtor->total_balance, 2) }}</td>
-                                                                            @php $totalCurrentAssets += $debtor->total_balance; @endphp
-                                                                        </tr>
-                                                                    @endforeach
-                                                                @endif
+                                                                <tr>
+                                                                    <td>{{ $c++ }}</td>
+                                                                    <td colspan="3">Total Debtors</td>
+                                                                    <td>{{ number_format($totalDebtorBalance, 2) }}</td>
+                                                                    @php $totalCurrentAssets += $totalDebtorBalance; @endphp
+                                                                </tr>
 
                                                                 @if($labourerPaymentsBalance > 0)
                                                                     <tr>
@@ -236,28 +218,6 @@
 
                                                     <div class="mb-4">
                                                         <h4>Capital</h4>
-                                                        <div class="table-responsive">
-                                                            <table class="table table-bordered table-hover">
-                                                                <tbody>
-                                                                @php $c = 1; @endphp
-                                                                <tr>
-                                                                    <td>{{ $c++ }}</td>
-                                                                    <td colspan="3">Profit of the Period</td>
-                                                                    <td><strong>{{ number_format($profit, 2) }}</strong></td>
-                                                                </tr>
-                                                                <tr>
-                                                                    <td>{{ $c++ }}</td>
-                                                                    <td colspan="3">Revaluation Earnings</td>
-                                                                    <td><strong>{{ number_format($totalFixedAssets - $totalLatestRevaluations, 2) }}</strong></td>
-                                                                </tr>
-                                                                <tr class="table-secondary">
-                                                                    <td></td>
-                                                                    <td colspan="3"><strong>Total Capital</strong></td>
-                                                                    <td><strong>{{ number_format($totalFixedAssets - $totalLatestRevaluations + $profit, 2) }}</strong></td>
-                                                                </tr>
-                                                                </tbody>
-                                                            </table>
-                                                        </div>
                                                     </div>
 
                                                     <div class="mb-4">
@@ -275,17 +235,13 @@
                                                                 <tbody>
                                                                 @php $c = 1; $totalLiabilities = 0; @endphp
 
-                                                                @if($creditorBalances->isNotEmpty())
-                                                                    @foreach($creditorBalances as $creditor)
-                                                                        <tr>
-                                                                            <td>{{ $c++ }}</td>
-                                                                            <td>Creditor: {{ $creditor->name }}</td>
-                                                                            <td>{{ number_format(abs($creditor->total_balance), 2) }}</td>
-                                                                            <td></td>
-                                                                            @php $totalLiabilities += $creditor->total_balance; @endphp
-                                                                        </tr>
-                                                                    @endforeach
-                                                                @endif
+                                                                <tr>
+                                                                    <td>{{ $c++ }}</td>
+                                                                    <td>Total Creditors</td>
+                                                                    <td>{{ number_format($totalCreditorBalance, 2) }}</td>
+                                                                    <td></td>
+                                                                    @php $totalLiabilities += $totalCreditorBalance; @endphp
+                                                                </tr>
 
                                                                 @if($currentAssets->net_amount < 0)
                                                                     <tr>

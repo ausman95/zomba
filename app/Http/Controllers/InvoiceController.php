@@ -62,7 +62,6 @@ class InvoiceController extends Controller
             $request->validate($rules);
 
             $party = Creditor::find($request->input('creditor_id'));
-            // No statementModel needed here for creditors.
         } elseif ($partyType === 'debtor') {
             $rules['member_id'] = 'required|exists:members,id';
             $request->validate($rules);
@@ -89,26 +88,45 @@ class InvoiceController extends Controller
             $invoice->save();
 
             if ($partyType === 'debtor') {
-                // Create a record in member_payments
                 $payment = new MemberPayment();
                 $payment->member_id = $party->id;
                 $payment->account_id = $request->input('account_id');
                 $payment->amount = $invoice->amount;
-                $payment->transaction_type = 'invoice'; // Or another appropriate type
+                $payment->transaction_type = 'invoice';
                 $payment->name = 'Invoice #' . $invoice->invoice_number;
                 $payment->t_date = $invoice->invoice_date;
                 $payment->created_by = $request->input('created_by');
                 $payment->updated_by = $request->input('updated_by');
 
-                // Calculate the balance
                 $previousPayment = MemberPayment::where('member_id', $party->id)
-                    ->where('account_id', $request->input('account_id')) // Add account_id filter
+                    ->where('account_id', $request->input('account_id'))
                     ->orderBy('id', 'desc')
                     ->first();
 
                 $previousBalance = $previousPayment ? $previousPayment->balance : 0;
                 $payment->balance = $previousBalance + $invoice->amount;
                 $payment->save();
+            }
+
+            if ($partyType === 'creditor') {
+                $statement = new CreditorStatement();
+                $statement->creditor_id = $party->id;
+                $statement->account_id = $request->input('account_id');
+                $statement->amount = $invoice->amount;
+                $statement->type = 'invoice'; // Or another appropriate type
+                $statement->description = 'Invoice #' . $invoice->invoice_number;
+                $statement->creditor_invoice_id = $invoice->id;
+                $statement->created_by = $request->input('created_by');
+                $statement->updated_by = $request->input('updated_by');
+
+                $previousStatement = CreditorStatement::where('creditor_id', $party->id)
+                    ->where('account_id', $request->input('account_id'))
+                    ->orderBy('id', 'desc')
+                    ->first();
+
+                $previousBalance = $previousStatement ? $previousStatement->balance : 0;
+                $statement->balance = $previousBalance + $invoice->amount;
+                $statement->save();
             }
 
             DB::commit();
