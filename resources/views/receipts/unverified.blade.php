@@ -75,9 +75,9 @@
                     <div class="col-sm-12 col-md-9 col-lg-10 p-3"> {{-- Adjusted column for table --}}
                         <div class="card">
                             <div class="card-body px-1">
-                                <h5 class="card-title text-center">
-                                    @if($bank) {{-- Check if $bank object exists before accessing its properties --}}
-                                    {{ $bank->bank_name ?? 'N/A' }} Account Reconciliations
+                                <h5 class="card-title text-center mb-3">
+                                    @if($bank)
+                                        <strong>{{ $bank->bank_name ?? 'N/A' }}</strong> Account Reconciliations
                                     @else
                                         All Bank Account Reconciliations
                                     @endif
@@ -92,116 +92,205 @@
                                     @endif
                                 </h5>
 
-                                {{-- Move the table structure outside the @forelse or ensure proper handling --}}
-                                {{-- The @forelse/@foreach logic below was flawed and would duplicate the table --}}
-
-                                @forelse($payments as $payment)
-                                    {{-- This block will only run if $payments is NOT empty --}}
-                                    {{-- The table structure should wrap the @foreach, not be inside it --}}
-
-                                    {{-- Check if this is the first item in the paginated collection to draw the table once --}}
-                                    @if ($loop->first)
-                                        <div style="overflow-x:auto;">
-                                            <table class="table table-bordered table-hover table-striped">
-                                                <thead>
-                                                <tr>
-                                                    <th>NO</th>
-                                                    <th>DATE</th>
-                                                    <th>FOR</th>
-                                                    <th>DESCRIPTION</th>
-                                                    <th>AMOUNT (MK)</th>
-                                                    <th>ACCOUNT</th>
-                                                    <th>BANK</th>
-                                                    <th>TYPE</th>
-                                                    <th>ACTION</th>
-                                                </tr>
-                                                </thead>
-                                                <tbody>
-                                                @endif
-
-                                                <tr>
-                                                    <td>{{ $loop->iteration + $payments->firstItem() - 1 }}</td> {{-- Corrected for pagination --}}
-                                                    <td>{{ \Carbon\Carbon::parse($payment->t_date)->format('d F Y') }}</td>
-                                                    <td>{{ ucwords(substr($payment->name,0,20)) }}</td>
-                                                    <td>{{ $payment->specification ?? 'N/A' }}</td>
-                                                    <th>{{ number_format($payment->amount, 2) }}</th>
-                                                    <td>{{ ucwords($payment->account->name ?? 'N/A') }}</td>
-                                                    <td>
-                                                        @if(!empty($payment->bank)) {{-- Check if bank relationship exists --}}
-                                                        {{ $payment->bank->bank_name.' - '.$payment->bank->account_number.' - '.$payment->bank->account_name }}
-                                                        @else
-                                                            N/A
-                                                        @endif
-                                                    </td>
-                                                    {{-- Assuming account type 2 is expense and others are revenue --}}
-                                                    <td>{{ ucwords(($payment->account->type ?? null) == 2 ? "Expense" : "Revenue") }}</td>
-                                                    <td class="text-center">
-                                                        <button type="button" class="btn btn-danger btn-sm rounded-0" data-bs-toggle="modal" data-bs-target="#deleteModal{{ $payment->id }}">
-                                                            <i class="fa fa-trash"></i> Delete
-                                                        </button>
-                                                    </td>
-                                                </tr>
-
-                                                {{-- Delete Modal for each payment --}}
-                                                <div class="modal" id="deleteModal{{ $payment->id }}" tabindex="-1" aria-labelledby="deleteModalLabel{{ $payment->id }}" aria-hidden="true">
-                                                    <div class="modal-dialog">
-                                                        <div class="modal-content">
-                                                            <div class="modal-header">
-                                                                <h5 class="modal-title" id="deleteModalLabel{{ $payment->id }}">Delete Transaction</h5>
-                                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                                            </div>
-                                                            <form action="{{ route('payments.destroy', $payment->id) }}" method="POST">
-                                                                @csrf
-                                                                @method('DELETE')
-                                                                <div class="modal-body">
-                                                                    <p>Are you sure you want to delete this transaction for ( {{ $payment->name.' Amounting to : MK'. number_format($payment->amount,2) }})?</p>
-                                                                    <div class="mb-3">
-                                                                        <label for="delete_notes{{ $payment->id }}" class="form-label">Reason for Deletion</label>
-                                                                        <textarea class="form-control" id="delete_notes{{ $payment->id }}" name="delete_notes" rows="3" required></textarea> {{-- Added required --}}
-                                                                    </div>
-                                                                </div>
-                                                                <div class="modal-footer">
-                                                                    <button type="button" class="btn btn-secondary rounded-0" data-bs-dismiss="modal">Cancel</button>
-                                                                    <button type="submit" class="btn btn-danger rounded-0">Delete Transaction</button>
-                                                                </div>
-                                                            </form>
-                                                        </div>
-                                                    </div>
-                                                </div>
-
-                                                @if ($loop->last)
-                                                    {{-- Table Footer for total sum --}}
-                                                    <tfoot>
-                                                    <tr>
-                                                        <th colspan="4" class="text-end">Total Sum:</th>
-                                                        <th>{{ number_format($payments->sum('amount'), 2) }}</th>
-                                                        <th colspan="4"></th> {{-- Span remaining columns --}}
-                                                    </tr>
-                                                    </tfoot>
-                                                    </tbody>
-                                            </table>
-                                        </div>
-                                        {{-- Pagination Links --}}
-                                        <div class="d-flex justify-content-center mt-3">
-                                            {{ $payments->appends(request()->input())->links() }} {{-- Keep filters when paginating --}}
-                                        </div>
-                                    @endif
-
+                                @forelse($transactions as $transaction)
                                 @empty
-                                    {{-- This block runs if $payments is empty --}}
-                                    <div class="alert alert-info" role="alert">
-                                        <i class="fa fa-info-circle"></i> No transactions found for the selected filters.
+                                    <div class="alert alert-info text-center" role="alert">
+                                        <i class="fa fa-info-circle me-2"></i> No transactions found for the selected filters.
                                     </div>
                                 @endforelse
+
+                                @if ($transactions->isNotEmpty() || (isset($openingBalance) && $openingBalance != 0)) {{-- Show table if transactions exist OR if there's an opening balance --}}
+                                <div style="overflow-x:auto;">
+                                    <table class="table table-bordered table-hover table-striped">
+                                        <thead>
+                                        <tr>
+                                            <th>NO</th>
+                                            <th>DATE</th>
+                                            <th>NAME/FOR</th>
+                                            <th>DESCRIPTION</th>
+                                            <th class="text-end">REVENUE (MK)</th> {{-- Specific header for Revenue --}}
+                                            <th class="text-end">EXPENDITURE (MK)</th> {{-- Specific header for Expenditure --}}
+                                            <th class="text-end">BALANCE (MK)</th> {{-- New header for running balance --}}
+                                            <th>ACCOUNT</th>
+                                            <th>BANK</th>
+                                            <th class="text-center">ACTION</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        @php
+                                            // Initialize running balance
+                                            $runningBalance = $openingBalance;
+                                            $counter = 0; // For overall numbering including opening balance
+                                        @endphp
+
+                                        {{-- Display Opening Balance as the first row --}}
+                                        <tr>
+                                            <td>{{ ++$counter }}</td>
+                                            <td>N/A</td> {{-- Date for opening balance --}}
+                                            <td>Opening Balance</td>
+                                            <td>Balance from previous transactions</td>
+                                            <td class="text-end">
+                                                @if($openingBalance > 0)
+                                                    {{ number_format($openingBalance, 2) }}
+                                                @else
+                                                    -
+                                                @endif
+                                            </td>
+                                            <td class="text-end">
+                                                @if($openingBalance < 0)
+                                                    ({{ number_format(abs($openingBalance), 2) }})
+                                                @else
+                                                    -
+                                                @endif
+                                            </td>
+                                            <td class="text-end fw-bold">{{ number_format($runningBalance, 2) }}</td>
+                                            <td>N/A</td>
+                                            <td>
+                                                @if($bank)
+                                                    {{ $bank->bank_name ?? 'N/A' }}
+                                                @else
+                                                    All Banks
+                                                @endif
+                                            </td>
+                                            <td class="text-center">-</td>
+                                        </tr>
+
+                                        @foreach($transactions as $transaction)
+                                            @php
+                                                $isRevenue = (($transaction->account->type ?? null) == 1);
+                                                $displayAmount = $transaction->amount;
+
+                                                if ($isRevenue) {
+                                                    $runningBalance += $displayAmount;
+                                                } else {
+                                                    $runningBalance -= $displayAmount;
+                                                }
+                                                $counter++; // Increment for the current transaction
+                                            @endphp
+                                            <tr>
+                                                <td>{{ $counter }}</td>
+                                                <td>{{ \Carbon\Carbon::parse($transaction->t_date)->format('d F Y') }}</td>
+                                                <td>{{ ucwords(substr($transaction->name, 0, 20)) }}</td>
+                                                <td>{{ $transaction->description ?? 'N/A' }}</td>
+                                                <td class="text-end">
+                                                    @if($isRevenue)
+                                                        {{ number_format($displayAmount, 2) }}
+                                                    @else
+                                                        -
+                                                    @endif
+                                                </td>
+                                                <td class="text-end">
+                                                    @if(!$isRevenue)
+                                                        ({{ number_format($displayAmount, 2) }})
+                                                    @else
+                                                        -
+                                                    @endif
+                                                </td>
+                                                <td class="text-end fw-bold">{{ number_format($runningBalance, 2) }}</td>
+                                                <td>{{ ucwords($transaction->account->name ?? 'N/A') }}</td>
+                                                <td>
+                                                    @if(!empty($transaction->bank))
+                                                        {{ $transaction->bank->bank_name.' - '.$transaction->bank->account_number.' - '.$transaction->bank->account_name }}
+                                                    @else
+                                                        N/A
+                                                    @endif
+                                                </td>
+                                                <td class="text-center">
+                                                    <button type="button" class="btn btn-danger btn-sm rounded-0"
+                                                            data-bs-toggle="modal" data-bs-target="#deleteTransactionModal"
+                                                            data-transaction-id="{{ $transaction->id }}"
+                                                            data-transaction-name="{{ $transaction->name }}"
+                                                            data-transaction-amount="{{ number_format($transaction->amount, 2) }}">
+                                                        <i class="fa fa-trash"></i> Delete
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                        @endforeach
+                                        </tbody>
+                                        <tfoot>
+                                        <tr>
+                                            <th colspan="4" class="text-end">Closing Balance:</th>
+                                            <th colspan="2" class="text-end"></th> {{-- Leave revenue/expenditure columns empty in footer --}}
+                                            <th class="text-end fw-bold">{{ number_format($runningBalance, 2) }}</th>
+                                            <th colspan="3"></th>
+                                        </tr>
+                                        </tfoot>
+                                    </table>
+                                </div>
+
+                                {{-- Pagination Links --}}
+                                <div class="d-flex justify-content-center mt-3">
+                                    {{ $transactions->appends(request()->input())->links() }}
+                                </div>
+                                @endif
                             </div>
                         </div>
+
+                        {{-- Universal Delete Modal (Outside the loop, updated with JS for dynamic content) --}}
+                        <div class="modal fade" id="deleteTransactionModal" tabindex="-1" aria-labelledby="deleteTransactionModalLabel" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="deleteTransactionModalLabel">Confirm Deletion</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <form id="deleteTransactionForm" action="" method="POST">
+                                        @csrf
+                                        @method('DELETE')
+                                        <div class="modal-body">
+                                            <p>Are you sure you want to delete this transaction for <strong id="transactionName"></strong> amounting to: <strong>MK<span id="transactionAmount"></span></strong>?</p>
+                                            <div class="mb-3">
+                                                <label for="delete_notes" class="form-label">Reason for Deletion</label>
+                                                <textarea class="form-control" id="delete_notes" name="delete_notes" rows="3" required></textarea>
+                                            </div>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary rounded-0" data-bs-dismiss="modal">Cancel</button>
+                                            <button type="submit" class="btn btn-danger rounded-0">Delete Transaction</button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+
+
                     </div>
                 </div>
             </div>
         </div>
     </div>
 @stop
+        @push('scripts')
+            <script>
+                document.addEventListener('DOMContentLoaded', function () {
+                    const deleteTransactionModal = document.getElementById('deleteTransactionModal');
+                    deleteTransactionModal.addEventListener('show.bs.modal', function (event) {
+                        const button = event.relatedTarget;
+                        const transactionId = button.getAttribute('data-transaction-id');
+                        const transactionName = button.getAttribute('data-transaction-name');
+                        const transactionAmount = button.getAttribute('data-transaction-amount');
 
+                        const modalTitle = deleteTransactionModal.querySelector('.modal-title');
+                        const transactionNameSpan = deleteTransactionModal.querySelector('#transactionName');
+                        const transactionAmountSpan = deleteTransactionModal.querySelector('#transactionAmount');
+                        const deleteForm = deleteTransactionModal.querySelector('#deleteTransactionForm');
+
+                        modalTitle.textContent = 'Delete Transaction (ID: ' + transactionId + ')';
+                        transactionNameSpan.textContent = transactionName;
+                        transactionAmountSpan.textContent = transactionAmount;
+
+                        deleteForm.action = `/payments/${transactionId}`;
+                    });
+
+                    deleteTransactionModal.addEventListener('hidden.bs.modal', function () {
+                        const deleteNotes = deleteTransactionModal.querySelector('#delete_notes');
+                        if (deleteNotes) {
+                            deleteNotes.value = '';
+                        }
+                    });
+                });
+            </script>
+        @endpush
 @section('scripts')
     <script src="{{ asset('vendor/simple-datatable/simple-datatable.js') }}"></script>
     <script>

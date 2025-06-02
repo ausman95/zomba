@@ -49,4 +49,5 @@ class Receipt extends Model
             ->orderByDesc(DB::raw('SUM(member_payments.amount)'))
             ->get();
     }
+
 }

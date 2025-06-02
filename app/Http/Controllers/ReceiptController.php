@@ -28,6 +28,7 @@ use App\Models\ProjectPayment;
 use App\Models\Receipt;
 use App\Models\Supplier;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class ReceiptController extends Controller
 {
@@ -189,74 +190,101 @@ class ReceiptController extends Controller
     public function bankReconciliations(Request $request)
     {
         // --- 1. Validation ---
-        // Enhanced validation with clearer messages and specific rules
         $request->validate([
-            'bank_id'    => 'nullable|numeric|exists:banks,id', // 'nullable' if it's optional
+            'bank_id'    => 'nullable|numeric|exists:banks,id',
             'start_date' => 'nullable|date',
             'end_date'   => 'nullable|date|after_or_equal:start_date',
         ]);
 
-        // Custom validation to ensure both dates are present if one is
-        // This is typically handled better by a Form Request or more robust validation rules,
-        // but can be implemented like this if necessary:
+        // Custom validation for date range consistency
         if ($request->filled('start_date') xor $request->filled('end_date')) {
             return redirect()->back()->withErrors([
                 'date_range' => 'Both Start Date and End Date are required when filtering by a date range.'
-            ])->withInput(); // Keep old input
+            ])->withInput();
         }
 
-
-        // --- 2. Query Building ---
-        $query = Payment::query();
-
-        // Eager load relationships for efficiency
-        $query->with(['account', 'bank']); // Assumes Payment model has 'account' and 'bank' relationships
-
-        // Base filters (assuming all reconciliation payments are of account type 1 and status 0)
-        $query->whereHas('account', function ($q) {
-            $q->where('type', 1); // Payments with account type 1
-        });
-        $query->where('payments.soft_delete', 0); // Unverified / active payments
-
-        // Initialize variables for the view, especially for filter retention and dynamic captions
+        // Initialize variables for filter retention and dynamic captions
         $selectedBankId = $request->input('bank_id');
         $startDate = $request->input('start_date');
         $endDate = $request->input('end_date');
-
-        // *** CRUCIAL FIX: Initialize and fetch the $bank object ***
         $bank = null; // Default to null
+        $openingBalance = 0; // Initialize opening balance
+
+        // --- Calculate Opening Balance ---
+        // This is the sum of all relevant transactions BEFORE the selected start_date
+        $openingBalanceQuery = Payment::query()
+            ->where('soft_delete', 0)
+            ->whereHas('account', function ($q) {
+                $q->whereIn('type', [1, 2]); // Consider both types for opening balance
+            });
+
         if ($request->filled('bank_id')) {
-            $query->where('payments.bank_id', $selectedBankId); // Filter by bank_id on payments table
-            $bank = Bank::find($selectedBankId); // Fetch the Bank model for the caption
+            $openingBalanceQuery->where('bank_id', $selectedBankId);
+            $bank = Bank::find($selectedBankId);
         }
 
-        // Apply date range filter if both dates are provided
+        if ($request->filled('start_date')) {
+            // Sum all amounts before the start_date
+            // Revenue should be positive, Expenditure should be negative
+            $openingBalance = $openingBalanceQuery
+                ->where('t_date', '<', $startDate)
+                ->get()
+                ->sum(function ($payment) {
+                    // Assuming account type 1 is Revenue and 2 is Expense
+                    return ($payment->account->type ?? null) == 1 ? $payment->amount : -$payment->amount;
+                });
+        } else {
+            // If no start date, opening balance is from the very beginning for the selected bank
+            $openingBalance = $openingBalanceQuery
+                ->get()
+                ->sum(function ($payment) {
+                    return ($payment->account->type ?? null) == 1 ? $payment->amount : -$payment->amount;
+                });
+        }
+
+
+        // --- 2. Query Building for Current Period Transactions ---
+        $query = Payment::query();
+        $query->with(['account', 'bank']);
+        $query->where('soft_delete', 0);
+        $query->whereHas('account', function ($q) {
+            $q->whereIn('type', [1, 2]);
+        });
+
+        if ($request->filled('bank_id')) {
+            $query->where('bank_id', $selectedBankId);
+        }
+
         if ($request->filled('start_date') && $request->filled('end_date')) {
-            $query->whereBetween('payments.t_date', [$startDate, $endDate]);
+            $query->whereBetween('t_date', [$startDate, $endDate]);
+        } elseif ($request->filled('start_date')) {
+            $query->where('t_date', '>=', $startDate);
+        } elseif ($request->filled('end_date')) {
+            $query->where('t_date', '<=', $endDate);
         }
 
-        // Order the results
-        $query->orderBy('payments.id', 'desc');
+        $query->orderBy('t_date', 'asc') // Order by date ASC for chronological balance calculation in view
+        ->orderBy('id', 'asc');
 
         // --- 3. Get Paginated Results ---
-        // Use paginate() instead of get() for efficiency and UI features
-        $payments = $query->paginate(10000); // Adjust items per page as needed
+        $transactions = $query->paginate(15);
 
         // --- 4. Data for Filter Dropdowns ---
-        $banks = Bank::all(); // All banks for the filter dropdown
+        $banks = Bank::all();
         $cpage = 'finances';
+
         // --- 5. Logging ---
-        activity('FINANCES')->log("Accessed Bank Reconciliations page.")->causer(request()->user());
 
         // --- 6. Return View ---
         return view('receipts.unverified', compact(
             'cpage',
-            'payments',
-            'banks',          // List of all banks for the filter dropdown
-            'bank',           // *** The specific Bank model selected (or null) for the caption ***
-            'selectedBankId', // For sticky bank filter selection
-            'startDate',      // For sticky start date filter
-            'endDate'         // For sticky end date filter
+            'transactions',
+            'banks',
+            'bank',
+            'selectedBankId',
+            'startDate',
+            'endDate',
+            'openingBalance' // Pass the opening balance to the view
         ));
     }
     public function churchReportGenerate(Request $request, Receipt $receipt)
