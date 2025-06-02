@@ -50,6 +50,6 @@ class Position extends Model
     public function members(): HasMany // <--- ADD THIS METHOD
     {
         // Assuming your 'members' table has a 'position_id' foreign key
-        return $this->hasMany(Member::class, 'position_id');
+        return $this->hasMany(Member::class, 'position_id')->where(['soft_delete'=>0]);
     }
 }
