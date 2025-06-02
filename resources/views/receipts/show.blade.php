@@ -124,25 +124,10 @@
                                 </table>
                                 <div class="mt-3">
                                     <div>
-                                        <a href="{{route('payments.edit',$transaction->id).'?verified='.$_GET['verified']}}"
-                                           class="btn btn-warning rounded-0" style="margin: 2px">
-                                            <i class="fa fa-edit"></i>Update
-                                        </a>
-                                        @if($transaction->status==0)
-                                            @if(request()->user()->id !=$transaction->created_by)
-                                        <button class="btn btn-success  rounded-0" id="delete-btn" style="margin: 5px">
-                                            <i class="fa fa-check-circle"></i>Verify
-                                        </button>
-                                            @endif
-                                        <form action="{{route('payments.destroy',$transaction->id)}}" method="POST" id="delete-form">
-                                            @csrf
-                                            <input type="hidden" name="_method" value="DELETE">
-                                            <input type="hidden" name="id" value="{{$transaction->id}}">
-                                            <input type="hidden" name="type" value="{{$transaction->account_id}}">
-                                            <input type="hidden" name="amount" value="{{$transaction->amount}}">
-                                            <input type="hidden" name="account" value="{{$transaction->account->name}}">
-                                        </form>
-                                        @endif
+{{--                                        <a href="{{route('payments.edit',$transaction->id).'?verified='.$_GET['verified']}}"--}}
+{{--                                           class="btn btn-warning rounded-0" style="margin: 2px">--}}
+{{--                                            <i class="fa fa-edit"></i>Update--}}
+{{--                                        </a>--}}
                                         @if($transaction->account_id==279)
                                             <a href="{{route('member-receipt.generate')."?id=".$transaction->id}}"
                                                class="btn btn-primary rounded-0" style="margin: 2px" target="_blank">

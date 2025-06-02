@@ -124,7 +124,7 @@ class ReceiptController extends Controller
         $query = Payment::join('accounts', 'accounts.id', '=', 'payments.account_id')
             ->select('payments.*') // Select all columns from payments table
             ->where('accounts.type', 1) // Filter for account type 1 (e.g., Income accounts)
-            ->where('payments.status', 0); // Filter for status 0 (e.g., Verified receipts)
+            ->where('payments.soft_delete', 0); // Filter for status 0 (e.g., Verified receipts)
 
         // Apply bank filter
         // IMPORTANT: Your original code had 'accounts.id' here for bank_id, but it should be 'payments.bank_id'
@@ -183,7 +183,7 @@ class ReceiptController extends Controller
             'account_name'    => "SCHOOL FEES", // Hardcoded in your original code
             'term_name'       => $currentMonthName, // Using the determined month name
             'accounts'        => \App\Models\Accounts::where(['soft_delete'=>0])->orderBy('id','ASC')->get(),
-            'status'          => 0, // Consistent with payments.status filter
+            'soft_delete'          => 0, // Consistent with payments.status filter
         ]);
     }
     public function bankReconciliations(Request $request)
@@ -216,7 +216,7 @@ class ReceiptController extends Controller
         $query->whereHas('account', function ($q) {
             $q->where('type', 1); // Payments with account type 1
         });
-        $query->where('payments.status', 0); // Unverified / active payments
+        $query->where('payments.soft_delete', 0); // Unverified / active payments
 
         // Initialize variables for the view, especially for filter retention and dynamic captions
         $selectedBankId = $request->input('bank_id');
@@ -411,7 +411,7 @@ class ReceiptController extends Controller
         $paymentsQuery = Payment::join('accounts', 'accounts.id', '=', 'payments.account_id')
             ->select('payments.*') // Select all columns from payments table
             ->where(['accounts.type' => 1]) // Filter for account type 1 (e.g., Income accounts)
-            ->where(['payments.status' => 0]) // Filter for status 0 (e.g., Verified receipts)
+            ->where(['payments.soft_delete' => 0]) // Filter for status 0 (e.g., Verified receipts)
             ->where(['accounts.soft_delete' => 0]); // Filter for active accounts
 
         // Apply bank filter if selected
@@ -482,7 +482,7 @@ class ReceiptController extends Controller
             'term_name' => $currentMonthName, // Using currentMonthName for consistency
 
             // Status is 0 for "Verified Receipts", which is handled in query
-            'status' => 0,
+            'soft_delete' => 0,
         ]);
     }
 
@@ -500,7 +500,7 @@ class ReceiptController extends Controller
 
         // Base filter: Only show unverified payments (status = 0)
         // Ensure 'status' column exists on your 'payments' table
-        $query->where('payments.status', 0);
+        $query->where('payments.soft_delete', 0);
 
         // Filter by soft_delete on related accounts
         // This assumes your Payment model has an 'account' relationship

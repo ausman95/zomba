@@ -32,14 +32,14 @@ class Banks extends Model
     {
         // Calculate the sum of amounts where type = 1
         $revenue = Payment::where('bank_id', $this->id)
-//            ->where('status', 0)
+            ->where('soft_delete', 0)
             ->where('type', 1)
             ->sum('amount');
 
         // Calculate the sum of amounts where type = 2
         $expenses = Payment::where('bank_id', $this->id)
             ->where('type', 2)
-//            ->where('status', 0)
+            ->where('soft_delete', 0)
             ->sum('amount');
 
         // Return the difference between revenue and expenses

@@ -49,7 +49,7 @@ class PaymentController extends Controller
         $endDate = $request->input('end_date');
 
         // Define the transaction query, always filtering out inactive/deleted transactions
-        $transactionsQuery = Payment::where('status', 0); // Always show active transactions
+        $transactionsQuery = Payment::where('soft_delete', 0); // Always show active transactions
 
         // --- Determine the effective start and end dates based on filters ---
         if ($monthId) {
@@ -75,7 +75,7 @@ class PaymentController extends Controller
         // We only calculate opening balance if we have a valid start date to begin from
         if ($startDate) {
             // Calculate opening balance based on transactions *before* the start date
-            $openingBalanceQuery = Payment::where('status', 0) // Only active payments
+            $openingBalanceQuery = Payment::where('soft_delete', 0) // Only active payments
             ->where('t_date', '<', $startDate);
 
             if ($bankId) {
@@ -203,7 +203,7 @@ class PaymentController extends Controller
 
         // 1. Apply Status Filter: Only show active payments (status = 0)
         // Ensure this is applied before other filters if it's a base requirement
-        $query->where('status', 0); // Assuming 0 means active
+        $query->where('soft_delete', 0); // Assuming 0 means active
 
         // 2. Apply Bank Filter (if provided)
         if ($request->filled('bank_id')) {
@@ -286,7 +286,7 @@ class PaymentController extends Controller
             ->where('payments.t_date', '>=', $month->start_date)
             ->where('payments.t_date', '<=', $month->end_date)
             ->where('accounts.type', 2) // Assuming 'type' 2 is for receipts
-            ->where('payments.status', 0); // Assuming 0 means active/verified payments
+            ->where('payments.soft_delete', 0); // Assuming 0 means active/verified payments
 
         // Eager load relationships needed in the view
         $query->with(['account', 'bank']); // Add 'bank' if you need bank details
@@ -697,7 +697,7 @@ class PaymentController extends Controller
 
             // 3. Update the 'specification', 'status', 'updated_by' fields
             $payment->specification = $newSpecification;
-            $payment->status = 1; // Assuming '1' means deleted/inactive for payments
+            $payment->soft_delete = 1; // Assuming '1' means deleted/inactive for payments
             $payment->updated_by = $user->id; // Set the user who performed this action
 
             // 4. Save the changes to the database
