@@ -703,10 +703,10 @@ class PaymentController extends Controller
             // 4. Save the changes to the database
             // Eloquent will automatically update `updated_at` here because timestamps are enabled.
             $payment->save();
-            $message = 'GoodDay Madam, there was a reversal done by ' . request()->user()->name . ' for ' . @$payment->name . ',
+            $message = 'GoodDay Sir, there was a reversal done by ' . request()->user()->name . ' for ' . @$payment->name . ',
             '.$payment->account->name.' : MK' . number_format($payment->amount,2).'Reason Being '.$payment->specification;
-            $receiptController->sendSms('0888608771',$message); // sending sms
-            $receiptController->sendSms('0999924207',$message); // sending sms
+            $this->sendSms('0888307368',$message); // sending sms
+            $this->sendSms('0999809706',$message); // sending sms
             // 5. Log the action (optional but good for auditing)
             Log::info("Payment ID: {$payment->id} status changed to 1 (marked deleted) by user {$user->id}. Original spec: '{$originalSpecification}'. New spec: '{$payment->specification}'");
 

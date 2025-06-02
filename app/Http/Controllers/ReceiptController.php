@@ -733,7 +733,7 @@ class ReceiptController extends Controller
                 ->first();
             if($request->post('amount')>0) {
                 $message = 'Dear ' . $member->name . ' You have Paid ' . $account->name .
-                    ' Amounting to : MK ' . number_format($request->post('amount'), 2) . ' AREA 47, EAGLES CATHEDRAL';
+                    ' Amounting to : MK ' . number_format($request->post('amount'), 2) . ' AREA 25, VICTORY TEMPLE';
                 if ($member->phone_number) {
                     if ($labourerController->validating($member->phone_number) != 0) {
                         $this->sendSms($member->phone_number, $message);
@@ -746,9 +746,9 @@ class ReceiptController extends Controller
                 }
             }
             if($request->post('amount')<0){
-                $message = 'GoodDay Madam, there was a reversal done by ' . request()->user()->name . ' for ' . @$member->name . ','.$account->name.' : MK' . number_format($data['amount'],2).' AREA 47, EAGLES CATHEDRAL';
-//                $this->sendSms('0882230137',$message); // sending sms
-                $this->sendSms('0995056302',$message); // sending sms
+                $message = 'GoodDay Sir, there was a reversal done by ' . request()->user()->name . ' for ' . @$member->name . ','.$account->name.' : MK' . number_format($data['amount'],2).' AREA 47, EAGLES CATHEDRAL';
+                $this->sendSms('0888307368',$message); // sending sms
+                $this->sendSms('0999809706',$message); // sending sms
             }
             $order = new DeliveryController();
             if($request->post('amount')>0){

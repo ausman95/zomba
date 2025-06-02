@@ -5,7 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta http-equiv="refresh" content="{{ config('session.lifetime') * 60 }}; url={{route('login')}}">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EAGLES CATHEDRAL @yield('page')</title>
+    <title>AREA 25, VICTORY TEMPLE @yield('page')</title>
         <link rel="stylesheet" href="{{asset('vendors/select2/css/select2.css')}}">
     <link rel="stylesheet" href="{{asset('vendor/sweetalert2-10.15.5/sweetalert2.min.css')}}">
 

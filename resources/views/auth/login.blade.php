@@ -8,7 +8,7 @@
     <meta name="description" content="">
     <meta name="author" content="Mark Otto, Jacob Thornton, and Bootstrap contributors">
     <meta name="generator" content="Hugo 0.112.5">
-    <title>Signin · EAGLES CATHEDRAL </title>
+    <title>Signin · AREA 25, VICTORY TEMPLE </title>
     <link rel="icon" href="{{asset('images/logo.png')}}">
     <link rel="canonical" href="https://getbootstrap.com/docs/5.3/examples/sign-in/">
     <link rel="stylesheet" href="{{asset('vendor/bootstrap2/assets/dist/css/bootstrap.min.css')}}">
