@@ -11,7 +11,9 @@ use App\Models\Month;
 use App\Models\Payment;
 use App\Models\Payroll;
 use App\Models\PayrollItem;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
 class PayrollController extends Controller
@@ -26,33 +28,51 @@ class PayrollController extends Controller
 
     public function destroy(Payroll $payroll)
     {
-        $payroll->payrollItems()->delete();
-        $payroll->delete();
+        // Ensure only 'draft' payrolls can be deleted
+        if ($payroll->status !== 'Pending') {
+            return back()->with('error-notification', 'Only "draft" payrolls can be deleted.');
+        }
 
-        return redirect()->route('payrolls.index')->with('success-notification', 'Payroll deleted successfully.');
+        DB::beginTransaction();
+        try {
+            // Payroll items will be cascade deleted if foreign key constraint is set up
+            $payroll->delete();
+            DB::commit();
+
+            // Log activity
+            // activity('Payrolls')
+            //     ->log("Deleted Payroll ID: {$payroll->id} for Employee: {$payroll->employee->name}")
+            //     ->causer(request()->user());
+
+            return redirect()->route('payrolls.index', ['month_id' => $payroll->month_id])->with('success-notification', 'Payroll deleted successfully!');
+
+        } catch (\Exception $e) {
+            DB::rollBack();
+            Log::error('Error deleting payroll: ' . $e->getMessage(), ['exception' => $e, 'payroll_id' => $payroll->id]);
+            return back()->with('error-notification', 'An unexpected error occurred while deleting the payroll. Please try again. Details: ' . $e->getMessage());
+        }
     }
     public function index(Request $request)
     {
-        $months = Month::orderBy('id','desc')->get();
-        $payrolls = []; // Initialize as empty array
+        $selectedMonthId = $request->input('month_id');
+        $payrolls = collect(); // Initialize as an empty collection
+        $hasPayrollForSelectedMonth = false;
+        $selectedMonth = null; // To hold the Month model if selected
 
-        if ($request->has('month') && $request->month != '') {
-            $payrolls = Payroll::where('month_id', $request->month)->get();
+        if ($selectedMonthId) {
+            $selectedMonth = Month::find($selectedMonthId);
+            if ($selectedMonth) {
+                $payrolls = Payroll::with(['month', 'creator'])
+                    ->where('month_id', $selectedMonthId)
+                    ->get();
+                $hasPayrollForSelectedMonth = $payrolls->isNotEmpty();
+            }
         }
 
-        $cpage = 'human-resources';
+        $months = Month::orderBy('id', 'desc')->get();
 
-        return view('payrolls.index', compact('cpage', 'payrolls', 'months'));
+        return view('payrolls.index', compact('payrolls', 'months', 'selectedMonthId', 'hasPayrollForSelectedMonth', 'selectedMonth'))->with('cpage', 'human-resources');
     }
-
-//    public function index()
-//    {
-//        $payrolls = Payroll::all(); // Adjust pagination as needed
-//        //$payrolls = Payroll::with(['labourer', 'month'])->paginate(10); // Adjust pagination as needed
-//
-//        $cpage = 'human-resources';
-//        return view('payrolls.index', compact('cpage', 'payrolls'));
-//    }
 
     public function create()
     {
@@ -65,23 +85,38 @@ class PayrollController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'month_id' => 'required|exists:months,id',
-            'payroll_date' => 'required',
-            'labourer_id' => 'nullable|exists:labourers,id',
+            'month_id'     => 'required|numeric|exists:months,id',
+            'payroll_date' => 'required|date',
+            'labourer_id'  => 'nullable|numeric|exists:labourers,id', // 'labourer_id' from your reference
         ]);
 
-        if ($request->labourer_id) {
-            // Single Labourer
-            $this->generatePayrollIfValid($request->payroll_date,$request->labourer_id, $request->month_id);
-        } else {
-            // All Labourers
-            $labourers = Labourer::all();
-            foreach ($labourers as $labourer) {
-                $this->generatePayrollIfValid($request->payroll_date,$labourer->id, $request->month_id);
-            }
-        }
+        $selectedMonth = Month::findOrFail($request->input('month_id'));
+        $payrollDate = Carbon::parse($request->input('payroll_date'));
+        $employeeId = $request->input('labourer_id');
 
-        return redirect()->back()->with('success-notification', 'Payroll(s) created successfully.');
+        DB::beginTransaction();
+
+        try {
+            if ($employeeId) {
+                // Generate payroll for a single employee
+                $this->generatePayrollIfValid($payrollDate, $employeeId, $selectedMonth->id);
+            } else {
+                // Generate payroll for all employees
+                $employees = Labourer::all();
+                foreach ($employees as $employee) {
+                    $this->generatePayrollIfValid($payrollDate, $employee->id, $selectedMonth->id);
+                }
+            }
+
+            DB::commit();
+
+            return redirect()->route('payrolls.index', ['month_id' => $selectedMonth->id])->with('success-notification', 'Payroll(s) generated successfully!');
+
+        } catch (\Exception $e) {
+            DB::rollBack();
+            Log::error('Error generating payroll: ' . $e->getMessage(), ['exception' => $e, 'request_data' => $request->all()]);
+            return back()->withInput()->with('error-notification', 'An unexpected error occurred while generating the payroll. Please try again. Details: ' . $e->getMessage());
+        }
     }
 
     private function generatePayrollIfValid($date,$labourerId, $monthId)
@@ -111,7 +146,10 @@ class PayrollController extends Controller
         if ($contract) {
             $benefits = $contract->benefits()->get();
 
-            $loan = Loan::where(['labourer_id' => $labourerId])->where('remaining_balance', '>', 0)->latest()->first();
+            $loan = Loan::where(['labourer_id' => $labourerId])
+                ->where('remaining_balance', '>', 0)
+                ->where('loan_status', '=', 'active')
+                ->latest()->first();
             $loanRepayment = 0;
             $loanAccountId = null;
 

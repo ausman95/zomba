@@ -37,7 +37,6 @@
                                 <span class="invalid-feedback">{{ $message }}</span>
                                 @enderror
                             </div>
-
                             <div class="form-group">
                                 <label for="Month">Months</label>
                                 <select name="month_id" class="form-select select-relation @error('month_id') is-invalid @enderror" style="width: 100%">
@@ -52,7 +51,6 @@
                                 <span class="invalid-feedback">{{ $message }}</span>
                                 @enderror
                             </div>
-
                             <!-- New filters for Start Date and End Date -->
                             <div class="form-group">
                                 <label for="Start Date">Start Date</label>
@@ -61,7 +59,6 @@
                                 <span class="invalid-feedback">{{ $message }}</span>
                                 @enderror
                             </div>
-
                             <div class="form-group">
                                 <label for="End Date">End Date</label>
                                 <input type="date" name="end_date" class="form-control @error('end_date') is-invalid @enderror" value="{{ old('end_date') }}">
@@ -69,7 +66,6 @@
                                 <span class="invalid-feedback">{{ $message }}</span>
                                 @enderror
                             </div>
-
                             <div class="form-group">
                                 <button class="btn btn-primary rounded-0" type="submit">
                                     Apply Filters &rarr;
@@ -96,40 +92,60 @@
                                 @else
                                     <div style="overflow-x:auto;">
                                         <table class="table table-bordered table-hover table-striped">
-                                            <caption style="caption-side: top; text-align: center">ALL TRANSACTIONS</caption>
+                                            {{-- Dynamic Table Caption --}}
+                                            <caption style="caption-side: top; text-align: center; font-weight: bold; font-size: 1.2em;">
+                                                @php
+                                                    $titlePart = 'All Transactions';
+                                                    $bankName = $selectedBank->account_name ?? null; // Uses selectedBank object from controller
+                                                    $datePeriod = '';
+
+                                                    if ($bankName) {
+                                                        $titlePart = $bankName . ' Transactions';
+                                                    }
+
+                                                    if ($currentMonth) {
+                                                        $datePeriod = ' for ' . $currentMonth;
+                                                    } elseif ($startDate && $endDate) {
+                                                        $datePeriod = ' from ' . \Carbon\Carbon::parse($startDate)->format('d F Y') . ' to ' . \Carbon\Carbon::parse($endDate)->format('d F Y');
+                                                    } elseif ($startDate) {
+                                                        $datePeriod = ' from ' . \Carbon\Carbon::parse($startDate)->format('d F Y') . ' onwards';
+                                                    } elseif ($endDate) {
+                                                        $datePeriod = ' up to ' . \Carbon\Carbon::parse($endDate)->format('d F Y');
+                                                    }
+
+                                                    echo $titlePart . $datePeriod;
+                                                @endphp
+                                            </caption>
                                             <thead>
                                             <tr>
                                                 <th>NO</th>
                                                 <th>DATE</th>
-                                                <th>REF</th>
+                                                <th>FOR</th> {{-- This column now displays the 'name' field (e.g., recipient) --}}
                                                 <th>AMOUNT (MK)</th>
-                                                    <th>BALANCE (MK)</th>
                                                 <th>ACCOUNT</th>
                                                 <th>BANK</th>
-                                                <th>METHOD</th>
-                                                <th>CHEQUE #</th>
+                                                <th>REF #</th> {{-- This column displays the 'reference' field (e.g., cheque number) --}}
                                                 <th>TYPE</th>
-                                                <th>-</th>
-                                                <th>CREATED BY</th>
-                                                <th>VERIFIED BY</th>
                                             </tr>
                                             </thead>
                                             <tbody>
-                                            <!-- Opening Balance Row -->
                                             @php
-                                                $balance = $openingBalance; // Initialize balance
+                                                $totalPeriodSum = 0; // Sum of transactions within the filtered period
                                             @endphp
+
                                             @if($openingBalance != 0)
                                                 <tr>
                                                     <td>1</td>
-                                                    <td>{{ date('d F Y', strtotime($start_date)) }} (Opening Balance)</td>
+                                                    <td>
+                                                        @if($startDate)
+                                                            {{ \Carbon\Carbon::parse($startDate)->format('d F Y') }}
+                                                        @else
+                                                            N/A {{-- Fallback if startDate is unexpectedly not set --}}
+                                                        @endif
+                                                        (Opening Balance)
+                                                    </td>
                                                     <td>N/A</td>
                                                     <td>{{ number_format($openingBalance, 2) }}</td>
-                                                        <td>{{ $openingBalance < 0 ? '(' . number_format(abs($openingBalance), 2) . ')' : number_format($openingBalance, 2) }}</td>
-                                                    <td>N/A</td>
-                                                    <td>N/A</td>
-                                                    <td>N/A</td>
-                                                    <td>N/A</td>
                                                     <td>N/A</td>
                                                     <td>N/A</td>
                                                     <td>N/A</td>
@@ -137,10 +153,22 @@
                                                 </tr>
                                             @endif
 
-                                            <!-- Transactions Loop -->
                                             @foreach($payments as $payment)
+                                                @php
+                                                    // Calculate the effective amount for summing based on type and sign
+                                                    $effectiveAmount = 0;
+                                                    if (($payment->type == 1 && $payment->amount >= 0) || ($payment->type == 2 && $payment->amount < 0)) {
+                                                        // This is an income-like transaction (Revenue with positive amount, or Reversed Expense with negative amount)
+                                                        $effectiveAmount = abs($payment->amount);
+                                                    } else {
+                                                        // This is an expense-like transaction (Expense with positive amount, or Reversed Revenue with negative amount)
+                                                        $effectiveAmount = -abs($payment->amount);
+                                                    }
+                                                    $totalPeriodSum += $effectiveAmount;
+                                                @endphp
                                                 <tr>
-                                                    <td>{{ ($loop->index + 2) + (($payments->currentPage() - 1) * $payments->perPage()) }}</td>
+                                                    {{-- Dynamic 'NO' column: Adjusts for presence of opening balance row --}}
+                                                    <td>{{ ($loop->index + ($openingBalance != 0 ? 2 : 1)) + (($payments->currentPage() - 1) * $payments->perPage()) }}</td>
                                                     <td>{{ date('d F Y', strtotime($payment->t_date)) }}</td>
                                                     <td>
                                                         @if($payment->amount < 0)
@@ -150,100 +178,46 @@
                                                         @endif
                                                     </td>
                                                     <td>
-                                                        @if($payment->type == 2 && $payment->amount <0)
+                                                        {{-- Display logic for amount: positive for income-like, (negative) for expense-like --}}
+                                                        @if(($payment->type == 1 && $payment->amount > 0) || ($payment->type == 2 && $payment->amount < 0))
                                                             {{ number_format(abs($payment->amount), 2) }}
-                                                        @elseif($payment->type == 1 && $payment->amount < 0)
-                                                            ({{ number_format(abs($payment->amount), 2) }})
-                                                        @elseif($payment->type == 1 && $payment->amount > 0)
-                                                            {{ number_format(abs($payment->amount), 2) }}
-                                                        @elseif($payment->type == 2 && $payment->amount > 0)
-                                                           ({{ number_format(abs($payment->amount), 2) }})
+                                                        @else {{-- ($payment->type == 1 && $payment->amount < 0) || ($payment->type == 2 && $payment->amount > 0) --}}
+                                                        ({{ number_format(abs($payment->amount), 2) }})
                                                         @endif
                                                     </td>
-                                                        <td>
-                                                            @php
-                                                                if ($payment->type == 1) {
-                                                                    $balance += $payment->amount;
-                                                                } else {
-                                                                    $balance -= $payment->amount;
-                                                                }
-                                                            @endphp
-
-                                                            {{ $balance < 0 ? '('.number_format(abs($balance), 2).')' : number_format($balance, 2) }}
-                                                        </td>
                                                     <td>{{ ucwords($payment->account->name) }}</td>
                                                     <td>
                                                         @php
+                                                            // Assuming your Bank model is named 'Bank' (singular)
                                                             $bank = \App\Models\Banks::find($payment->bank_id);
                                                         @endphp
                                                         {{ $bank->account_name . ' - ' . $bank->account_number }}
                                                     </td>
                                                     <td>
-                                                        @switch($payment->payment_method)
-                                                            @case(1)
-                                                                CASH
-                                                                @break
-                                                            @case(3)
-                                                                CHEQUE
-                                                                @break
-                                                            @case(4)
-                                                                ONLINE TRANSFER
-                                                                @break
-                                                            @default
-                                                                MOBILE MONEY TRANSFER
-                                                        @endswitch
-                                                    </td>
-                                                    <td>
                                                         {{ $payment->reference }}
                                                     </td>
                                                     <td>
-                                                        @switch($payment->type)
-                                                            @case(1)
-                                                                MAIN CHURCH
-                                                                @break
-                                                            @case(2)
-                                                                ADMIN
-                                                                @break
-                                                            @case(3)
-                                                                SUPPLIERS
-                                                                @break
-                                                            @case(4)
-                                                                EMPLOYEES
-                                                                @break
-                                                            @case(5)
-                                                                MEMBERS
-                                                                @break
-                                                            @case(6)
-                                                                DONATION
-                                                                @break
-                                                            @case(7)
-                                                                LOANS
-                                                                @break
-                                                            @case(8)
-                                                                PROJECTS
-                                                                @break
-                                                            @default
-                                                                OTHER
-                                                        @endswitch
-                                                    </td>
-                                                    <td>
-                                                        {{ $payment->type == 2 ? "EXPENSE" : "REVENUE" }}
-                                                    </td>
-                                                    <td>
-                                                        @php
-                                                            $creator = \App\Models\User::find($payment->created_by);
-                                                        @endphp
-                                                        {{ $creator ? $creator->name : 'N/A' }}
-                                                    </td>
-                                                    <td>
-                                                        @php
-                                                            $verifier = \App\Models\User::find($payment->verified_by);
-                                                        @endphp
-                                                        {{ $verifier ? $verifier->name : 'N/A' }}
+                                                        @if($payment->type == 1)
+                                                            Revenue
+                                                        @else
+                                                            Expense
+                                                        @endif
                                                     </td>
                                                 </tr>
                                             @endforeach
                                             </tbody>
+                                            <tfoot>
+                                            <tr>
+                                                <th colspan="3" class="text-right">Total for Current Period:</th>
+                                                <th>{{ number_format($totalPeriodSum, 2) }}</th>
+                                                <th colspan="4"></th> {{-- Span remaining columns --}}
+                                            </tr>
+                                            <tr>
+                                                <th colspan="3" class="text-right">Overall Closing Balance:</th>
+                                                <th>{{ number_format($openingBalance + $totalPeriodSum, 2) }}</th>
+                                                <th colspan="4"></th>
+                                            </tr>
+                                            </tfoot>
                                         </table>
                                     </div>
                                     <div class="float-end">

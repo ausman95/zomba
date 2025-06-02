@@ -42,8 +42,16 @@
                                         <td>{{$member->name}}</td>
                                     </tr>
                                     <tr>
-                                        <td>Phone Number</td>
+                                        <td>Phone Number 1</td>
                                         <td>{{($member->phone_number)}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Phone Number 2</td>
+                                        <td>{{($member->phone)}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Church Position</td>
+                                        <td>{{($member->position->name)}}</td>
                                     </tr>
                                     <tr>
                                         <td>Home Cells</td>

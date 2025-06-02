@@ -117,10 +117,10 @@
                         <i class='bx bx-bar-chart-alt-2 sidenav__icon'></i>
                         <span class="sidenav__name">Home Attendances</span>
                     </a>
-                <a href="{{route('announcements.index')}}" class="sidenav__link {{$cpage === 'announcements' ? 'link-active' : ''}}"
-                   title="Announcements">
+                <a href="{{route('analytics')}}" class="sidenav__link {{$cpage === 'analytics' ? 'link-active' : ''}}"
+                   title="Analytics">
                     <i class='bx bx-list-ol sidenav__icon'></i>
-                    <span class="sidenav__name">Announcements</span>
+                    <span class="sidenav__name">Analytics</span>
                 </a>
                 @if(request()->user()->designation!='administrator')
                     <a href="{{route('members.show',request()->user()->member_id)}}"

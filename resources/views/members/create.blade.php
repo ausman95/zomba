@@ -78,11 +78,11 @@
                     @enderror
                 </div>
                 <div class="form-group">
-                    <label>Phone Number</label>
+                    <label>Phone Number 1</label>
                     <input type="number" name="phone_number"
                            class="form-control @error('phone_number') is-invalid @enderror"
                            value="{{old('phone_number')}}"
-                           placeholder="Phone number"
+                           placeholder="Phone number 1"
                     >
                     @error('phone_number')
                     <span class="invalid-feedback">
@@ -90,7 +90,35 @@
                         </span>
                     @enderror
                 </div>
-                @if(request()->user()->designation=='administrator')
+                <div class="form-group">
+                    <label>Phone Number 2</label>
+                    <input type="number" name="phone"
+                           class="form-control @error('phone') is-invalid @enderror"
+                           value="{{old('phone')}}"
+                           placeholder="Phone number 2"
+                    >
+                    @error('phone')
+                    <span class="invalid-feedback">
+                               {{$message}}
+                        </span>
+                    @enderror
+                </div>
+                <div class="form-group">
+                    <label>Church Position (i.e. Elder)</label>
+                    <select name="position_id"
+                            class="form-select select-relation @error('position_id') is-invalid @enderror" style="width: 100%">
+                        <option value=""></option>
+                        @foreach($positions as $position)
+                            <option value="{{$position->id}}"
+                                {{old('position_id')===$position->id ? 'selected' : ''}}>{{$position->name}}</option>
+                        @endforeach
+                    </select>
+                    @error('position_id')
+                    <span class="invalid-feedback">
+                               {{$message}}
+                        </span>
+                    @enderror
+                </div>
                 <div class="form-group">
                     <label>Home Cell</label>
                     <select name="church_id"
@@ -107,7 +135,6 @@
                         </span>
                     @enderror
                 </div>
-                @endif
                 <p>Ministries</p>
                 <hr>
                 @foreach($ministries as $ministry)

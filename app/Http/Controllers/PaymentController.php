@@ -19,141 +19,138 @@ use App\Models\MemberPayment;
 use App\Models\Ministry;
 use App\Models\MinistryPayment;
 use App\Models\Month;
+use App\Models\Other;
+use App\Models\OtherPayment;
 use App\Models\Payment;
 use App\Models\ProjectPayment;
 use App\Models\Supplier;
 use App\Models\SupplierPayments;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Log;
+
 class PaymentController extends Controller
 {
     public function allTransaction(Request $request)
     {
-        $status = 0;
+        // Initialize variables
         $openingBalance = 0;
-        $currentMonth = null;
-        $transactions = collect(); // Initialize an empty collection for transactions
+        $currentMonthName = null; // Renamed to avoid confusion with Month model instance
+        $selectedBank = null; // To hold the selected bank object for the view title if needed
 
-        $bankId = $request->post('bank_id');
-        $startDate = $request->post('start_date');
-        $monthId = $request->post('month_id');
-        $endDate = $request->post('end_date');
+        // Extract and sanitize input parameters
+        $bankId = $request->input('bank_id'); // Use input() for GET/POST, more explicit
+        $monthId = $request->input('month_id');
+        $startDate = $request->input('start_date');
+        $endDate = $request->input('end_date');
 
-        // Case 1: When both bank_id, start_date, and end_date are provided
-        if ($bankId && $startDate &&$endDate) {
+        // Define the transaction query, always filtering out inactive/deleted transactions
+        $transactionsQuery = Payment::where('status', 0); // Always show active transactions
 
-
-            // Fetch all previous bank transactions up to the start of the selected period
-            $previousTransactions = Payment::where('bank_id', $bankId)
-                ->where('t_date', '<', $startDate)
-                ->get();
-
-            // Calculate the opening balance from prior transactions
-            foreach ($previousTransactions as $transaction) {
-                if ($transaction->type == 1) {
-                    $openingBalance += $transaction->amount; // Revenue
-                } elseif ($transaction->type == 2) {
-                    $openingBalance -= $transaction->amount; // Expense
-                }
-            }
-
-            // Fetch current period's bank transactions
-            $transactions = Payment::where('bank_id', $bankId)
-                ->whereBetween('t_date', [$startDate, $endDate])
-                ->orderBy('t_date', 'ASC')
-                ->get();
-        }
-
-        // Case 2: When both bank_id and month_id are provided
-
-        elseif ($bankId && $monthId) {
-            $bankId = $request->post('bank_id');
-            $month = Month::find($request->post('month_id'));
-
+        // --- Determine the effective start and end dates based on filters ---
+        if ($monthId) {
+            $month = Month::find($monthId);
             if ($month) {
+                // If a month is selected, its dates override explicit start/end dates
                 $startDate = $month->start_date;
                 $endDate = $month->end_date;
-                $currentMonth = $month->name;
-
-                // Fetch all previous bank transactions up to the start of the selected period
-                $previousTransactions = Payment::where('bank_id', $bankId)
-                    ->where('t_date', '<', $startDate)
-                    ->get();
-
-                // Calculate the opening balance from prior transactions
-                foreach ($previousTransactions as $transaction) {
-                    if ($transaction->type == 1) {
-                        $openingBalance += $transaction->amount; // Revenue
-                    } elseif ($transaction->type == 2) {
-                        $openingBalance -= $transaction->amount; // Expense
-                    }
-                }
-
-                // Fetch current period's bank transactions
-                $transactions = Payment::where('bank_id', $bankId)
-                    ->whereBetween('t_date', [$startDate, $endDate])
-                    ->orderBy('t_date', 'ASC')
-                    ->get();
+                $currentMonthName = $month->name;
             } else {
+                // Handle invalid month selection gracefully
                 return redirect()->back()->withErrors(['month_id' => 'Invalid month selected.']);
             }
         }
 
-        // Case 3: If only start_date and end_date are provided (no bank)
-        elseif ($startDate &&$endDate) {
-            $startDate = $request->post('start_date');
-            $endDate = $request->post('end_date');
+        // Apply bank filter if bank ID is provided
+        if ($bankId) {
+            $transactionsQuery->where('bank_id', $bankId);
+            $selectedBank = Banks::find($bankId); // Fetch the bank details
+        }
 
-            // Fetch all previous transactions up to the selected period (for all banks)
-            $previousTransactions = Payment::where('t_date', '<', $startDate)
-                ->get();
+        // --- Calculate Opening Balance and Filter Transactions for the period ---
+        // We only calculate opening balance if we have a valid start date to begin from
+        if ($startDate) {
+            // Calculate opening balance based on transactions *before* the start date
+            $openingBalanceQuery = Payment::where('status', 0) // Only active payments
+            ->where('t_date', '<', $startDate);
 
-            // Calculate the opening balance from prior transactions
-            foreach ($previousTransactions as $transaction) {
-                if ($transaction->type == 1) {
-                    $openingBalance += $transaction->amount; // Revenue
-                } elseif ($transaction->type == 2) {
-                    $openingBalance -= $transaction->amount; // Expense
+            if ($bankId) {
+                $openingBalanceQuery->where('bank_id', $bankId);
+            }
+
+            $openingBalanceTransactions = $openingBalanceQuery->get();
+
+            foreach ($openingBalanceTransactions as $transaction) {
+                // Assuming type 1 is income (increases balance), type 2 is expense (decreases balance)
+                if ($transaction->type == 1) { // Income
+                    $openingBalance += $transaction->amount;
+                } elseif ($transaction->type == 2) { // Expense
+                    $openingBalance -= $transaction->amount;
                 }
             }
 
-            // Fetch current period's transactions
-            $transactions = Payment::whereBetween('t_date', [$startDate, $endDate])
-                ->orderBy('t_date', 'ASC')
-                ->get();
+            // Apply date range filter for the main transaction list
+            if ($endDate) {
+                $transactionsQuery->whereBetween('t_date', [$startDate, $endDate]);
+            } else {
+                // If only a start date is provided, get transactions from that date onwards
+                $transactionsQuery->where('t_date', '>=', $startDate);
+            }
+        } elseif ($endDate) {
+            // If only an end date is provided, get transactions up to that date
+            $transactionsQuery->where('t_date', '<=', $endDate);
         }
 
+        // Fetch current period's transactions, eager load relationships, and order them
+        $transactions = $transactionsQuery->with(['account', 'bank']) // Eager load related models
+        ->orderBy('t_date', 'ASC')
+            ->get();
 
-
-        // Paginate the bank transactions
-        $currentPage = LengthAwarePaginator::resolveCurrentPage();
+        // --- Pagination ---
+        // The original pagination logic might be simplified if you plan to use Laravel's built-in paginate()
+        // If you need all results first and then paginate, your current logic is fine,
+        // but Laravel's `->paginate($perPage)` is generally more efficient for large datasets.
         $perPage = 1000;
+        $currentPage = LengthAwarePaginator::resolveCurrentPage();
         $currentResults = $transactions->slice(($currentPage - 1) * $perPage, $perPage)->all();
 
-        $transactions = new LengthAwarePaginator($currentResults, $transactions->count(), $perPage, $currentPage, [
+        $paginatedTransactions = new LengthAwarePaginator($currentResults, $transactions->count(), $perPage, $currentPage, [
             'path' => LengthAwarePaginator::resolveCurrentPath(),
         ]);
 
+
+        // --- Prepare data for the view ---
+        $banks = Banks::where('soft_delete', 0)->orderBy('id', 'desc')->get(); // Use Bank model
+        $months = Month::orderBy('id', 'desc')->get(); // Assuming Month model doesn't use soft_delete
+
         // Log the activity
         activity('FINANCES')
-            ->log("Accessed Bank Transactions")
+            ->log("Accessed Bank Transactions for Bank ID: " . ($bankId ?? 'All') .
+                " Month ID: " . ($monthId ?? 'N/A') .
+                " Start Date: " . ($startDate ?? 'N/A') .
+                " End Date: " . ($endDate ?? 'N/A'))
             ->causer($request->user());
 
         // Return the view with necessary data
-        return view('receipts.all')->with([
+        return view('receipts.all', [
             'cpage' => "finances",
-            'payments' => $transactions,
-            'status' => $status,
-            'start_date'=>$startDate,
+            'payments' => $paginatedTransactions, // Pass the paginated collection
+            'status' => $status ?? 0, // Default to 0 if not set, though it seems unused
+            'startDate' => $startDate, // Pass start date for view to retain filter
+            'endDate' => $endDate, // Pass end date for view to retain filter
             'openingBalance' => $openingBalance,
-            'currentMonth' => $currentMonth,
-            'banks' => Banks::where('soft_delete', 0)->orderBy('id', 'desc')->get(),
-            'months' => Month::where('soft_delete', 0)->orderBy('id', 'desc')->get(),
+            'currentMonth' => $currentMonthName,
+            'banks' => $banks,
+            'selectedBank' => $selectedBank, // Pass the selected bank object for view title
+            'months' => $months,
+            'selectedMonthId' => $monthId, // Pass selected month ID to pre-select dropdown
+            'selectedBankId' => $bankId, // Pass selected bank ID to pre-select dropdown
         ]);
     }
-
     /**
      * Display a listing of the resource.
      *
@@ -192,28 +189,82 @@ class PaymentController extends Controller
             'payments'=>$payment,
         ]);
     }
-    public function index()
+    public function index(Request $request)
     {
+        $query = Payment::query();
 
-         if(Month::getActiveMonth()){
-             $month =Month::getActiveMonth();
-            }else{
-                return redirect()->route('months.index')->with([
-                    'success-notification'=>"Please Create a new month"
-                ]);
+        // Initialize variables for the view to retain filter selections and for the caption
+        $selectedBankId = $request->input('bank_id');
+        $selectedMonthId = $request->input('month_id');
+        $startDate = $request->input('start_date');
+        $endDate = $request->input('end_date');
+        $selectedBank = null; // Will store the Bank model if selected
+        $currentMonth = null; // Will store the month name if selected
+
+        // 1. Apply Status Filter: Only show active payments (status = 0)
+        // Ensure this is applied before other filters if it's a base requirement
+        $query->where('status', 0); // Assuming 0 means active
+
+        // 2. Apply Bank Filter (if provided)
+        if ($request->filled('bank_id')) {
+            $query->where('bank_id', $selectedBankId);
+            $selectedBank = Banks::find($selectedBankId); // Fetch the bank model for the caption
+        }
+
+        // 3. Apply Month Filter (if provided)
+        if ($request->filled('month_id')) {
+            $month = Month::find($selectedMonthId);
+            if ($month) {
+                // Assuming 't_date' is the transaction date
+                // And Month model has 'year' and 'month_number' or similar attributes
+                $query->whereYear('t_date', $month->year)
+                    ->whereMonth('t_date', $month->month_number);
+                $currentMonth = $month->name; // Use the month's name for the caption
             }
+        }
 
-        activity('FINANCES')
-            ->log("Accessed Payments")->causer(request()->user());
-        return view('payments.index')->with([
-            'cpage' => "finances",
-            'payments'=>Payment::whereBetween('t_date',[$month->start_date,$month->end_date])
-                ->where(['type'=>2])
-                ->where('account_id','!=',134)
-                ->orderBy('payments.id','desc')->get(),
-            'months'=>Month::where(['soft_delete'=>0])->orderBY('id','desc')->get()
-        ]);
+        // 4. Apply Start Date Filter (if provided)
+        if ($request->filled('start_date')) {
+            $query->whereDate('t_date', '>=', $startDate);
+        }
+
+        // 5. Apply End Date Filter (if provided)
+        if ($request->filled('end_date')) {
+            $query->whereDate('t_date', '<=', $endDate);
+        }
+
+        // Eager load relationships for the table (e.g., account, bank)
+        // Keep this `with` here. The `where(['status'=>0])` below is redundant as it's already applied above.
+        $query->with(['account', 'bank']);
+
+        // Order by date, latest first
+        $query->orderBy('t_date', 'desc');
+
+        // ******************************************************
+        // THE FIX: Use paginate() instead of get()
+        // ******************************************************
+        $payments = $query->paginate(10); // You can adjust the number of items per page
+
+        // Fetch all banks and months for the filter dropdowns
+        $banks = Banks::all(); // Assuming you want all banks in the dropdown
+        $months = Month::orderBy('id','desc')->get(); // Fetch months for the dropdown
+
+        $cpage = 'finances'; // Controller page variable
+
+        return view('payments.index', compact(
+            'cpage',
+            'payments',
+            'banks',
+            'months',
+            'selectedBankId',
+            'selectedMonthId',
+            'startDate',
+            'endDate',
+            'selectedBank', // Pass the selected bank model
+            'currentMonth'  // Pass the current month name
+        ));
     }
+
 
     public function generateReceipt(Request $request)
     {
@@ -223,19 +274,50 @@ class PaymentController extends Controller
 
         $month = Month::where('id', $request->post('month_id'))->first();
 
-        activity('FINANCES')->log("Accessed Payments")->causer(request()->user());
+        // Check if month exists to prevent errors
+        if (!$month) {
+            return redirect()->back()->with('error', 'Selected month not found.');
+        }
 
-        return view('payments.index')->with([
-            'cpage' => "finances",
-            'payments' => Payment::join('accounts', 'accounts.id','=','payments.account_id')
-                ->select('payments.*')
-                ->where('payments.t_date', '>=', $month->start_date)
-                ->where('payments.t_date', '<=', $month->end_date)
-                ->where('accounts.type', 2)
-                ->orderBy('payments.id', 'desc')
-                ->get(),
-            'months' => Month::orderBy('id', 'desc')->get()
-        ]);
+        activity('FINANCES')->log("Accessed Payments Report for Month: {$month->name}")->causer(request()->user());
+
+        $query = Payment::join('accounts', 'accounts.id', '=', 'payments.account_id')
+            ->select('payments.*') // Select payments.* to get all payment columns
+            ->where('payments.t_date', '>=', $month->start_date)
+            ->where('payments.t_date', '<=', $month->end_date)
+            ->where('accounts.type', 2) // Assuming 'type' 2 is for receipts
+            ->where('payments.status', 0); // Assuming 0 means active/verified payments
+
+        // Eager load relationships needed in the view
+        $query->with(['account', 'bank']); // Add 'bank' if you need bank details
+
+        $query->orderBy('payments.id', 'desc');
+
+        // --- THE CRITICAL CHANGE ---
+        $payments = $query->paginate(10); // Use paginate() instead of get()
+        // You can adjust the number of items per page (e.g., 10)
+
+        // Pass filter values for the view to retain context and show/hide clear filters button
+        $selectedBankId = null; // No bank filter in this specific report method
+        $selectedMonthId = $month->id;
+        $startDate = $month->start_date;
+        $endDate = $month->end_date;
+        $selectedBank = null; // No specific bank selected for this report
+        $currentMonth = $month->name; // Pass the month name for the caption
+        $cpage = 'finances'; // Controller page variable
+        $months = Month::orderBy('id','desc')->get(); // Controller page variable
+
+        return view('payments.index', compact(
+            'cpage',
+            'payments',
+            'months',
+            'selectedBankId',
+            'selectedMonthId',
+            'startDate',
+            'endDate',
+            'selectedBank',
+            'currentMonth'
+        ));
     }
 
     /**
@@ -254,6 +336,7 @@ class PaymentController extends Controller
             'cpage'=>"finances",
             'creditors'=>$creditors,
             'banks'=>$banks,
+            'others'=>Other::where(['soft_delete'=>0])->orderBy('id','desc')->get(),
             'members'=>Member::where(['soft_delete'=>0])->orderBy('id','desc')->get(),
             'churches'=>Church::where(['soft_delete'=>0])->orderBy('id','desc')->get(),
             'ministries'=>Ministry::where(['soft_delete'=>0])->orderBy('id','desc')->get(),
@@ -310,6 +393,11 @@ class PaymentController extends Controller
             case '7':{
                 $request->validate(['ministry_id' => "required"]);
                 $transactions_name = Ministry::where(['id'=>$request->post('ministry_id')])->first()->name;
+                break;
+            }
+            case '8':{
+                $request->validate(['other_id' => "required"]);
+                $transactions_name = Other::where(['id'=>$request->post('other_id')])->first()->name;
                 break;
             }
         }
@@ -502,6 +590,25 @@ class PaymentController extends Controller
             ];
             MinistryPayment::create($ministries);
         }
+        if($request->type==8){
+            $bala = OtherPayment::where(['other_id'=>$request->post('other_id')])->orderBy('id','desc')->first();
+            @$balances = $bala->balance;
+            if(!$balances){
+                $balances = 0;
+            }
+            $ministries = [
+                'name'=>$transactions_name.' For '.$account->name,
+                'other_id'=>$request->post('other_id'),
+                'amount'=>$request->post('amount'),
+                'created_by'=>$request->post('created_by'),
+                'updated_by'=>$request->post('updated_by'),
+                'account_id'=>$request->post('account_id'),
+                'balance'=>$balances+$request->post('amount'),
+                'payment_id'=>$payment,
+                'transaction_type'=>2,
+            ];
+            OtherPayment::create($ministries);
+        }
         BankTransaction::create($transactions);
         //code to generate an invoice
         activity('FINANCES')
@@ -536,6 +643,7 @@ class PaymentController extends Controller
     {
         return view('receipts.edit')->with([
             'cpage'=>"finances",
+            'banks'=>Banks::all(),
             'transaction'=>$payment,
         ]);
     }
@@ -563,28 +671,56 @@ class PaymentController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Request $request,ReceiptController $receiptController)
+    public function destroy(Request $request, Payment $payment,ReceiptController $receiptController)
     {
-        $data=array('status'=>1,'updated_by'=> request()->user()->id) ;
-        DB::table('payments')
-            ->where(['id' => $request->post('id')])
-            ->update($data);
-        if($request->post('type')==1){
-            DB::table('member_payments')
-                ->where(['payment_id' => $request->post('id')])
-                ->update($data);
-            $member = MemberPayment::where(['member_payments.payment_id'=> $request->post('id')])
-                ->join('members', 'members.id', '=', 'member_payments.member_id')
-                ->first();
-            if($member->phone_number!=0) {
-                $message = 'Dear ' . $member->name . ' You have Paid ' . $request->post('account') .
-                    ' Amounting to : MK ' . number_format($request->post('amount'), 2) .
-                    PHP_EOL . ' AREA 25 VICTORY TEMPLE';
-                $receiptController->sendSms($member->phone_number, $message);
-            }
-        }
-        return redirect()->route('receipt.unverified')->with([
-            'success-notification'=>"Successfully"
+        // 1. Validate the request (optional but recommended for deletion notes)
+        $request->validate([
+            'delete_notes' => 'nullable|string|max:1000',
         ]);
+
+        try {
+            // Get the deletion notes from the request
+            $deletionNotes = $request->input('delete_notes');
+            $user = Auth::user(); // Get the authenticated user
+
+            // 2. Append deletion notes to the 'specification' field
+            $originalSpecification = $payment->specification;
+            $newSpecification = $originalSpecification;
+            $timestamp = Carbon::now()->format('Y-m-d H:i:s');
+            $userName = $user->name ?? 'N/A User';
+
+            if (!empty($deletionNotes)) {
+                $newSpecification .= "\n[MARKED DELETED by {$userName} on {$timestamp}]: {$deletionNotes}";
+            } else {
+                $newSpecification .= "\n[MARKED DELETED by {$userName} on {$timestamp}]";
+            }
+
+            // 3. Update the 'specification', 'status', 'updated_by' fields
+            $payment->specification = $newSpecification;
+            $payment->status = 1; // Assuming '1' means deleted/inactive for payments
+            $payment->updated_by = $user->id; // Set the user who performed this action
+
+            // 4. Save the changes to the database
+            // Eloquent will automatically update `updated_at` here because timestamps are enabled.
+            $payment->save();
+            $message = 'GoodDay Madam, there was a reversal done by ' . request()->user()->name . ' for ' . @$payment->name . ',
+            '.$payment->account->name.' : MK' . number_format($payment->amount,2).'Reason Being '.$payment->specification;
+            $receiptController->sendSms('0888608771',$message); // sending sms
+            $receiptController->sendSms('0999924207',$message); // sending sms
+            // 5. Log the action (optional but good for auditing)
+            Log::info("Payment ID: {$payment->id} status changed to 1 (marked deleted) by user {$user->id}. Original spec: '{$originalSpecification}'. New spec: '{$payment->specification}'");
+
+            // 6. Redirect back with a success message
+            return back()->with('success-notification', 'Transaction successfully marked as deleted and notes appended.');
+
+        } catch (\Exception $e) {
+            // 7. Handle any errors
+            Log::error("Error marking payment ID: {$payment->id} as deleted. Error: " . $e->getMessage(), [
+                'exception' => $e,
+                'request_data' => $request->all(),
+                'payment_id' => $payment->id
+            ]);
+            return back()->withInput()->with('error-notification', 'Failed to mark transaction as deleted: ' . $e->getMessage());
+        }
     }
 }

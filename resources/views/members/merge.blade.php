@@ -25,7 +25,7 @@
                     <form action="{{route('member.edit-merge')}}" method="POST" autocomplete="off">
                         @csrf
                         <div class="form-group">
-                            <label>Delete this Member</label>
+                            <label>First Member to Merge</label>
                             <select name="member_id_to_delete"
                                     class="form-select select-relation @error('member_id_to_delete') is-invalid @enderror" style="width: 100%">
                                 <option value="">-- Select ---</option>
@@ -42,17 +42,30 @@
                             @enderror
                         </div>
                         <div class="form-group">
-                            <label>Keep this Member</label>
-                            <select name="member_to_keep"
-                                    class="form-select select-relation @error('member_to_keep') is-invalid @enderror" style="width: 100%">
+                            <label>Second Member to Merge</label>
+                            <select name="member_id_to_keep"
+                                    class="form-select select-relation @error('member_id_to_keep') is-invalid @enderror" style="width: 100%">
                                 <option value="">-- Select ---</option>
                                 @foreach($members as $member)
                                     <option value="{{$member->id}}"
-                                        {{old('member_to_keep')===$member->id ? 'selected' : ''}}>
+                                        {{old('member_id_to_keep')===$member->id ? 'selected' : ''}}>
                                         {{$member->name.' '.$member->church->name}}</option>
                                 @endforeach
                             </select>
-                            @error('member_to_keep')
+                            @error('member_id_to_keep')
+                            <span class="invalid-feedback">
+                               {{$message}}
+                        </span>
+                            @enderror
+                        </div>
+                        <div class="form-group">
+                            <label>New Name</label>
+                            <input type="text" name="name"
+                                   class="form-control @error('name') is-invalid @enderror"
+                                   value="{{old('name')}}"
+                                   placeholder="New Name"
+                            >
+                            @error('name')
                             <span class="invalid-feedback">
                                {{$message}}
                         </span>

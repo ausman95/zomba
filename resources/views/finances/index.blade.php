@@ -37,6 +37,9 @@
             <a href="{{ route('creditors.index') }}" class="btn btn-primary btn-md rounded-0">
                 <i class="fas fa-user-friends"></i> Creditors
             </a>
+            <a href="{{ route('others.index') }}" class="btn btn-primary btn-md rounded-0">
+                <i class="fas fa-shopping-cart"></i> Others
+            </a>
 {{--            <a href="{{ route('purchases.index') }}" class="btn btn-primary btn-md rounded-0">--}}
 {{--                <i class="fas fa-shopping-cart"></i> Purchases--}}
 {{--            </a>--}}
@@ -52,14 +55,11 @@
             <a href="{{ route('receipts.index') }}" class="btn btn-primary btn-md rounded-0">
                 <i class="fas fa-receipt"></i> Receipts
             </a>
-            <a href="{{ route('receipt.unverified') }}" class="btn btn-primary btn-md rounded-0">
-                <i class="fas fa-exclamation-triangle"></i> Unverified
+            <a href="{{ route('receipt.reconciliations') }}" class="btn btn-primary btn-md rounded-0">
+                <i class="fas fa-exclamation-triangle"></i> Reconciliations
             </a>
             <a href="{{ route('receipt.all') }}" class="btn btn-primary btn-md rounded-0">
                 <i class="fas fa-list-alt"></i> All
-            </a>
-            <a href="{{ route('analytics') }}" class="btn btn-primary btn-md rounded-0">
-                <i class="fas fa-chart-line"></i> Reports
             </a>
             <div class="mt-3">
                 <div class="row">

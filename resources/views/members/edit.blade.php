@@ -43,13 +43,26 @@
                             @enderror
                         </div>
                         <div class="form-group">
-                            <label>Phone Number</label>
+                            <label>Phone Number 1</label>
                             <input type="number" name="phone_number"
                                    class="form-control @error('phone_number') is-invalid @enderror"
                                    value="{{old('phone_number') ?? $member->phone_number}}"
-                                   placeholder="Phone Number"
+                                   placeholder="Phone Number 1"
                             >
                             @error('phone_number')
+                            <span class="invalid-feedback">
+                               {{$message}}
+                        </span>
+                            @enderror
+                        </div>
+                        <div class="form-group">
+                            <label>Phone Number 2</label>
+                            <input type="number" name="phone"
+                                   class="form-control @error('phone') is-invalid @enderror"
+                                   value="{{old('phone') ?? $member->phone}}"
+                                   placeholder="Phone Number 2"
+                            >
+                            @error('phone')
                             <span class="invalid-feedback">
                                {{$message}}
                         </span>
@@ -105,6 +118,25 @@
                             <span class="invalid-feedback">
                                {{$message}}
                         </span>
+                            @enderror
+                        </div>
+                        <div class="form-group mb-3"> {{-- Added mb-3 for consistent spacing below the input --}}
+                            <label for="position_id" class="form-label">Church Position<span class="text-danger">*</span></label> {{-- Added 'for' attribute and 'form-label' class, plus a required indicator --}}
+                            <select name="position_id" id="position_id" required {{-- Added 'id' for the label's 'for' attribute --}}
+                            class="form-select select-relation @error('position_id') is-invalid @enderror" style="width: 100%">
+                                <option value="">-- Select Church Position --</option> {{-- More descriptive default option --}}
+                                @foreach($positions as $position)
+                                    <option value="{{ $position->id }}"
+                                        {{-- FIX: Corrected "selected" logic. Checks old input first, then existing model's position_id --}}
+                                        {{ (old('position_id') == $position->id || (isset($member) && $member->position_id == $position->id)) ? 'selected' : '' }}>
+                                        {{ ucwords($position->name) }}
+                                    </option>
+                                @endforeach
+                            </select>
+                            @error('position_id')
+                            <span class="invalid-feedback" role="alert"> {{-- Added role="alert" for accessibility --}}
+            <strong>{{ $message }}</strong>
+        </span>
                             @enderror
                         </div>
                         <hr style="height: .3em;" class="border-theme">

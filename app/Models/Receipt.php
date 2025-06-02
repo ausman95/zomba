@@ -10,12 +10,26 @@ class Receipt extends Model
 {
     use HasFactory;
 
-    public function getMonthsTransaction($start,$end,$accountID)
+//    public function getMonthsTransaction($start,$end,$accountID)
+//    {
+//        return  MemberPayment::where(['member_payments.account_id'=>$accountID])
+//            ->whereBetween('member_payments.t_date',[$start,$end])
+//            ->join('months', 'months.id', '=', 'member_payments.month_id')
+//            ->groupBy(['months.id'])
+//            ->get();
+//    }
+
+    public function getMonthsTransaction($start, $end, $accountID)
     {
-        return  MemberPayment::where(['member_payments.account_id'=>$accountID])
-            ->whereBetween('member_payments.t_date',[$start,$end])
-            ->join('months', 'months.id', '=', 'member_payments.month_id')
-            ->groupBy(['months.id'])
+        return MemberPayment::where(['member_payments.account_id' => $accountID])
+            ->whereBetween('member_payments.t_date', [$start, $end])
+            ->join('months', function ($join) {
+                $join->on('member_payments.t_date', '>=', 'months.start_date')
+                    ->on('member_payments.t_date', '<=', 'months.end_date');
+            })
+//            ->select('months.id as month_id', 'months.name as month_name')
+            ->groupBy('months.id', 'months.name')
+            ->orderBy('months.id')
             ->get();
     }
     public function getMembers($start,$end,$accountID)
@@ -23,10 +37,10 @@ class Receipt extends Model
         return  MemberPayment::where(['account_id'=>$accountID])
             ->whereBetween('member_payments.t_date',[$start,$end])
             ->join('members', 'members.id', '=', 'member_payments.member_id')
-            ->join('churches', 'churches.id', '=', 'members.church_id')
+            ->join('positions', 'positions.id', '=', 'members.position_id')
             ->select(
                 'members.name as pastor',
-                'churches.name as church',
+                'positions.name as position',
                 'members.id as member_id',
                 'member_payments.account_id as account_id',
                 DB::raw('SUM(member_payments.amount) as amount')

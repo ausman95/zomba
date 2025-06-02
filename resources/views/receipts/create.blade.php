@@ -19,7 +19,7 @@
         </nav>
         <hr>
         <div class="mt-2">
-            <form action="{{route('receipts.store')}}" method="POST" autocomplete="off">
+            <form action="{{route('receipts.store')}}" method="POST" autocomplete="off" onsubmit="return disableSubmitButton(this);">
                 <div class="row">
                     <div class="col-sm-12 col-md-8 col-lg-4">
                         @csrf
@@ -149,7 +149,7 @@
                                    class="form-control @error('cheque_number') is-invalid @enderror"
                                    value="0"
                                    placeholder="Cheque Number">
-                            <input type="number" name="amount" required
+                            <input type="text" name="amount" required
                                    class="form-control @error('amount') is-invalid @enderror"
                                    value="{{old('amount')}}"
                                    placeholder="Amount" >
@@ -224,8 +224,8 @@
                         </div>
                     </div>
                 </div>
-                <div class="form-group">
-                    <button class="btn btn-md btn-primary rounded-0">
+                <div class="form-group mt-4">
+                    <button type="submit" class="btn btn-md btn-primary rounded-0 submit-button">
                         <i class="fa fa-paper-plane"></i>Save
                     </button>
                 </div>
@@ -242,6 +242,15 @@
                 </script>
         @endif
     <script>
+        function disableSubmitButton(form) {
+            const submitButton = form.querySelector('.submit-button');
+            if (submitButton) {
+                submitButton.disabled = true;
+                submitButton.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Submitting...';
+            }
+            return true; // Allow form submission
+        }
+
         $(document).ready(function () {
             $('.type').on('change', function () {
                 let status = $(this).val();

@@ -25,6 +25,7 @@ class DeliveryController extends \FPDF
         $sumOf,
         $kwachaFigure,
         $monthOf,
+        $date,
         $receivedFrom;
 
 
@@ -54,12 +55,12 @@ class DeliveryController extends \FPDF
         $this->Ln();
         $this->Cell(20,8,'','','L');
         $this->SetFont('Courier','B',8);
-        $this->Cell(85,5,'MALAWI ASSEMBLIES OF GOD','','','C');
+        $this->Cell(85,5,'EAGLES CATHEDRAL, AREA 47 AOG','','','C');
         $this->Ln(10);
 
         $this->SetFont('Courier','B',9);
         $this->Cell(50,10,'','','L');
-        $this->Cell(30,2,'Date: '.@date('D d, M Y'),'','R');
+        $this->Cell(30,2,'Date: '.date('d F Y', strtotime($this->date)),'','R');
         $this->Ln(10);
 
         $this->SetFont('Courier','B',9);
@@ -71,7 +72,7 @@ class DeliveryController extends \FPDF
         $this->Ln(5);
 
         $this->SetFont('Courier','B',9);
-        $this->MultiCell(88,5,'Being Paid for '.$this->paidFor.' for the month of '.$this->monthOf,'','L');
+        $this->MultiCell(88,5,'Being Paid for '.$this->paidFor.' ('.$this->monthOf.')','','L');
         $this->Ln(5);
 
         $this->SetFont('Courier','B',9);
@@ -123,7 +124,7 @@ class DeliveryController extends \FPDF
         //$this->footer_note();
         @$this->Output();
     }
-    public function generateMemberReceipt($id,$monthId)
+    public function generateMemberReceipt($id,$monthId,$date,$specification)
     {
         $payment = MemberPayment::where(['id'=>$id])->first();
         $account = Accounts::where(['id'=>$payment->account_id])->first();
@@ -132,8 +133,8 @@ class DeliveryController extends \FPDF
         $totalInWords = str_replace('  ',' ',str_replace(
             '.',' Kwacha ',strtolower(numberToWords($totalInWords))));
 
-        $this->monthOf = $monthId;
-        $this->date = date('d-m-Y');
+        $this->monthOf = $specification;
+        $this->date = $date;
         $this->kwachaFigure = $total;
         $this->sumOf = ucwords($totalInWords);
         $this->paidFor = $account->name;
@@ -325,7 +326,7 @@ class DeliveryController extends \FPDF
             '.',' Kwacha ',strtolower(numberToWords($totalInWords))));
 
         $this->monthOf = $month->name;
-        $this->date = date('d-m-Y');
+        $this->date = $payment_id->t_date;
         $this->kwachaFigure = $total;
         $this->sumOf = ucwords($totalInWords);
         $this->paidFor = $account->name;

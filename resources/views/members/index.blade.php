@@ -23,15 +23,13 @@
         </div>
         <div class="mt-3">
             @if(request()->user()->designation=='administrator' || request()->user()->designation=='church')
-                <a href="{{route('members.create')}}" class="btn btn-primary btn-md rounded-0">
-                    <i class="fa fa-plus-circle"></i>New Member
+                <a href="{{ route('members.create') }}" class="btn btn-primary btn-md rounded-0">
+                    <i class="fa fa-plus-circle"></i> New Member
                 </a>
-                <a href="{{route('member.merge')}}" class="btn btn-primary btn-md rounded-0">
-                    <i class="fa fa-list-ol"></i>Merge Members
-                </a>
-                <a href="{{route('testimonials.index')}}" class="btn btn-primary btn-md rounded-0">
-                    <i class="fa fa-comment"></i> Testimonials
-                </a>
+                <a href="{{ route('member.merge') }}" class="btn btn-primary btn-md rounded-0">
+                    <i class="fa fa-code-merge"></i> Merge Members </a>
+                <a href="{{ route('positions.index') }}" class="btn btn-primary btn-md rounded-0">
+                    <i class="fa fa-briefcase"></i> Positions </a>
             @endif
             <div class="card container-fluid" style="min-height: 30em;">
                 <div class="row">
@@ -110,11 +108,11 @@
                                                             <th>NAME</th>
                                                             <th>GENDER</th>
                                                             <th>HOME CHURCH</th>
-                                                            <th>PHONE</th>
+                                                            <th>PHONE 1</th>
+                                                            <th>PHONE 2</th>
+                                                            <th>---</th>
                                                             <th>CREATED ON</th>
                                                             {{--                                                @if(@!$report)--}}
-                                                            <th>CREATED BY</th>
-                                                            <th>UPDATED BY</th>
                                                             <th>ACTION</th>
                                                             {{--                                                @endif--}}
                                                         </tr>
@@ -128,9 +126,9 @@
                                                                 <td>{{$member->gender}}</td>
                                                                 <td>{{$member->church->name}}</td>
                                                                 <td>{{$member->phone_number}}</td>
+                                                                <td>{{$member->phone}}</td>
+                                                                <td>{{$member->position->name}}</td>
                                                                 <td>{{date('d F Y', strtotime($member->created_at)) }}</td>
-                                                                <td>{{\App\Models\Budget::userName($member->created_by)}}</td>
-                                                                <td>{{\App\Models\Budget::userName($member->updated_by)}}</td>
                                                                <td class="pt-1">
                                                                    @if(request()->user()->designation!='member')
                                                                     <a href="{{route('members.show',$member->id)}}"

@@ -11,14 +11,20 @@ class Member extends Model
 {
     use HasFactory;
     protected $fillable = [
-        'name','church_id',
-        'phone_number','gender',
+        'name','church_id','position_id',
+        'phone_number','gender','phone',
         'status','created_by','updated_by'
     ];
     public function getName($id)
     {
         $name = Member::where(['id'=>$id])->latest()->first();
         return  $name->name;
+    }
+    public function position(): BelongsTo // <--- ADD THIS METHOD
+    {
+        // Assuming your 'members' table has a 'position_id' foreign key
+        // that links to the 'positions' table
+        return $this->belongsTo(Position::class, 'position_id');
     }
 
     public static function getMemberByMinistry($id)

@@ -104,18 +104,34 @@ class AccountController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(StoreRequest $request)
+    public function store(Request $request)
     {
-        if(is_numeric($request->post('name'))){
-            return back()->with(['error-notification'=>"Invalid Character Entered on Name"]);
-        }
-        $data = $request->post();
+        $name = $request->post('name');
+        $type = $request->post('type'); // Assuming you have a 'type' field
 
-        Accounts::create($data);
+        if (is_numeric($name)) {
+            return back()->with(['error-notification' => "Invalid Character Entered on Name"]);
+        }
+
+        // Check for duplicate account by name and type
+        $duplicateAccount = Accounts::where('name', $name)
+            ->where('type', $type)
+            ->exists();
+
+        if ($duplicateAccount) {
+            return back()->with(['error-notification' => "An account with this name and type already exists."]);
+            // Or you could return false if this is part of a validation rule
+            // return false;
+        }
+
+        $accountData = $request->post();
+
+        Accounts::create($accountData);
         activity('ACCOUNTS')
-            ->log("Created a new Account")->causer(request()->user());
-        return redirect()->route('accounts.index')->with([
-            'success-notification'=>"Account successfully Created"
+            ->log("Created a new Account")
+            ->causer($request->user());
+        return redirect()->route('accounts.create')->with([
+            'success-notification' => "Account successfully Created",
         ]);
     }
 

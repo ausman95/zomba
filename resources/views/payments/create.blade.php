@@ -19,12 +19,54 @@
         </nav>
         <hr>
         <div class="mt-2">
+            <button type="button" class="btn btn-primary rounded-0 btn-md" data-bs-toggle="modal" data-bs-target="#price">
+                <i class="fa fa-plus-circle"></i> New Other Payee
+            </button>
+            <div class="modal " id="price" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="staticBackdropLabel">Adding Prices</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <form action="{{route('others.store')}}" method="POST" autocomplete="off">
+                                @csrf
+                                <div class="form-group">
+                                    <label>Name</label>
+                                    <input type="hidden"  name="updated_by" value="{{request()->user()->id}}" required>
+                                    <input type="hidden"  name="created_by" value="{{request()->user()->id}}" required>
+                                    <input type="text" name="name"
+                                           class="form-control @error('name') is-invalid @enderror"
+                                           value="{{old('name')}}"
+                                           placeholder="Payee Name" >
+                                    @error('name')
+                                    <span class="invalid-feedback">
+                               {{$message}}
+                        </span>
+                                    @enderror
+                                </div>
+                                <hr style="height: .3em;" class="border-theme">
+                                <div class="form-group">
+                                    <button class="btn btn-md btn-primary rounded-0">
+                                        <i class="fa fa-paper-plane"></i>Save
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"><i class="fa fa-times-circle"></i> Cancel</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <hr>
             <form action="{{route('payments.store')}}" method="POST" autocomplete="off">
                 <div class="row">
                     <div class="col-sm-12 col-md-8 col-lg-4">
                         @csrf
                         <div class="form-group">
-                            <label>Payee</label>
+                            <label>Category</label>
                             <input type="hidden"  name="updated_by" value="{{request()->user()->id}}" required>
                             <input type="hidden"  name="created_by" value="{{request()->user()->id}}" required>
                             <select name="type"
@@ -34,12 +76,11 @@
                                 <option value="2">Admin</option>
                                 <option value="4">Employees</option>
                                 <option value="3">Creditors</option>
-                                <option value="8">Assets</option>
+{{--                                <option value="8">Assets</option>--}}
                                 <option value="5">Members</option>
-                                <option value="6">Home Churches</option>
-                                <option value="7">Ministries</option>
-                                <option value="1">Department</option>
-
+{{--                                <option value="6">Home Churches</option>--}}
+{{--                                <option value="7">Ministries</option>--}}
+{{--                                <option value="1">Department</option>--}}
                                 <option value="8">Others</option>
                             </select>
                             @error('type')
@@ -48,7 +89,24 @@
                             </span>
                             @enderror
                         </div>
-
+                        <div class="others d-none">
+                            <div class="form-group">
+                                <label>Other Payee</label>
+                                <select name="other_id"
+                                        class="form-select select-relation @error('other_id') is-invalid @enderror" style="width: 100%">
+                                    <option value="">-- Select ---</option>
+                                    @foreach($others as $other)
+                                        <option value="{{$other->id}}"
+                                            {{old('other_id')===$other->id ? 'selected' : ''}}>{{$other->name}}</option>
+                                    @endforeach
+                                </select>
+                                @error('other_id')
+                                <span class="invalid-feedback">
+                                   {{$message}}
+                            </span>
+                                @enderror
+                            </div>
+                        </div>
                         <div class="employees d-none">
                             <div class="form-group">
                                 <label>Members</label>
@@ -207,7 +265,7 @@
                                    class="form-control @error('cheque_number') is-invalid @enderror"
                                    value="0"
                                    placeholder="Cheque Number">
-                            <input type="number" name="amount" required
+                            <input type="text" name="amount" required
                                    class="form-control @error('amount') is-invalid @enderror"
                                    value="{{old('amount')}}"
                                    placeholder="Amount" >
@@ -316,12 +374,13 @@
                     $('.creditors').addClass('d-none').removeClass('show');
                     $('.members').addClass('d-none').removeClass('show');
                     $('.projects').addClass('show').removeClass('d-none');
-
+                    $('.others').addClass('d-none').removeClass('show');
                     $('.churches').addClass('d-none').removeClass('show');
                     $('.ministries').addClass('d-none').removeClass('show');
                     $('.employees').addClass('d-none').removeClass('show');
                 }
                 if(status==='2'){
+                    $('.others').addClass('d-none').removeClass('show');
                     $('.creditors').addClass('d-none').removeClass('show');
                     $('.members').addClass('d-none').removeClass('show');
                     $('.projects').addClass('d-none').removeClass('show');
@@ -330,6 +389,7 @@
                     $('.employees').addClass('d-none').removeClass('show');
                 }
                 if(status==='3'){
+                    $('.others').addClass('d-none').removeClass('show');
                     $('.creditors').addClass('show').removeClass('d-none');
                     $('.members').addClass('d-none').removeClass('show');
                     $('.projects').addClass('d-none').removeClass('show');
@@ -337,7 +397,17 @@
                     $('.ministries').addClass('d-none').removeClass('show');
                     $('.employees').addClass('d-none').removeClass('show');
                 }
+                if(status==='8'){
+                    $('.others').addClass('show').removeClass('d-none');
+                    $('.creditors').addClass('d-none').removeClass('show');
+                    $('.members').addClass('d-none').removeClass('show');
+                    $('.projects').addClass('d-none').removeClass('show');
+                    $('.churches').addClass('d-none').removeClass('show');
+                    $('.ministries').addClass('d-none').removeClass('show');
+                    $('.employees').addClass('d-none').removeClass('show');
+                }
                 if(status==='4'){
+                    $('.others').addClass('d-none').removeClass('show');
                     $('.creditors').addClass('d-none').removeClass('show');
                     $('.members').addClass('show').removeClass('d-none');
                     $('.projects').addClass('d-none').removeClass('show');
@@ -346,6 +416,7 @@
                     $('.employees').addClass('d-none').removeClass('show');
                 }
                 if(status==='5'){
+                    $('.others').addClass('d-none').removeClass('show');
                     $('.creditors').addClass('d-none').removeClass('show');
                     $('.members').addClass('d-none').removeClass('show');
                     $('.projects').addClass('d-none').removeClass('show');
@@ -354,6 +425,7 @@
                     $('.employees').addClass('show').removeClass('d-none');
                 }
                 if(status==='6'){
+                    $('.others').addClass('d-none').removeClass('show');
                     $('.creditors').addClass('d-none').removeClass('show');
                     $('.members').addClass('d-none').removeClass('show');
                     $('.projects').addClass('d-none').removeClass('show');
@@ -362,6 +434,7 @@
                     $('.employees').addClass('d-none').removeClass('show');
                 }
                 if(status==='7'){
+                    $('.others').addClass('d-none').removeClass('show');
                     $('.creditors').addClass('d-none').removeClass('show');
                     $('.members').addClass('d-none').removeClass('show');
                     $('.projects').addClass('d-none').removeClass('show');

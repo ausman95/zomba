@@ -7,7 +7,9 @@ use App\Http\Controllers\FinanceController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\LoanController;
 use App\Http\Controllers\NotificationController;
+use App\Http\Controllers\PayrollController;
 use App\Http\Controllers\ProjectController;
+use App\Http\Controllers\ReceiptController;
 use App\Http\Controllers\RequisitionController;
 use App\Http\Controllers\SupplierController;
 use App\Http\Controllers\UserController;
@@ -32,6 +34,9 @@ Route::middleware(['preventBackHistory'])->group(function () {
             Route::get('/logout', [\App\Http\Controllers\Auth\LogoutController::class, 'perform'])->name('logout.perform');
 
         });
+        Route::get('loans/{loan}/approve', [LoanController::class, 'approve'])->name('loans.approve');
+        Route::get('loans/{loan}/reject', [LoanController::class, 'reject'])->name('loans.reject');
+
         Route::get('/home', [HomeController::class, 'index'])->name('home');
         Route::get('members/merge', [\App\Http\Controllers\MemberController::class, 'memberMerge'])->name('member.merge');
         Route::post('members/merging', [\App\Http\Controllers\MemberController::class, 'merge'])->name('member.edit-merge');
@@ -54,6 +59,7 @@ Route::middleware(['preventBackHistory'])->group(function () {
         Route::resource('purchases', \App\Http\Controllers\PurchaseController::class);
         Route::resource('ministries', \App\Http\Controllers\MinistryController::class);
         Route::resource('months', \App\Http\Controllers\MonthController::class);
+        Route::resource('others', \App\Http\Controllers\OtherController::class);
         Route::resource('members', \App\Http\Controllers\MemberController::class);
         Route::resource('banks', \App\Http\Controllers\BankController::class);
         Route::resource('announcements', \App\Http\Controllers\AnnouncementController::class);
@@ -75,9 +81,11 @@ Route::middleware(['preventBackHistory'])->group(function () {
         Route::post('church/report/generate', [\App\Http\Controllers\ReceiptController::class, 'churchReportGenerate'])->name('church-report.generate');
         Route::get('church/report/generate', [\App\Http\Controllers\ReceiptController::class, 'churchReportGenerate'])->name('church-report.generate');
         Route::resource('zones', \App\Http\Controllers\ZoneController::class);
-        Route::get('receipt/unverified', [\App\Http\Controllers\ReceiptController::class, 'unverified'])->name('receipt.unverified');
+        Route::get('receipt/reconciliation', [\App\Http\Controllers\ReceiptController::class, 'unverified'])->name('receipt.reconciliations');
         Route::resource('testimonials', \App\Http\Controllers\TestimonialController::class);
         Route::resource('videos', \App\Http\Controllers\VideoController::class);
+        Route::get('/bank/reconciliation', [ReceiptController::class, 'bankReconciliations'])->name('bank-reconciliations');
+        Route::resource('positions', \App\Http\Controllers\PositionController::class);
 
         Route::resource('leave-settings', \App\Http\Controllers\LeaveSettingController::class);
         Route::resource('requisitions', RequisitionController::class)->except(['store', 'show', 'destroy']);
@@ -272,6 +280,17 @@ Route::middleware(['preventBackHistory'])->group(function () {
         /**
          * stock flow Routes
          */
+        Route::get('loans/{loan}/repayments/create', [LoanController::class, 'recordRepaymentForm'])->name('loans.record_repayment');
+        Route::post('loans/{loan}/repayments', [LoanController::class, 'storeRepayment'])->name('loans.store_repayment');
+        Route::put('loans/{loan}/approve', [LoanController::class, 'approve'])->name('loans.approve');
+        Route::put('loans/{loan}/reject', [LoanController::class, 'reject'])->name('loans.reject');
+        Route::put('loans/{loan}/activate', [LoanController::class, 'activate'])->name('loans.activate');
+        Route::put('loans/{loan}/deactivate', [LoanController::class, 'deactivate'])->name('loans.deactivate');
+        Route::post('payrolls/generate', [PayrollController::class, 'generatePayroll'])->name('payrolls.generate');
+
+// Route for updating monthly repayment
+        Route::put('loans/{loan}/update-repayment', [LoanController::class, 'updateRepayment'])->name('loans.updateRepayment');
+
         Route::resource('reports', \App\Http\Controllers\ReportController::class);
         Route::resource('stock-flows', \App\Http\Controllers\StockFlowController::class);
         Route::resource('services', \App\Http\Controllers\ServiceController::class);

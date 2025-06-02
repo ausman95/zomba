@@ -116,9 +116,6 @@ class BudgetController extends Controller
     public function update(UpdateRequest $request, Budget $budget)
     {
         $data = $request->post();
-        if($request->post('start_date')>$request->post('end_date')){
-            return back()->with(['error-notification'=>"Invalid End Date Entered"]);
-        }
         $budget->update($data);
         activity('BUDGETS')
             ->log("Updated a Budget")->causer(request()->user());

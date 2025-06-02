@@ -115,7 +115,7 @@ class BankController extends Controller
             ->log("Accessed Banks")->causer(request()->user());
 
         // Paginate transactions
-        $transactions = $bank->transactions()->paginate(1000); // Adjust the number of items per page as needed
+        $transactions = $bank->transactions()->paginate(2000); // Adjust the number of items per page as needed
 
         return view('banks.show')->with([
             'cpage' => "finances",

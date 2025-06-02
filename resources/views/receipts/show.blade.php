@@ -106,10 +106,6 @@
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td>Status</td>
-                                        <th>{{ucwords($transaction->status == 1 ? "VERIFIED" : "UN~VERIFIED") }}</th>
-                                    </tr>
-                                    <tr>
                                         <td>Created On</td>
                                         <td>{{date('d F Y', strtotime($transaction->created_at)) }}</td>
                                     </tr>
@@ -147,7 +143,7 @@
                                             <input type="hidden" name="account" value="{{$transaction->account->name}}">
                                         </form>
                                         @endif
-                                        @if($transaction->account_id==1)
+                                        @if($transaction->account_id==279)
                                             <a href="{{route('member-receipt.generate')."?id=".$transaction->id}}"
                                                class="btn btn-primary rounded-0" style="margin: 2px" target="_blank">
                                                 <i class="fa fa-print"></i>Receipt

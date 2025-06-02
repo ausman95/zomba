@@ -9,38 +9,57 @@ use App\Models\Member;
 use App\Models\MemberMinistry;
 use App\Models\MemberPayment;
 use App\Models\Ministry;
+use App\Models\Position;
 use App\Models\Zone;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 class MemberController extends Controller
 {
-    public function merge(Request $request )
+    public function merge(Request $request)
     {
-        $request->validate([
-            'member_id_to_delete' => "required|numeric",
-            'member_to_keep' => "required|numeric",
+        // Validate the request data
+        $validatedData = $request->validate([
+            'member_id_to_delete' => 'required|numeric',
+            'member_id_to_keep'      => 'required|numeric',
+            'name'                => 'required|string', // Changed to string, as name is a string
         ]);
-        if($request->post('member_to_keep')==$request->post('member_id_to_delete')){
-            return redirect()->route('member.merge')->with([
-                'error-notification'=>"Check the Inputs and Try again "
+
+        // Ensure the members to merge are different
+        if ($validatedData['member_id_to_keep'] === $validatedData['member_id_to_delete']) {
+            return redirect()->route('members.merge')->with([ // Corrected route name
+                'error-notification' => 'Cannot merge the same member.',
             ]);
         }
-        MemberPayment::where(['member_id' => $request->post('member_id_to_delete')])
-            ->update(['member_id' => $request->post('member_to_keep')]);
 
-//        Member::where(['id' => $request->post('member_id_to_delete')])
-//            ->delete();
+        // Update member_payments to point to the kept member
+        MemberPayment::where('member_id', $validatedData['member_id_to_delete'])
+            ->update(['member_id' => $validatedData['member_id_to_keep']]);
 
-        Member::where(['id' => $request->post('member_id_to_delete')])
+        // Get the phone number of the member to be deleted
+        $deletedMember = Member::find($validatedData['member_id_to_delete']);
+        $deletedMemberPhone = $deletedMember->phone_number;
+
+        // Soft delete the merged member and update name
+        Member::where('id', $validatedData['member_id_to_delete'])
             ->update(['soft_delete' => 1]);
 
+        // Update the phone number of the member to keep
+        Member::where('id', $validatedData['member_id_to_keep'])
+            ->update(['phone' => $deletedMemberPhone, 'name' => $validatedData['name']]);
+
+        // Log the member merge activity
         activity('members')
-            ->log("Merged some members")->causer(request()->user());
+            ->log("Merged member ID {$validatedData['member_id_to_delete']} into member ID {$validatedData['member_id_to_keep']}") // Added more details in log
+            ->causer(request()->user());
+
+        // Redirect with a success message
         return redirect()->route('members.index')->with([
-            'success-notification'=>"Successfully"
+            'success-notification' => 'Members merged successfully.', // More descriptive message
         ]);
     }
+
+
     public function memberMerge()
     {
         $members = Member::where(['soft_delete'=>0])->orderBy('id','desc')->get();
@@ -136,6 +155,7 @@ class MemberController extends Controller
         return view('members.create')->with([
             'cpage' => "members",
             'home_church'=>$home_church,
+            'positions'=> Position::where(['soft_delete'=>0])->orderBy('id','desc')->get(),
             'churches'=> Church::where(['soft_delete'=>0])->orderBy('id','desc')->get(),
             'ministries'=> Ministry::where(['soft_delete'=>0])->orderBy('id','desc')->get(),
         ]);
@@ -162,11 +182,13 @@ class MemberController extends Controller
                 MemberMinistry::create($data);
             }
         }
+        $message ='Dear ' . $request->post('name') . ' You have been registered
+        into the EASYMAOG System '.PHP_EOL.PHP_EOL. ' AREA 47, EAGLES CATHEDRAL';
         if($request->post('phone_number')!=0) {
-            $message = 'MALAWI ASSEMBLIES OF GOD' .
-                PHP_EOL . PHP_EOL . 'Dear ' . $request->post('name') . PHP_EOL . PHP_EOL . ' You have been registered into the new church system ' .
-                PHP_EOL . PHP_EOL . PHP_EOL . ' AREA 25 VICTORY TEMPLE';
             $receiptController->sendSms($request->post('phone_number'), $message);
+        }
+        if($request->post('phone')!=0) {
+            $receiptController->sendSms($request->post('phone'), $message);
         }
         activity('members')
             ->log("Created a new member")->causer(request()->user());
@@ -192,6 +214,7 @@ class MemberController extends Controller
         return view('members.edit')->with([
             'cpage' => "members",
             'member' => $member,
+            'positions'=> Position::where(['soft_delete'=>0])->orderBy('id','desc')->get(),
             'churches'=> Church::orderBy('id','desc')->get(),
             'ministries'=> Ministry::orderBy('id','desc')->get(),
         ]);

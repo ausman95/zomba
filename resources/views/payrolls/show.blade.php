@@ -88,10 +88,8 @@
     <div id="printable-payroll">
         <div style="text-align: center;">
             <img class="mb-2" src="{{asset('vendor/logo.png')}}" alt="" width="72" height="57">
-            <p><strong>AREA 25 VICTORY TEMPLE</strong><br>
-                Area 25 C, Lilongwe Malawi<br>
-                0999172593<br>
-                info@victorytemple.org</p>
+            <p><strong>EAGLES CATHEDRAL </strong><br>
+                Area 47, Lilongwe Malawi<br></p>
         </div>
         <div class="card" style="min-height: 30em;">
             <div class="card-body px-1">

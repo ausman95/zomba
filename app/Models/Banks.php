@@ -18,7 +18,8 @@ class Banks extends Model
     }
     public function transactions()
     {
-        return $this->hasMany(Payment::class, 'bank_id')->orderBy('t_date', 'ASC');
+        return $this->hasMany(Payment::class, 'bank_id')->where('status', 0)
+            ->orderBy('t_date', 'ASC');
     }
 
     public function incomes()
@@ -31,12 +32,14 @@ class Banks extends Model
     {
         // Calculate the sum of amounts where type = 1
         $revenue = Payment::where('bank_id', $this->id)
+            ->where('status', 0)
             ->where('type', 1)
             ->sum('amount');
 
         // Calculate the sum of amounts where type = 2
         $expenses = Payment::where('bank_id', $this->id)
             ->where('type', 2)
+            ->where('status', 0)
             ->sum('amount');
 
         // Return the difference between revenue and expenses

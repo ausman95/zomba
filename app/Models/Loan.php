@@ -4,18 +4,28 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Loan extends Model
 {
     use HasFactory;
 
     protected $fillable = [
-        'labourer_id', 'loan_amount',
-        'loan_start_date', 'loan_duration_months',
-        'monthly_repayment', 'remaining_balance',
-        'account_id',
-        'created_by', 'updated_by'
+        'labourer_id',
+        'loan_amount',
+        'loan_start_date',
+        'loan_duration_months',
+        'monthly_repayment',
+        'remaining_balance',
+        'loan_status', // Added this
+        'reason',
+        'end_date',
+        'approved_at', // Added this
+        'created_by',
+        'updated_by'
     ];
+
+
 
     // Relationships
 
@@ -53,5 +63,9 @@ class Loan extends Model
     public function labourerPayments()
     {
         return $this->hasMany(LabourerPayments::class, 'loan_id');
+    }
+    public function repayments(): HasMany
+    {
+        return $this->hasMany(LoanRepayment::class);
     }
 }

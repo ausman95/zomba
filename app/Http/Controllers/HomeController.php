@@ -282,7 +282,7 @@ class HomeController extends Controller
         activity('ANALYTICS')
             ->log("Accessed the Report page")->causer(request()->user());
         return view('analytics')->with([
-            'cpage' => "finances",
+            'cpage' => "analytics",
             'suppliers' => Supplier::all(),
             'materials' => Material::all()
         ]);

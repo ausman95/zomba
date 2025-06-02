@@ -51,6 +51,23 @@
                             </span>
                             @enderror
                         </div>
+                        <div class="form-group ">
+                            <label>Bank Account</label>
+                            <select name="bank_id" required
+                                    class="form-select select-relation @error('bank_id') is-invalid @enderror" style="width: 100%">
+                                <option value="{{$transaction->bank->id}}"
+                                    {{old('bank_id')===$transaction->bank->id ? 'selected' : ''}}>{{$transaction->bank->account_name.' '.$transaction->bank->account_number}}</option>
+                            @foreach($banks as $bank)
+                                    <option value="{{$bank->id}}"
+                                        {{old('bank_id')===$bank->id ? 'selected' : ''}}>{{$bank->account_name.' '.$bank->account_number}}</option>
+                                @endforeach
+                            </select>
+                            @error('bank_id')
+                            <span class="invalid-feedback">
+                                   {{$message}}
+                            </span>
+                            @enderror
+                        </div>
                         <div class="form-group">
                             <label>Reference/ Cheque Number</label>
                             <input type="text" name="reference"

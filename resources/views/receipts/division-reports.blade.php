@@ -80,8 +80,8 @@
                                     <select name="description"
                                             class="form-select select-relation @error('description') is-invalid @enderror" style="width: 100%">
                                         <option value="3">Members</option>
-{{--                                        <option value="4">Home Churches</option>--}}
-{{--                                        <option value="2">Ministries</option>--}}
+                                        {{--                                        <option value="4">Home Churches</option>--}}
+                                        {{--                                        <option value="2">Ministries</option>--}}
                                     </select>
                                     @error('description')
                                     <span class="invalid-feedback">
@@ -123,12 +123,12 @@
                                             <div style="overflow-x:auto;">
                                                 @if($description ==='3')
                                                     <table class="table table-bordered table-hover table-striped">
-                                                        <caption style=" caption-side: top; text-align: center"> PERFORMANCE REPORT FROM {{strtoupper($to_month_name)}}  TO {{strtoupper($from_month_name)}}</caption>
+                                                        <caption style=" caption-side: top; text-align: center"> PERFORMANCE REPORT FROM {{strtoupper($to_month_name)}} TO {{strtoupper($from_month_name)}}</caption>
                                                         <thead>
                                                         <tr>
                                                             <th>NO</th>
                                                             <th>MEMBER</th>
-                                                            <th>HOME CHURCH</th>
+                                                            <th>POSITION</th>
                                                             @foreach($getMonths as $month)
                                                                 <th>{{$month->name}}
                                                                     <br>
@@ -142,82 +142,99 @@
                                                         </tr>
                                                         </thead>
                                                         <tbody>
-                                                        <?php  $c= 1; $sum = 0;?>
-                                                        @foreach($churches  as $church)
+                                                            <?php $c= 1; $totalSumForAllMonths = 0;?>
+                                                        @foreach($churches as $church)
                                                             <tr>
                                                                 <td>{{$c++}}</td>
                                                                 <td>{{$church->pastor}}</td>
-                                                                <td>{{$church->church}}</td>
-                                                            @foreach($getMonths as $month)
+                                                                <td>{{$church->position}}</td>
+                                                                    <?php $rowTotal = 0; ?>
+                                                                @foreach($getMonths as $month)
                                                                     <td>
-                                                                        {{number_format($month->getMemberAmount($church->member_id,$month->month_id,$church->account_id),2)}}
+                                                                            <?php
+                                                                            $amountForMonth = $church->getMemberAmount(
+                                                                                $church->member_id,
+                                                                                $month->start_date,
+                                                                                $month->end_date,
+                                                                                $church->account_id
+                                                                            );
+                                                                            echo number_format($amountForMonth, 2);
+                                                                            $rowTotal += $amountForMonth;
+                                                                            ?>
                                                                     </td>
                                                                 @endforeach
-                                                                <td>{{number_format($church->amount,2)}}</td>
+                                                                <td>{{number_format($rowTotal, 2)}}</td>
                                                             </tr>
+                                                                <?php $totalSumForAllMonths += $rowTotal; ?>
                                                         @endforeach
                                                         </tbody>
+                                                        <tfoot>
+                                                        <tr>
+                                                            <td colspan="{{ 3 + count($getMonths) }}" style="text-align: right; font-weight: bold;">GRAND TOTAL (MK):</td>
+                                                            <td style="font-weight: bold;">{{ number_format($totalSumForAllMonths, 2) }}</td>
+                                                        </tr>
+                                                        </tfoot>
                                                     </table>
                                                 @elseif($account_id ==='1' && $description ==='4' )
                                                     {{$churches->links()}}
                                                     @if($type==1)
-                                                    <table class="table table-bordered table-hover  table-striped">
-                                                        <caption style=" caption-side: top; text-align: center">{{$division_name.' CHURCH '.$account_name}} PERFORMANCE REPORT FROM {{strtoupper($to_month_name)}}  TO {{strtoupper($from_month_name)}}</caption>
-                                                        <thead>
-                                                        <tr>
-                                                            <?php  $z = 1;  $total= 0;$local_amount = 0; $general_amount = 0;$agreds_amount = 0; $other_amount = 0; $sunday_amount = 0;$missions = 0;$construction = 0; $pastor = 0; $education = 0 ?>
-                                                            <th>NO</th>
-                                                            <th>-</th>
-                                                            <th>-</th>
-                                                            @foreach($getMonths as $month)
-                                                                <th>-</th>
-                                                            @endforeach
-                                                        </tr>
-                                                        </thead>
-                                                        <tbody>
-                                                        @foreach($districts as $district)
-                                                        <tr>
-                                                            <th>{{$z++}}</th>
-                                                            <th>{{$district->name}} District</th>
-                                                            <th>-</th>
-                                                            @foreach($getMonths as $month)
-                                                                <th>-</th>
-                                                            @endforeach
-                                                        </tr>
-                                                        @foreach(\App\Models\Receipt::getSection($district->id) as $section)
-                                                        <tr>
-                                                            <th>{{$z++}}</th>
-                                                            <th>{{$section->name}} Section</th>
-                                                            <th>-</th>
-                                                            @foreach($getMonths as $month)
-                                                                <th>-</th>
-                                                            @endforeach
-                                                        </tr>
-                                                        <tr>
-                                                            <th>{{$z++}}</th>
-                                                            <th>CHURCH</th>
-                                                            <th>PASTOR</th>
-                                                            @foreach($getMonths as $month)
-                                                                <th>{{$month->name}}</th>
-                                                            @endforeach
-                                                        </tr>
-                                                        @foreach(\App\Models\Receipt::getChurch($section->id) as $church)
+                                                        <table class="table table-bordered table-hover  table-striped">
+                                                            <caption style=" caption-side: top; text-align: center">{{$division_name.' CHURCH '.$account_name}} PERFORMANCE REPORT FROM {{strtoupper($to_month_name)}}  TO {{strtoupper($from_month_name)}}</caption>
+                                                            <thead>
                                                             <tr>
-                                                                <td>{{$z++}}</td>
-                                                                <td>{{$church->name}}</td>
-                                                                <td>{{$church->pastor}}</td>
+                                                                    <?php  $z = 1;  $total= 0;$local_amount = 0; $general_amount = 0;$agreds_amount = 0; $other_amount = 0; $sunday_amount = 0;$missions = 0;$construction = 0; $pastor = 0; $education = 0 ?>
+                                                                <th>NO</th>
+                                                                <th>-</th>
+                                                                <th>-</th>
                                                                 @foreach($getMonths as $month)
-                                                                    <td>
-                                                                        {{number_format($month->getChurchGeneralFunds($church->id,$month->id)*10/15)}}
-                                                                    </td>
+                                                                    <th>-</th>
                                                                 @endforeach
                                                             </tr>
-                                                        @endforeach
-                                                        @endforeach
-                                                        @endforeach
+                                                            </thead>
+                                                            <tbody>
+                                                            @foreach($districts as $district)
+                                                                <tr>
+                                                                    <th>{{$z++}}</th>
+                                                                    <th>{{$district->name}} District</th>
+                                                                    <th>-</th>
+                                                                    @foreach($getMonths as $month)
+                                                                        <th>-</th>
+                                                                    @endforeach
+                                                                </tr>
+                                                                @foreach(\App\Models\Receipt::getSection($district->id) as $section)
+                                                                    <tr>
+                                                                        <th>{{$z++}}</th>
+                                                                        <th>{{$section->name}} Section</th>
+                                                                        <th>-</th>
+                                                                        @foreach($getMonths as $month)
+                                                                            <th>-</th>
+                                                                        @endforeach
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <th>{{$z++}}</th>
+                                                                        <th>CHURCH</th>
+                                                                        <th>PASTOR</th>
+                                                                        @foreach($getMonths as $month)
+                                                                            <th>{{$month->name}}</th>
+                                                                        @endforeach
+                                                                    </tr>
+                                                                    @foreach(\App\Models\Receipt::getChurch($section->id) as $church)
+                                                                        <tr>
+                                                                            <td>{{$z++}}</td>
+                                                                            <td>{{$church->name}}</td>
+                                                                            <td>{{$church->pastor}}</td>
+                                                                            @foreach($getMonths as $month)
+                                                                                <td>
+                                                                                    {{number_format($month->getChurchGeneralFunds($church->id,$month->id)*10/15)}}
+                                                                                </td>
+                                                                            @endforeach
+                                                                        </tr>
+                                                                    @endforeach
+                                                                @endforeach
+                                                            @endforeach
 
-                                                        </tbody>
-                                                    </table>
+                                                            </tbody>
+                                                        </table>
                                                     @else
                                                         <table class="table table-bordered table-hover  table-striped">
                                                             <caption style=" caption-side: top; text-align: center">{{$division_name.' CHURCH '.$account_name}} PERFORMANCE REPORT FROM {{strtoupper($to_month_name)}}  TO {{strtoupper($from_month_name)}}</caption>
@@ -239,7 +256,7 @@
                                                             </tr>
                                                             </thead>
                                                             <tbody>
-                                                            <?php  $z = 1;  $total= 0;$local_amount = 0; $general_amount = 0;$agreds_amount = 0; $other_amount = 0; $sunday_amount = 0;$missions = 0;$construction = 0; $pastor = 0; $education = 0 ?>
+                                                                <?php  $z = 1;  $total= 0;$local_amount = 0; $general_amount = 0;$agreds_amount = 0; $other_amount = 0; $sunday_amount = 0;$missions = 0;$construction = 0; $pastor = 0; $education = 0 ?>
                                                             @foreach($churches  as $church)
                                                                 <tr>
                                                                     <td>{{$z++}}</td>
@@ -278,7 +295,7 @@
                                                         </tr>
                                                         </thead>
                                                         <tbody>
-                                                        <?php  $c= 1; $sum = 0;?>
+                                                            <?php  $c= 1; $sum = 0;?>
                                                         @foreach($churches  as $church)
                                                             <tr>
                                                                 <td>{{$c++}}</td>
@@ -316,7 +333,7 @@
                                                         </tr>
                                                         </thead>
                                                         <tbody>
-                                                        <?php  $c= 1; $sum = 0;?>
+                                                            <?php  $c= 1; $sum = 0;?>
                                                         @foreach($churches  as $church)
                                                             <tr>
                                                                 <td>{{$c++}}</td>
@@ -354,7 +371,7 @@
                                                         </tr>
                                                         </thead>
                                                         <tbody>
-                                                        <?php  $c= 1; $sum = 0;?>
+                                                            <?php  $c= 1; $sum = 0;?>
                                                         @foreach($churches  as $church)
                                                             <tr>
                                                                 <td>{{$c++}}</td>

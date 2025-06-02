@@ -21,17 +21,21 @@ class MemberPayment extends Model
     {
         return $this->belongsTo(Accounts::class,'account_id');
     }
-    public function getMemberAmount($memberID,$monthID,$accountID)
+
+    public function getMemberAmount($memberID, $startDate, $endDate, $accountID)
     {
-        $amount = MemberPayment::where('member_id','=',$memberID)
-            ->where('month_id','=',$monthID)
-            ->where('account_id','=',$accountID)
+        $amount = MemberPayment::where('member_id', '=', $memberID)
+            ->where('account_id', '=', $accountID)
+            ->whereBetween('t_date', [$startDate, $endDate])
             ->select(DB::raw('SUM(amount) as amount'))
             ->groupBy('member_id')
             ->first();
-        if(@!$amount){
+
+        if (! $amount) {
             return 0;
         }
+
         return $amount->amount;
     }
+
 }

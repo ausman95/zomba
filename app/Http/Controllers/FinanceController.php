@@ -41,7 +41,7 @@ class FinanceController extends Controller
     public function financialStatement()
     {
         return view('finances.reports')->with([
-            'cpage' => "finances",
+            'cpage' => "analytics",
             'months'=>Month::where(['soft_delete'=>0])->orderBy('id','desc')->get()
         ]);
     }
@@ -80,7 +80,7 @@ class FinanceController extends Controller
 
         // Prepare data for the view
         $viewData = [
-            'cpage' => "finances",
+            'cpage' => "analytics",
             'statement' => $statement,
             'fixedAssets' => $this->fetchFixedAssets(),
             'start_date' => $start,

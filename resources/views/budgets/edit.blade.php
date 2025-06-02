@@ -44,7 +44,7 @@
                         </div>
                         <div class="form-group">
                             <label>Amount</label>
-                            <input type="number" name="amount"
+                            <input type="text" name="amount"
                                    class="form-control @error('amount') is-invalid @enderror"
                                    value="{{old('amount') ?? $budget->amount}}"
                                    placeholder="Amount Allocated" >

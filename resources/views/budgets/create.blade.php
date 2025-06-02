@@ -43,7 +43,7 @@
                         </div>
                         <div class="form-group">
                             <label>Amount</label>
-                            <input type="number" name="amount" required
+                            <input type="text" name="amount" required
                                    class="form-control @error('amount') is-invalid @enderror"
                                    value="{{old('amount')}}"
                                    placeholder="Amount Allocated" >

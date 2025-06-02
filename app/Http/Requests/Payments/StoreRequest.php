@@ -26,7 +26,7 @@ class StoreRequest extends FormRequest
         return [
             'account_id'=>"required|numeric",
             'bank_id'=>"required|numeric",
-            'amount'=>"required|numeric",
+            'amount' => 'required|numeric|gt:0',
             'type'=>"required|numeric",
             't_date'=>"required|date",
             'payment_method'=>"required|numeric",
