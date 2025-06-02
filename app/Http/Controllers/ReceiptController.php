@@ -222,9 +222,8 @@ class ReceiptController extends Controller
             // --- Calculate Opening Balance ---
             $openingBalanceQuery = Payment::query()
                 ->where('soft_delete', 0)
-                ->whereHas('account', function ($q) {
-                    $q->whereIn('type', [1, 2]);
-                });
+                // Now directly check 'type' on the payments table itself
+                ->whereIn('type', [1, 2]); // Assuming type 1 is Revenue, type 2 is Expenditure
 
             if ($request->filled('bank_id')) {
                 $openingBalanceQuery->where('bank_id', $selectedBankId);
@@ -236,24 +235,25 @@ class ReceiptController extends Controller
                     ->where('t_date', '<', $startDate)
                     ->get()
                     ->sum(function ($payment) {
-                        return ($payment->account->type ?? null) == 1 ? $payment->amount : -$payment->amount;
+                        // Use $payment->type directly
+                        return ($payment->type ?? null) == 1 ? $payment->amount : -$payment->amount;
                     });
             } else {
                 // If no start date, opening balance is from the very beginning for the selected bank/all banks
                 $openingBalance = $openingBalanceQuery
                     ->get()
                     ->sum(function ($payment) {
-                        return ($payment->account->type ?? null) == 1 ? $payment->amount : -$payment->amount;
+                        // Use $payment->type directly
+                        return ($payment->type ?? null) == 1 ? $payment->amount : -$payment->amount;
                     });
             }
 
             // --- 2. Query Building for Current Period Transactions ---
             $query = Payment::query();
-            $query->with(['account', 'bank']);
+            $query->with(['account', 'bank']); // Keep eager loading 'account' and 'bank' for display in the table
             $query->where('soft_delete', 0);
-            $query->whereHas('account', function ($q) {
-                $q->whereIn('type', [1, 2]);
-            });
+            // Now directly check 'type' on the payments table for the main query as well
+            $query->whereIn('type', [1, 2]); // Filter for relevant types
 
             if ($request->filled('bank_id')) {
                 $query->where('bank_id', $selectedBankId);
@@ -281,7 +281,7 @@ class ReceiptController extends Controller
         }
 
         // --- Return View ---
-        return view('receipts.unverified', compact(
+        return view('finances.bank_reconciliation', compact( // Assuming 'finances.bank_reconciliation' is the correct view for this method
             'cpage',
             'transactions',
             'banks',
