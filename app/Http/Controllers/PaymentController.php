@@ -114,7 +114,7 @@ class PaymentController extends Controller
         // The original pagination logic might be simplified if you plan to use Laravel's built-in paginate()
         // If you need all results first and then paginate, your current logic is fine,
         // but Laravel's `->paginate($perPage)` is generally more efficient for large datasets.
-        $perPage = 1000;
+        $perPage = 10000;
         $currentPage = LengthAwarePaginator::resolveCurrentPage();
         $currentResults = $transactions->slice(($currentPage - 1) * $perPage, $perPage)->all();
 
@@ -243,7 +243,7 @@ class PaymentController extends Controller
         // ******************************************************
         // THE FIX: Use paginate() instead of get()
         // ******************************************************
-        $payments = $query->paginate(10); // You can adjust the number of items per page
+        $payments = $query->paginate(10000); // You can adjust the number of items per page
 
         // Fetch all banks and months for the filter dropdowns
         $banks = Banks::all(); // Assuming you want all banks in the dropdown
@@ -294,7 +294,7 @@ class PaymentController extends Controller
         $query->orderBy('payments.id', 'desc');
 
         // --- THE CRITICAL CHANGE ---
-        $payments = $query->paginate(10); // Use paginate() instead of get()
+        $payments = $query->paginate(10000); // Use paginate() instead of get()
         // You can adjust the number of items per page (e.g., 10)
 
         // Pass filter values for the view to retain context and show/hide clear filters button
