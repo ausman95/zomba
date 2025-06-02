@@ -271,7 +271,7 @@ class ReceiptController extends Controller
                 ->orderBy('id', 'asc');
 
             // --- 3. Get Paginated Results ---
-            $transactions = $query->paginate(15);
+            $transactions = $query->paginate(10000);
 
             // --- 4. Logging ---
             activity('FINANCES')->log("Accessed Bank Reconciliations page with filters: " . json_encode($request->all()))->causer(Auth::user());
