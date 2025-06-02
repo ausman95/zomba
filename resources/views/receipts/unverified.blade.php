@@ -149,7 +149,7 @@
 
                                         @foreach($transactions as $transaction)
                                             @php
-                                                $isRevenue = (($transaction->account->type ?? null) == 1);
+                                                $isRevenue = (($transaction->type ?? null) == 1);
                                                 $displayAmount = $transaction->amount;
 
                                                 if ($isRevenue) {
