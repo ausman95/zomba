@@ -27,7 +27,7 @@
                     <i class="fa fa-plus-circle"></i> New Member
                 </a>
                 <a href="{{ route('member.merge') }}" class="btn btn-primary btn-md rounded-0">
-                    <i class="fa fa-code-merge"></i> Merge Members </a>
+                    <i class="fa fa-user-plus"></i> Merge Members </a>
                 <a href="{{ route('positions.index') }}" class="btn btn-primary btn-md rounded-0">
                     <i class="fa fa-briefcase"></i> Positions </a>
             @endif
