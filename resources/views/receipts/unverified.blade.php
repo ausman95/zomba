@@ -212,7 +212,7 @@
                         </div>
 
                         {{-- Universal Delete Modal (Outside the loop, updated with JS for dynamic content) --}}
-                        <div class="modal fade" id="deleteTransactionModal" tabindex="-1" aria-labelledby="deleteTransactionModalLabel" aria-hidden="true">
+                        <div class="modal" id="deleteTransactionModal" tabindex="-1" aria-labelledby="deleteTransactionModalLabel" aria-hidden="true">
                             <div class="modal-dialog">
                                 <div class="modal-content">
                                     <div class="modal-header">
