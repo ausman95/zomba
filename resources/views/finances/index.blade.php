@@ -55,7 +55,7 @@
             <a href="{{ route('receipts.index') }}" class="btn btn-primary btn-md rounded-0">
                 <i class="fas fa-receipt"></i> Receipts
             </a>
-            <a href="{{ route('receipt.reconciliations') }}" class="btn btn-primary btn-md rounded-0">
+            <a href="{{ route('bank-reconciliations') }}" class="btn btn-primary btn-md rounded-0">
                 <i class="fas fa-exclamation-triangle"></i> Reconciliations
             </a>
             <a href="{{ route('receipt.all') }}" class="btn btn-primary btn-md rounded-0">

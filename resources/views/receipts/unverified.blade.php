@@ -291,37 +291,3 @@
                 });
             </script>
         @endpush
-@section('scripts')
-    <script src="{{ asset('vendor/simple-datatable/simple-datatable.js') }}"></script>
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            // Initialize select2 for filter dropdowns
-            $('.select-relation').select2({
-                placeholder: 'Select an option',
-                allowClear: true // Allows clearing the selected option
-            });
-
-            // Clear Filters button functionality
-            const clearFiltersBtn = document.getElementById('clearFiltersBtn');
-            if (clearFiltersBtn) {
-                clearFiltersBtn.addEventListener('click', function() {
-                    // Reset all form fields
-                    document.getElementById('bank_id').value = "";
-                    document.getElementById('start_date').value = "";
-                    document.getElementById('end_date').value = "";
-
-                    // Trigger select2 update if it's initialized on bank_id
-                    $('#bank_id').val('').trigger('change');
-
-                    // Submit the form to apply cleared filters
-                    document.getElementById('bankReconciliationFilterForm').submit();
-                });
-            }
-
-            // Fix for Bootstrap 5 Modals (replace data-dismiss with data-bs-dismiss if using BS5)
-            // Ensure you are using Bootstrap 5's modal JS for data-bs-toggle and data-bs-dismiss
-            // If you are still on Bootstrap 4, then data-dismiss is correct.
-            // Assuming Bootstrap 5 from your classes (btn-close)
-        });
-    </script>
-@endsection
