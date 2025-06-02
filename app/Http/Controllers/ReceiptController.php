@@ -281,7 +281,7 @@ class ReceiptController extends Controller
         }
 
         // --- Return View ---
-        return view('finances.bank_reconciliation', compact( // Assuming 'finances.bank_reconciliation' is the correct view for this method
+        return view('receipts.unverified', compact( // Assuming 'finances.bank_reconciliation' is the correct view for this method
             'cpage',
             'transactions',
             'banks',
