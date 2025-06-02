@@ -147,7 +147,7 @@
     <form method="POST" action="{{ route('login') }}">
         @csrf
         <img style="margin-left: 35%" class="mb-2" src="{{asset('vendor/logo.png')}}" alt="" width="72" height="57">
-        <h2 style="margin-left: 10% !important;" class="h3 mb-3 fw-normal">AREA 25, VICTORY TEMPLE </h2>
+        <h2 style="margin-left: 10% !important;" class="h3 mb-3 fw-normal">VICTORY TEMPLE </h2>
         @csrf
         <div class="form-floating">
             <input id="floatingInput" type="email" class="form-control @error('email') is-invalid @enderror"
