@@ -77,7 +77,7 @@
                             <div class="card-body px-1">
                                 <h5 class="card-title text-center mb-3">
                                     @if($bank)
-                                        <strong>{{ $bank->bank_name ?? 'N/A' }}</strong> Account Reconciliations
+                                        <strong>{{ $bank->bank_name.' - '.$bank->account_name.' -'.$bank->account_number ?? 'N/A' }}</strong> Account Reconciliations
                                     @else
                                         All Bank Account Reconciliations
                                     @endif
@@ -112,7 +112,6 @@
                                             <th class="text-end">EXPENDITURE (MK)</th> {{-- Specific header for Expenditure --}}
                                             <th class="text-end">BALANCE (MK)</th> {{-- New header for running balance --}}
                                             <th>ACCOUNT</th>
-                                            <th>BANK</th>
                                             <th class="text-center">ACTION</th>
                                         </tr>
                                         </thead>
@@ -145,13 +144,6 @@
                                             </td>
                                             <td class="text-end fw-bold">{{ number_format($runningBalance, 2) }}</td>
                                             <td>N/A</td>
-                                            <td>
-                                                @if($bank)
-                                                    {{ $bank->bank_name ?? 'N/A' }}
-                                                @else
-                                                    All Banks
-                                                @endif
-                                            </td>
                                             <td class="text-center">-</td>
                                         </tr>
 
@@ -188,13 +180,6 @@
                                                 </td>
                                                 <td class="text-end fw-bold">{{ number_format($runningBalance, 2) }}</td>
                                                 <td>{{ ucwords($transaction->account->name ?? 'N/A') }}</td>
-                                                <td>
-                                                    @if(!empty($transaction->bank))
-                                                        {{ $transaction->bank->bank_name.' - '.$transaction->bank->account_number.' - '.$transaction->bank->account_name }}
-                                                    @else
-                                                        N/A
-                                                    @endif
-                                                </td>
                                                 <td class="text-center">
                                                     <button type="button" class="btn btn-danger btn-sm rounded-0"
                                                             data-bs-toggle="modal" data-bs-target="#deleteTransactionModal"
