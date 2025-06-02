@@ -240,7 +240,7 @@ class ReceiptController extends Controller
 
         // --- 3. Get Paginated Results ---
         // Use paginate() instead of get() for efficiency and UI features
-        $payments = $query->paginate(15); // Adjust items per page as needed
+        $payments = $query->paginate(10000); // Adjust items per page as needed
 
         // --- 4. Data for Filter Dropdowns ---
         $banks = Bank::all(); // All banks for the filter dropdown
