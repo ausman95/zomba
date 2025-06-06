@@ -183,7 +183,7 @@ class MemberController extends Controller
             }
         }
         $message ='Dear ' . $request->post('name') . ' You have been registered
-        into the EASYMAOG System '.PHP_EOL.PHP_EOL. ' AREA 47, EAGLES CATHEDRAL';
+        into the EASYMAOG System '.PHP_EOL.PHP_EOL. ' AREA 25, VICTORY TEMPLE';
         if($request->post('phone_number')!=0) {
             $receiptController->sendSms($request->post('phone_number'), $message);
         }
