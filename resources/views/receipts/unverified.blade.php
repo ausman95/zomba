@@ -190,7 +190,7 @@
                                                                 data-transaction-bank-id="{{ $transaction->bank_id }}"
                                                                 data-transaction-date="{{ $transaction->t_date }}"
                                                                 data-transaction-name="{{ $transaction->name }}"
-                                                                data-transaction-description="{{ $transaction->description ?? '' }}"
+                                                                data-transaction-description="{{ $transaction->specification ?? '' }}"
                                                                 data-transaction-account-id="{{ $transaction->account_id }}"  {{-- NEW --}}
                                                                 data-transaction-reference="{{ $transaction->reference ?? '' }}"> {{-- NEW --}}
                                                             <i class="fa fa-edit"></i> Edit
