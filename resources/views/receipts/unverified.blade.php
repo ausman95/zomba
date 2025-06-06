@@ -125,27 +125,28 @@
 
                                             {{-- Display Opening Balance as the first row --}}
                                             <tr>
-                                                <td>{{ ++$counter }}</td>
-                                                <td>N/A</td> {{-- Date for opening balance --}}
-                                                <td>Opening Balance</td>
+                                                <td class="text-nowrap">{{ ++$counter }}</td>
+                                                <td class="text-nowrap">N/A</td> {{-- Date for opening balance --}}
+                                                <td class="text-nowrap">Opening Balance</td>
                                                 <td>Balance from previous transactions</td>
-                                                <td class="text-end">
+                                                <td class="text-end text-nowrap">
                                                     @if($openingBalance > 0)
                                                         {{ number_format($openingBalance, 2) }}
                                                     @else
                                                         -
                                                     @endif
                                                 </td>
-                                                <td class="text-end">
+                                                <td class="text-end text-nowrap">
                                                     @if($openingBalance < 0)
                                                         ({{ number_format(abs($openingBalance), 2) }})
                                                     @else
                                                         -
                                                     @endif
                                                 </td>
-                                                <td class="text-end fw-bold">{{ number_format($runningBalance, 2) }}</td>
-                                                <td>N/A</td>
-                                                <td class="text-center">-</td>
+                                                <td class="text-end fw-bold text-nowrap">{{ number_format($runningBalance, 2) }}</td>
+                                                <td class="text-nowrap">N/A</td>
+                                                <td class="text-nowrap">-</td> {{-- No cheque/reference for opening balance --}}
+                                                <td class="text-center text-nowrap">-</td> {{-- No action for opening balance --}}
                                             </tr>
 
                                             @foreach($transactions as $transaction)
@@ -210,9 +211,9 @@
                                             <tfoot>
                                             <tr>
                                                 <th colspan="4" class="text-end">Closing Balance:</th>
-                                                <th colspan="2" class="text-end"></th> {{-- Leave revenue/expenditure columns empty in footer --}}
-                                                <th class="text-end fw-bold">{{ number_format($runningBalance, 2) }}</th>
-                                                <th colspan="3"></th>
+                                                <th colspan="2" class="text-end"></th>
+                                                <th class="text-end fw-bold text-nowrap">{{ number_format($runningBalance, 2) }}</th>
+                                                <th colspan="3"></th> {{-- Adjusted colspan for the remaining 3 columns (Account, Cheque/Reference, Action) --}}
                                             </tr>
                                             </tfoot>
                                         </table>
@@ -284,7 +285,7 @@
                                                     <select name="account_id" id="editAccountId" class="form-select select-relation" style="width: 100%" required>
                                                         <option value="{{@$transaction->account->id}}"
                                                             {{old('bank_id')===@$transaction->account->id ? 'selected' : ''}}>{{@$transaction->account->name}}</option>
-                                                    @foreach($accounts as $accountOption)
+                                                        @foreach($accounts as $accountOption)
                                                             <option value="{{ $accountOption->id }}">
                                                                 {{ $accountOption->name }}
                                                             </option>
@@ -332,6 +333,7 @@
         </div>
     </div>
 @endsection
+<script src="{{asset('vendor/simple-datatable/simple-datatable.js')}}"></script>
 @section('scripts')
     <script>
         document.addEventListener('DOMContentLoaded', function () {
