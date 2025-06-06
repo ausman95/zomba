@@ -112,6 +112,7 @@
                                                 <th class="text-end">EXPENDITURE (MK)</th> {{-- Specific header for Expenditure --}}
                                                 <th class="text-end">BALANCE (MK)</th> {{-- New header for running balance --}}
                                                 <th>ACCOUNT</th>
+                                                <th>CHEQUE</th>
                                                 <th class="text-center">ACTION</th>
                                             </tr>
                                             </thead>
@@ -163,7 +164,7 @@
                                                     <td>{{ $counter }}</td>
                                                     <td>{{ \Carbon\Carbon::parse($transaction->t_date)->format('d F Y') }}</td>
                                                     <td>{{ ucwords(substr($transaction->name, 0, 20)) }}</td>
-                                                    <td>{{ $transaction->description ?? 'N/A' }}</td>
+                                                    <td>{{ $transaction->specification ?? 'N/A' }}</td>
                                                     <td class="text-end">
                                                         @if($isRevenue)
                                                             {{ number_format($displayAmount, 2) }}
@@ -180,7 +181,20 @@
                                                     </td>
                                                     <td class="text-end fw-bold">{{ number_format($runningBalance, 2) }}</td>
                                                     <td>{{ ucwords($transaction->account->name ?? 'N/A') }}</td>
+                                                    <td>{{ ucwords($transaction->reference ?? 'N/A') }}</td>
                                                     <td class="text-center">
+                                                        <button type="button" class="btn btn-info btn-sm rounded-0 text-white"
+                                                                data-bs-toggle="modal" data-bs-target="#editTransactionModal"
+                                                                data-transaction-id="{{ $transaction->id }}"
+                                                                data-transaction-bank-id="{{ $transaction->bank_id }}"
+                                                                data-transaction-date="{{ $transaction->t_date }}"
+                                                                data-transaction-name="{{ $transaction->name }}"
+                                                                data-transaction-description="{{ $transaction->description ?? '' }}"
+                                                                data-transaction-account-id="{{ $transaction->account_id }}"  {{-- NEW --}}
+                                                                data-transaction-reference="{{ $transaction->reference ?? '' }}"> {{-- NEW --}}
+                                                            <i class="fa fa-edit"></i> Edit
+                                                        </button>
+                                                        {{-- Existing Delete Button --}}
                                                         <button type="button" class="btn btn-danger btn-sm rounded-0"
                                                                 data-bs-toggle="modal" data-bs-target="#deleteTransactionModal"
                                                                 data-transaction-id="{{ $transaction->id }}"
@@ -188,6 +202,7 @@
                                                                 data-transaction-amount="{{ number_format($transaction->amount, 2) }}">
                                                             <i class="fa fa-trash"></i> Delete
                                                         </button>
+
                                                     </td>
                                                 </tr>
                                             @endforeach
@@ -237,8 +252,79 @@
                                     </div>
                                 </div>
                             </div>
+                            <!-- Edit Transaction Modal -->
+                            <div class="modal" id="editTransactionModal" tabindex="-1" aria-labelledby="editTransactionModalLabel" aria-hidden="true">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="editTransactionModalLabel">Edit Transaction</h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                        </div>
+                                        <form id="editTransactionForm" method="POST">
+                                            @csrf
+                                            @method('PUT')
+                                            <div class="modal-body">
+                                                <input type="hidden" name="transaction_id" id="editTransactionId">
 
+                                                <div class="mb-3">
+                                                    <label for="editBankId" class="form-label">Bank Account</label>
+                                                    <select name="bank_id" id="editBankId" class="form-select select-relation" style="width: 100%" required>
+                                                        <option value="{{@$transaction->bank->id}}"
+                                                            {{old('bank_id')===@$transaction->bank->id ? 'selected' : ''}}>{{@$transaction->bank->account_name.' '.@$transaction->bank->account_number}}</option>
+                                                        @foreach($banks as $bank)
+                                                            <option value="{{$bank->id}}"
+                                                                {{old('bank_id')===$bank->id ? 'selected' : ''}}>{{$bank->account_name.' '.$bank->account_number}}</option>
+                                                        @endforeach
+                                                    </select>
+                                                    <span class="invalid-feedback d-block" id="editBankIdError"></span>
+                                                </div>
 
+                                                <div class="mb-3">
+                                                    <label for="editAccountId" class="form-label">Account</label> {{-- NEW: Account dropdown --}}
+                                                    <select name="account_id" id="editAccountId" class="form-select select-relation" style="width: 100%" required>
+                                                        <option value="{{@$transaction->account->id}}"
+                                                            {{old('bank_id')===@$transaction->account->id ? 'selected' : ''}}>{{@$transaction->account->name}}</option>
+                                                    @foreach($accounts as $accountOption)
+                                                            <option value="{{ $accountOption->id }}">
+                                                                {{ $accountOption->name }}
+                                                            </option>
+                                                        @endforeach
+                                                    </select>
+                                                    <span class="invalid-feedback d-block" id="editAccountIdError"></span>
+                                                </div>
+
+                                                <div class="mb-3">
+                                                    <label for="editTransactionDate" class="form-label">Date</label>
+                                                    <input type="date" name="t_date" id="editTransactionDate" class="form-control" required>
+                                                    <span class="invalid-feedback d-block" id="editTransactionDateError"></span>
+                                                </div>
+
+                                                <div class="mb-3">
+                                                    <label for="editTransactionName" class="form-label">Name/For</label>
+                                                    <input type="text" name="name" id="editTransactionName" class="form-control" required>
+                                                    <span class="invalid-feedback d-block" id="editTransactionNameError"></span>
+                                                </div>
+
+                                                <div class="mb-3">
+                                                    <label for="editTransactionDescription" class="form-label">Description (Optional)</label>
+                                                    <textarea name="description" id="editTransactionDescription" class="form-control" rows="3"></textarea>
+                                                </div>
+
+                                                <div class="mb-3">
+                                                    <label for="editTransactionReference" class="form-label">Cheque / Reference (Optional)</label> {{-- NEW: Reference input --}}
+                                                    <input type="text" name="reference" id="editTransactionReference" class="form-control">
+                                                    <span class="invalid-feedback d-block" id="editTransactionReferenceError"></span>
+                                                </div>
+
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary rounded-0" data-bs-dismiss="modal">Cancel</button>
+                                                <button type="submit" class="btn btn-primary rounded-0">Save Changes</button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -247,9 +333,9 @@
     </div>
 @endsection
 @section('scripts')
-    <script src="{{asset('vendor/simple-datatable/simple-datatable.js')}}"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function () {
+            // --- Delete Transaction Modal Logic (Existing) ---
             const deleteTransactionModal = document.getElementById('deleteTransactionModal');
             deleteTransactionModal.addEventListener('show.bs.modal', function (event) {
                 const button = event.relatedTarget;
@@ -266,7 +352,7 @@
                 transactionNameSpan.textContent = transactionName;
                 transactionAmountSpan.textContent = transactionAmount;
 
-                deleteForm.action = `/payments/${transactionId}`;
+                deleteForm.action = `/payments/${transactionId}`; // Assuming your delete route is like /payments/{id}
             });
 
             deleteTransactionModal.addEventListener('hidden.bs.modal', function () {
@@ -275,6 +361,85 @@
                     deleteNotes.value = '';
                 }
             });
+
+            // --- Clear Filters Button Logic (Existing) ---
+            const clearFiltersBtn = document.getElementById('clearFiltersBtn');
+            if (clearFiltersBtn) {
+                clearFiltersBtn.addEventListener('click', function() {
+                    const form = document.getElementById('bankReconciliationFilterForm');
+                    // Reset selected values
+                    form.querySelector('#bank_id').value = '';
+                    form.querySelector('#start_date').value = '';
+                    form.querySelector('#end_date').value = '';
+                    // Submit the form to clear filters
+                    form.submit();
+                });
+            }
+
+
+            // --- NEW: Edit Transaction Modal Logic ---
+            const editTransactionModal = document.getElementById('editTransactionModal');
+            editTransactionModal.addEventListener('show.bs.modal', function (event) {
+                const button = event.relatedTarget; // Button that triggered the modal
+
+                // Extract data from data-bs-* attributes
+                const transactionId = button.getAttribute('data-transaction-id');
+                const transactionBankId = button.getAttribute('data-transaction-bank-id');
+                const transactionDate = button.getAttribute('data-transaction-date');
+                const transactionName = button.getAttribute('data-transaction-name');
+                const transactionDescription = button.getAttribute('data-transaction-description');
+                const transactionAccountId = button.getAttribute('data-transaction-account-id'); // NEW
+                const transactionReference = button.getAttribute('data-transaction-reference'); // NEW
+
+                // Get modal elements
+                const editForm = editTransactionModal.querySelector('#editTransactionForm');
+                const idInput = editTransactionModal.querySelector('#editTransactionId');
+                const bankSelect = editTransactionModal.querySelector('#editBankId');
+                const accountSelect = editTransactionModal.querySelector('#editAccountId'); // NEW
+                const dateInput = editTransactionModal.querySelector('#editTransactionDate');
+                const nameInput = editTransactionModal.querySelector('#editTransactionName');
+                const descriptionInput = editTransactionModal.querySelector('#editTransactionDescription');
+                const referenceInput = editTransactionModal.querySelector('#editTransactionReference'); // NEW
+                const modalTitle = editTransactionModal.querySelector('.modal-title');
+
+                // Populate the modal fields
+                idInput.value = transactionId;
+                bankSelect.value = transactionBankId;
+                accountSelect.value = transactionAccountId; // NEW
+                dateInput.value = transactionDate;
+                nameInput.value = transactionName;
+                descriptionInput.value = transactionDescription;
+                referenceInput.value = transactionReference; // NEW
+                modalTitle.textContent = `Edit Transaction (ID: ${transactionId})`;
+
+                // Set the form action URL dynamically
+                editForm.action = `/payments/${transactionId}`; // Adjust route if needed
+
+                // Clear previous validation errors if any
+                clearEditModalErrors();
+
+                // If you are using a library like Select2 for `select-relation` class,
+                // you might need to trigger an update here. Example:
+                // $(bankSelect).trigger('change.select2');
+                // $(accountSelect).trigger('change.select2'); // NEW: For account select
+            });
+
+            // Clear form fields and errors when the modal is closed
+            editTransactionModal.addEventListener('hidden.bs.modal', function () {
+                const editForm = editTransactionModal.querySelector('#editTransactionForm');
+                editForm.reset(); // Resets all form fields
+                clearEditModalErrors(); // Clear any validation feedback
+            });
+
+            // Function to clear validation errors in the edit modal
+            function clearEditModalErrors() {
+                document.querySelectorAll('#editTransactionForm .is-invalid').forEach(element => {
+                    element.classList.remove('is-invalid');
+                });
+                document.querySelectorAll('#editTransactionForm .invalid-feedback').forEach(element => {
+                    element.textContent = '';
+                });
+            }
         });
     </script>
 @stop

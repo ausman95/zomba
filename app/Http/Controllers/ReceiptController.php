@@ -279,6 +279,7 @@ class ReceiptController extends Controller
             // Log that the page was accessed without filters
             activity('FINANCES')->log("Accessed Bank Reconciliations page (first load, no filters).")->causer(Auth::user());
         }
+        $accounts = Account::all();
 
         // --- Return View ---
         return view('receipts.unverified', compact( // Assuming 'finances.bank_reconciliation' is the correct view for this method
@@ -286,6 +287,7 @@ class ReceiptController extends Controller
             'transactions',
             'banks',
             'bank',
+            'accounts',
             'selectedBankId',
             'startDate',
             'endDate',

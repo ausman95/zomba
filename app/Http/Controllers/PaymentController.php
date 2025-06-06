@@ -32,6 +32,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Validator;
 
 class PaymentController extends Controller
 {
@@ -655,13 +656,57 @@ class PaymentController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request,Payment $payment)
+    public function update(Request $request, Payment $payment) // Using route model binding
     {
-        $data = $request->post();
-        $payment->update($data);
-        return redirect()->route('payments.show',$payment->id.'?verified='.$data['verified'])->with([
-            'success-notification'=>"Successfully Updated"
+        // Validate the request
+        $validator = Validator::make($request->all(), [
+            'bank_id'     => 'required|numeric|exists:banks,id',
+            'account_id'  => 'required|numeric|exists:accounts,id', // NEW: Validate account_id
+            't_date'      => 'required|date',
+            'name'        => 'required|string|max:255',
+            'description' => 'nullable|string|max:1000',
+            'reference'   => 'nullable|string|max:255', // NEW: Validate reference (e.g., cheque number)
+            // Amount and Type should generally NOT be editable here to maintain financial integrity.
+            // Adjustments or reversals are typically used for such changes.
         ]);
+
+        if ($validator->fails()) {
+            if ($request->ajax()) {
+                return response()->json(['errors' => $validator->errors()], 422);
+            }
+            return redirect()->back()->withErrors($validator)->withInput();
+        }
+
+        try {
+            // Update the payment details
+            $payment->bank_id = $request->input('bank_id');
+            $payment->account_id = $request->input('account_id'); // NEW: Save account_id
+            $payment->t_date = $request->input('t_date');
+            $payment->name = $request->input('name');
+            $payment->specification = $request->input('description');
+            $payment->reference = $request->input('reference'); // NEW: Save reference
+            $payment->save();
+
+            activity('FINANCES')
+                ->performedOn($payment)
+                ->log("Updated transaction (ID: {$payment->id}) from Bank Reconciliations.");
+
+            if ($request->ajax()) {
+                return response()->json(['success-notification' => 'Transaction updated successfully.']);
+            }
+            return redirect()->back()->with('success-notification', 'Transaction updated successfully!');
+
+        } catch (\Exception $e) {
+            activity('FINANCES')
+                ->performedOn($payment)
+                ->withProperties(['error' => $e->getMessage()])
+                ->log("Failed to update transaction (ID: {$payment->id}) from Bank Reconciliations.");
+
+            if ($request->ajax()) {
+                return response()->json(['error-notification' => 'Failed to update transaction: ' . $e->getMessage()], 500);
+            }
+            return redirect()->back()->with('error-notification', 'Failed to update transaction: ' . $e->getMessage());
+        }
     }
 
 
