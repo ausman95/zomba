@@ -338,8 +338,31 @@
 @section('scripts')
     <script>
         document.addEventListener('DOMContentLoaded', function () {
-            // ... (Existing Delete and Clear Filters Button Logic) ...
+            const deleteTransactionModal = document.getElementById('deleteTransactionModal');
+            deleteTransactionModal.addEventListener('show.bs.modal', function (event) {
+                const button = event.relatedTarget;
+                const transactionId = button.getAttribute('data-transaction-id');
+                const transactionName = button.getAttribute('data-transaction-name');
+                const transactionAmount = button.getAttribute('data-transaction-amount');
 
+                const modalTitle = deleteTransactionModal.querySelector('.modal-title');
+                const transactionNameSpan = deleteTransactionModal.querySelector('#transactionName');
+                const transactionAmountSpan = deleteTransactionModal.querySelector('#transactionAmount');
+                const deleteForm = deleteTransactionModal.querySelector('#deleteTransactionForm');
+
+                modalTitle.textContent = 'Delete Transaction (ID: ' + transactionId + ')';
+                transactionNameSpan.textContent = transactionName;
+                transactionAmountSpan.textContent = transactionAmount;
+
+                deleteForm.action = `/payments/${transactionId}`; // Assuming your delete route is like /payments/{id}
+            });
+
+            deleteTransactionModal.addEventListener('hidden.bs.modal', function () {
+                const deleteNotes = deleteTransactionModal.querySelector('#delete_notes');
+                if (deleteNotes) {
+                    deleteNotes.value = '';
+                }
+            });
             // --- NEW: Edit Transaction Modal Logic ---
             const editTransactionModal = document.getElementById('editTransactionModal');
             editTransactionModal.addEventListener('show.bs.modal', function (event) {
