@@ -767,24 +767,25 @@ class ReceiptController extends Controller
             $last_id = MemberPayment::create($members);
             $member = Member::where(['id'=> $request->post('member_id')])
                 ->first();
-            if($request->post('amount')>0) {
-                $message = 'Dear ' . $member->name . ' You have Paid ' . $account->name .
-                    ' Amounting to : MK ' . number_format($request->post('amount'), 2) . ' AREA 25, VICTORY TEMPLE';
-                if ($member->phone_number) {
-                    if ($labourerController->validating($member->phone_number) != 0) {
-                        $this->sendSms($member->phone_number, $message);
-                    }
-                }
-                if ($member->phone) {
-                    if ($labourerController->validating($member->phone_number) != 0) {
-                        $this->sendSms($member->phone, $message);
-                    }
+
+            if ($member->phone_number) {
+                // Attempt to standardize and validate the phone number
+                $standardizedPhoneNumber = $labourerController->validating($member->phone_number);
+                // If standardization was successful (i.e., not false)
+                if ($standardizedPhoneNumber !== false) {
+                    $message = 'Dear ' . $member->name .' on '.date('d F Y', strtotime($member->t_date)). ', you Paid ' . $request->post('account') .
+                        ' Amounting to : MK ' . number_format($request->post('amount'), 2).'. AREA 25, VICTORY TEMPLE';
+                    $this->sendSms($standardizedPhoneNumber, $message);
                 }
             }
-            if($request->post('amount')<0){
-                $message = 'GoodDay Sir, there was a reversal done by ' . request()->user()->name . ' for ' . @$member->name . ','.$account->name.' : MK' . number_format($data['amount'],2).' AREA 47, EAGLES CATHEDRAL';
-                $this->sendSms('0888307368',$message); // sending sms
-                $this->sendSms('0999809706',$message); // sending sms
+// For $member->phone (if it's a separate field)
+            if ($member->phone) {
+                $standardizedPhone = $labourerController->validating($member->phone);
+                if ($standardizedPhone !== false) {
+                    $message = 'Dear ' . $member->name .' on '.date('d F Y', strtotime($member->t_date)). ', you Paid ' . $request->post('account') .
+                        ' Amounting to : MK ' . number_format($request->post('amount'), 2).'. AREA 25, VICTORY TEMPLE';
+                    $this->sendSms($standardizedPhone, $message);
+                }
             }
             $order = new DeliveryController();
             if($request->post('amount')>0){

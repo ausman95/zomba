@@ -246,11 +246,43 @@ class LabourerController extends Controller
      */
     public function validating($phone)
     {
-        $value = 0;
-        if(preg_match('/^[0-9]{10}+$/', $phone)) {
-            $value = 1;
+        // Step 1: Clean the phone number.
+        // This removes any non-digit characters.
+        // It keeps a leading '+' if present, as it's part of international formats.
+        $cleanPhone = preg_replace('/[^0-9+]/', '', $phone);
+
+        // If the cleaned number starts with '+', ensure only digits follow
+        if (str_starts_with($cleanPhone, '+')) {
+            $cleanPhone = '+' . preg_replace('/[^0-9]/', '', substr($cleanPhone, 1));
+        } else {
+            // For numbers without a leading '+', just remove all non-digits
+            $cleanPhone = preg_replace('/[^0-9]/', '', $cleanPhone);
         }
-        return $value;
+
+
+        // Step 2: Attempt to match and standardize the phone number based on Malawi patterns.
+
+        // Pattern A: 9 digits starting with specific prefixes (88, 99, 98, 89)
+        // Example: 882230137, 992230137, 98xxxxxxx, 89xxxxxxx
+        if (preg_match('/^(88|99|98|89)\d{7}$/', $cleanPhone)) {
+            return '0' . $cleanPhone; // Prepend '0' to standardize to 10 digits
+        }
+
+        // Pattern B: Already 10 digits, starts with 08 or 09
+        // Example: 0882230137, 0992230137
+        if (preg_match('/^0[89]\d{8}$/', $cleanPhone)) {
+            return $cleanPhone; // Already in the desired 10-digit format
+        }
+
+        // Pattern C: International format (optional '+', '265', then 8 or 9, followed by 8 digits)
+        // Example: +265882230137, 265992230137
+        if (preg_match('/^(\+?265)[89]\d{8}$/', $cleanPhone)) {
+            return $cleanPhone; // Return as is, or you could convert to local format if needed.
+            // For simplicity, we keep the international format here.
+        }
+
+        // Step 3: If no patterns match, the phone number is considered invalid.
+        return false; // Return false to indicate invalidity
     }
     public function store(StoreRequest $request)
     {
