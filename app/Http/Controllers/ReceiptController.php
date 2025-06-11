@@ -773,7 +773,7 @@ class ReceiptController extends Controller
                 $standardizedPhoneNumber = $labourerController->validating($member->phone_number);
                 // If standardization was successful (i.e., not false)
                 if ($standardizedPhoneNumber !== false) {
-                    $message = 'Dear ' . $member->name .' on '.date('d F Y', strtotime($member->t_date)). ', you Paid ' . $request->post('account') .
+                    $message = 'Dear ' . $member->name .' on '.date('d F Y', strtotime($last_id->t_date)). ', you Paid ' . $request->post('account') .
                         ' Amounting to : MK ' . number_format($request->post('amount'), 2).'. AREA 25, VICTORY TEMPLE';
                     $this->sendSms($standardizedPhoneNumber, $message);
                 }
@@ -782,7 +782,7 @@ class ReceiptController extends Controller
             if ($member->phone) {
                 $standardizedPhone = $labourerController->validating($member->phone);
                 if ($standardizedPhone !== false) {
-                    $message = 'Dear ' . $member->name .' on '.date('d F Y', strtotime($member->t_date)). ', you Paid ' . $request->post('account') .
+                    $message = 'Dear ' . $member->name .' on '.date('d F Y', strtotime($last_id->t_date)). ', you Paid ' . $request->post('account') .
                         ' Amounting to : MK ' . number_format($request->post('amount'), 2).'. AREA 25, VICTORY TEMPLE';
                     $this->sendSms($standardizedPhone, $message);
                 }
