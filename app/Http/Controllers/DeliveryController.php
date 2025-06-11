@@ -55,7 +55,7 @@ class DeliveryController extends \FPDF
         $this->Ln();
         $this->Cell(20,8,'','','L');
         $this->SetFont('Courier','B',8);
-        $this->Cell(85,5,'EAGLES CATHEDRAL, AREA 47 AOG','','','C');
+        $this->Cell(85,5,'VICTORY TEMPLE, AREA 25 AOG','','','C');
         $this->Ln(10);
 
         $this->SetFont('Courier','B',9);
