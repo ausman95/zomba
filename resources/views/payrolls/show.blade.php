@@ -153,7 +153,7 @@
                             <li class="list-group-item">No payroll items found.</li>
                         @endforelse
                         <li class="list-group-item">
-                            <strong>Total Net Tax: (MK) {{ number_format($totalTax, 2) }}</strong>
+                            {{ $c++ }} -  <strong>Total Net Tax: (MK) {{ number_format($totalTax, 2) }}</strong>
                         </li>
 
                     </ol>
