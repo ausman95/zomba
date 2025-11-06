@@ -116,35 +116,38 @@
                         @endphp
 
                         @forelse ($payroll->payrollItems as $item)
-                            @php
-                                $amount = abs($item->amount);
-                                $totalBalance += $amount;
 
-                                // Calculate tax if the department is ADMIN
-                                $tax = 0;
-                                if ($payroll->labourer->department->name == 'ADMIN') {
-                                    // Tax calculation logic
-                                    $taxFree = 150000;
-                                    if ($amount <= 350000) {
-                                        // Entire amount taxed at 25%
-                                        $tax += $amount * 0.25;
-                                    } else {
-                                        // First 350,000 at 25%
-                                        $tax += 350000 * 0.25;
-                                        // Remaining amount at 30%
-                                        $remaining = $amount - 350000;
-                                        $tax += $remaining * 0.30;
-                                    }
-                                    $totalTax += $tax;
-                                }
-                            @endphp
                             <li class="list-group-item">
                                 {{ $c++ }} - {{ $item->account->name ?? $item->description }} - <strong>(MK) {{ number_format($amount, 2) }}</strong> ({{ $item->type }})
                                 @if($item->amount < 0)
                                     <span class="text-danger"> (Deduction)</span>
                                 @endif
+                                @if($payroll->labourer->department->name=='ADMIN')
+                                @if($item->amount >0)
+                                    @php
+                                        $amount = abs($item->amount);
+                                        $totalBalance += $amount;
+
+                                        // Calculate tax if the department is ADMIN
+                                        $tax = 0;
+                                        if ($payroll->labourer->department->name == 'ADMIN') {
+                                            // Tax calculation logic
+                                            $taxFree = 150000;
+                                            if ($amount <= 350000) {
+                                                // Entire amount taxed at 25%
+                                                $tax += $amount * 0.25;
+                                            } else {
+                                                // First 350,000 at 25%
+                                                $tax += 350000 * 0.25;
+                                                // Remaining amount at 30%
+                                                $remaining = $amount - 350000;
+                                                $tax += $remaining * 0.30;
+                                            }
+                                            $totalTax += $tax;
+                                        }
+                                    @endphp
+                                @endif
                             </li>
-                            @if($payroll->labourer->department->name=='ADMIN')
                                 <li class="list-group-item">
                                     <strong>Total Net Tax: (MK) {{ number_format($totalTax, 2) }}</strong>
                                 </li>
