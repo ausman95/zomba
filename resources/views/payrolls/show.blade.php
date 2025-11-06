@@ -143,15 +143,15 @@
                                 @if($item->amount < 0)
                                     <span class="text-danger"> (Deduction)</span>
                                 @endif
-                                @if($payroll->labourer->department->name=='ADMIN')
-                                     <br>
-                                    Total Tax : <strong>(MK) {{ number_format($tax, 2) }}</strong>
-                                @endif
                             </li>
                         @empty
                             <li class="list-group-item">No payroll items found.</li>
                         @endforelse
-                       
+                        @if($payroll->labourer->department->name=='ADMIN')
+                            <li class="list-group-item">
+                                <strong>Total Net Tax: (MK) {{ number_format($totalTax, 2) }}</strong>
+                            </li>
+                        @endif
                     </ol>
                 </div>
 
