@@ -118,7 +118,7 @@
                         @forelse ($payroll->payrollItems as $item)
 
                             <li class="list-group-item">
-                                {{ $c++ }} - {{ $item->account->name ?? $item->description }} - <strong>(MK) {{ number_format($amount, 2) }}</strong> ({{ $item->type }})
+                                {{ $c++ }} - {{ $item->account->name ?? $item->description }} - <strong>(MK) {{ number_format($item->amount, 2) }}</strong> ({{ $item->type }})
                                 @if($item->amount < 0)
                                     <span class="text-danger"> (Deduction)</span>
                                 @endif
