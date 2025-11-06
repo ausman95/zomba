@@ -135,7 +135,7 @@
                                             $remaining_amount = $amount-$taxFree;
                                             if ($remaining_amount <= 350000) {
                                                 // Entire amount taxed at 25%
-                                                $totalTax = $amount * 0.25;
+                                                $totalTax = $remaining_amount * 0.25;
                                             } else {
                                                 // First 350,000 at 25%
                                                 $tax = 350000 * 0.25;
