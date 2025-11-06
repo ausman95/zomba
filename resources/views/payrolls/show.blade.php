@@ -153,7 +153,9 @@
                             <li class="list-group-item">No payroll items found.</li>
                         @endforelse
                         <li class="list-group-item">
-                            {{ $c++ }} -  <strong>Total Net Tax: (MK) {{ number_format($totalTax, 2) }}</strong>
+                            {{ $c++ }} -  <strong> Net Tax : (MK) {{ number_format($totalTax, 2) }}</strong>
+                            {{ $c++ }} -  <strong> Pension : (MK) {{ number_format(($amount*0.05), 2) }}</strong>
+
                         </li>
 
                     </ol>
