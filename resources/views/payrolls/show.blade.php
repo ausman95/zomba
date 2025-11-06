@@ -152,12 +152,14 @@
                         @empty
                             <li class="list-group-item">No payroll items found.</li>
                         @endforelse
+                        @if($payroll->labourer->department->name=='ADMIN')
                         <li class="list-group-item">
                             {{ $c++ }} -  <strong> Net Tax : (MK) {{ number_format($totalTax, 2) }}</strong>
                         </li>
                         <li class="list-group-item">
                             {{ $c++ }} -  <strong> Pension : (MK) {{ number_format(($amount*0.05), 2) }}</strong>
                         </li>
+                        @endif
                     </ol>
                 </div>
 
