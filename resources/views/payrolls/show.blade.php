@@ -112,6 +112,7 @@
                         @php
                             $c = 1;
                             $totalTax = 0; // Initialize total tax
+                            $remaining_amount  = 0;
                             $total = 0; // Initialize total tax
                         @endphp
 
@@ -123,7 +124,7 @@
                                     <span class="text-danger"> (Deduction)</span>
                                 @endif
                                 @if($payroll->labourer->department->name=='ADMIN')
-                                @if($item->amount >0)
+                                @if($item->amount >150000)
                                     @php
                                         $amount = $item->amount;
 
@@ -131,14 +132,15 @@
                                         $tax = 0;
                                         // Tax calculation logic
                                             $taxFree = 150000;
-                                            if ($amount <= 350000) {
+                                            $remaining_amount = $amount-$taxFree;
+                                            if ($remaining_amount <= 350000) {
                                                 // Entire amount taxed at 25%
                                                 $totalTax = $amount * 0.25;
                                             } else {
                                                 // First 350,000 at 25%
                                                 $tax = 350000 * 0.25;
                                                 // Remaining amount at 30%
-                                                $remaining = $amount - 350000;
+                                                $remaining = $remaining_amount - 350000;
                                                 $total= $remaining * 0.30;
                                                  $totalTax = $tax+$total;
                                             }
