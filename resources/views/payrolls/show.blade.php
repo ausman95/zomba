@@ -109,19 +109,56 @@
                 <div class="card-body">
                     <h5 class="card-title">Payroll Items</h5>
                     <ol class="list-group list-group-flush">
-                        @php $c = 1; @endphp
+                        @php
+                            $c = 1;
+                            $totalBalance = 0; // Initialize total balance
+                            $totalTax = 0; // Initialize total tax
+                        @endphp
+
                         @forelse ($payroll->payrollItems as $item)
+                            @php
+                                $amount = abs($item->amount);
+                                $totalBalance += $amount;
+
+                                // Calculate tax if the department is ADMIN
+                                $tax = 0;
+                                if ($payroll->labourer->department->name == 'ADMIN') {
+                                    // Tax calculation logic
+                                    $taxFree = 150000;
+                                    if ($amount <= 350000) {
+                                        // Entire amount taxed at 25%
+                                        $tax += $amount * 0.25;
+                                    } else {
+                                        // First 350,000 at 25%
+                                        $tax += 350000 * 0.25;
+                                        // Remaining amount at 30%
+                                        $remaining = $amount - 350000;
+                                        $tax += $remaining * 0.30;
+                                    }
+                                    $totalTax += $tax;
+                                }
+                            @endphp
                             <li class="list-group-item">
-                                {{ $c++ . ' - ' . ($item->account->name ?? $item->description) }} - <strong>(MK) {{ number_format(abs($item->amount), 2) }}</strong> ({{ $item->type }})
+                                {{ $c++ }} - {{ $item->account->name ?? $item->description }} - <strong>(MK) {{ number_format($amount, 2) }}</strong> ({{ $item->type }})
                                 @if($item->amount < 0)
                                     <span class="text-danger"> (Deduction)</span>
+                                @endif
+                                @if($payroll->labourer->department->name=='ADMIN')
+                                     <br>
+                                    Total Tax : <strong>(MK) {{ number_format($tax, 2) }}</strong>
                                 @endif
                             </li>
                         @empty
                             <li class="list-group-item">No payroll items found.</li>
                         @endforelse
+                        @if($payroll->labourer->department->name=='ADMIN')
+                            <li class="list-group-item">
+                                <strong>Total Net Tax: (MK) {{ number_format($totalTax, 2) }}</strong>
+                            </li>
+                        @endif
                     </ol>
                 </div>
+
 
                 <div class="mt-4">
                     <div class="row">
