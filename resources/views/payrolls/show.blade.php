@@ -129,21 +129,20 @@
 
                                         // Calculate tax if the department is ADMIN
                                         $tax = 0;
-                                        if ($payroll->labourer->department->name == 'ADMIN') {
-                                            // Tax calculation logic
+                                        // Tax calculation logic
                                             $taxFree = 150000;
                                             if ($amount <= 350000) {
                                                 // Entire amount taxed at 25%
-                                                $tax = $amount * 0.25;
+                                                $totalTax = $amount * 0.25;
                                             } else {
                                                 // First 350,000 at 25%
                                                 $tax = 350000 * 0.25;
                                                 // Remaining amount at 30%
                                                 $remaining = $amount - 350000;
                                                 $total= $remaining * 0.30;
+                                                 $totalTax = $tax+$total;
                                             }
-                                            $totalTax = $tax+$total;
-                                        }
+
                                     @endphp
                                 @endif
                             </li>
