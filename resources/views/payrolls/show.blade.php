@@ -111,8 +111,8 @@
                     <ol class="list-group list-group-flush">
                         @php
                             $c = 1;
-                            $totalBalance = 0; // Initialize total balance
                             $totalTax = 0; // Initialize total tax
+                            $total = 0; // Initialize total tax
                         @endphp
 
                         @forelse ($payroll->payrollItems as $item)
@@ -125,8 +125,7 @@
                                 @if($payroll->labourer->department->name=='ADMIN')
                                 @if($item->amount >0)
                                     @php
-                                        $amount = abs($item->amount);
-                                        $totalBalance += $amount;
+                                        $amount = $item->amount;
 
                                         // Calculate tax if the department is ADMIN
                                         $tax = 0;
@@ -135,15 +134,15 @@
                                             $taxFree = 150000;
                                             if ($amount <= 350000) {
                                                 // Entire amount taxed at 25%
-                                                $tax += $amount * 0.25;
+                                                $tax = $amount * 0.25;
                                             } else {
                                                 // First 350,000 at 25%
-                                                $tax += 350000 * 0.25;
+                                                $tax = 350000 * 0.25;
                                                 // Remaining amount at 30%
                                                 $remaining = $amount - 350000;
-                                                $tax += $remaining * 0.30;
+                                                $total= $remaining * 0.30;
                                             }
-                                            $totalTax += $tax;
+                                            $totalTax = $tax+$total;
                                         }
                                     @endphp
                                 @endif
