@@ -182,7 +182,7 @@
                                                         @endif
                                                     </td>
                                                     <td class="text-end">
-                                                        @if(!$isRevenue)
+                                                        @if($transaction->type==1)
                                                             ({{ number_format($displayAmount, 2) }})
                                                         @else
                                                             -
