@@ -151,7 +151,7 @@
 
                                             @foreach($transactions as $transaction)
                                                 @php
-                                                    $isRevenue = ($transaction->type == 1 || $transaction->name=='Loan Monthly Repayment');
+                                                    $isRevenue = ($transaction->type == 1 || $transaction->name==='Loan Monthly Repayment');
                                                     $displayAmount = $transaction->amount;
 
                                                     if ($isRevenue) {
