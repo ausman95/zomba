@@ -168,7 +168,12 @@
                                                     <td>{{ $transaction->specification ?? 'N/A' }}</td>
                                                     <td class="text-end">
                                                         @if($isRevenue)
-                                                            {{ number_format($displayAmount, 2) }}
+                                                            @if($transaction->name=='Loan Monthly Repayment')
+                                                                {{ number_format(abs($displayAmount), 2) }}
+                                                            @else
+                                                                {{ number_format($displayAmount, 2) }}
+                                                            @endif
+
                                                         @else
                                                             -
                                                         @endif
