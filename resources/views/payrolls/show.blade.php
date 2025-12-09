@@ -164,7 +164,7 @@
                             @php $pension = 0; @endphp
                         @endif
                     </ol>
-                    <p class="card-text"><strong>Total Amount (MK):</strong> {{ number_format($payroll->total_amount-$totalTax-$pension, 2) }}</p>
+                    <p class="card-text"><strong>Net Salary (MK):</strong> {{ number_format($payroll->total_amount-$totalTax-$pension, 2) }}</p>
                 </div>
 
 
