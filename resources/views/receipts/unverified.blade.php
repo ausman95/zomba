@@ -151,12 +151,15 @@
 
                                             @foreach($transactions as $transaction)
                                                 @php
-                                                    $isRevenue = ($transaction->type == 1 || $transaction->name==='Loan Monthly Repayment');
                                                     $displayAmount = $transaction->amount;
 
-                                                    if ($isRevenue) {
+                                                    if ($transaction->type == 1) {
                                                         $runningBalance += $displayAmount;
-                                                    } else {
+                                                        }
+                                                    elseif($transaction->name=='Loan Monthly Repayment'){
+                                                            $runningBalance += $displayAmount;
+                                                        }
+                                                    else {
                                                         $runningBalance -= $displayAmount;
                                                     }
                                                     $counter++; // Increment for the current transaction
