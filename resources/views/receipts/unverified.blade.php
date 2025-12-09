@@ -164,7 +164,7 @@
                                                 <tr>
                                                     <td>{{ $counter }}</td>
                                                     <td>{{ \Carbon\Carbon::parse($transaction->t_date)->format('d F Y') }}</td>
-                                                    <td>{{ ucwords(substr($transaction->name, 0, 20)) }}</td>
+                                                    <td>{{ ucwords(substr($transaction->name, 0, 2000)) }}</td>
                                                     <td>{{ $transaction->specification ?? 'N/A' }}</td>
                                                     <td class="text-end">
                                                         @if($isRevenue)
