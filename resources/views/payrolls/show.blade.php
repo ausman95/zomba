@@ -100,7 +100,6 @@
                         <p class="card-text"><strong>Employee:</strong> {{ $payroll->labourer->name }}</p>
                         <p class="card-text"><strong>Job Position:</strong> {{ $payroll->labourer->labour->name }}</p>
                         <p class="card-text"><strong>Month:</strong> {{ $payroll->month->name }}</p>
-                        <p class="card-text"><strong>Total Amount (MK):</strong> {{ number_format($payroll->total_amount, 2) }}</p>
                         <p class="card-text"><strong>Status:</strong> {{ $payroll->status }}</p>
                         <p class="card-text"><strong>Payroll Date:</strong> {{date('d F Y', strtotime($payroll->payroll_date)) }}</p>
                     </div>
@@ -152,15 +151,20 @@
                         @empty
                             <li class="list-group-item">No payroll items found.</li>
                         @endforelse
+                        @php $pension = 0; @endphp
                         @if($payroll->labourer->department->name=='ADMIN')
                         <li class="list-group-item">
                             {{ $c++ }} -  <strong> Net Tax : (MK) {{ number_format($totalTax, 2) }}</strong>
                         </li>
+                            @php $pension = $amount*0.05; @endphp
                         <li class="list-group-item">
-                            {{ $c++ }} -  <strong> Pension : (MK) {{ number_format(($amount*0.05), 2) }}</strong>
+                            {{ $c++ }} -  <strong> Pension : (MK) {{ number_format($pension, 2) }}</strong>
                         </li>
+                        @else
+                            @php $pension = 0; @endphp
                         @endif
                     </ol>
+                    <p class="card-text"><strong>Total Amount (MK):</strong> {{ number_format($payroll->total_amount-$totalTax-$pension, 2) }}</p>
                 </div>
 
 
