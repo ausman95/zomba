@@ -151,15 +151,12 @@
 
                                             @foreach($transactions as $transaction)
                                                 @php
-                                                    $displayAmount = $transaction->amount;
+                                                    $isRevenue = ($transaction->type == 1);
+                                                    $displayAmount = abs($transaction->amount);
 
-                                                    if ($transaction->type == 1) {
+                                                    if ($isRevenue) {
                                                         $runningBalance += $displayAmount;
-                                                        }
-                                                    elseif($transaction->name=='Loan Monthly Repayment'){
-                                                            $runningBalance += $displayAmount;
-                                                        }
-                                                    else {
+                                                    } else {
                                                         $runningBalance -= $displayAmount;
                                                     }
                                                     $counter++; // Increment for the current transaction
@@ -170,19 +167,14 @@
                                                     <td>{{ ucwords(substr($transaction->name, 0, 20)) }}</td>
                                                     <td>{{ $transaction->specification ?? 'N/A' }}</td>
                                                     <td class="text-end">
-                                                        @if($transaction->type==1)
-                                                            @if($transaction->name=='Loan Monthly Repayment')
-                                                                {{ number_format(abs($displayAmount), 2) }}
-                                                            @else
+                                                        @if($isRevenue)
                                                                 {{ number_format($displayAmount, 2) }}
-                                                            @endif
-
                                                         @else
                                                             -
                                                         @endif
                                                     </td>
                                                     <td class="text-end">
-                                                        @if($transaction->type==1)
+                                                        @if(!$isRevenue)
                                                             ({{ number_format($displayAmount, 2) }})
                                                         @else
                                                             -
