@@ -153,7 +153,7 @@
                                                 @php
                                                     $isRevenue = (
                                                         ($transaction->type === 1) ||
-                                                        ($transaction->specification === 'Payroll Payment')
+                                                        ($transaction->name === 'Loan Monthly Repayment')
                                                     );                                                    $displayAmount = $transaction->amount;
 
                                                                                                         if ($isRevenue) {
@@ -170,7 +170,7 @@
                                                     <td>{{ $transaction->specification ?? 'N/A' }}</td>
                                                     <td class="text-end">
                                                         @if($isRevenue)
-                                                            @if($transaction->specification=='Payroll Payment')
+                                                            @if($transaction->name=='Loan Monthly Repayment')
                                                                 {{ number_format(abs($displayAmount), 2) }}
                                                             @else
                                                                 {{ number_format($displayAmount, 2) }}
