@@ -170,7 +170,7 @@
                                                     <td>{{ ucwords(substr($transaction->name, 0, 20)) }}</td>
                                                     <td>{{ $transaction->specification ?? 'N/A' }}</td>
                                                     <td class="text-end">
-                                                        @if($isRevenue)
+                                                        @if($transaction->type==1)
                                                             @if($transaction->name=='Loan Monthly Repayment')
                                                                 {{ number_format(abs($displayAmount), 2) }}
                                                             @else
