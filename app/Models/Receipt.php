@@ -50,4 +50,17 @@ class Receipt extends Model
             ->get();
     }
 
+    public function getPayments($start, $end, $accountID)
+    {
+        return Payment::from('payments as p')
+            ->select(
+                'p.*'
+            )
+            ->join('accounts as a', 'a.id', '=', 'p.account_id')
+            ->where('p.account_id', $accountID)
+            ->whereBetween('p.t_date', [$start, $end])
+            ->orderBy('p.id', 'DESC')
+            ->get();
+    }
+
 }

@@ -300,10 +300,10 @@ class ReceiptController extends Controller
         $accountID = $request->post('account_id');
         $to_month_id = $request->post('to_month_id');
         $from_month_id= $request->post('from_month_id');
-        $description= $request->post('description');
-        if(!$description){
-            $description = $request->session()->get('description');
-        }
+//        $description= $request->post('description');
+//        if(!$description){
+//            $description = $request->session()->get('description');
+//        }
         if(!$to_month_id){
             $to_month_id = $request->session()->get('to_month_id');
         }
@@ -325,6 +325,7 @@ class ReceiptController extends Controller
         $end = $to_month->end_date;
 
         $receipts =  $receipt->getMembers($start,$end,$accountID);
+        $payments = $receipt->getPayments($start,$end,$accountID);
 
         activity('Receipts')
             ->log("Accessed Receipts")->causer(request()->user());
@@ -333,8 +334,9 @@ class ReceiptController extends Controller
             'account_id'=>$accountID,
             'account_name'=>@Accounts::where(['id'=>$accountID])->first()->name,
             'receipts'=>$receipts,
+            'payments'=>$payments,
             'getMonths'=>$receipt->getMonthsTransaction($start,$end,$accountID),
-            'description'=>$description,
+            'description'=>@Accounts::where(['id'=>$accountID])->first()->type,
             'churches'=>$receipts,
             'from_month_name'=>$to_month->name,
             'to_month_name'=>$from_month->name,
@@ -365,7 +367,7 @@ class ReceiptController extends Controller
         elseif (substr($to, 0, 3) === '265' && substr($to, 0, 1) !== '+') {
             $to = '+' . $to; // Add leading '+'
         }
-
+        die('message=>'.$message.'to =>'.$to.'senderid =>'.$this->senderId);
         try {
             return $this->connObj->send([
                 'to' => [$to],
