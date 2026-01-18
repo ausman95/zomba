@@ -367,7 +367,7 @@ class ReceiptController extends Controller
         elseif (substr($to, 0, 3) === '265' && substr($to, 0, 1) !== '+') {
             $to = '+' . $to; // Add leading '+'
         }
-        die('message=>'.$message.'to =>'.$to.'senderid =>'.$this->senderId);
+        //die('message=>'.$message.'to =>'.$to.'senderid =>'.$this->senderId);
         try {
             return $this->connObj->send([
                 'to' => [$to],
